@@ -63,7 +63,9 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                commands.add("0.1");
+                commands.add("1");
+                commands.add("2");
+                commands.add("4");
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.flyspeed.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
