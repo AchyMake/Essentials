@@ -62,13 +62,13 @@ public class BankCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (player.hasPermission("players.command.bank.top")) {
+                if (player.hasPermission("essentials.command.bank.top")) {
                     commands.add("top");
                 }
-                if (player.hasPermission("players.command.bank.withdraw")) {
+                if (player.hasPermission("essentials.command.bank.withdraw")) {
                     commands.add("withdraw");
                 }
-                if (player.hasPermission("players.command.bank.deposit")) {
+                if (player.hasPermission("essentials.command.bank.deposit")) {
                     commands.add("deposit");
                 }
             } else if (args.length == 2) {

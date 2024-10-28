@@ -6,7 +6,6 @@ import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.data.Worth;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -52,8 +51,8 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
                     var value = Double.parseDouble(args[0]);
                     getWorth().setWorth(heldItem, value);
                     var itemName = getMessage().toTitleCase(heldItem.toString());
-                    if (getWorth().isListed(heldItem)) {
-                        getMessage().send(player, itemName + "&6 is now worth&a " + getEconomy().currency() + getEconomy().format(getWorth().get(heldItem)));
+                    if (getWorth().isListed(heldItem.getType())) {
+                        getMessage().send(player, itemName + "&6 is now worth&a " + getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType())));
                     } else getMessage().send(player, itemName + "&6 is now worthless");
                 } else getMessage().send(player, "&cYou have to hold an item");
                 return true;
@@ -75,8 +74,5 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private boolean isEmpty(Player player) {
-        return player.getInventory().getItemInMainHand().getType().equals(Material.AIR);
     }
 }

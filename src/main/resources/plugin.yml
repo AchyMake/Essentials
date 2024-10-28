@@ -16,7 +16,700 @@ commands:
     permission: essentials.command.announcement
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  anvil:
+    description: opens anvil by command
+    permission: essentials.command.anvil
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  back:
+    description: teleport back to recent or death
+    permission: essentials.command.back
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  balance:
+    description: check balance/top
+    permission: essentials.command.balance
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+    aliases:
+      - bal
+  ban:
+    description: ban target
+    permission: essentials.command.ban
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  bank:
+    description: check bank/top or withdraw/deposit
+    permission: essentials.command.bank
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  cartography:
+    description: open cartography by command
+    permission: essentials.command.cartography
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  color:
+    description: check color codes
+    permission: essentials.command.color
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  delhome:
+    description: delete home
+    permission: essentials.command.delhome
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  delwarp:
+    description: delete warp
+    permission: essentials.command.delwarp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  eco:
+    description: change player eco
+    permission: essentials.command.eco
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  enchant:
+    description: enchant held item
+    permission: essentials.command.enchant
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  enchanting:
+    description: open enchanting table by command
+    permission: essentials.command.enchanting
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  enderchest:
+    description: open enderchest by command
+    permission: essentials.command.enderchest
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  essentials:
+    description: essentials main command
+    permission: essentials.command.essentials
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+    aliases:
+      - ess
+  feed:
+    description: satisfy hunger by command
+    permission: essentials.command.feed
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  fly:
+    description: toggle fly
+    permission: essentials.command.fly
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  flyspeed:
+    description: changes flyspeed
+    permission: essentials.command.flyspeed
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  freeze:
+    description: freezes player
+    permission: essentials.command.freeze
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  gamemode:
+    description: changes gamemode
+    permission: essentials.command.gamemode
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  give:
+    description: give items
+    permission: essentials.command.give
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  gma:
+    description: changes to adventure
+    permission: essentials.command.gma
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  gmc:
+    description: changes to creative
+    permission: essentials.command.gmc
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  gms:
+    description: changes to survival
+    permission: essentials.command.gms
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  gmsp:
+    description: changes to spectator
+    permission: essentials.command.gmsp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  grindstone:
+    description: opens grindstone by command
+    permission: essentials.command.grindstone
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  hat:
+    description: changes hat by command
+    permission: essentials.command.hat
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  heal:
+    description: satisfies health by command
+    permission: essentials.command.heal
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  help:
+    description: list of help from config
+    permission: essentials.command.help
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  home:
+    description: teleports home
+    permission: essentials.command.home
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  homes:
+    description: check homes
+    permission: essentials.command.homes
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  information:
+    description: check player information
+    permission: essentials.command.information
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  inventory:
+    description: check player inventory
+    permission: essentials.command.inventory
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  jail:
+    description: toggle jail
+    permission: essentials.command.jail
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  kit:
+    description: kit command
+    permission: essentials.command.kit
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  loom:
+    description: opens loom by command
+    permission: essentials.command.loom
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  motd:
+    description: check motd
+    permission: essentials.command.motd
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  mute:
+    description: mute player
+    permission: essentials.command.mute
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  nickname:
+    description: change nickname
+    permission: essentials.command.nickname
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  pay:
+    description: pay others
+    permission: essentials.command.pay
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  pvp:
+    description: toggle pvp
+    permission: essentials.command.pvp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  repair:
+    description: repair held item
+    permission: essentials.command.repair
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  respond:
+    description: respond to whisper
+    permission: essentials.command.respond
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+    aliases:
+      - r
+  rtp:
+    description: random teleport
+    permission: essentials.command.rtp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  rules:
+    description: check rules
+    permission: essentials.command.rules
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  sell:
+    description: sell items
+    permission: essentials.command.sell
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  sethome:
+    description: sets home
+    permission: essentials.command.sethome
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  setjail:
+    description: sets jail
+    permission: essentials.command.setjail
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  setspawn:
+    description: sets spawn
+    permission: essentials.command.setspawn
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  setwarp:
+    description: sets warp
+    permission: essentials.command.setwarp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  setworth:
+    description: sets held item worth
+    permission: essentials.command.setworth
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  skull:
+    description: skull command
+    permission: essentials.command.skull
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  smithing:
+    description: opens smithing by command
+    permission: essentials.command.smithing
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  spawn:
+    description: teleports to spawn
+    permission: essentials.command.spawn
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  stonecutter:
+    description: opens stonecutter by command
+    permission: essentials.command.stonecutter
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  store:
+    description: check store
+    permission: essentials.command.store
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tpaccept:
+    description: tpaccept
+    permission: essentials.command.tpaccept
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tpa:
+    description: tpa
+    permission: essentials.command.tpa
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tpahere:
+    description: tpahere
+    permission: essentials.command.tpahere
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tpcancel:
+    description: tpcancel
+    permission: essentials.command.tpcancel
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tp:
+    description: tp
+    permission: essentials.command.tp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tpdeny:
+    description: tpdeny
+    permission: essentials.command.tpdeny
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  tphere:
+    description: tphere
+    permission: essentials.command.tphere
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  unban:
+    description: unban
+    permission: essentials.command.unban
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  vanish:
+    description: vanish
+    permission: essentials.command.vanish
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  walkspeed:
+    description: walkspeed
+    permission: essentials.command.walkspeed
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  warp:
+    description: warp
+    permission: essentials.command.warp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  whisper:
+    description: whisper
+    permission: essentials.command.whisper
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  workbench:
+    description: workbench
+    permission: essentials.command.workbench
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  worth:
+    description: worth
+    permission: essentials.command.worth
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
 permissions:
   essentials.command.announcement:
     description: announce server
+    default: op
+  essentials.command.anvil:
+    description: opens anvil by command
+    default: op
+  essentials.command.back:
+    description: teleport back to recent or death
+    default: op
+  essentials.command.balance:
+    description: check balance/top
+    default: op
+  essentials.command.ban:
+    description: ban target
+    default: op
+  essentials.command.bank:
+    description: check bank/top or withdraw/deposit
+    default: op
+  essentials.command.cartography:
+    description: open cartography by command
+    default: op
+  essentials.command.color:
+    description: check color codes
+    default: op
+  essentials.command.delhome:
+    description: delete home
+    default: op
+  essentials.command.delwarp:
+    description: delete warp
+    default: op
+  essentials.command.eco:
+    description: change player eco
+    default: op
+  essentials.command.enchant:
+    description: enchant held item
+    default: op
+  essentials.command.enchanting:
+    description: open enchanting table by command
+    default: op
+  essentials.command.enderchest:
+    description: open enderchest by command
+    default: op
+  essentials.command.enderchest.other:
+    description: open player enderchest by command
+    default: op
+  essentials.command.enderchest.exempt:
+    description: denies opening enderchest
+    default: op
+  essentials.command.essentials:
+    description: essentials main command
+    default: op
+  essentials.command.feed:
+    description: satisfy hunger by command
+    default: op
+  essentials.command.feed.other:
+    description: satisfy targets hunger by command
+    default: op
+  essentials.command.feed.exempt:
+    description: exempts feed
+    default: op
+  essentials.command.fly:
+    description: toggle fly
+    default: op
+  essentials.command.fly.other:
+    description: toggle targets fly
+    default: op
+  essentials.command.fly.exempt:
+    description: exempts toggle fly
+    default: op
+  essentials.command.flyspeed:
+    description: changes flyspeed
+    default: op
+  essentials.command.flyspeed.other:
+    description: changes targets flyspeed
+    default: op
+  essentials.command.flyspeed.exempt:
+    description: exempts changes flyspeed
+    default: op
+  essentials.command.freeze:
+    description: freezes player
+    default: op
+  essentials.command.freeze.exempt:
+    description: freezes player
+    default: op
+  essentials.command.gamemode:
+    description: changes gamemode
+    default: op
+  essentials.command.gamemode.other:
+    description: changes targets gamemode
+    default: op
+  essentials.command.gamemode.exempt:
+    description: exempts changes gamemode
+    default: op
+  essentials.command.give:
+    description: give items
+    default: op
+  essentials.command.gma:
+    description: changes to adventure
+    default: op
+  essentials.command.gmc:
+    description: changes to creative
+    default: op
+  essentials.command.gms:
+    description: changes to survival
+    default: op
+  essentials.command.gmsp:
+    description: changes to spectator
+    default: op
+  essentials.command.grindstone:
+    description: opens grindstone by command
+    default: op
+  essentials.command.grindstone.other:
+    description: opens grindstone for target by command
+    default: op
+  essentials.command.grindstone.exempt:
+    description: exempts grindstone
+    default: op
+  essentials.command.hat:
+    description: changes hat by command
+    default: op
+  essentials.command.hat.other:
+    description: changes target hat by command
+    default: op
+  essentials.command.hat.exempt:
+    description: exempts changes hat
+    default: op
+  essentials.command.heal:
+    description: satisfies health by command
+    default: op
+  essentials.command.heal.other:
+    description: satisfies targets health by command
+    default: op
+  essentials.command.heal.exempt:
+    description: exempts heal
+    default: op
+  essentials.command.help:
+    description: list of help by config
+    default: op
+  essentials.command.help.other:
+    description: list of help by config
+    default: op
+  essentials.command.help.exempt:
+    description: list of help by config
+    default: op
+  essentials.command.home:
+    description: teleports home
+    default: op
+  essentials.command.homes:
+    description: check homes
+    default: op
+  essentials.command.homes.delete:
+    description: delete targets home
+    default: op
+  essentials.command.homes.teleport:
+    description: teleport targets home
+    default: op
+  essentials.command.information:
+    description: check player information
+    default: op
+  essentials.command.inventory:
+    description: check player inventory
+    default: op
+  essentials.command.inventory.exempt:
+    description: exempts player inventory
+    default: op
+  essentials.command.jail:
+    description: toggle jail
+    default: op
+  essentials.command.jail.exempt:
+    description: exempts jail
+    default: op
+  essentials.command.kit:
+    description: kit command
+    default: op
+  essentials.command.kit.starter:
+    description: kit command
+    default: op
+  essentials.command.kit.other:
+    description: kit command
+    default: op
+  essentials.command.loom:
+    description: open loom by command
+    default: op
+  essentials.command.loom.other:
+    description: open loom by command
+    default: op
+  essentials.command.loom.exempt:
+    description: open loom by command
+    default: op
+  essentials.command.motd:
+    description: check motd
+    default: op
+  essentials.command.mute:
+    description: mute player
+    default: op
+  essentials.command.mute.exempt:
+    description: mute player
+    default: op
+  essentials.command.nickname:
+    description: change nickname
+    default: op
+  essentials.command.nickname.other:
+    description: change nickname
+    default: op
+  essentials.command.nickname.exempt:
+    description: change nickname
+    default: op
+  essentials.command.pay:
+    description: pay others
+    default: op
+  essentials.command.pvp:
+    description: toggle pvp
+    default: op
+  essentials.command.pvp.other:
+    description: toggle pvp
+    default: op
+  essentials.command.pvp.exempt:
+    description: toggle pvp
+    default: op
+  essentials.command.repair:
+    description: repair held item
+    default: op
+  essentials.command.repair.force:
+    description: repair held item
+    default: op
+  essentials.command.respond:
+    description: respond to whisper
+    default: op
+  essentials.command.rtp:
+    description: random teleport
+    default: op
+  essentials.command.rtp.force:
+    description: random teleport
+    default: op
+  essentials.command.rules:
+    description: check rules
+    default: op
+  essentials.command.rules.other:
+    description: check rules
+    default: op
+  essentials.command.rules.exempt:
+    description: check rules
+    default: op
+  essentials.command.sell:
+    description: sell items
+    default: op
+  essentials.command.sethome:
+    description: sets home
+    default: op
+  essentials.command.sethome.multiple.default:
+    description: sets home
+    default: op
+  essentials.command.setjail:
+    description: sets jail
+    default: op
+  essentials.command.setspawn:
+    description: sets spawn
+    default: op
+  essentials.command.setwarp:
+    description: sets warp
+    default: op
+  essentials.command.setworth:
+    description: sets held item worth
+    default: op
+  essentials.command.skull:
+    description: skull command
+    default: op
+  essentials.command.smithing:
+    description: opens smithing by command
+    default: op
+  essentials.command.smithing.other:
+    description: opens smithing by command
+    default: op
+  essentials.command.smithing.exempt:
+    description: opens smithing by command
+    default: op
+  essentials.command.spawn:
+    description: teleports to spawn
+    default: op
+  essentials.command.spawn.other:
+    description: teleports to spawn
+    default: op
+  essentials.command.spawn.exempt:
+    description: teleports to spawn
+    default: op
+  essentials.command.stonecutter:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.stonecutter.other:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.stonecutter.exempt:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.store:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.store.other:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.store.exempt:
+    description: opens stonecutter by command
+    default: op
+  essentials.command.tpaccept:
+    description: tpaccept
+    default: op
+  essentials.command.tpa:
+    description: tpa
+    default: op
+  essentials.command.tpahere:
+    description: tpahere
+    default: op
+  essentials.command.tpcancel:
+    description: tpcancel
+    default: op
+  essentials.command.tp:
+    description: tp
+    default: op
+  essentials.command.tpdeny:
+    description: tpdeny
+    default: op
+  essentials.command.tphere:
+    description: tphere
+    default: op
+  essentials.command.unban:
+    description: unban
+    default: op
+  essentials.command.vanish:
+    description: vanish
+    default: op
+  essentials.command.walkspeed:
+    description: walkspeed
+    default: op
+  essentials.command.warp:
+    description: warp
+    default: op
+  essentials.command.whisper:
+    description: whisper
+    default: op
+  essentials.command.workbench:
+    description: workbench
+    default: op
+  essentials.command.worth:
+    description: worth
     default: op
