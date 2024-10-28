@@ -31,7 +31,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
                 return true;
             } else if (args.length == 1) {
-                var value = Integer.parseInt(args[0]);
+                var value = Double.parseDouble(args[0]);
                 userdata.setMovementSpeed(value);
                 getMessage().send(player, "&6You changed walk speed to&f " + value);
                 return true;
@@ -40,7 +40,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[1]);
                     var userdataTarget = getUserdata(target);
                     if (target != null) {
-                        var value = Integer.parseInt(args[0]);
+                        var value = Double.parseDouble(args[0]);
                         if (target == player) {
                             userdataTarget.setMovementSpeed(value);
                             getMessage().send(player, "&6You changed&f " + target.getName() + " &6walk speed to&f " + value);
@@ -57,7 +57,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 var target = sender.getServer().getPlayerExact(args[1]);
                 var userdataTarget = getUserdata(target);
                 if (target != null) {
-                    var value = Integer.parseInt(args[0]);
+                    var value = Double.parseDouble(args[0]);
                     userdataTarget.setMovementSpeed(value);
                     consoleCommandSender.sendMessage("You changed " + target.getName() + " walk speed to " + value);
                 } else consoleCommandSender.sendMessage(args[1] + " is currently offline");

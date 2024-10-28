@@ -393,12 +393,23 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     public double getDefaultMovementSpeed() {
         return 0.10000000149011612;
     }
-    public void setMovementSpeed(int amount) {
+    public float getDefaultFlySpeed() {
+        return 0.1F;
+    }
+    public void setMovementSpeed(double amount) {
         var player = getPlayer();
         if (player != null) {
             if (amount > 0) {
                 player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(getDefaultMovementSpeed() * amount);
             } else player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(getDefaultMovementSpeed());
+        }
+    }
+    public void setFlySpeed(float amount) {
+        var player = getPlayer();
+        if (player != null) {
+            if (amount > 0) {
+                player.setFlySpeed(getDefaultFlySpeed() * amount);
+            } else player.setFlySpeed(getDefaultFlySpeed());
         }
     }
 }
