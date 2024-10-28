@@ -41,7 +41,7 @@ public class UpdateChecker {
                         getLatest((latest) -> {
                             if (!getVersion().equals(latest)) {
                                 getMessage().send(player, getName() + "&6 has new update:");
-                                getMessage().send(player, "-&a https://www.spigotmc.org/resources/0/");
+                                getMessage().send(player, "-&a https://www.spigotmc.org/resources/120466/");
                             }
                         });
                     }
@@ -57,7 +57,7 @@ public class UpdateChecker {
                     getLatest((latest) -> {
                         if (!getVersion().equals(latest)) {
                             getInstance().sendInfo(getName() + " has new update:");
-                            getInstance().sendInfo("- https://www.spigotmc.org/resources/0/");
+                            getInstance().sendInfo("- https://www.spigotmc.org/resources/120466/");
                         }
                     });
                 }
@@ -65,7 +65,7 @@ public class UpdateChecker {
         }
     }
     public void getLatest(Consumer<String> consumer) {
-        try (var inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 0).openStream()) {
+        try (var inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 120466).openStream()) {
             var scanner = new Scanner(inputStream);
             if (scanner.hasNext()) {
                 consumer.accept(scanner.next());
