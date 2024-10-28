@@ -13,8 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.PluginManager;
 
-import java.text.SimpleDateFormat;
-
 public class PlayerLogin implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
@@ -48,14 +46,16 @@ public class PlayerLogin implements Listener {
                         if (userdata.exists()) {
                             if (userdata.isBanned()) {
                                 if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + SimpleDateFormat.getInstance().format(userdata.getBanExpire())));
+                                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + getInstance().getDateHandler().getFormatted(userdata.getBanExpire())));
                                 } else allow(event, player);
                             } else allow(event, player);
                         } else allow(event, player);
                     } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
                 } else if (userdata.exists()) {
                     if (userdata.isBanned()) {
-                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason()));
+                        if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
+                            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + getInstance().getDateHandler().getFormatted(userdata.getBanExpire())));
+                        } else allow(event, player);
                     } else allow(event, player);
                 } else allow(event, player);
             } else event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, getConfig().getString("connection.login.whitelisted"));
@@ -65,14 +65,16 @@ public class PlayerLogin implements Listener {
                     if (userdata.exists()) {
                         if (userdata.isBanned()) {
                             if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + SimpleDateFormat.getInstance().format(userdata.getBanExpire())));
+                                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + getInstance().getDateHandler().getFormatted(userdata.getBanExpire())));
                             } else allow(event, player);
                         } else allow(event, player);
                     } else allow(event, player);
                 } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
             } else if (userdata.exists()) {
                 if (userdata.isBanned()) {
-                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason()));
+                    if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
+                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor("Reason: " + userdata.getBanReason() + ", expires: " + getInstance().getDateHandler().getFormatted(userdata.getBanExpire())));
+                    } else allow(event, player);
                 } else allow(event, player);
             } else allow(event, player);
         }

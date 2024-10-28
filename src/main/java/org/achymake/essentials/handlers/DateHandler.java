@@ -1,5 +1,6 @@
 package org.achymake.essentials.handlers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateHandler {
@@ -36,5 +37,8 @@ public class DateHandler {
     }
     public boolean expired(long date) {
         return getDate().getTime() == getDate(date).getTime() || getDate().after(getDate(date));
+    }
+    public String getFormatted(long date) {
+        return new SimpleDateFormat("MM-dd-yyyy").format(getDate(date));
     }
 }

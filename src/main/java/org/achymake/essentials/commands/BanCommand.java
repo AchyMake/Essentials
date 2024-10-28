@@ -40,12 +40,14 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (target == player) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addDays(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else if (target.hasPermission("essentials.command.ban.exempt")) {
                                 getMessage().send(player, "&cYou are not allowed to ban&f " + target.getName());
                             } else if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addDays(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else getMessage().send(player, target.getName() + "&c is already banned");
@@ -53,6 +55,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addDays(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + offlinePlayer.getName() + "&6 for&f " + value + " " + date);
                             } else getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
                         }
@@ -60,12 +63,14 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (target == player) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addMonths(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else if (target.hasPermission("essentials.command.ban.exempt")) {
                                 getMessage().send(player, "&cYou are not allowed to ban&f " + target.getName());
                             } else if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addMonths(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else getMessage().send(player, target.getName() + "&c is already banned");
@@ -73,6 +78,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addMonths(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + offlinePlayer.getName() + "&6 for&f " + value + " " + date);
                             } else getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
                         }
@@ -80,12 +86,14 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (target == player) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addYears(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else if (target.hasPermission("essentials.command.ban.exempt")) {
                                 getMessage().send(player, "&cYou are not allowed to ban&f " + target.getName());
                             } else if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addYears(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + target.getName() + "&6 for&f " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else getMessage().send(player, target.getName() + "&c is already banned");
@@ -93,6 +101,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addYears(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 getMessage().send(player, "&6You banned&f " + offlinePlayer.getName() + "&6 for&f " + value + " " + date);
                             } else getMessage().send(player, offlinePlayer.getName() + "&c is already banned");
                         }
@@ -110,6 +119,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addDays(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + target.getName() + " for " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else commandSender.sendMessage(target.getName() + " is already banned");
@@ -117,6 +127,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addDays(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + offlinePlayer.getName() + " for " + value + " " + date);
                             } else commandSender.sendMessage(offlinePlayer.getName() + " is already banned");
                         }
@@ -124,6 +135,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addMonths(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + target.getName() + " for " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else commandSender.sendMessage(target.getName() + " is already banned");
@@ -131,6 +143,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addMonths(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + offlinePlayer.getName() + " for " + value + " " + date);
                             } else commandSender.sendMessage(offlinePlayer.getName() + " is already banned");
                         }
@@ -138,6 +151,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             if (!getUserdata(target).isBanned()) {
                                 getUserdata(target).setLong("settings.ban-expire", new DateHandler().addYears(value));
+                                getUserdata(target).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + target.getName() + " for " + value + " " + date);
                                 target.kickPlayer(getUserdata(target).getConfig().getString("settings.ban-reason"));
                             } else commandSender.sendMessage(target.getName() + " is already banned");
@@ -145,6 +159,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                             if (!getUserdata(offlinePlayer).isBanned()) {
                                 getUserdata(offlinePlayer).setLong("settings.ban-expire", new DateHandler().addYears(value));
+                                getUserdata(offlinePlayer).setBoolean("settings.banned", true);
                                 commandSender.sendMessage("You banned " + offlinePlayer.getName() + " for " + value + " " + date);
                             } else commandSender.sendMessage(offlinePlayer.getName() + " is already banned");
                         }

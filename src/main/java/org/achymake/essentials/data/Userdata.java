@@ -134,7 +134,10 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
         return getConfig().getBoolean("settings.banned");
     }
     public String getBanReason() {
-        return getConfig().getString("settings.ban-reason");
+        var reason = getConfig().getString("settings.ban-reason");
+        if (reason == null || reason.isEmpty()) {
+            return "None";
+        } else return getConfig().getString("settings.ban-reason");
     }
     public long getBanExpire() {
         return getConfig().getLong("settings.ban-expire");
