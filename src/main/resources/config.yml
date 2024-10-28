@@ -59,8 +59,8 @@ deaths:
   send-location: true
   drop-economy:
     enable: false
-    min-amount: 1.0
-    max-amount: 5.0
+    min: 1.0
+    max: 5.0
   drop-player-head:
     # enable drop player heads
     enable: false
