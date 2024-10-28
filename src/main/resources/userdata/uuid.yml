@@ -1,0 +1,26 @@
+name: name
+display-name: name
+account: 0.0
+bank:
+  account: 0.0
+  members: {not yet coded}
+settings:
+  auto-pick: false
+  banned: false
+  ban-reason: ''
+  ban-expire: 0
+  frozen: false
+  jailed: false
+  muted: false
+  pvp: true
+  vanished: false
+homes: {}
+locations: {}
+tasks: {}
+last-whisper: uuid
+tpa:
+  sent: uuid
+  from: uuid
+tpahere:
+  sent: uuid
+  from: uuid

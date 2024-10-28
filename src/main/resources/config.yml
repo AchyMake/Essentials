@@ -1,0 +1,158 @@
+notify-update: true
+vanish-chat-color: "&c"
+economy:
+  enable: true
+  currency: "€"
+  format: "#,##0"
+  starter-balance: 0.0
+  minimum-payment: 1.00
+  bank:
+    starting-balance: 0.0
+    minimum-withdraw: 1.00
+    minimum-deposit: 1.00
+homes:
+  # if player has permission: 'essentials.command.sethome.multiple.default'
+  default: 3
+  vip: 6
+  staff: 12
+commands:
+  rtp:
+    world: world
+    spread: 1250
+  cooldown:
+    feed: 120
+    heal: 120
+    repair: 3600
+    rtp: 3600
+  disable:
+    - plugins
+    - icanhasbukkit
+    - version
+    - about
+    - me
+    - stop
+    - reload
+connection:
+  login:
+    full: "Server is currently full please try again later."
+    whitelisted: "Server is currently under maintenance."
+  join:
+    # if false permission: 'essentials.event.join.message'
+    enable: true
+    message: "%player%&e has joined the server [&a+&e]"
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75
+      pitch: 1.0
+  quit:
+    # if false permission: 'essentials.event.quit.message'
+    enable: true
+    message: "%player%&e has left the server [&c-&e]"
+    sound:
+      enable: true
+      type: ENTITY_FOX_AMBIENT
+      volume: 0.75
+      pitch: 1.0
+deaths:
+  # if false permission: 'essentials.event.death.location'
+  send-location: true
+  drop-economy:
+    enable: false
+    min-amount: 1.0
+    max-amount: 5.0
+  drop-player-head:
+    # enable drop player heads
+    enable: false
+    # chance of the drop
+    chance: 30
+teleport:
+  delay: 3
+  cancel-on-move: true
+  cancel-on-damage: true
+crops:
+  disable-tramping-farmland: true
+eggs:
+  disable-tramping-turtle-egg: true
+  disable-tramping-sniffer-egg: true
+fire:
+  disable-fire-spread: true
+  disable-lava-fire-spread: true
+physics:
+  disable-redstone: false
+server:
+  motd:
+    enable: false
+    line-1: "Minecraft Server"
+    line-2: ""
+message-of-the-day:
+  welcome:
+    - "&6Welcome&f %player%&6 to the server!"
+  welcome-back:
+    - "&6Welcome back&f %player%&6!"
+    - "&6We missed you!"
+  store:
+    - "&6Store:"
+    -  "- https://store.your-server.org"
+  rules:
+    - "&6Rules:"
+    - "&61.&f No server crashing"
+    - "&62.&f No griefing"
+    - "&63.&f No Monkieng around! uhh?"
+  help:
+    - "&6Help:"
+    - "- https://store.your-server.org/help"
+levels:
+  level-up:
+    particle:
+      enable: true
+      type: TOTEM
+      offsetX: 0.3
+      offsetY: 0.7
+      offsetZ: 0.3
+      count: 25
+    sound:
+      enable: true
+      type: ENTITY_VEX_AMBIENT
+      volume: 2.5
+      pitch: 1.0
+  level-down:
+    particle:
+      enable: true
+      type: SOUL
+      offsetX: 0.3
+      offsetY: 0.7
+      offsetZ: 0.3
+      count: 25
+    sound:
+      enable: true
+      type: ENTITY_VEX_AMBIENT
+      volume: 2.5
+      pitch: 1.0
+notification:
+  # Permissions
+  # essentials.event.block-break.notify
+  # essentials.event.bucket-empty.notify
+  # essentials.event.block-place.notify
+  #
+  # Placeholders
+  # Player %player%, Material %material%
+  # World %world%, X %x%, Y %y%, Z %z%
+  enable: false
+  block-break:
+    - DIAMOND_ORE
+    - DEEPSLATE_DIAMOND_ORE
+    - EMERALD_ORE
+    - DEEPSLATE_EMERALD_ORE
+    - ANCIENT_DEBRIS
+  bucket-empty:
+    - LAVA_BUCKET
+  block-place:
+    - TNT
+  message:
+    - "&7---------------"
+    - "&cDetected: &f%player%"
+    - "&cMaterial: &f%material%"
+    - "&cLocation:"
+    - "&cWorld:&f %world% &cX: &f%x% &cY: &f%y% &cZ: &f%z%"
+    - "&7---------------"

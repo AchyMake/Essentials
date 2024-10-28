@@ -1,0 +1,22 @@
+name: Essentials
+version: '${project.version}'
+main: org.achymake.essentials.Essentials
+api-version: '1.21'
+prefix: '${project.name}'
+load: STARTUP
+depend:
+  - Vault
+  - PlaceholderAPI
+author: AchyMake
+description: '${project.description}'
+website: '${project.url}'
+commands:
+  announcement:
+    description: announce server
+    permission: essentials.command.announcement
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+permissions:
+  essentials.command.announcement:
+    description: announce server
+    default: op
