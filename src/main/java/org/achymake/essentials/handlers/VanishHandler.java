@@ -71,10 +71,8 @@ public class VanishHandler {
             player.setCanPickupItems(true);
             getInstance().getServer().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
             getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
-            if (userdata.hasTaskID("vanish")) {
-                userdata.disableTask("vanish");
-            }
             userdata.setBoolean("settings.vanished", false);
+            userdata.disableTask("vanish");
             getVanished().remove(player);
             getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
         }
@@ -88,9 +86,7 @@ public class VanishHandler {
                 addVanishTask(player);
             }
         }, 50).getTaskId();
-        if (!userdata.hasTaskID("vanish")) {
-            userdata.addTaskID("vanish", id);
-        }
+        userdata.addTaskID("vanish", id);
     }
     public void disable() {
         if (!getVanished().isEmpty()) {

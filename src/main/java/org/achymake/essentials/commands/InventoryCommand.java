@@ -37,7 +37,7 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     if (target != player) {
                         if (!target.hasPermission("essentials.command.inventory.exempt")) {
-                            player.openInventory(target.getInventory());
+                            player.openInventory(target.getInventory()).setTitle(target.getName() + "'s Inventory");
                             getMessage().send(player, "&6Opened inventory of " + target.getName());
                         } else getMessage().send(player, command.getPermissionMessage());
                         return true;

@@ -40,11 +40,11 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            player.openInventory(target.getEnderChest());
+                            player.openInventory(target.getEnderChest()).setTitle(target.getName() + "'s Ender Chest");
                             getMessage().send(player, "&6Opened enderchest of&f " + player.getName());
                             return true;
                         } else if (!target.hasPermission("essentials.command.enderchest.exempt")) {
-                            player.openInventory(target.getEnderChest());
+                            player.openInventory(target.getEnderChest()).setTitle(target.getName() + "'s Ender Chest");
                             getMessage().send(player, "&6Opened enderchest of&f " + target.getName());
                         } else getMessage().send(player, command.getPermissionMessage());
                         return true;
