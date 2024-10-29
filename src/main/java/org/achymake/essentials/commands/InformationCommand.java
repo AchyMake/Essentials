@@ -48,6 +48,9 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                         getMessage().send(player, "&6account:&f " + getEconomy().currency() + getEconomy().format(userdata.getAccount()));
                         getMessage().send(player, "&6bank:&f " + getEconomy().currency() + getEconomy().format(userdata.getBankAccount()));
                         getMessage().send(player, "&6homes:&f " + userdata.getHomes().size());
+                        if (!userdata.getHomes().isEmpty()) {
+                            userdata.getHomes().forEach(home -> getMessage().send(player, "- " + home));
+                        }
                         getMessage().send(player, "&6muted:&f " + userdata.isMuted());
                         getMessage().send(player, "&6frozen:&f " + userdata.isFrozen());
                         getMessage().send(player, "&6jailed:&f " + userdata.isJailed());
