@@ -190,6 +190,7 @@ public final class Essentials extends JavaPlugin {
             new PlayerShearBlock();
         }
         new PlayerShearEntity();
+        new PlayerSpawnLocation();
         new PlayerTeleport();
         new PlayerToggleFlight();
         new PlayerToggleSneak();
@@ -219,7 +220,6 @@ public final class Essentials extends JavaPlugin {
         }
         getJail().reload();
         getKits().reload();
-        getMessage();
         getSkulls().reload();
         getSpawn().reload();
         getWarps().reload();
