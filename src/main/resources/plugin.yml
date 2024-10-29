@@ -713,3 +713,57 @@ permissions:
   essentials.command.worth:
     description: worth
     default: op
+  essentials.event.chat.color:
+    description: chat color
+    default: op
+  essentials.event.block_break.notify:
+    description: notify block break
+    default: op
+  essentials.event.block_place.notify:
+    description: notify block place
+    default: op
+  essentials.event.bucket_empty.notify:
+    description: notify bucket empty
+    default: op
+  essentials.event.command.exempt:
+    description: allows to use disabled commands
+    default: op
+  essentials.event.death.keep_inventory:
+    description: keeps inventory on death
+    default: op
+  essentials.event.death.keep_exp:
+    description: keeps exp on death
+    default: op
+  essentials.event.gamemode_change.notify:
+    description: notify game mode changes
+    default: op
+  essentials.event.join.message:
+    description: sends join message
+    default: op
+  essentials.event.join.notify:
+    description: notifies join event
+    default: op
+  essentials.event.level_change:
+    description: allows to use particles and sound on level change
+    default: op
+  essentials.event.login.full_sever:
+    description: allows to join on full server
+    default: op
+  essentials.event.quit.message:
+    description: sends quit message
+    default: op
+  essentials.event.quit.notify:
+    description: notifies quit event
+    default: op
+  essentials.event.death.location:
+    description: sends death location after respawn
+    default: op
+  essentials.event.anvil.color:
+    description: allows to use color code on anvil
+    default: op
+  essentials.event.anvil.unsafe:
+    description: allows to unsafely use enchantments on anvil
+    default: op
+  essentials.event.sign.color:
+    description: uses color codes for sign
+    default: op

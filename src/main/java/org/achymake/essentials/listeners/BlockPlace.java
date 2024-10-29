@@ -35,8 +35,7 @@ public class BlockPlace implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (userdata.isDisabled()) {
+        if (getUserdata(player).isDisabled()) {
             event.setCancelled(true);
         } else notifyBlockPlace(player, event.getBlockPlaced());
     }

@@ -4,13 +4,14 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.PluginManager;
 
-public class SignChange implements Listener {
+public class EntityDamage implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
@@ -23,19 +24,16 @@ public class SignChange implements Listener {
     private PluginManager getManager() {
         return getInstance().getManager();
     }
-    public SignChange() {
+    public EntityDamage() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onSignChange(SignChangeEvent event) {
-        var player = event.getPlayer();
-        if (getUserdata(player).isDisabled()) {
-            event.setCancelled(true);
-        } else if (player.hasPermission("essentials.event.sign.color")) {
-            for (int i = 0; i < event.getLines().length; i++) {
-                if (!event.getLine(i).contains("&"))return;
-                event.setLine(i, getMessage().addColor(event.getLine(i)));
-            }
-        }
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player))return;
+        var userdata = getUserdata(player);
+        if (!getInstance().getConfig().getBoolean("teleport.cancel-on-damage"))return;
+        if (!userdata.hasTaskID("teleport"))return;
+        getMessage().sendActionBar(player, "&cYou got damaged before teleporting!");
+        userdata.disableTask("teleport");
     }
 }

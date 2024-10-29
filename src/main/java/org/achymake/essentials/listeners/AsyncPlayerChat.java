@@ -52,10 +52,7 @@ public class AsyncPlayerChat implements Listener {
                 }
             });
         } else if (!userdata.isMuted()) {
-            var prefix = prefix(player);
-            var suffix = suffix(player);
-            var displayName = userdata.getDisplayName();
-            var format = getMessage().addColor(prefix + displayName + suffix + "&f: ");
+            var format = getMessage().addColor(prefix(player) + userdata.getDisplayName() + suffix(player) + "&f: ");
             if (player.hasPermission("essentials.event.chat.color")) {
                 event.setFormat(format + getMessage().addColor(message));
             } else event.setFormat(format + message);

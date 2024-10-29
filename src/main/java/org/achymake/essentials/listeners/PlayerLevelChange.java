@@ -27,6 +27,7 @@ public class PlayerLevelChange implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLevelChange(PlayerLevelChangeEvent event) {
         var player = event.getPlayer();
+        if (!player.hasPermission("essentials.event.level_change"))return;
         var level = player.getLevel();
         var oldLevel = event.getOldLevel();
         if (level > oldLevel) {

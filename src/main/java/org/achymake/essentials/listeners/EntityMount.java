@@ -26,12 +26,9 @@ public class EntityMount implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMount(EntityMountEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player player) {
-            var mount = event.getMount();
-            if (mount instanceof ArmorStand)return;
-            var userdata = getUserdata(player);
-            if (!userdata.isDisabled())return;
+        if (event.getEntity() instanceof Player player) {
+            if (event.getMount() instanceof ArmorStand)return;
+            if (!getUserdata(player).isDisabled())return;
             event.setCancelled(true);
         }
     }

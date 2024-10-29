@@ -49,9 +49,9 @@ public class PlayerInteract implements Listener {
         if (material.equals(Material.FARMLAND)) {
             return getConfig().getBoolean("crops.disable-tramping-farmland");
         } else if (material.equals(Material.TURTLE_EGG)) {
-            return getConfig().getBoolean("crops.disable-tramping-turtle-egg");
+            return getConfig().getBoolean("eggs.disable-tramping-turtle-egg");
         } else if (material.equals(Material.SNIFFER_EGG)) {
-            return getConfig().getBoolean("crops.disable-tramping-sniffer-egg");
+            return getConfig().getBoolean("eggs.disable-tramping-sniffer-egg");
         } else return false;
     }
 }

@@ -43,8 +43,7 @@ public class PlayerDeath implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = event.getEntity();
-        var userdata = getUserdata(player);
-        userdata.setLocation(player.getLocation(), "death");
+        getUserdata(player).setLocation(player.getLocation(), "death");
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
             if (getConfig().getInt("deaths.drop-player-head.chance") > new Random().nextInt(100)) {
                 event.getDrops().add(getMaterials().getPlayerHead(player, 1));
@@ -60,11 +59,11 @@ public class PlayerDeath implements Listener {
                 getMessage().send(player, "&cYou lost&a " + getEconomy().currency() + getEconomy().format(lost) + "&c you" + message);
             }
         }
-        if (player.hasPermission("essentials.event.death.keep-inventory")) {
+        if (player.hasPermission("essentials.event.death.keep_inventory")) {
             event.setKeepInventory(true);
             event.getDrops().clear();
         }
-        if (player.hasPermission("essentials.event.death.keep-level")) {
+        if (player.hasPermission("essentials.event.death.keep_exp")) {
             event.setKeepLevel(true);
             event.setDroppedExp(0);
         }

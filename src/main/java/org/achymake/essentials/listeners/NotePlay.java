@@ -1,30 +1,29 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.block.NotePlayEvent;
 import org.bukkit.plugin.PluginManager;
 
-public class PlayerShearEntity implements Listener {
+public class NotePlay implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private FileConfiguration getConfig() {
+        return getInstance().getConfig();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
     }
-    public PlayerShearEntity() {
+    public NotePlay() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onPlayerShearEntity(PlayerShearEntityEvent event) {
-        if (!getUserdata(event.getPlayer()).isDisabled())return;
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onEntityExplode(NotePlayEvent event) {
+        if (!getConfig().getBoolean("physics.disable-redstone"))return;
         event.setCancelled(true);
     }
 }

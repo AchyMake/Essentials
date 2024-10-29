@@ -21,7 +21,7 @@ public class PrepareAnvil implements Listener {
     public PrepareAnvil() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         var result = event.getResult();
         if (result == null)return;

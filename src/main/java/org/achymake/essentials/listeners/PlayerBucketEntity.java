@@ -24,9 +24,7 @@ public class PlayerBucketEntity implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEntity(PlayerBucketEntityEvent event) {
-        var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (!userdata.isDisabled())return;
+        if (!getUserdata(event.getPlayer()).isDisabled())return;
         event.setCancelled(true);
     }
 }

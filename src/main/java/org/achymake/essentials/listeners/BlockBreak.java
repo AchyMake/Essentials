@@ -35,8 +35,7 @@ public class BlockBreak implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (userdata.isDisabled()) {
+        if (getUserdata(player).isDisabled()) {
             event.setCancelled(true);
         } else notifyBlockBreak(player, event.getBlock());
     }

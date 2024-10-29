@@ -75,15 +75,7 @@ public class PlayerQuit implements Listener {
     }
     private void removeTPA(Player player) {
         var userdata = getUserdata(player);
-        if (userdata.getTpaFrom() != null) {
-            var tpaFrom = userdata.getTpaFrom();
-            var userdataTarget = getUserdata(tpaFrom);
-            if (getScheduler().isQueued(userdataTarget.getTaskID("tpa"))) {
-                userdata.disableTask("tpa");
-            }
-            userdataTarget.setString("tpa.sent", null);
-            userdata.setString("tpa.from", null);
-        } else if (userdata.getTpaSent() != null) {
+        if (userdata.getTpaSent() != null) {
             var tpaSent = userdata.getTpaSent();
             var userdataTarget = getUserdata(tpaSent);
             userdataTarget.setString("tpa.from", null);
@@ -91,19 +83,19 @@ public class PlayerQuit implements Listener {
                 userdata.disableTask("tpa");
             }
             userdata.setString("tpa.sent", null);
+        } else if (userdata.getTpaFrom() != null) {
+            var tpaFrom = userdata.getTpaFrom();
+            var userdataTarget = getUserdata(tpaFrom);
+            if (getScheduler().isQueued(userdataTarget.getTaskID("tpa"))) {
+                userdata.disableTask("tpa");
+            }
+            userdataTarget.setString("tpa.sent", null);
+            userdata.setString("tpa.from", null);
         }
     }
     private void removeTPAHere(Player player) {
         var userdata = getUserdata(player);
-        if (userdata.getTpaHereFrom() != null) {
-            var tpaHereFrom = userdata.getTpaHereFrom();
-            var userdataTarget = getUserdata(tpaHereFrom);
-            if (getScheduler().isQueued(userdataTarget.getTaskID("tpahere"))) {
-                userdataTarget.disableTask("tpahere");
-            }
-            userdataTarget.setString("tpahere.sent", null);
-            userdata.setString("tpahere.from", null);
-        } else if (userdata.getTpaHereSent() != null) {
+        if (userdata.getTpaHereSent() != null) {
             var tpaHereSent = userdata.getTpaHereSent();
             var userdataTarget = getUserdata(tpaHereSent);
             userdataTarget.setString("tpahere.from", null);
@@ -111,6 +103,14 @@ public class PlayerQuit implements Listener {
                 userdata.disableTask("tpahere");
             }
             userdata.setString("tpahere.sent", null);
+        } else if (userdata.getTpaHereFrom() != null) {
+            var tpaHereFrom = userdata.getTpaHereFrom();
+            var userdataTarget = getUserdata(tpaHereFrom);
+            if (getScheduler().isQueued(userdataTarget.getTaskID("tpahere"))) {
+                userdataTarget.disableTask("tpahere");
+            }
+            userdataTarget.setString("tpahere.sent", null);
+            userdata.setString("tpahere.from", null);
         }
     }
     private void playSound() {

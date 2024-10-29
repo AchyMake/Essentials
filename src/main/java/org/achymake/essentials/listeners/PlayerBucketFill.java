@@ -24,9 +24,7 @@ public class PlayerBucketFill implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketFill(PlayerBucketFillEvent event) {
-        var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (!userdata.isDisabled())return;
+        if (!getUserdata(event.getPlayer()).isDisabled())return;
         event.setCancelled(true);
     }
 }

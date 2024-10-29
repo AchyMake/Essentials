@@ -36,8 +36,7 @@ public class PlayerBucketEmpty implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (userdata.isDisabled()) {
+        if (getUserdata(player).isDisabled()) {
             event.setCancelled(true);
         } else notifyBucketEmpty(player, event.getBlock(), event.getBucket());
     }
@@ -49,7 +48,7 @@ public class PlayerBucketEmpty implements Listener {
         var y = block.getY();
         var z = block.getZ();
         getInstance().getOnlinePlayers().forEach(players -> {
-            if (!players.hasPermission("essentials.event.bucket-empty.notify"))return;
+            if (!players.hasPermission("essentials.event.bucket_empty.notify"))return;
             getConfig().getStringList("notification.message").forEach(messages -> {
                 var addPlayer = messages.replaceAll("%player%", player.getName());
                 var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(material.toString()));

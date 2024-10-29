@@ -153,14 +153,22 @@ public final class Essentials extends JavaPlugin {
     private void events() {
         new AsyncPlayerChat();
         new BlockBreak();
+        new BlockDispense();
+        new BlockDispenseArmor();
         new BlockFertilize();
         new BlockIgnite();
+        new BlockPistonExtend();
+        new BlockPistonRetract();
         new BlockPlace();
         new BlockReceiveGame();
+        new BlockRedstone();
+        new BlockSpread();
+        new EntityDamage();
         new EntityDamageByEntity();
         new EntityMount();
         new EntityTarget();
         new EntityTargetLivingEntity();
+        new NotePlay();
         new PlayerBucketEmpty();
         new PlayerBucketEntity();
         new PlayerBucketFill();

@@ -26,8 +26,7 @@ public class BlockFertilize implements Listener {
     public void onBlockFertilize(BlockFertilizeEvent event) {
         var player = event.getPlayer();
         if (player == null)return;
-        var userdata = getUserdata(player);
-        if (!userdata.isDisabled())return;
+        if (!getUserdata(player).isDisabled())return;
         event.setCancelled(true);
     }
 }

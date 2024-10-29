@@ -27,10 +27,8 @@ public class EntityTargetLivingEntity implements Listener {
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null)return;
         if (event.getEntity() instanceof Player)return;
-        var target = event.getTarget();
-        if (target instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (!userdata.isVanished())return;
+        if (event.getTarget() instanceof Player player) {
+            if (!getUserdata(player).isVanished())return;
             event.setCancelled(true);
         }
     }

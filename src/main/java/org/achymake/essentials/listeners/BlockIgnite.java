@@ -31,8 +31,7 @@ public class BlockIgnite implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockIgnite(BlockIgniteEvent event) {
         if (event.getIgnitingEntity() instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (!userdata.isDisabled())return;
+            if (!getUserdata(player).isDisabled())return;
             event.setCancelled(true);
         } else if (event.getIgnitingBlock() != null) {
             var block = event.getIgnitingBlock();

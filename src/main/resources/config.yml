@@ -103,6 +103,8 @@ message-of-the-day:
     - "&6Help:"
     - "- https://store.your-server.org/help"
 levels:
+  # if player has the permission 'essentials.event.level_change'
+  # the player will receive particle and sound effects
   level-up:
     particle:
       enable: true
