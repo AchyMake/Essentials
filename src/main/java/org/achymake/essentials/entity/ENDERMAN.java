@@ -19,7 +19,7 @@ public class ENDERMAN {
         config.set("disable-spawn", false);
         config.set("disable-block-form", false);
         config.set("disable-block-damage", false);
-        config.set("disable-block-change", false);
+        config.set("disable-block-change", true);
         config.set("disable-block-interact.FARMLAND", true);
         config.set("disable-block-interact.TURTLE_EGG", true);
         config.set("disable-block-interact.SNIFFER_EGG", true);

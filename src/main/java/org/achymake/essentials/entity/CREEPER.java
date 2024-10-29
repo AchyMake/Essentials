@@ -18,7 +18,7 @@ public class CREEPER {
         config.set("chunk-limit", -1);
         config.set("disable-spawn", false);
         config.set("disable-block-form", false);
-        config.set("disable-block-damage", false);
+        config.set("disable-block-damage", true);
         config.set("disable-block-change", false);
         config.set("disable-block-interact.FARMLAND", true);
         config.set("disable-block-interact.TURTLE_EGG", true);

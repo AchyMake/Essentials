@@ -7,29 +7,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class ENDER_DRAGON {
+public class TEXT_DISPLAY {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
     private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     private void setup() {
-        config.set("hostile", true);
+        config.set("hostile", false);
         config.set("chunk-limit", -1);
         config.set("disable-spawn", false);
         config.set("disable-block-form", false);
-        config.set("disable-block-damage", true);
+        config.set("disable-block-damage", false);
         config.set("disable-block-change", false);
-        config.set("disable-block-interact.FARMLAND", true);
-        config.set("disable-block-interact.TURTLE_EGG", true);
-        config.set("disable-block-interact.SNIFFER_EGG", true);
+        config.set("disable-block-interact.FARMLAND", false);
         config.set("disable-target.VILLAGER", false);
-        config.set("disable-damage.ITEM", true);
-        config.set("disable-damage.ITEM_FRAME", true);
-        config.set("disable-damage.GLOW_ITEM_FRAME", true);
-        config.set("disable-damage.PAINTING", true);
-        config.set("disable-damage.LEASH_KNOT", true);
-        config.set("disable-damage.ARMOR_STAND", true);
         config.set("disabled-spawn-reason.BEEHIVE", false);
         config.set("disabled-spawn-reason.BREEDING", false);
         config.set("disabled-spawn-reason.BUILD_IRONGOLEM", false);

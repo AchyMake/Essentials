@@ -196,7 +196,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     commands.add("the_end");
                 }
                 if (args[0].equalsIgnoreCase("pvp")) {
-                    commands.add(String.valueOf(getWorlds().get(args[2]).getPVP()));
+                    commands.add(String.valueOf(getWorlds().get(args[1]).getPVP()));
                 }
                 if (args[0].equalsIgnoreCase("gamerule")) {
                     Collections.addAll(commands, player.getServer().getWorld(args[1]).getGameRules());
