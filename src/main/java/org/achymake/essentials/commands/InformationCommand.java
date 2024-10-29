@@ -39,30 +39,34 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else {
                 if (args.length == 1) {
-                    OfflinePlayer offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                    var userdata = getUserdata(offlinePlayer);
-                    if (userdata.exists()) {
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+                    var offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                    var userdataOffline = getUserdata(offlinePlayer);
+                    if (userdataOffline.exists()) {
+                        var simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                         getMessage().send(player, "&m&7----------------------");
-                        getMessage().send(player, "&6name:&f " + userdata.getName());
-                        getMessage().send(player, "&6account:&f " + getEconomy().currency() + getEconomy().format(userdata.getAccount()));
-                        getMessage().send(player, "&6bank:&f " + getEconomy().currency() + getEconomy().format(userdata.getBankAccount()));
-                        getMessage().send(player, "&6homes:&f " + userdata.getHomes().size());
-                        if (!userdata.getHomes().isEmpty()) {
-                            userdata.getHomes().forEach(home -> getMessage().send(player, "- " + home));
+                        getMessage().send(player, "&6name:&f " + userdataOffline.getName());
+                        getMessage().send(player, "&6account:&f " + getEconomy().currency() + getEconomy().format(userdataOffline.getAccount()));
+                        getMessage().send(player, "&6bank:&f " + getEconomy().currency() + getEconomy().format(userdataOffline.getBankAccount()));
+                        getMessage().send(player, "&6homes:&f " + userdataOffline.getHomes().size());
+                        if (!userdataOffline.getHomes().isEmpty()) {
+                            userdataOffline.getHomes().forEach(home -> getMessage().send(player, "- " + home));
                         }
-                        getMessage().send(player, "&6muted:&f " + userdata.isMuted());
-                        getMessage().send(player, "&6frozen:&f " + userdata.isFrozen());
-                        getMessage().send(player, "&6jailed:&f " + userdata.isJailed());
-                        getMessage().send(player, "&6pvp:&f " + userdata.isPVP());
-                        getMessage().send(player, "&6banned:&f " + userdata.isBanned());
-                        getMessage().send(player, "&6ban-reason:&f " + userdata.getBanReason());
-                        getMessage().send(player, "&6ban-expire:&f " + simpleDateFormat.format(userdata.getBanExpire()));
-                        getMessage().send(player, "&6vanished:&f " + userdata.isVanished());
+                        getMessage().send(player, "&6muted:&f " + userdataOffline.isMuted());
+                        getMessage().send(player, "&6frozen:&f " + userdataOffline.isFrozen());
+                        getMessage().send(player, "&6jailed:&f " + userdataOffline.isJailed());
+                        getMessage().send(player, "&6pvp:&f " + userdataOffline.isPVP());
+                        getMessage().send(player, "&6banned:&f " + userdataOffline.isBanned());
+                        getMessage().send(player, "&6ban-reason:&f " + userdataOffline.getBanReason());
+                        getMessage().send(player, "&6ban-expire:&f " + simpleDateFormat.format(userdataOffline.getBanExpire()));
+                        getMessage().send(player, "&6vanished:&f " + userdataOffline.isVanished());
                         getMessage().send(player, "&6last online:&f " + simpleDateFormat.format(offlinePlayer.getLastPlayed()));
-                        getMessage().send(player, "&6uuid:&f " + userdata.getUUID());
+                        var quit = userdataOffline.getLocation("quit");
+                        if (quit != null) {
+                            getMessage().send(player, "&6quit location:&f " + quit.getWorld().getName() + ", &6X:&f" + quit.getBlockX() + ", &6Y:&f" + quit.getBlockY() + ", &6Z:&f" + quit.getBlockZ());
+                        }
+                        getMessage().send(player, "&6uuid:&f " + userdataOffline.getUUID());
                         getMessage().send(player, "&m&7----------------------");
-                    } else getMessage().send(player, userdata.getName() + "&c has never joined");
+                    } else getMessage().send(player, userdataOffline.getName() + "&c has never joined");
                     return true;
                 }
             }
