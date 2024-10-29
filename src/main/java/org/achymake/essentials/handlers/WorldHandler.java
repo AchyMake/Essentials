@@ -1,6 +1,7 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
+import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -91,6 +92,11 @@ public record WorldHandler(World getWorld) {
     }
     public World.Environment getEnvironment() {
         return getWorld().getEnvironment();
+    }
+    public Chunk getChunk(long chunkKey) {
+        var x = (int) chunkKey;
+        var z = (int) (chunkKey >> 32);
+        return getWorld().getChunkAt(x, z);
     }
     public void remove() {
         var file = getFile();
