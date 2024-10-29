@@ -38,12 +38,10 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             teleportBack(player);
-                        } else if (target.hasPermission("essentials.command.back.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                        } else if (!target.hasPermission("essentials.command.back.exempt")) {
                             teleportBack(target);
                             getMessage().send(player, target.getName() + "&6 has been teleported back");
-                        }
+                        } else getMessage().send(player, command.getPermissionMessage());
                         return true;
                     }
                 }

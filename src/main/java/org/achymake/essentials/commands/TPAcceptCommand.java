@@ -44,9 +44,10 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                         var userdataTarget = getUserdata(target);
                         var taskID = userdata.getTaskID("tpa");
                         if (getScheduler().isQueued(taskID)) {
-                            target.teleport(player);
-                            getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
                             getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
+                            getMessage().send(target, player.getName() + "&6 accepted tpa request");
+                            getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                            target.teleport(player);
                             userdataTarget.setString("tpa.sent", null);
                             userdata.setString("tpa.from", null);
                             userdataTarget.disableTask("tpa");
@@ -59,8 +60,8 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                         var taskID = userdataTarget.getTaskID("tpahere");
                         if (getScheduler().isQueued(taskID)) {
                             getMessage().send(target, player.getName() + "&6 accepted tpahere request");
-                            getMessage().sendActionBar(player, "&6Teleporting to&f " + player.getName());
                             getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpahere request");
+                            getMessage().sendActionBar(player, "&6Teleporting to&f " + player.getName());
                             player.teleport(target);
                             userdataTarget.setString("tpahere.sent", null);
                             userdata.setString("tpahere.from", null);

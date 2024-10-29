@@ -34,20 +34,18 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.anvil.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openAnvil(player);
-                            getMessage().send(target, player.getName() + "&6 opened anvil for you");
-                            getMessage().send(player, "&6You opened anvil for&f " + target.getName());
-                            return true;
-                        } else if (target.hasPermission("essentials.command.anvil.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
                             openAnvil(target);
                             getMessage().send(target, player.getName() + "&6 opened anvil for you");
                             getMessage().send(player, "&6You opened anvil for&f " + target.getName());
-                        }
+                            return true;
+                        } else if (!target.hasPermission("essentials.command.anvil.exempt")) {
+                            openAnvil(target);
+                            getMessage().send(target, player.getName() + "&6 opened anvil for you");
+                            getMessage().send(player, "&6You opened anvil for&f " + target.getName());
+                        } else getMessage().send(player, command.getPermissionMessage());
                         return true;
                     }
                 }

@@ -146,4 +146,10 @@ public class EconomyHandler {
     public double getMinimumPayment() {
         return getInstance().getConfig().getDouble("economy.minimum-payment");
     }
+    public double getMinimumBankWithdraw() {
+        return getInstance().getConfig().getDouble("economy.bank.minimum-withdraw");
+    }
+    public double getMinimumBankDeposit() {
+        return getInstance().getConfig().getDouble("economy.bank.minimum-withdraw");
+    }
 }

@@ -52,7 +52,26 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 2) {
-                
+                var amount = Double.parseDouble(args[1]);
+                if (args[0].equalsIgnoreCase("withdraw")) {
+                    if (amount >= getEconomy().getMinimumBankWithdraw()) {
+                        if (getEconomy().hasBank(player, amount)) {
+                            getEconomy().removeBank(player, amount);
+                            getEconomy().add(player, amount);
+                            getMessage().send(player, "&6You withdrew&a " + getEconomy().currency() + getEconomy().format(amount) + "&6 from bank");
+                            getMessage().send(player, "&6You now have&a " + getEconomy().currency() + getEconomy().format(getEconomy().getBank(player)));
+                        }
+                    }
+                } else if (args[0].equalsIgnoreCase("deposit")) {
+                    if (amount >= getEconomy().getMinimumBankDeposit()) {
+                        if (getEconomy().has(player, amount)) {
+                            getEconomy().remove(player, amount);
+                            getEconomy().addBank(player, amount);
+                            getMessage().send(player, "&6You deposit&a " + getEconomy().currency() + getEconomy().format(amount) + "&6 to bank");
+                            getMessage().send(player, "&6You now have&a " + getEconomy().currency() + getEconomy().format(getEconomy().getBank(player)));
+                        }
+                    }
+                }
             }
         }
         return false;

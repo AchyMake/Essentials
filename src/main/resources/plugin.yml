@@ -372,24 +372,75 @@ permissions:
     description: announce server
     default: op
   essentials.command.anvil:
-    description: opens anvil by command
+    description: opens anvil
+    default: op
+  essentials.command.anvil.other:
+    description: opens anvil for target
+    default: op
+  essentials.command.anvil.exempt:
+    description: exempts opening anvil by others
     default: op
   essentials.command.back:
-    description: teleport back to recent or death
+    description: teleport back to recent or death location
+    default: op
+  essentials.command.back.death:
+    description: teleport back to death locations
+    default: op
+  essentials.command.back.world.world:
+    description: teleports back to recent
+    default: op
+  essentials.command.back.world.world_nether:
+    description: teleports back to recent
+    default: op
+  essentials.command.back.world.world_the_end:
+    description: teleports back to recent
+    default: op
+  essentials.command.back.other:
+    description: teleport target back to recent or death location
+    default: op
+  essentials.command.back.exempt:
+    description: exempts teleporting back to recent or death location
     default: op
   essentials.command.balance:
+    description: check balance/top
+    default: op
+  essentials.command.balance.top:
     description: check balance/top
     default: op
   essentials.command.ban:
     description: ban target
     default: op
+  essentials.command.ban.exempt:
+    description: ban target
+    default: op
   essentials.command.bank:
+    description: check bank/top or withdraw/deposit
+    default: op
+  essentials.command.bank.top:
+    description: check bank/top or withdraw/deposit
+    default: op
+  essentials.command.bank.withdraw:
+    description: check bank/top or withdraw/deposit
+    default: op
+  essentials.command.bank.deposit:
     description: check bank/top or withdraw/deposit
     default: op
   essentials.command.cartography:
     description: open cartography by command
     default: op
+  essentials.command.cartography.other:
+    description: open cartography by command
+    default: op
+  essentials.command.cartography.exempt:
+    description: open cartography by command
+    default: op
   essentials.command.color:
+    description: check color codes
+    default: op
+  essentials.command.color.other:
+    description: check color codes
+    default: op
+  essentials.command.color.exempt:
     description: check color codes
     default: op
   essentials.command.delhome:
@@ -405,6 +456,12 @@ permissions:
     description: enchant held item
     default: op
   essentials.command.enchanting:
+    description: open enchanting table by command
+    default: op
+  essentials.command.enchanting.other:
+    description: open enchanting table by command
+    default: op
+  essentials.command.enchanting.exempt:
     description: open enchanting table by command
     default: op
   essentials.command.enderchest:
@@ -453,6 +510,18 @@ permissions:
     description: freezes player
     default: op
   essentials.command.gamemode:
+    description: changes gamemode
+    default: op
+  essentials.command.gamemode.adventure:
+    description: changes gamemode
+    default: op
+  essentials.command.gamemode.creative:
+    description: changes gamemode
+    default: op
+  essentials.command.gamemode.survival:
+    description: changes gamemode
+    default: op
+  essentials.command.gamemode.spectator:
     description: changes gamemode
     default: op
   essentials.command.gamemode.other:
@@ -548,6 +617,9 @@ permissions:
   essentials.command.kit.other:
     description: kit command
     default: op
+  essentials.command.kit.exempt:
+    description: kit command
+    default: op
   essentials.command.loom:
     description: open loom by command
     default: op
@@ -558,6 +630,12 @@ permissions:
     description: open loom by command
     default: op
   essentials.command.motd:
+    description: check motd
+    default: op
+  essentials.command.motd.other:
+    description: check motd
+    default: op
+  essentials.command.motd.exempt:
     description: check motd
     default: op
   essentials.command.mute:
@@ -686,10 +764,16 @@ permissions:
   essentials.command.tp:
     description: tp
     default: op
+  essentials.command.tp.exempt:
+    description: tp
+    default: op
   essentials.command.tpdeny:
     description: tpdeny
     default: op
   essentials.command.tphere:
+    description: tphere
+    default: op
+  essentials.command.tphere.exempt:
     description: tphere
     default: op
   essentials.command.unban:
@@ -704,10 +788,25 @@ permissions:
   essentials.command.warp:
     description: warp
     default: op
+  essentials.command.warp.warpName:
+    description: warp
+    default: op
+  essentials.command.warp.other:
+    description: warp
+    default: op
+  essentials.command.warp.exempt:
+    description: warp
+    default: op
   essentials.command.whisper:
     description: whisper
     default: op
   essentials.command.workbench:
+    description: workbench
+    default: op
+  essentials.command.workbench.other:
+    description: workbench
+    default: op
+  essentials.command.workbench.exempt:
     description: workbench
     default: op
   essentials.command.worth:
