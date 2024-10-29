@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,9 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
+    }
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -41,8 +45,8 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                         getMessage().send(player, "&m&7----------------------");
                         getMessage().send(player, "&6name:&f " + userdata.getName());
-                        getMessage().send(player, "&6uuid:&f " + userdata.getUUID());
-                        getMessage().send(player, "&6last online:&f " + simpleDateFormat.format(offlinePlayer.getLastPlayed()));
+                        getMessage().send(player, "&6account:&f " + getEconomy().currency() + getEconomy().format(userdata.getAccount()));
+                        getMessage().send(player, "&6bank:&f " + getEconomy().currency() + getEconomy().format(userdata.getBankAccount()));
                         getMessage().send(player, "&6homes:&f " + userdata.getHomes().size());
                         getMessage().send(player, "&6muted:&f " + userdata.isMuted());
                         getMessage().send(player, "&6frozen:&f " + userdata.isFrozen());
@@ -52,6 +56,8 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                         getMessage().send(player, "&6ban-reason:&f " + userdata.getBanReason());
                         getMessage().send(player, "&6ban-expire:&f " + simpleDateFormat.format(userdata.getBanExpire()));
                         getMessage().send(player, "&6vanished:&f " + userdata.isVanished());
+                        getMessage().send(player, "&6last online:&f " + simpleDateFormat.format(offlinePlayer.getLastPlayed()));
+                        getMessage().send(player, "&6uuid:&f " + userdata.getUUID());
                         getMessage().send(player, "&m&7----------------------");
                     } else getMessage().send(player, userdata.getName() + "&c has never joined");
                     return true;

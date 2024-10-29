@@ -60,8 +60,9 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().add(player, amount);
                             getMessage().send(player, "&6You withdrew&a " + getEconomy().currency() + getEconomy().format(amount) + "&6 from bank");
                             getMessage().send(player, "&6You now have&a " + getEconomy().currency() + getEconomy().format(getEconomy().getBank(player)));
-                        }
-                    }
+                        } else getMessage().send(player, "&cYou don't have&a " + getEconomy().currency() + getEconomy().format(amount) + "&c to withdraw");
+                    } else getMessage().send(player, "&cYou have to withdraw at least&a " + getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw()));
+                    return true;
                 } else if (args[0].equalsIgnoreCase("deposit")) {
                     if (amount >= getEconomy().getMinimumBankDeposit()) {
                         if (getEconomy().has(player, amount)) {
@@ -69,8 +70,9 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().addBank(player, amount);
                             getMessage().send(player, "&6You deposit&a " + getEconomy().currency() + getEconomy().format(amount) + "&6 to bank");
                             getMessage().send(player, "&6You now have&a " + getEconomy().currency() + getEconomy().format(getEconomy().getBank(player)));
-                        }
-                    }
+                        } else getMessage().send(player, "&cYou don't have&a " + getEconomy().currency() + getEconomy().format(amount) + "&c to deposit");
+                    } else getMessage().send(player, "&cYou have to deposit at least&a " + getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment()));
+                    return true;
                 }
             }
         }
