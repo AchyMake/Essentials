@@ -2,7 +2,6 @@ package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.ScheduleHandler;
-import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
@@ -24,8 +23,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     private FileConfiguration getMain() {
         return getInstance().getConfig();
     }
-    private WorldHandler getWorldHandler() {
-        return getInstance().getWorldHandler();
+    private Worlds getWorlds() {
+        return getInstance().getWorlds();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -193,7 +192,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     }
     public Location getHome(String homeName) {
         if (isHome(homeName)) {
-            var world = getWorldHandler().getWorld(getConfig().getString("homes." + homeName + ".world"));
+            var world = getWorlds().get(getConfig().getString("homes." + homeName + ".world"));
             if (world != null) {
                 var x = getConfig().getDouble("homes." + homeName + ".x");
                 var y = getConfig().getDouble("homes." + homeName + ".y");
@@ -282,7 +281,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     }
     public Location getLocation(String locationName) {
         if (isLocation(locationName)) {
-            var world = getWorldHandler().getWorld(getConfig().getString("locations." + locationName + ".world"));
+            var world = getWorlds().get(getConfig().getString("locations." + locationName + ".world"));
             if (world != null) {
                 var x = getConfig().getDouble("locations." + locationName + ".x");
                 var y = getConfig().getDouble("locations." + locationName + ".y");

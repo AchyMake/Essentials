@@ -39,7 +39,6 @@ public class PlaceholderProvider extends PlaceholderExpansion {
         } else {
             var instance = Essentials.getInstance();
             var userdata = instance.getUserdata(player);
-            var eco = instance.getEconomyHandler();
             switch (params) {
                 case "name" -> {
                     return player.getName();
@@ -54,10 +53,10 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
                 }
                 case "account" -> {
-                    return eco.currency() + eco.format(userdata.getAccount());
+                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(userdata.getAccount());
                 }
                 case "bank" -> {
-                    return eco.currency() + eco.format(userdata.getBankAccount());
+                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(userdata.getBankAccount());
                 }
                 case "pvp" -> {
                     return String.valueOf(userdata.isPVP());
@@ -67,6 +66,18 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 }
                 case "homes_left" -> {
                     return String.valueOf(userdata.getMaxHomes() - userdata.getHomes().size());
+                }
+                case "world_name" -> {
+                    return player.getWorld().getName();
+                }
+                case "world_display_name" -> {
+                    return instance.getWorldHandler(player.getWorld()).getDisplayName();
+                }
+                case "world_pvp" -> {
+                    return String.valueOf(player.getWorld().getPVP());
+                }
+                case "world_difficulty" -> {
+                    return instance.getMessage().toTitleCase(player.getWorld().getDifficulty().toString());
                 }
             }
         }

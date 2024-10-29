@@ -133,9 +133,9 @@ levels:
       pitch: 1.0
 notification:
   # Permissions
-  # essentials.event.block-break.notify
-  # essentials.event.bucket-empty.notify
-  # essentials.event.block-place.notify
+  # essentials.event.block_break.notify
+  # essentials.event.bucket_empty.notify
+  # essentials.event.block_place.notify
   #
   # Placeholders
   # Player %player%, Material %material%

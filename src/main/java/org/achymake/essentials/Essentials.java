@@ -6,9 +6,12 @@ import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
+import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
@@ -24,12 +27,14 @@ import java.util.UUID;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
+    private Entities entities;
     private Jail jail;
     private Kits kits;
     private Message message;
     private Skulls skulls;
     private Spawn spawn;
     private Warps warps;
+    private Worlds worlds;
     private Worth worth;
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
@@ -38,19 +43,20 @@ public final class Essentials extends JavaPlugin {
     private MaterialHandler materialHandler;
     private ScheduleHandler scheduleHandler;
     private VanishHandler vanishHandler;
-    private WorldHandler worldHandler;
     private UpdateChecker updateChecker;
     private PluginManager manager;
     private BukkitScheduler bukkitScheduler;
     @Override
     public void onEnable() {
         instance = this;
+        entities = new Entities();
         jail = new Jail();
         kits = new Kits();
         message = new Message();
         skulls = new Skulls();
         spawn = new Spawn();
         warps = new Warps();
+        worlds = new Worlds();
         worth = new Worth();
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
@@ -59,7 +65,6 @@ public final class Essentials extends JavaPlugin {
         materialHandler = new MaterialHandler();
         scheduleHandler = new ScheduleHandler();
         vanishHandler = new VanishHandler();
-        worldHandler = new WorldHandler();
         updateChecker = new UpdateChecker();
         manager = getServer().getPluginManager();
         bukkitScheduler = getServer().getScheduler();
@@ -93,6 +98,7 @@ public final class Essentials extends JavaPlugin {
         new EnchantCommand();
         new EnchantingCommand();
         new EnderChestCommand();
+        new EntityCommand();
         new EssentialsCommand();
         new FeedCommand();
         new FlyCommand();
@@ -148,6 +154,7 @@ public final class Essentials extends JavaPlugin {
         new WarpCommand();
         new WhisperCommand();
         new WorkbenchCommand();
+        new WorldCommand();
         new WorthCommand();
     }
     private void events() {
@@ -163,8 +170,13 @@ public final class Essentials extends JavaPlugin {
         new BlockReceiveGame();
         new BlockRedstone();
         new BlockSpread();
+        new CreatureSpawn();
+        new EntityBlockForm();
+        new EntityChangeBlock();
         new EntityDamage();
         new EntityDamageByEntity();
+        new EntityExplode();
+        new EntityInteract();
         new EntityMount();
         new EntityTarget();
         new EntityTargetLivingEntity();
@@ -195,7 +207,9 @@ public final class Essentials extends JavaPlugin {
         new PlayerToggleFlight();
         new PlayerToggleSneak();
         new PrepareAnvil();
+        new ServerLoad();
         new SignChange();
+        new WorldLoad();
     }
     public void reload() {
         var file = new File(getDataFolder(), "config.yml");
@@ -218,6 +232,7 @@ public final class Essentials extends JavaPlugin {
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
             getServer().setMotd(line1 + "\n" + line2);
         }
+        getEntities().reload();
         getJail().reload();
         getKits().reload();
         getSkulls().reload();
@@ -263,8 +278,8 @@ public final class Essentials extends JavaPlugin {
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
     }
-    public WorldHandler getWorldHandler() {
-        return worldHandler;
+    public WorldHandler getWorldHandler(World getWorld) {
+        return new WorldHandler(getWorld);
     }
     public VanishHandler getVanishHandler() {
         return vanishHandler;
@@ -278,6 +293,9 @@ public final class Essentials extends JavaPlugin {
     public InventoryHandler getInventoryHandler() {
         return inventoryHandler;
     }
+    public EntityHandler getEntityHandler(Entity getEntity) {
+        return new EntityHandler(getEntity);
+    }
     public EconomyHandler getEconomyHandler() {
         return economyHandler;
     }
@@ -287,8 +305,14 @@ public final class Essentials extends JavaPlugin {
     public CooldownHandler getCooldownHandler() {
         return cooldownHandler;
     }
+    public ChunkHandler getChunkHandler(Chunk getChunk) {
+        return new ChunkHandler(getChunk);
+    }
     public Worth getWorth() {
         return worth;
+    }
+    public Worlds getWorlds() {
+        return worlds;
     }
     public Warps getWarps() {
         return warps;
@@ -310,6 +334,9 @@ public final class Essentials extends JavaPlugin {
     }
     public Jail getJail() {
         return jail;
+    }
+    public Entities getEntities() {
+        return entities;
     }
     public static Essentials getInstance() {
         return instance;

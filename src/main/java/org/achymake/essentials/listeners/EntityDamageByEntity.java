@@ -3,6 +3,7 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
@@ -21,6 +22,9 @@ public class EntityDamageByEntity implements Listener {
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
+    }
+    private EntityHandler getEntityHandler(Entity getEntity) {
+        return getInstance().getEntityHandler(getEntity);
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -163,6 +167,11 @@ public class EntityDamageByEntity implements Listener {
             default -> {
                 if (entity instanceof Player player) {
                     disableTeleport(player);
+                } else {
+                    var entityHandler = getEntityHandler(event.getDamager());
+                    if (!entityHandler.exists())return;
+                    if (!entityHandler.disableDamage(event.getEntity()))return;
+                    event.setCancelled(true);
                 }
             }
         }

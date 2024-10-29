@@ -83,6 +83,11 @@ commands:
     permission: essentials.command.enderchest
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  entity:
+    description: entity settings
+    permission: essentials.command.entity
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   essentials:
     description: essentials main command
     permission: essentials.command.essentials
@@ -362,6 +367,11 @@ commands:
     permission: essentials.command.workbench
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  world:
+    description: world settings
+    permission: essentials.command.world
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   worth:
     description: worth
     permission: essentials.command.worth
@@ -472,6 +482,9 @@ permissions:
     default: op
   essentials.command.enderchest.exempt:
     description: denies opening enderchest
+    default: op
+  essentials.command.entity:
+    description: entity settings
     default: op
   essentials.command.essentials:
     description: essentials main command
@@ -808,6 +821,9 @@ permissions:
     default: op
   essentials.command.workbench.exempt:
     description: workbench
+    default: op
+  essentials.command.world:
+    description: world settings
     default: op
   essentials.command.worth:
     description: worth

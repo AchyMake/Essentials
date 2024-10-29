@@ -103,7 +103,7 @@ public class Kits {
         config.addDefault("food.price", 25.0);
         config.addDefault("food.cooldown", 1800);
         config.addDefault("food.items.steak.type", "COOKED_BEEF");
-        config.addDefault("food.item.steak.amount", 16);
+        config.addDefault("food.items.steak.amount", 16);
         config.options().copyDefaults(true);
         save();
     }
