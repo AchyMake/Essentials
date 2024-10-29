@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Evoker;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
 import java.io.File;
@@ -201,6 +200,7 @@ public class Entities {
         new WITCH().reload();
         new WITHER().reload();
         new WITHER_SKELETON().reload();
+        new WITHER_SKULL().reload();
         new WOLF().reload();
         new ZOGLIN().reload();
         new ZOMBIE().reload();
