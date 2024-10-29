@@ -186,7 +186,9 @@ public final class Essentials extends JavaPlugin {
         new PlayerMove();
         new PlayerQuit();
         new PlayerRespawn();
-        new PlayerShearBlock();
+        if (!isSpigot()) {
+            new PlayerShearBlock();
+        }
         new PlayerShearEntity();
         new PlayerTeleport();
         new PlayerToggleFlight();
