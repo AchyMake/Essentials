@@ -62,7 +62,7 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
                     return true;
                 } else if (args[0].equalsIgnoreCase("discord")) {
                     consoleCommandSender.sendMessage("Developers Discord:");
-                    consoleCommandSender.sendMessage("- https://discord.gg/BMKaW4yTvy");
+                    consoleCommandSender.sendMessage("- https://discord.com/invite/aMtQFeJKyB");
                     return true;
                 }
             } else if (args.length == 2) {

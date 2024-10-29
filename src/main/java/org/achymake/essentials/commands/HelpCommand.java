@@ -30,16 +30,16 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                 getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
                 return true;
             } else if (args.length == 0) {
-                getMessage().sendStringList(player, getInstance().getConfig().getStringList("help"));
+                getMessage().sendStringList(player, getInstance().getConfig().getStringList("message-of-the-day.help"));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.help.others")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getMessage().sendStringList(target, getInstance().getConfig().getStringList("help"));
+                            getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.help"));
                         } else if (!target.hasPermission("essentials.command.help.exempt")) {
-                            getMessage().sendStringList(target, getInstance().getConfig().getStringList("help"));
+                            getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.help"));
                         } else getMessage().send(player, command.getPermissionMessage());
                         return true;
                     }
@@ -47,12 +47,12 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 0) {
-                getMessage().sendStringList(consoleCommandSender, getInstance().getConfig().getStringList("help"));
+                getMessage().sendStringList(consoleCommandSender, getInstance().getConfig().getStringList("message-of-the-day.help"));
                 return true;
             } else if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    getMessage().sendStringList(target, getInstance().getConfig().getStringList("help"));
+                    getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.help"));
                     return true;
                 }
             }

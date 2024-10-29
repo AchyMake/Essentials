@@ -46,7 +46,7 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
                 var userdataOffline = getUserdata(offlinePlayer);
                 if (userdataOffline.isBanned()) {
                     userdataOffline.setBoolean("settings.banned", false);
-                    userdataOffline.setString("settings.ban-reason", "null");
+                    userdataOffline.setString("settings.ban-reason", "");
                     consoleCommandSender.sendMessage(offlinePlayer.getName() + " is no longer banned");
                 } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " is not banned");
                 return true;

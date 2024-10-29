@@ -244,11 +244,13 @@ public final class Essentials extends JavaPlugin {
         var userdata = new File(getDataFolder(), "userdata");
         if (userdata.exists() && userdata.isDirectory()) {
             for (var file : userdata.listFiles()) {
-                var config = YamlConfiguration.loadConfiguration(file);
-                try {
-                    config.load(file);
-                } catch (IOException | InvalidConfigurationException e) {
-                    sendWarning(e.getMessage());
+                if (file.exists() && file.isFile()) {
+                    var config = YamlConfiguration.loadConfiguration(file);
+                    try {
+                        config.load(file);
+                    } catch (IOException | InvalidConfigurationException e) {
+                        sendWarning(e.getMessage());
+                    }
                 }
             }
         }
