@@ -24,7 +24,8 @@ public class PlayerTeleport implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (!event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || !event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN))return;
-        getUserdata(event.getPlayer()).setLocation(event.getFrom(), "recent");
+        if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+            getUserdata(event.getPlayer()).setLocation(event.getFrom(), "recent");
+        }
     }
 }
