@@ -5,13 +5,45 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.achymake.essentials.Essentials;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class Message {
     private Essentials getInstance() {
         return Essentials.getInstance();
+    }
+    private final File file = new File(getInstance().getDataFolder(), "message.yml");
+    private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public String get(String path) {
+        return config.getString(path);
+    }
+    public void sendMessage(Player player, String path, String... strings) {
+        if (config.isString(path)) {
+            send(player, config.getString(path));
+        } else if (config.isList(path)) {
+            config.getStringList(path).forEach(message -> send(player, message));
+        }
+    }
+    private void setup() {
+        config.set("commands.announcement", "&f{0}");
+        config.set("commands.anvil.target", "{0} opened anvil for you");
+        config.set("commands.anvil.sender", "You opened anvil for {0}");
+        config.options().copyDefaults(true);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+        }
+    }
+    public void reload() {
+        if (file.exists()) {
+            config = YamlConfiguration.loadConfiguration(file);
+        } else setup();
     }
     public void send(Player player, String message) {
         player.sendMessage(addColor(message));
@@ -50,18 +82,18 @@ public class Message {
         if (string.contains(" ")) {
             var stringBuilder = new StringBuilder();
             for (var strings : string.split(" ")) {
-                stringBuilder.append(strings.charAt(0) + strings.substring(1).toLowerCase());
+                stringBuilder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
                 stringBuilder.append(" ");
             }
             return stringBuilder.toString().strip();
         } else if (string.contains("_")) {
             var stringBuilder = new StringBuilder();
             for (var strings : string.split("_")) {
-                stringBuilder.append(strings.charAt(0) + strings.substring(1).toLowerCase());
+                stringBuilder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
                 stringBuilder.append(" ");
             }
             return stringBuilder.toString().strip();
-        } else return string.charAt(0) + string.substring(1).toLowerCase();
+        } else return string.toUpperCase().charAt(0) + string.substring(1).toLowerCase();
     }
     public void sendColorCodes(Player player) {
         player.sendMessage(ChatColor.GOLD + "Minecraft colors:");

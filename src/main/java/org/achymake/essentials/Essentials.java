@@ -235,6 +235,7 @@ public final class Essentials extends JavaPlugin {
         getEntities().reload();
         getJail().reload();
         getKits().reload();
+        getMessage().reload();
         getSkulls().reload();
         getSpawn().reload();
         getWarps().reload();

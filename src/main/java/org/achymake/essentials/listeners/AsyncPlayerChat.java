@@ -37,25 +37,27 @@ public class AsyncPlayerChat implements Listener {
         var player = event.getPlayer();
         var userdata = getUserdata(player);
         var message = event.getMessage();
-        if (player.isOp()) {
-            var opFormat = getMessage().addColor(prefix(player) + "&4" + userdata.getDisplayName() + "&f" + suffix(player) + "&f: ");
-            event.setFormat(opFormat + getMessage().addColor(message));
-        } else if (getVanishHandler().isVanish(player)) {
-            var vanishColor = getInstance().getConfig().getString("vanish-chat-color");
-            var vanishFormat = getMessage().addColor(vanishColor + userdata.getDisplayName() + "&f: ");
-            event.setCancelled(true);
-            getVanishHandler().getVanished().forEach(vanished -> {
+        if (!userdata.isMuted()) {
+            if (getVanishHandler().isVanish(player)) {
+                var vanishColor = getInstance().getConfig().getString("vanish-chat-color");
+                var vanishFormat = getMessage().addColor(vanishColor + userdata.getDisplayName() + "&f: ");
+                event.setCancelled(true);
+                getVanishHandler().getVanished().forEach(vanished -> {
+                    if (player.hasPermission("essentials.event.chat.color")) {
+                        getMessage().send(vanished, vanishFormat + getMessage().addColor(message));
+                    } else {
+                        getMessage().send(vanished, vanishFormat + message);
+                    }
+                });
+            } else if (player.isOp()) {
+                var opFormat = getMessage().addColor(prefix(player) + "&4" + userdata.getDisplayName() + "&f" + suffix(player) + "&f: ");
+                event.setFormat(opFormat + getMessage().addColor(message));
+            } else {
+                var format = getMessage().addColor(prefix(player) + userdata.getDisplayName() + suffix(player) + "&f: ");
                 if (player.hasPermission("essentials.event.chat.color")) {
-                    getMessage().send(vanished, vanishFormat + getMessage().addColor(message));
-                } else {
-                    getMessage().send(vanished, vanishFormat + message);
-                }
-            });
-        } else if (!userdata.isMuted()) {
-            var format = getMessage().addColor(prefix(player) + userdata.getDisplayName() + suffix(player) + "&f: ");
-            if (player.hasPermission("essentials.event.chat.color")) {
-                event.setFormat(format + getMessage().addColor(message));
-            } else event.setFormat(format + message);
+                    event.setFormat(format + getMessage().addColor(message));
+                } else event.setFormat(format + message);
+            }
         } else event.setCancelled(true);
     }
     public String prefix(Player player) {

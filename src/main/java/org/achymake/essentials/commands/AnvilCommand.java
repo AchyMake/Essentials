@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +39,13 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openAnvil(target);
-                            getMessage().send(target, player.getName() + "&6 opened anvil for you");
-                            getMessage().send(player, "&6You opened anvil for&f " + target.getName());
+                            getMessage().send(target, MessageFormat.format(getMessage().get("commands.anvil.target"), player.getName()));
+                            getMessage().send(target, MessageFormat.format(getMessage().get("commands.anvil.sender"), target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.anvil.exempt")) {
                             openAnvil(target);
-                            getMessage().send(target, player.getName() + "&6 opened anvil for you");
-                            getMessage().send(player, "&6You opened anvil for&f " + target.getName());
+                            getMessage().send(target, MessageFormat.format(getMessage().get("commands.anvil.target"), player.getName()));
+                            getMessage().send(target, MessageFormat.format(getMessage().get("commands.anvil.sender"), target.getName()));
                         } else getMessage().send(player, command.getPermissionMessage());
                         return true;
                     }

@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class AnnouncementCommand implements CommandExecutor, TabCompleter {
                 getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
                 return true;
             } else if (args.length > 0) {
-                getMessage().sendAll(getMessage().getBuilder(args, 0));
+                getMessage().sendAll(MessageFormat.format(getMessage().get("commands.announcement"), getMessage().getBuilder(args, 0)));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender) {
             if (args.length > 0) {
-                getMessage().sendAll(getMessage().getBuilder(args, 0));
+                getMessage().sendAll(MessageFormat.format(getMessage().get("commands.announcement"), getMessage().getBuilder(args, 0)));
                 return true;
             }
         }
