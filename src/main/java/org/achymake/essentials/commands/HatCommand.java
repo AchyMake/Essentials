@@ -33,47 +33,41 @@ public class HatCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
+            if (args.length == 0) {
+                var heldItem = player.getInventory().getItemInMainHand();
+                if (!getMaterials().isAir(heldItem)) {
+                    var helmet = player.getInventory().getHelmet();
+                    if (helmet == null) {
+                        player.getInventory().setHelmet(getMaterials().getItemStack(heldItem.getType().toString(), 1));
+                        heldItem.setAmount(heldItem.getAmount() - 1);
+                        player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
+                    } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));
+                } else player.sendMessage(getMessage().get("commands.hat.air"));
                 return true;
-            } else {
-                if (args.length == 0) {
-                    var heldItem = player.getInventory().getItemInMainHand();
-                    if (!getMaterials().isAir(heldItem)) {
-                        var helmet = player.getInventory().getHelmet();
-                        if (helmet == null) {
-                            getMessage().send(player, "&6You are now wearing&f " + getMessage().toTitleCase(heldItem.getType().toString()));
-                            player.getInventory().setHelmet(getMaterials().getItem(heldItem.getType().toString(), 1));
-                            heldItem.setAmount(heldItem.getAmount() - 1);
-                        } else getMessage().send(player, "&cYou are already wearing&f " + getMessage().toTitleCase(helmet.getType().toString()));
-                    } else getMessage().send(player, "&cYou have to hold an item");
-                    return true;
-                } else if (args.length == 1) {
-                    if (player.hasPermission("essentials.command.hat.other")) {
-                        var target = player.getServer().getPlayerExact(args[0]);
-                        if (target != null) {
-                            var heldItem = player.getInventory().getItemInMainHand();
-                            if (!getMaterials().isAir(heldItem)) {
-                                if (target == player) {
-                                    var helmet = target.getInventory().getHelmet();
-                                    if (helmet == null) {
-                                        var name = getMessage().toTitleCase(heldItem.getType().toString());
-                                        getMessage().send(player, target.getName() + "&6 is now wearing&f " + name);
-                                        target.getInventory().setHelmet(getMaterials().getItem(heldItem.getType().toString(), 1));
-                                        heldItem.setAmount(heldItem.getAmount() - 1);
-                                    } else getMessage().send(player, target.getName() + "&c is already wearing&f " + getMessage().toTitleCase(helmet.getType().toString()));
-                                } else if (!target.hasPermission("essentials.command.hat.exempt")) {
-                                    var helmet = target.getInventory().getHelmet();
-                                    if (helmet == null) {
-                                        var name = getMessage().toTitleCase(heldItem.getType().toString());
-                                        getMessage().send(player, target.getName() + "&6 is now wearing&f " + name);
-                                        target.getInventory().setHelmet(getMaterials().getItem(heldItem.getType().toString(), 1));
-                                        heldItem.setAmount(heldItem.getAmount() - 1);
-                                    } else getMessage().send(player, target.getName() + "&c is already wearing&f " + getMessage().toTitleCase(helmet.getType().toString()));
-                                } else getMessage().send(player, "&cYou are not allowed to change helmet for&f " + target.getName());
-                            } else getMessage().send(player, "&cYou have to hold an item");
-                            return true;
-                        }
+            } else if (args.length == 1) {
+                if (player.hasPermission("essentials.command.hat.other")) {
+                    var target = player.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        var heldItem = player.getInventory().getItemInMainHand();
+                        if (!getMaterials().isAir(heldItem)) {
+                            if (target == player) {
+                                var helmet = target.getInventory().getHelmet();
+                                if (helmet == null) {
+                                    var name = getMessage().toTitleCase(heldItem.getType().toString());
+                                    getMessage().send(player, target.getName() + "&6 is now wearing&f " + name);
+                                    target.getInventory().setHelmet(getMaterials().getItemStack(heldItem.getType().toString(), 1));
+                                    heldItem.setAmount(heldItem.getAmount() - 1);
+                                } else getMessage().send(player, target.getName() + "&c is already wearing&f " + getMessage().toTitleCase(helmet.getType().toString()));
+                            } else if (!target.hasPermission("essentials.command.hat.exempt")) {
+                                var helmet = target.getInventory().getHelmet();
+                                if (helmet == null) {
+                                    target.getInventory().setHelmet(getMaterials().getItemStack(heldItem.getType().toString(), 1));
+                                    heldItem.setAmount(heldItem.getAmount() - 1);
+                                    player.sendMessage(getMessage().get("commands.hat.target-success", target.getName(), getMessage().toTitleCase(heldItem.getType().toString())));
+                                } else player.sendMessage(getMessage().get("commands.hat.target-occupied", target.getName(), getMessage().toTitleCase(helmet.getType().toString())));
+                            } else player.sendMessage(getMessage().get("commands.hat.exempt", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.hat.air"));
+                        return true;
                     }
                 }
             }

@@ -34,10 +34,7 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (target != player) {
@@ -49,22 +46,22 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                                     userdataTarget.setString("tpa.from", null);
                                     userdata.setString("tpa.sent", null);
                                     userdata.disableTask("tpa");
-                                    getMessage().send(player, "&cTeleport request has expired");
-                                    getMessage().send(target, "&cTeleport request has expired");
+                                    target.sendMessage(getMessage().get("commands.tpa.expired"));
+                                    player.sendMessage(getMessage().get("commands.tpa.expired"));
                                 }
                             }, 300).getTaskId();
                             userdata.setString("tpa.sent", target.getUniqueId().toString());
                             userdataTarget.setString("tpa.from", player.getUniqueId().toString());
                             userdata.addTaskID("tpa", taskID);
-                            getMessage().send(target, player.getName() + "&6 has sent you a tpa request");
-                            getMessage().send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
-                            getMessage().send(player, "&6You have sent a tpa request to&f " + target.getName());
-                            getMessage().send(player, "&6You can type&c /tpcancel");
+                            target.sendMessage(getMessage().get("commands.tpa.target.notify", player.getName()));
+                            target.sendMessage(getMessage().get("commands.tpa.target.decide"));
+                            player.sendMessage(getMessage().get("commands.tpa.sender.notify", target.getName()));
+                            player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
                         } else {
-                            getMessage().send(player, "&cYou already sent tp request");
-                            getMessage().send(player, "&cYou can type&f /tpcancel");
+                            player.sendMessage(getMessage().get("commands.tpa.occupied"));
+                            player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
                         }
-                    } else getMessage().send(player, "&cYou can't send request to your self");
+                    } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
                     return true;
                 }
             }

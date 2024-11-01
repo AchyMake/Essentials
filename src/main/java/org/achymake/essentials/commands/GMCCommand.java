@@ -27,25 +27,24 @@ public class GMCCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                if (player.getGameMode().equals(GameMode.CREATIVE)) {
-                    getMessage().send(player, "&cYou are already in&f Creative&c mode");
-                } else setCreative(player);
-                return true;
+            if (args.length == 0) {
+                if (!player.getGameMode().equals(GameMode.CREATIVE)) {
+                    setCreative(player);
+                    return true;
+                }
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            setCreative(target);
-                        } else if (target.hasPermission("essentials.command.gamemode.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else if (target.getGameMode().equals(GameMode.CREATIVE)) {
-                            getMessage().send(player, target.getName() + "&c is already in&f Creative&c mode");
-                        } else setCreative(target);
+                            if (!target.getGameMode().equals(GameMode.CREATIVE)) {
+                                setCreative(target);
+                            }
+                        } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
+                            if (!target.getGameMode().equals(GameMode.CREATIVE)) {
+                                setCreative(target);
+                            }
+                        } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -83,5 +82,6 @@ public class GMCCommand implements CommandExecutor, TabCompleter {
     }
     private void setCreative(Player player) {
         player.setGameMode(GameMode.CREATIVE);
+        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.creative"));
     }
 }

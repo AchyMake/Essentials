@@ -26,30 +26,30 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                 var userdataOffline = getUserdata(offlinePlayer);
-                if (userdataOffline.isBanned()) {
-                    userdataOffline.setBoolean("settings.banned", false);
-                    userdataOffline.setString("settings.ban-reason", "");
-                    getMessage().send(player, offlinePlayer.getName() + "&6 is no longer banned");
-                } else getMessage().send(player, offlinePlayer.getName() + "&c is not banned");
+                if (userdataOffline.exists()) {
+                    if (userdataOffline.isBanned()) {
+                        userdataOffline.setBoolean("settings.banned", false);
+                        userdataOffline.setString("settings.ban-reason", "");
+                        player.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                    } else player.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
+                }
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                 var userdataOffline = getUserdata(offlinePlayer);
-                if (userdataOffline.isBanned()) {
-                    userdataOffline.setBoolean("settings.banned", false);
-                    userdataOffline.setString("settings.ban-reason", "");
-                    consoleCommandSender.sendMessage(offlinePlayer.getName() + " is no longer banned");
-                } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " is not banned");
-                return true;
+                if (userdataOffline.exists()) {
+                    if (userdataOffline.isBanned()) {
+                        userdataOffline.setBoolean("settings.banned", false);
+                        userdataOffline.setString("settings.ban-reason", "");
+                        consoleCommandSender.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
+                    return true;
+                }
             }
         }
         return false;
@@ -59,14 +59,14 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                for (var offlinePlayer : sender.getServer().getOfflinePlayers()) {
+                getInstance().getOfflinePlayers().forEach(offlinePlayer -> {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.isBanned()) {
-                        if (offlinePlayer.getName().startsWith(args[0])) {
-                            commands.add(offlinePlayer.getName());
+                        if (userdataOffline.getName().startsWith(args[0])) {
+                            commands.add(userdataOffline.getName());
                         }
                     }
-                }
+                });
             }
         }
         return commands;

@@ -27,38 +27,49 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var mode = args[0].toLowerCase();
                 if (player.hasPermission("essentials.command.gamemode." + mode)) {
-                    return setGameMode(player, mode);
+                    if (mode.equalsIgnoreCase("adventure")) {
+                        player.setGameMode(GameMode.ADVENTURE);
+                        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.adventure"));
+                        return true;
+                    } else if (mode.equalsIgnoreCase("creative")) {
+                        player.setGameMode(GameMode.CREATIVE);
+                        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.creative"));
+                        return true;
+                    } else if (mode.equalsIgnoreCase("spectator")) {
+                        player.setGameMode(GameMode.SPECTATOR);
+                        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.spectator"));
+                        return true;
+                    } else if (mode.equalsIgnoreCase("survival")) {
+                        player.setGameMode(GameMode.SURVIVAL);
+                        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.survival"));
+                        return true;
+                    }
                 }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
+                        var mode = args[0].toLowerCase();
                         if (target == player) {
-                            var mode = args[0].toLowerCase();
-                            return setGameMode(target, mode);
-                        } else if (target.hasPermission("essentials.command.gamemode.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                            return true;
-                        } else {
-                            var mode = args[0].toLowerCase();
-                            return setGameMode(target, mode);
-                        }
-                    }
+                            setMode(target, mode);
+                        } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
+                            setMode(target, mode);
+                        } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
                 var target = sender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     var mode = args[0].toLowerCase();
-                    return setGameMode(target, mode);
-                }
+                    setMode(target, mode);
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -94,19 +105,19 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
         }
         return commands;
     }
-    private boolean setGameMode(Player player, String gameMode) {
-        if (gameMode.equalsIgnoreCase("adventure")) {
-            player.setGameMode(GameMode.ADVENTURE);
-            return true;
-        } else if (gameMode.equalsIgnoreCase("creative")) {
-            player.setGameMode(GameMode.CREATIVE);
-            return true;
-        } else if (gameMode.equalsIgnoreCase("spectator")) {
-            player.setGameMode(GameMode.SPECTATOR);
-            return true;
-        } else if (gameMode.equalsIgnoreCase("survival")) {
-            player.setGameMode(GameMode.SURVIVAL);
-            return true;
-        } else return false;
+    private void setMode(Player target, String mode) {
+        if (mode.equalsIgnoreCase("adventure")) {
+            target.setGameMode(GameMode.ADVENTURE);
+            getMessage().sendActionBar(target, getMessage().get("commands.gamemode.adventure"));
+        } else if (mode.equalsIgnoreCase("creative")) {
+            target.setGameMode(GameMode.CREATIVE);
+            getMessage().sendActionBar(target, getMessage().get("commands.gamemode.creative"));
+        } else if (mode.equalsIgnoreCase("spectator")) {
+            target.setGameMode(GameMode.SPECTATOR);
+            getMessage().sendActionBar(target, getMessage().get("commands.gamemode.spectator"));
+        } else if (mode.equalsIgnoreCase("survival")) {
+            target.setGameMode(GameMode.SURVIVAL);
+            getMessage().sendActionBar(target, getMessage().get("commands.gamemode.survival"));
+        }
     }
 }

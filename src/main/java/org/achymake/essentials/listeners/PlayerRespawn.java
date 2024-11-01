@@ -45,13 +45,13 @@ public class PlayerRespawn implements Listener {
         }
         if (player.hasPermission("essentials.event.death.location")) {
             var location = userdata.getLocation("death");
-            if (location == null) return;
-            var world = location.getWorld().getEnvironment().toString().toLowerCase();
+            if (location == null)return;
+            var world = getInstance().getWorldHandler(location.getWorld()).getDisplayName();
             var x = location.getBlockX();
             var y = location.getBlockY();
             var z = location.getBlockZ();
-            getMessage().send(player, "&6Death location:");
-            getMessage().send(player, "&6World:&f " + world + "&6 X:&f " + x + "&6 Y:&f " + y + "&6 Z:&f " + z);
+            player.sendMessage(getMessage().get("events.respawn.title"));
+            player.sendMessage(getMessage().get("events.respawn.location", world, String.valueOf(x), String.valueOf(y), String.valueOf(z)));
         }
     }
 }

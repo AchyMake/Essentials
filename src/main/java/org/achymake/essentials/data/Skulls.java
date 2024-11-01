@@ -28,7 +28,7 @@ public class Skulls {
         return getListed().contains(skullName);
     }
     public ItemStack getCustomHead(String skullName, int amount) {
-        var skullItem = getMaterials().getItem("player_head", amount);
+        var skullItem = getMaterials().getItemStack("player_head", amount);
         var skullMeta = (SkullMeta) skullItem.getItemMeta();
         if (16 >= skullName.length()) {
             var profile = getInstance().getServer().createProfile(skullName);

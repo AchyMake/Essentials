@@ -30,27 +30,20 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (getSpawn().getLocation() != null) {
-                    userdata.teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
-                } else getMessage().send(player, "Spawn&c does not exist");
+                    getUserdata(player).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.spawn.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
-                        var userdataTarget = getUserdata(target);
-                        if (!userdataTarget.isDisabled()) {
-                            if (getSpawn().getLocation() != null) {
-                                if (!target.hasPermission("essentials.command.spawn.exempt")) {
-                                    userdataTarget.teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
-                                } else getMessage().send(player, "&cYou are not allowed to spawn&f " + target.getName());
-                            } else getMessage().send(player, "Spawn&c does not exist");
-                        } else getMessage().send(player, target.getName() + "&c is either in jail or frozen");
+                        if (getSpawn().getLocation() != null) {
+                            if (!target.hasPermission("essentials.command.spawn.exempt")) {
+                                getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                            } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                         return true;
                     }
                 }
@@ -59,12 +52,9 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
-                    if (!userdataTarget.isDisabled()) {
-                        if (getSpawn().getLocation() != null) {
-                            userdataTarget.teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
-                        } else consoleCommandSender.sendMessage(target.getName() + " is either in jail or frozen");
-                    } else consoleCommandSender.sendMessage("Spawn does not exist");
+                    if (getSpawn().getLocation() != null) {
+                        getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.spawn.invalid"));
                     return true;
                 }
             }

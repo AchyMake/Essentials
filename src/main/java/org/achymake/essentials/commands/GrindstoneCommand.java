@@ -26,10 +26,7 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 openGrindstone(player);
                 return true;
             } else if (args.length == 1) {
@@ -38,15 +35,13 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openGrindstone(target);
-                            getMessage().send(target, player.getName() + "&6 opened grindstone for you");
-                            getMessage().send(player, "&6You opened grindstone for&f " + target.getName());
-                        } else if (target.hasPermission("essentials.command.grindstone.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                            target.sendMessage(getMessage().get("commands.grindstone.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
+                        } else if (!target.hasPermission("essentials.command.grindstone.exempt")) {
                             openGrindstone(target);
-                            getMessage().send(target, player.getName() + "&6 opened grindstone for you");
-                            getMessage().send(player, "&6You opened grindstone for&f " + target.getName());
-                        }
+                            target.sendMessage(getMessage().get("commands.grindstone.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.grindstone.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -83,7 +78,7 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
     private void openGrindstone(Player player) {
         var inventory = getInstance().getInventoryHandler().openGrindstone(player);
         if (inventory == null) {
-            getMessage().send(player, "&cServer does not provide this function");
+            player.sendMessage(getMessage().get("error.not-provided"));
         }
     }
 }

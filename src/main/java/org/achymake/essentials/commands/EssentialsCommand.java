@@ -2,8 +2,6 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,9 +12,6 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
-    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -26,20 +21,13 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 getMessage().send(player, "&6" + getInstance().name() + ":&f " + getInstance().version());
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     getInstance().reload();
                     getMessage().send(player, "&6Essentials:&f reloaded");
-                    return true;
-                } else if (args[0].equalsIgnoreCase("discord")) {
-                    getMessage().send(player, "&6Developers Discord:");
-                    getMessage().send(player, "&f-&a https://discord.gg/BMKaW4yTvy");
                     return true;
                 }
             } else if (args.length == 2) {
@@ -59,10 +47,6 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("reload")) {
                     getInstance().reload();
                     consoleCommandSender.sendMessage("Essentials: reloaded");
-                    return true;
-                } else if (args[0].equalsIgnoreCase("discord")) {
-                    consoleCommandSender.sendMessage("Developers Discord:");
-                    consoleCommandSender.sendMessage("- https://discord.com/invite/aMtQFeJKyB");
                     return true;
                 }
             } else if (args.length == 2) {

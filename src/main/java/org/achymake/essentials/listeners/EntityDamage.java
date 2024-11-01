@@ -27,13 +27,13 @@ public class EntityDamage implements Listener {
     public EntityDamage() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player player))return;
-        var userdata = getUserdata(player);
-        if (!getInstance().getConfig().getBoolean("teleport.cancel-on-damage"))return;
-        if (!userdata.hasTaskID("teleport"))return;
-        getMessage().sendActionBar(player, "&cYou got damaged before teleporting!");
-        userdata.disableTask("teleport");
+        if (event.getEntity() instanceof Player player) {
+            if (!getUserdata(player).hasTaskID("teleport"))return;
+            if (!getInstance().getConfig().getBoolean("teleport.cancel-on-damage"))return;
+            getUserdata(player).disableTask("teleport");
+            player.sendMessage(getMessage().get("events.damage"));
+        }
     }
 }

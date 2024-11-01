@@ -30,52 +30,41 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (!getWarps().getListed().isEmpty()) {
+                    player.sendMessage(getMessage().get("commands.warp.title"));
                     getMessage().send(player, "&6Warps:");
                     getWarps().getListed().forEach(warps -> {
                         if (player.hasPermission("essentials.command.warp." + warps)) {
-                            getMessage().send(player, "- " + warps);
+                            player.sendMessage(getMessage().get("commands.warp.listed", warps));
                         }
                     });
-                } else getMessage().send(player, "&cWarps is currently empty");
+                } else player.sendMessage(getMessage().get("commands.warp.empty"));
                 return true;
             } else if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
-                if (player.hasPermission("players.command.warp." + warpName)) {
+                if (player.hasPermission("essentials.command.warp." + warpName)) {
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
-                        userdata.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                    } else getMessage().send(player, warpName + "&c does not exist");
+                        getUserdata(player).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                    } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                     return true;
                 }
             } else if (args.length == 2) {
-                if (player.hasPermission("players.command.warp.other")) {
+                if (player.hasPermission("essentials.command.warp.other")) {
                     var target = player.getServer().getPlayerExact(args[1]);
                     if (target != null) {
+                        var warpName = args[0].toLowerCase();
+                        var warp = getWarps().getLocation(warpName);
                         if (target == player) {
-                            var userdataTarget = getUserdata(target);
-                            if (!userdataTarget.isDisabled()) {
-                                var warpName = args[0].toLowerCase();
-                                var warp = getWarps().getLocation(warpName);
-                                if (warp != null) {
-                                    userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                                } else getMessage().send(player, warpName + "&c does not exist");
-                            }
+                            if (warp != null) {
+                                getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                            } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                         } else if (!target.hasPermission("essentials.command.warp.exempt")) {
-                            var userdataTarget = getUserdata(target);
-                            if (!userdataTarget.isDisabled()) {
-                                var warpName = args[0].toLowerCase();
-                                var warp = getWarps().getLocation(warpName);
-                                if (warp != null) {
-                                    userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                                } else getMessage().send(player, warpName + "&c does not exist");
-                            }
-                        } else getMessage().send(player, "&cYou are not allowed to warp&f " + target.getName());
+                            if (warp != null) {
+                                getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                            } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
+                        } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -85,14 +74,12 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 var target = consoleCommandSender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
                     var userdataTarget = getUserdata(target);
-                    if (!userdataTarget.isDisabled()) {
-                        var warpName = args[0].toLowerCase();
-                        var warp = getWarps().getLocation(warpName);
-                        if (warp != null) {
-                            userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                        } else consoleCommandSender.sendMessage(warpName + " does not exist");
-                        return true;
-                    }
+                    var warpName = args[0].toLowerCase();
+                    var warp = getWarps().getLocation(warpName);
+                    if (warp != null) {
+                        userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
+                    return true;
                 }
             }
         }
@@ -112,10 +99,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 });
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
-                    getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
-                                commands.add(target.getName());
+                    getInstance().getOnlinePlayers().forEach(players -> {
+                        if (!getUserdata(players).isVanished()) {
+                            if (players.getName().startsWith(args[0])) {
+                                commands.add(players.getName());
                             }
                         }
                     });

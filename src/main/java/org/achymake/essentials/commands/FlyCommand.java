@@ -26,51 +26,48 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
+            if (args.length == 0) {
+                player.setAllowFlight(!player.getAllowFlight());
+                if (player.getAllowFlight()) {
+                    getMessage().sendActionBar(player, getMessage().get("commands.fly.enable"));
+                } else getMessage().sendActionBar(player, getMessage().get("commands.fly.disable"));
                 return true;
-            } else {
-                if (args.length == 0) {
-                    player.setAllowFlight(!player.getAllowFlight());
-                    if (player.getAllowFlight()) {
-                        getMessage().sendActionBar(player, "&6&lFly:&a Enabled");
-                    } else getMessage().sendActionBar(player, "&6&lFly:&c Disabled");
+            } else if (args.length == 1) {
+                if (player.hasPermission("players.command.fly.other")) {
+                    var target = sender.getServer().getPlayerExact(args[0]);
+                    if (target != null) {
+                        if (target == player) {
+                            target.setAllowFlight(!target.getAllowFlight());
+                            if (target.getAllowFlight()) {
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
+                            } else getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                        } else if (!target.hasPermission("players.command.fly.exempt")) {
+                            target.setAllowFlight(!target.getAllowFlight());
+                            if (target.getAllowFlight()) {
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
+                                target.sendMessage(getMessage().get("commands.fly.target", player.getName(), "enabled"));
+                                player.sendMessage(getMessage().get("commands.fly.sender", "enabled", target.getName()));
+                            } else {
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                                target.sendMessage(getMessage().get("commands.fly.target", player.getName(), "disabled"));
+                                player.sendMessage(getMessage().get("commands.fly.sender", "disabled", target.getName()));
+                            }
+                        } else player.sendMessage(getMessage().get("commands.fly.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
-                } else if (args.length == 1) {
-                    if (player.hasPermission("players.command.fly.other")) {
-                        var target = sender.getServer().getPlayerExact(args[0]);
-                        if (target != null) {
-                            if (target == player) {
-                                target.setAllowFlight(!target.getAllowFlight());
-                                if (target.getAllowFlight()) {
-                                    getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
-                                } else getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
-                            } else if (!target.hasPermission("players.command.fly.exempt")) {
-                                target.setAllowFlight(!target.getAllowFlight());
-                                if (target.getAllowFlight()) {
-                                    getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
-                                    getMessage().send(player, "&6You enabled fly for&f " + target.getName());
-                                } else {
-                                    getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
-                                    getMessage().send(player, "&6You disabled fly for&f " + target.getName());
-                                }
-                            } else getMessage().send(player, command.getPermissionMessage());
-                            return true;
-                        }
-                    }
                 }
             }
         }
-        if (sender instanceof ConsoleCommandSender) {
+        if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.setAllowFlight(!target.getAllowFlight());
                     if (target.getAllowFlight()) {
-                        getMessage().sendActionBar(target, "&6&lFly:&a Enabled");
-                    } else getMessage().sendActionBar(target, "&6&lFly:&c Disabled");
-                    return true;
-                }
+                        getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
+                    } else getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

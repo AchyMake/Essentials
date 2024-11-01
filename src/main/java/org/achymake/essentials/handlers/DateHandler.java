@@ -22,16 +22,25 @@ public class DateHandler {
     }
     public long addDays(int value) {
         var date = getDate();
+        date.setSeconds(0);
+        date.setMinutes(0);
+        date.setHours(0);
         date.setDate(date.getDate() + value);
         return date.getTime();
     }
     public long addMonths(int value) {
         var date = getDate();
+        date.setSeconds(0);
+        date.setMinutes(0);
+        date.setHours(0);
         date.setMonth(date.getMonth() + value);
         return date.getTime();
     }
     public long addYears(int value) {
         var date = getDate();
+        date.setSeconds(0);
+        date.setMinutes(0);
+        date.setHours(0);
         date.setYear(date.getYear() + value);
         return date.getTime();
     }

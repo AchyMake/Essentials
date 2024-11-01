@@ -3,6 +3,7 @@ package org.achymake.essentials.handlers;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,32 +14,29 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class MaterialHandler {
-    public Material getMaterial(String materialName) {
+    public Material get(String materialName) {
         return Material.valueOf(materialName.toUpperCase());
     }
-    public ItemStack getItem(String materialName, int amount) {
-        return new ItemStack(getMaterial(materialName.toUpperCase()), amount);
+    public ItemStack getItemStack(String materialName, int amount) {
+        return new ItemStack(get(materialName.toUpperCase()), amount);
     }
-    public void giveItem(Player player, ItemStack itemStack) {
+    public void giveItemStack(Player player, ItemStack itemStack) {
         if (itemStack != null) {
             if (Arrays.asList(player.getInventory().getStorageContents()).contains(null)) {
                 player.getInventory().addItem(itemStack);
             } else dropItem(player.getLocation(), itemStack);
         }
     }
-    public void giveItems(Player player, Collection<ItemStack> itemStacks) {
+    public void giveItemStacks(Player player, Collection<ItemStack> itemStacks) {
         for (var itemStack : itemStacks) {
-            giveItem(player, itemStack);
+            giveItemStack(player, itemStack);
         }
     }
     public Item dropItem(Location location, ItemStack itemStack) {
-        var world = location.getWorld();
-        if (world != null) {
-            return world.dropItem(location, itemStack);
-        } else return null;
+        return location.getWorld().dropItem(location, itemStack);
     }
     public ItemStack getPlayerHead(OfflinePlayer offlinePlayer, int amount) {
-        var itemStack = getItem("player_head", amount);
+        var itemStack = getItemStack("player_head", amount);
         var skullMeta = (SkullMeta) itemStack.getItemMeta();
         skullMeta.setOwningPlayer(offlinePlayer);
         itemStack.setItemMeta(skullMeta);
@@ -53,6 +51,9 @@ public class MaterialHandler {
         } else return false;
     }
     public boolean isAir(ItemStack itemStack) {
-        return itemStack.getType().equals(getMaterial("air"));
+        return itemStack == null || itemStack.getType().equals(get("air"));
+    }
+    public boolean isAir(Block block) {
+        return block.getType().equals(get("air"));
     }
 }

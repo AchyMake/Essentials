@@ -3,8 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Spawn;
-import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,9 +16,6 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
-    }
     private Spawn getSpawn() {
         return getInstance().getSpawn();
     }
@@ -33,16 +28,13 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (getSpawn().getLocation() != null) {
                     getSpawn().setLocation(player.getLocation());
-                    getMessage().send(player, "&6Spawn relocated");
+                    player.sendMessage(getMessage().get("commands.setspawn.relocated"));
                 } else {
                     getSpawn().setLocation(player.getLocation());
-                    getMessage().send(player, "&6Spawn has been set");
+                    player.sendMessage(getMessage().get("commands.setspawn.set"));
                 }
                 return true;
             }

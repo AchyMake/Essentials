@@ -2,11 +2,9 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.data.Worth;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +17,6 @@ import java.util.List;
 public class SellCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
-    }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -41,11 +36,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
                     var itemName = getMessage().toTitleCase(heldItem.getType().toString());
@@ -53,10 +44,10 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                         var amount = heldItem.getAmount();
                         var result = getWorth().get(heldItem.getType()) * amount;
                         getEconomy().add(player, result);
-                        getMessage().send(player, "&6You sold&f " + amount + " " + itemName + "&6 for&a " + getEconomy().currency() + getEconomy().format(result));
                         heldItem.setAmount(0);
-                    } else getMessage().send(player, itemName + "&c is not able to sell");
-                } else getMessage().send(player, "&cYou have to hold an item");
+                        player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
+                    } else player.sendMessage(getMessage().get("commands.sell.unsellable"));
+                } else player.sendMessage(getMessage().get("commands.sell.air"));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("all")) {
@@ -68,27 +59,29 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                                 var amount = itemStack.getAmount();
                                 var result = getWorth().get(itemStack.getType()) * amount;
                                 getEconomy().add(player, result);
-                                getMessage().send(player, "&6You sold&f " + amount + " " + itemName + "&6 for&a " + getEconomy().currency() + getEconomy().format(result));
                                 itemStack.setAmount(0);
+                                player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
                             }
                         }
                     }
                 } else {
                     var amount = Integer.parseInt(args[0]);
-                    var heldItem = player.getInventory().getItemInMainHand();
-                    if (!getMaterials().isAir(heldItem)) {
-                        var itemName = getMessage().toTitleCase(heldItem.getType().toString());
-                        var itemAmount = heldItem.getAmount();
-                        if (getWorth().isListed(heldItem.getType())) {
-                            if (itemAmount >= amount) {
-                                var result = getWorth().get(heldItem.getType()) * amount;
-                                var newAmount = itemAmount - amount;
-                                getEconomy().add(player, result);
-                                getMessage().send(player, "&6You sold&f " + amount + " " + itemName + "&6 for&a " + getEconomy().currency() + getEconomy().format(result));
-                                heldItem.setAmount(newAmount);
-                            } else getMessage().send(player, "&cYou don't have enough&f " + itemName);
-                        } else getMessage().send(player, itemName + "&c is not able to sell");
-                    } else getMessage().send(player, "&cYou have to hold an item");
+                    if (amount > 0) {
+                        var heldItem = player.getInventory().getItemInMainHand();
+                        if (!getMaterials().isAir(heldItem)) {
+                            var itemName = getMessage().toTitleCase(heldItem.getType().toString());
+                            var itemAmount = heldItem.getAmount();
+                            if (getWorth().isListed(heldItem.getType())) {
+                                if (itemAmount >= amount) {
+                                    var result = getWorth().get(heldItem.getType()) * amount;
+                                    var newAmount = itemAmount - amount;
+                                    getEconomy().add(player, result);
+                                    heldItem.setAmount(newAmount);
+                                    player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
+                                } else player.sendMessage(getMessage().get("commands.sell.insufficient", itemName));
+                            } else player.sendMessage(getMessage().get("commands.sell.unsellable"));
+                        } else player.sendMessage(getMessage().get("commands.sell.air"));
+                    }
                 }
             }
         }
@@ -104,7 +97,6 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                 commands.add("32");
                 commands.add("64");
                 commands.add("all");
-                commands.add("hand");
             }
         }
         return commands;

@@ -27,10 +27,9 @@ public class CreatureSpawn implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
+        if (event.getEntity() instanceof Player)return;
         var chunk = event.getLocation().getChunk();
-        var entityHandler = getEntityHandler(entity);
+        var entityHandler = getEntityHandler(event.getEntity());
         if (!entityHandler.exists())return;
         if (entityHandler.disableSpawnReason(event.getSpawnReason())) {
             event.setCancelled(true);
@@ -42,7 +41,7 @@ public class CreatureSpawn implements Listener {
                 var listed = new ArrayList<Entity>();
                 for (var chunkEntities : chunk.getEntities()) {
                     if (chunkEntities.getType().equals(event.getEntityType())) {
-                        listed.add(entity);
+                        listed.add(event.getEntity());
                     }
                 }
                 if (listed.size() >= chunkLimit) {

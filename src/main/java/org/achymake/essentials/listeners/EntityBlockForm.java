@@ -25,11 +25,8 @@ public class EntityBlockForm implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
-        var entityHandler = getEntityHandler(entity);
-        if (!entityHandler.exists())return;
-        if (!entityHandler.disableBlockForm())return;
+        if (event.getEntity() instanceof Player)return;
+        if (!getEntityHandler(event.getEntity()).disableBlockForm())return;
         event.setCancelled(true);
     }
 }

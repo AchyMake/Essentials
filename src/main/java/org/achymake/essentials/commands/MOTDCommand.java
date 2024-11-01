@@ -30,10 +30,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
                 return true;
             } else if (args.length == 1) {
@@ -47,7 +44,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                             getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
                         } else if (!target.hasPermission("essentials.command.motd.exempt")) {
                             getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
-                        } else getMessage().send(player, command.getPermissionMessage());
+                        } else player.sendMessage(getMessage().get("commands.motd.exempt", target.getName()));
                         return true;
                     }
                 }

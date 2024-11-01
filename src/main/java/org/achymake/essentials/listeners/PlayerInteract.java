@@ -31,16 +31,14 @@ public class PlayerInteract implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null)return;
-        var block = event.getClickedBlock();
-        var player = event.getPlayer();
-        var userdata = getUserdata(player);
+        var userdata = getUserdata(event.getPlayer());
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (!userdata.isDisabled())return;
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.PHYSICAL)) {
             if (userdata.isDisabled() || userdata.isVanished()) {
                 event.setCancelled(true);
-            } else if (isSensitiveBlocks(block.getType())) {
+            } else if (isSensitiveBlocks(event.getClickedBlock().getType())) {
                 event.setCancelled(true);
             }
         }

@@ -26,11 +26,7 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 openSmithingTable(player);
                 return true;
             } else if (args.length == 1) {
@@ -39,13 +35,11 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openSmithingTable(player);
-                            getMessage().send(target, player.getName() + "&6 opened smithing table for you");
-                            getMessage().send(player, "&6You opened smithing table for&f " + target.getName());
+                            player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.smithing.exempt")) {
                             openSmithingTable(target);
-                            getMessage().send(target, player.getName() + "&6 opened smithing table for you");
-                            getMessage().send(player, "&6You opened smithing table for&f " + target.getName());
+                            player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                         } else getMessage().send(player, command.getPermissionMessage());
                         return true;
                     }
@@ -83,7 +77,7 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
     private void openSmithingTable(Player player) {
         var inventory = getInstance().getInventoryHandler().openSmithingTable(player);
         if (inventory == null) {
-            getMessage().send(player, "&cServer does not provide this function");
+            player.sendMessage(getMessage().get("error.not-provided"));
         }
     }
 }

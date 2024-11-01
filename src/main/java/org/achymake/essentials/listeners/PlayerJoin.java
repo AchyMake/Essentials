@@ -43,7 +43,6 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        getUpdateChecker().getUpdate(player);
         if (getVanishHandler().isVanish(player)) {
             event.setJoinMessage(null);
             setVanish(player);
@@ -61,6 +60,7 @@ public class PlayerJoin implements Listener {
             }
             sendMotd(player);
         }
+        getUpdateChecker().getUpdate(player);
     }
     private void sendMotd(Player player) {
         var userdata = getUserdata(player);

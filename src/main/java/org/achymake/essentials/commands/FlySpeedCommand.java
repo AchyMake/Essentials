@@ -29,28 +29,25 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var value = Float.parseFloat(args[0]);
-                userdata.setFlySpeed(value);
-                getMessage().send(player, "&6You're fly speed has changed to&f " + value);
+                getUserdata(player).setFlySpeed(value);
+                player.sendMessage(getMessage().get("commands.flyspeed.self", String.valueOf(value)));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.flyspeed.other")) {
                     var value = Float.parseFloat(args[0]);
                     var target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
-                        var userdataTarget = getUserdata(target);
                         if (target == player) {
-                            userdataTarget.setFlySpeed(value);
-                            getMessage().send(player, "&6You changed&f " + target.getName() + " &6fly speed to&f " + value);
+                            getUserdata(player).setFlySpeed(value);
+                            target.sendMessage(getMessage().get("commands.flyspeed.target", player.getName(), String.valueOf(value)));
+                            player.sendMessage(getMessage().get("commands.flyspeed.sender", target.getName(), String.valueOf(value)));
                         } else if (!target.hasPermission("essentials.command.flyspeed.exempt")) {
-                            userdataTarget.setFlySpeed(value);
-                            getMessage().send(player, "&6You changed&f " + target.getName() + " &6fly speed to&f " + value);
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            getUserdata(target).setFlySpeed(value);
+                            target.sendMessage(getMessage().get("commands.flyspeed.target", player.getName(), String.valueOf(value)));
+                            player.sendMessage(getMessage().get("commands.flyspeed.sender", target.getName(), String.valueOf(value)));
+                        } else player.sendMessage(getMessage().get("commands.flyspeed.exempt", target.getName()));
                         return true;
                     }
                 }

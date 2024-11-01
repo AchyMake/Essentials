@@ -42,38 +42,35 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (!getKits().getListed().isEmpty()) {
-                    getMessage().send(player, "&6Kits:");
+                    player.sendMessage(getMessage().get("commands.kit.title"));
                     getKits().getListed().forEach(kits -> {
                         if (player.hasPermission("essentials.command.kit." + kits)) {
-                            getMessage().send(player, "- " + kits);
+                            player.sendMessage(getMessage().get("commands.kit.listed", kits));
                         }
                     });
-                } else getMessage().send(player, "&cKits are currently empty");
+                } else player.sendMessage(getMessage().get("commands.kit.empty"));
                 return true;
             } else if (args.length == 1) {
-                var kitName = args[0].toLowerCase();
+                var kitName = args[0];
                 var timer = getKits().getCooldown(kitName);
-                if (getKits().getListed().contains(kitName)) {
+                if (getKits().isListed(kitName)) {
                     if (player.hasPermission("essentials.command.kit." + kitName)) {
                         if (!getCooldown().has(player, kitName, timer)) {
                             if (getKits().hasPrice(kitName)) {
                                 if (getEconomy().has(player, getKits().getPrice(kitName))) {
-                                    getMaterials().giveItems(player, getKits().getKit(kitName));
+                                    getMaterials().giveItemStacks(player, getKits().get(kitName));
                                     getEconomy().remove(player, getKits().getPrice(kitName));
                                     getCooldown().add(player, kitName, timer);
-                                    getMessage().send(player, "&6You received&f " + kitName);
-                                } else getMessage().send(player, "&cYou do not have&a " + getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)) + "&c for&f " + kitName + "&c kit");
+                                    player.sendMessage(getMessage().get("commands.kit.receive", kitName));
+                                } else player.sendMessage(getMessage().get("commands.kit.non-sufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                             } else {
-                                getMaterials().giveItems(player, getKits().getKit(kitName));
+                                getMaterials().giveItemStacks(player, getKits().get(kitName));
                                 getCooldown().add(player, kitName, timer);
-                                getMessage().send(player, "&6You received&f " + kitName);
+                                player.sendMessage(getMessage().get("commands.kit.receive", kitName));
                             }
-                        } else getMessage().sendActionBar(player, "&cYou have to wait&f " + getCooldown().get(player, kitName, timer) + "&c seconds");
+                        } else player.sendMessage(getMessage().get("commands.kit.cooldown", getCooldown().get(player, kitName, timer)));
                         return true;
                     }
                 }
@@ -82,13 +79,13 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
                         if (!target.hasPermission("essentials.command.kit.exempt")) {
-                            var kitName = args[0].toLowerCase();
-                            if (getKits().getListed().contains(kitName)) {
-                                getMaterials().giveItems(target, getKits().getKit(kitName));
-                                getMessage().send(target, "&6You received&f " + kitName + "&6 kit");
-                                getMessage().send(player, "&6You gave&f " + kitName + "&6 kit to&f " + target.getName());
+                            var kitName = args[0];
+                            if (getKits().isListed(kitName)) {
+                                getMaterials().giveItemStacks(target, getKits().get(kitName));
+                                target.sendMessage(getMessage().get("commands.kit.receive", kitName));
+                                player.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
                             }
-                        } else getMessage().send(player, "&cYou are not allowed to send kit to&f " + target.getName());
+                        } else player.sendMessage(getMessage().get("commands.kit.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -101,11 +98,11 @@ public class KitCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 var target = sender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
-                    var kitName = args[0].toLowerCase();
-                    if (getKits().getListed().contains(kitName)) {
-                        getMaterials().giveItems(target, getKits().getKit(kitName));
-                        getMessage().send(target, "&6You received&f " + kitName + "&6 kit");
-                        consoleCommandSender.sendMessage("You gave " + kitName + " kit to " + target.getName());
+                    var kitName = args[0];
+                    if (getKits().isListed(kitName)) {
+                        getMaterials().giveItemStacks(target, getKits().get(kitName));
+                        target.sendMessage(getMessage().get("commands.kit.receive", kitName));
+                        consoleCommandSender.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
                         return true;
                     }
                 }

@@ -26,10 +26,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 getMessage().sendStringList(player, getInstance().getConfig().getStringList("message-of-the-day.help"));
                 return true;
             } else if (args.length == 1) {
@@ -40,7 +37,7 @@ public class HelpCommand implements CommandExecutor, TabCompleter {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.help"));
                         } else if (!target.hasPermission("essentials.command.help.exempt")) {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.help"));
-                        } else getMessage().send(player, command.getPermissionMessage());
+                        } else player.sendMessage(getMessage().get("commands.help.exempt", target.getName()));
                         return true;
                     }
                 }

@@ -30,38 +30,30 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                var name = player.getName();
+            if (args.length == 0) {
+                var name = userdata.getName();
                 var displayName = userdata.getDisplayName();
                 if (!displayName.equals(name)) {
                     userdata.setString("display-name", name);
-                    getMessage().send(player, "&6You reset your nickname");
+                    player.sendMessage(getMessage().get("commands.nickname.self", name));
                     return true;
                 }
             } else if (args.length == 1) {
                 var rename = args[0];
-                var displayName = userdata.getDisplayName();
-                if (!displayName.equals(rename)) {
-                    userdata.setString("display-name", rename);
-                    getMessage().send(player, "&6You changed your nickname to&f " + rename);
-                } else getMessage().send(player, "&cYou already have&f " + rename + "&c as nickname");
+                userdata.setString("display-name", rename);
+                player.sendMessage(getMessage().get("commands.nickname.self", rename));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.nickname.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
+                        var rename = args[0];
                         var userdataTarget = getUserdata(target);
-                        var displayName = userdataTarget.getDisplayName();
                         if (!target.hasPermission("essentials.command.nickname.exempt")) {
-                            if (!displayName.equals(args[0])) {
-                                userdataTarget.setString("display-name", args[0]);
-                                getMessage().send(player, "&6You changed " + target.getName() + " nickname to&f " + args[0]);
-                            } else getMessage().send(player, target.getName() + "&c already have&f " + args[0] + "&c as nickname");
-                        } else getMessage().send(player, command.getPermissionMessage());
-                    } else getMessage().send(player, args[1] + "&c is currently offline");
+                            userdataTarget.setString("display-name", rename);
+                            player.sendMessage(getMessage().get("commands.nickname.sender", target.getName(), rename));
+                        } else player.sendMessage(getMessage().get("commands.nickname.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                     return true;
                 }
             }

@@ -33,38 +33,33 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 2) {
-                var target = sender.getServer().getPlayerExact(args[0]);
-                if (target != player) {
-                    if (target != null) {
-                        if (getUserdata(target).exists()) {
-                            var amount = Double.parseDouble(args[1]);
-                            if (amount >= getEconomy().getMinimumPayment()) {
-                                if (getEconomy().has(player, amount)) {
-                                    getEconomy().remove(player, amount);
-                                    getEconomy().add(target, amount);
-                                    getMessage().send(player, "&6You paid&f " + target.getName() + "&a " + getEconomy().currency() + getEconomy().format(amount));
-                                    getMessage().send(target, "&6You received&a " + getEconomy().currency() + getEconomy().format(amount) + "&6 from&f " + player.getName());
-                                } else getMessage().send(player, "&cYou don't have&a " + getEconomy().currency() + getEconomy().format(amount) + "&c to pay&f " + target.getName());
-                            } else getMessage().send(player, "&cYou have to pay at least&a " + getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment()));
-                        } else getMessage().send(player, target.getName() + "&c has never joined");
-                    } else {
-                        var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                        if (getUserdata(offlinePlayer).exists()) {
-                            var amount = Double.parseDouble(args[1]);
-                            if (amount >= getEconomy().getMinimumPayment()) {
-                                if (getEconomy().has(player, amount)) {
-                                    getEconomy().remove(player, amount);
-                                    getEconomy().add(offlinePlayer, amount);
-                                    getMessage().send(player, "&6You paid&f " + offlinePlayer.getName() + "&a " + getEconomy().currency() + getEconomy().format(amount));
-                                } else getMessage().send(player, "&cYou don't have&a " + getEconomy().currency() + getEconomy().format(amount) + "&c to pay&f " + offlinePlayer.getName());
-                            } else getMessage().send(player, "&cYou have to pay at least&a " + getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment()));
-                        } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
-                    }
-                } else getMessage().send(player, "&cYou cannot pay your self");
+            if (args.length == 2) {
+                var target = player.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    if (target != player) {
+                        var amount = Double.parseDouble(args[1]);
+                        if (amount >= getEconomy().getMinimumPayment()) {
+                            if (getEconomy().has(player, amount)) {
+                                getEconomy().add(target, amount);
+                                getEconomy().remove(player, amount);
+                                target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currency() + getEconomy().format(amount), player.getName()));
+                                player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.pay.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount), target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
+                    } else player.sendMessage(getMessage().get("commands.pay.self"));
+                } else {
+                    var offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                    if (getUserdata(offlinePlayer).exists()) {
+                        var amount = Double.parseDouble(args[1]);
+                        if (amount >= getEconomy().getMinimumPayment()) {
+                            if (getEconomy().has(player, amount)) {
+                                getEconomy().add(offlinePlayer, amount);
+                                getEconomy().remove(player, amount);
+                                player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.pay.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount), offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                }
                 return true;
             }
         }

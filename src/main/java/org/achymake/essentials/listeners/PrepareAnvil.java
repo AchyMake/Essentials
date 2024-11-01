@@ -2,6 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
+import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,6 +15,9 @@ public class PrepareAnvil implements Listener {
     }
     private Message getMessage() {
         return getInstance().getMessage();
+    }
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -29,13 +33,15 @@ public class PrepareAnvil implements Listener {
         var view = event.getView();
         var player = view.getPlayer();
         var rename = view.getRenameText();
-        if (rename.contains("&")) {
-            if (player.hasPermission("essentials.event.anvil.color")) {
-                resultMeta.setDisplayName(getMessage().addColor(rename));
+        if (rename != null) {
+            if (rename.contains("&")) {
+                if (player.hasPermission("essentials.event.anvil.color")) {
+                    resultMeta.setDisplayName(getMessage().addColor(rename));
+                }
             }
         }
         var secondItem = event.getInventory().getSecondItem();
-        if (secondItem != null) {
+        if (secondItem != null && secondItem.getType().equals(getMaterials().get("enchanted_book"))) {
             var secondItemMeta = secondItem.getItemMeta();
             if (secondItemMeta.hasEnchants()) {
                 secondItemMeta.getEnchants().keySet().forEach(enchantment -> {
@@ -44,7 +50,9 @@ public class PrepareAnvil implements Listener {
                     if (bookLevel > maxLevel) {
                         if (player.hasPermission("essentials.event.anvil.unsafe")) {
                             resultMeta.addEnchant(enchantment, bookLevel, true);
-                        } else resultMeta.addEnchant(enchantment, maxLevel, true);
+                        } else if (player.hasPermission("essentials.event.anvil.safe")) {
+                            resultMeta.addEnchant(enchantment, maxLevel, true);
+                        }
                     }
                 });
             }

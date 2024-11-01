@@ -6,10 +6,7 @@ import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -34,31 +31,49 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 2) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+            if (args.length == 2) {
+                var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    var type = args[1];
-                    var itemStack = getMaterials().getItem(type, 1);
+                    var amount = 1;
+                    var itemStack = getMaterials().getItemStack(args[1], amount);
                     if (itemStack != null) {
-                        getMaterials().giveItem(target, itemStack);
-                        var itemName = getMessage().toTitleCase(itemStack.getType().toString());
-                        getMessage().send(player, "&6You gave&f " + target.getName() + " &61&f " + itemName);
+                        getMaterials().giveItemStack(target, itemStack);
+                        player.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
                         return true;
                     }
                 }
             } else if (args.length == 3) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    var type = args[1];
                     var amount = Integer.parseInt(args[2]);
-                    var itemStack = getMaterials().getItem(type, amount);
+                    var itemStack = getMaterials().getItemStack(args[1], amount);
                     if (itemStack != null) {
-                        getMaterials().giveItem(target, itemStack);
-                        var itemName = getMessage().toTitleCase(itemStack.getType().toString());
-                        getMessage().send(player, "&6You gave&f " + target.getName() + " &6" + amount + "&f " + itemName);
+                        getMaterials().giveItemStack(target, itemStack);
+                        player.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
+                        return true;
+                    }
+                }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 2) {
+                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    var amount = 1;
+                    var itemStack = getMaterials().getItemStack(args[1], amount);
+                    if (itemStack != null) {
+                        getMaterials().giveItemStack(target, itemStack);
+                        consoleCommandSender.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
+                        return true;
+                    }
+                }
+            } else if (args.length == 3) {
+                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    var amount = Integer.parseInt(args[2]);
+                    var itemStack = getMaterials().getItemStack(args[1], amount);
+                    if (itemStack != null) {
+                        getMaterials().giveItemStack(target, itemStack);
+                        consoleCommandSender.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
                         return true;
                     }
                 }

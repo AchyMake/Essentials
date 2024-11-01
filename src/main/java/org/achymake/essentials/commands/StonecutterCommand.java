@@ -38,25 +38,22 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openStonecutter(target);
-                            getMessage().send(target, player.getName() + "&6 opened stonecutter for you");
-                            getMessage().send(player, "&6You opened stonecutter for&f " + target.getName());
+                            player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                             return true;
-                        } else if (target.hasPermission("essentials.command.stonecutter.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                        } else if (!target.hasPermission("essentials.command.stonecutter.exempt")) {
                             openStonecutter(target);
-                            getMessage().send(target, player.getName() + "&6 opened stonecutter for you");
-                            getMessage().send(player, "&6You opened stonecutter for&f " + target.getName());
-                        }
+                            player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.stonecutter.exempt", target.getName()));
                         return true;
                     }
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     openStonecutter(target);
+                    consoleCommandSender.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                     return true;
                 }
             }
@@ -84,7 +81,7 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
     private void openStonecutter(Player player) {
         var inventory = getInstance().getInventoryHandler().openStonecutter(player);
         if (inventory == null) {
-            getMessage().send(player, "&cServer does not provide this function");
+            player.sendMessage(getMessage().get("error.not-provided"));
         }
     }
 }

@@ -30,25 +30,20 @@ public class RespondCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length > 0) {
+            if (args.length > 0) {
                 if (userdata.getConfig().isString("last-whisper")) {
                     if (userdata.getLastWhisper() != null) {
                         var target = player.getServer().getPlayer(userdata.getLastWhisper().getUniqueId());
                         if (target != null) {
                             var userdataTarget = getUserdata(target);
-                            var senderName = player.getName();
-                            var targetName = target.getName();
                             var message = getMessage().getBuilder(args, 1);
-                            getMessage().send(player, "&7You > " + targetName + ": " + message);
-                            getMessage().send(target, "&7" + senderName + " > You: " + message);
-                            getMessage().sendAll("&7" + senderName + " > " + targetName + ": " + message, "essentials.command.whisper.notify");
+                            target.sendMessage(getMessage().get("commands.respond.target", player.getName(), message));
+                            player.sendMessage(getMessage().get("commands.respond.sender", target.getName(), message));
                             userdata.setString("last-whisper", target.getUniqueId().toString());
                             userdataTarget.setString("last-whisper", player.getUniqueId().toString());
-                            return true;
-                        }
+                            getMessage().sendAll(getMessage().get("commands.respond.notify", player.getName(), target.getName(), message), "essentials.command.whisper.notify");
+                        } else player.sendMessage(getMessage().get("error.target.offline", userdata.getLastWhisper().getName()));
+                        return true;
                     }
                 }
             }

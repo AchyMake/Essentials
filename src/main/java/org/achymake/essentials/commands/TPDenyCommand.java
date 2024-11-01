@@ -34,39 +34,36 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (userdata.getTpaFrom() != null) {
-                    var target = sender.getServer().getPlayer(userdata.getTpaFrom().getUniqueId());
+                    var target = userdata.getTpaFrom().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdataTarget.getTaskID("tpa");
-                        if (getScheduler().isQueued(taskID)) {
-                            getScheduler().cancel(taskID);
-                            getMessage().send(target, player.getName() + "&6 denied tpa request");
-                            getMessage().send(player, "&6You denied tpa request");
+                        var tpaTask = userdataTarget.getTaskID("tpa");
+                        if (getScheduler().isQueued(tpaTask)) {
+                            getScheduler().cancel(tpaTask);
                             userdata.setString("tpa.from", null);
                             userdataTarget.setString("tpa.sent", null);
                             userdataTarget.disableTask("tpa");
+                            target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
                         }
                     }
                 } else if (userdata.getTpaHereFrom() != null) {
-                    var target = sender.getServer().getPlayer(userdata.getTpaHereFrom().getUniqueId());
+                    var target = userdata.getTpaHereFrom().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdataTarget.getTaskID("tpahere");
-                        if (getScheduler().isQueued(taskID)) {
-                            getScheduler().cancel(taskID);
-                            getMessage().send(target, player.getName() + "&6 denied tpahere request");
-                            getMessage().send(player, "&6You denied tpahere request");
+                        var tpaHereTask = userdataTarget.getTaskID("tpahere");
+                        if (getScheduler().isQueued(tpaHereTask)) {
+                            getScheduler().cancel(tpaHereTask);
                             userdata.setString("tpahere.from", null);
                             userdataTarget.setString("tpahere.sent", null);
                             userdataTarget.disableTask("tpahere");
+                            target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
                         }
                     }
-                } else getMessage().send(player, "&cYou do not have any tp request");
+                } else player.sendMessage(getMessage().get("commands.tpdeny.non-requested"));
                 return true;
             }
         }

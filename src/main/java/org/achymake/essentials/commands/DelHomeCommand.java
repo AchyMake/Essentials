@@ -30,15 +30,12 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var homeName = args[0].toLowerCase();
                 if (userdata.isHome(homeName)) {
                     userdata.setString("homes." + homeName, null);
-                    getMessage().send(player, homeName + "&6 has been deleted");
-                } else getMessage().send(player, homeName + "&c does not exist");
+                    player.sendMessage(getMessage().get("commands.delhome.success", homeName));
+                } else player.sendMessage(getMessage().get("commands.delhome.invalid"));
                 return true;
             }
         }

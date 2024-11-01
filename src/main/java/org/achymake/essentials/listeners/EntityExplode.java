@@ -25,11 +25,8 @@ public class EntityExplode implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
-        var entityHandler = getEntityHandler(entity);
-        if (!entityHandler.exists())return;
-        if (!entityHandler.disableBlockDamage())return;
+        if (event.getEntity() instanceof Player)return;
+        if (!getEntityHandler(event.getEntity()).disableBlockDamage())return;
         event.setCancelled(true);
     }
 }

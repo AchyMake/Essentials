@@ -29,10 +29,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 player.openInventory(player.getEnderChest());
                 return true;
             } else if (args.length == 1) {
@@ -40,15 +37,13 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            player.openInventory(target.getEnderChest()).setTitle(target.getName() + "'s Ender Chest");
-                            getMessage().send(player, "&6Opened enderchest of&f " + player.getName());
+                            player.openInventory(target.getEnderChest()).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.enderchest.exempt")) {
-                            player.openInventory(target.getEnderChest()).setTitle(target.getName() + "'s Ender Chest");
-                            getMessage().send(player, "&6Opened enderchest of&f " + target.getName());
-                        } else getMessage().send(player, command.getPermissionMessage());
-                        return true;
-                    }
+                            player.openInventory(target.getEnderChest()).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.enderchest.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
         }
@@ -59,7 +54,7 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (player.hasPermission("players.command.enderchest.other")) {
+                if (player.hasPermission("essentials.command.enderchest.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
                             if (target.getName().startsWith(args[0])) {

@@ -29,17 +29,13 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (target != player) {
                         if (!target.hasPermission("essentials.command.inventory.exempt")) {
-                            player.openInventory(target.getInventory()).setTitle(target.getName() + "'s Inventory");
-                            getMessage().send(player, "&6Opened inventory of " + target.getName());
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            player.openInventory(target.getInventory()).setTitle(getMessage().get("commands.inventory.title", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.inventory.exempt"));
                         return true;
                     }
                 }

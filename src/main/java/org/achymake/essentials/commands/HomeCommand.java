@@ -29,32 +29,29 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var delay = getInstance().getConfig().getInt("teleport.delay");
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                var location = getUserdata(player).getHome("home");
-                if (location != null) {
-                    userdata.teleport(location, "home", delay);
-                } else getMessage().send(player, "home&c does not exist");
+            if (args.length == 0) {
+                var delay = getInstance().getConfig().getInt("teleport.delay");
+                var home = getUserdata(player).getHome("home");
+                if (home != null) {
+                    getUserdata(player).teleport(home, "home", delay);
+                } else player.sendMessage(getMessage().get("commands.home.invalid", "home"));
                 return true;
             } else if (args.length == 1) {
+                var delay = getInstance().getConfig().getInt("teleport.delay");
                 var homeName = args[0].toLowerCase();
                 if (homeName.equalsIgnoreCase("bed")) {
                     if (player.hasPermission("essentials.command.home.bed")) {
-                        var location = player.getBedSpawnLocation();
-                        if (location != null) {
-                            userdata.teleport(location, "bed", delay);
-                        } else getMessage().send(player, "bed&c does not exist");
+                        var bed = player.getBedSpawnLocation();
+                        if (bed != null) {
+                            getUserdata(player).teleport(bed, homeName, delay);
+                        } else player.sendMessage(getMessage().get("commands.home.invalid", "bed"));
                         return true;
                     }
                 } else {
-                    var location = getUserdata(player).getHome(homeName);
-                    if (location != null) {
-                        userdata.teleport(location, homeName, delay);
-                    } else getMessage().send(player, homeName + "&c does not exist");
+                    var home = getUserdata(player).getHome(homeName);
+                    if (home != null) {
+                        getUserdata(player).teleport(home, homeName, delay);
+                    } else player.sendMessage(getMessage().get("commands.home.invalid", homeName));
                     return true;
                 }
             }

@@ -1,6 +1,7 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,14 +15,14 @@ public record EntityHandler(Entity getEntity) {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private File getFile() {
-        return new File(getInstance().getDataFolder(), "entity/" + getType() + ".yml");
+    private Entities getEntities() {
+        return getInstance().getEntities();
     }
     public boolean exists() {
-        return getFile().exists();
+        return getEntities().exists(getType());
     }
     public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(getFile());
+        return getEntities().getConfig(getType());
     }
     public boolean isHostile() {
         return getConfig().getBoolean("hostile");

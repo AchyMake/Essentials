@@ -25,11 +25,8 @@ public class EntityInteract implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityInteract(EntityInteractEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
-        var entityHandler = getEntityHandler(entity);
-        if (!entityHandler.exists())return;
-        if (!entityHandler.disableBlockInteract(event.getBlock()))return;
+        if (event.getEntity() instanceof Player)return;
+        if (!getEntityHandler(event.getEntity()).disableBlockInteract(event.getBlock()))return;
         event.setCancelled(true);
     }
 }

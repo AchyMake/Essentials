@@ -21,7 +21,7 @@ public class NotePlay implements Listener {
     public NotePlay() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(NotePlayEvent event) {
         if (!getConfig().getBoolean("physics.disable-redstone"))return;
         event.setCancelled(true);

@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -26,32 +27,29 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                getMessage().sendColorCodes(player);
+            if (args.length == 0) {
+                sendColorCodes(player);
                 return true;
             } else if (args.length == 1) {
-                if (player.hasPermission("players.command.color.other")) {
+                if (player.hasPermission("essentials.command.color.other")) {
                     var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getMessage().sendColorCodes(player);
-                        } else if (target.hasPermission("players.command.color.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else getMessage().sendColorCodes(target);
-                        return true;
-                    }
-                }
-            }
-        } else if (sender instanceof ConsoleCommandSender) {
-            if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
-                if (target != null) {
-                    getMessage().sendColorCodes(target);
+                            sendColorCodes(target);
+                        } else if (!target.hasPermission("essentials.command.color.exempt")) {
+                            sendColorCodes(target);
+                        } else player.sendMessage(getMessage().get("commands.color.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
                 }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 1) {
+                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    sendColorCodes(target);
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -61,7 +59,7 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (player.hasPermission("players.command.color.others")) {
+                if (player.hasPermission("essentials.command.color.others")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
                             if (target.getName().startsWith(args[0])) {
@@ -73,5 +71,16 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
+    }
+    private void sendColorCodes(Player player) {
+        player.sendMessage(getMessage().get("commands.color.title"));
+        player.sendMessage(ChatColor.BLACK + "&0" + ChatColor.DARK_BLUE + " &1" + ChatColor.DARK_GREEN + " &2" + ChatColor.DARK_AQUA + " &3");
+        player.sendMessage(ChatColor.DARK_RED + "&4" + ChatColor.DARK_PURPLE + " &5" + ChatColor.GOLD + " &6" + ChatColor.GRAY + " &7");
+        player.sendMessage(ChatColor.DARK_GRAY + "&8" + ChatColor.BLUE + " &9" + ChatColor.GREEN + " &a" + ChatColor.AQUA + " &b");
+        player.sendMessage(ChatColor.RED + "&c" + ChatColor.LIGHT_PURPLE + " &d" + ChatColor.YELLOW + " &e");
+        player.sendMessage("");
+        player.sendMessage("&k" + ChatColor.MAGIC + " Magic" + ChatColor.RESET + " &l" + ChatColor.BOLD + " Bold");
+        player.sendMessage("&m" + ChatColor.STRIKETHROUGH + " Strike" + ChatColor.RESET + " &n" + ChatColor.UNDERLINE + " Underline");
+        player.sendMessage("&o" + ChatColor.ITALIC + " Italic" + ChatColor.RESET + " &r Reset");
     }
 }

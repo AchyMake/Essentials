@@ -27,25 +27,24 @@ public class GMSCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                if (player.getGameMode().equals(GameMode.SURVIVAL)) {
-                    getMessage().send(player, "&cYou are already in&f Survival&c mode");
-                } else setSurvival(player);
-                return true;
+            if (args.length == 0) {
+                if (!player.getGameMode().equals(GameMode.SURVIVAL)) {
+                    setSurvival(player);
+                    return true;
+                }
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            setSurvival(target);
-                        } else if (target.hasPermission("essentials.command.gamemode.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else if (target.getGameMode().equals(GameMode.SURVIVAL)) {
-                            getMessage().send(player, target.getName() + "&c is already in&f Survival&c mode");
-                        } else setSurvival(target);
+                            if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
+                                setSurvival(target);
+                            }
+                        } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
+                            if (!target.getGameMode().equals(GameMode.SURVIVAL)) {
+                                setSurvival(target);
+                            }
+                        } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -83,5 +82,6 @@ public class GMSCommand implements CommandExecutor, TabCompleter {
     }
     private void setSurvival(Player player) {
         player.setGameMode(GameMode.SURVIVAL);
+        getMessage().sendActionBar(player, getMessage().get("commands.gamemode.survival"));
     }
 }

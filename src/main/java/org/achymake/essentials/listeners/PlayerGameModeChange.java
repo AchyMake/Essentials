@@ -23,9 +23,7 @@ public class PlayerGameModeChange implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-        var player = event.getPlayer();
-        var gamemode = event.getNewGameMode();
-        getMessage().send(player, "&6Your gamemode has changed to&f " + getMessage().toTitleCase(gamemode.name()));
-        getMessage().sendAll(player.getName() + "&6 has changed gamemode to&f " + getMessage().toTitleCase(gamemode.name()), "essentials.event.gamemode_change.notify");
+        event.getPlayer().sendMessage(getMessage().get("events.gamemode.change", getMessage().toTitleCase(event.getNewGameMode().name())));
+        getMessage().sendAll(getMessage().get("events.gamemode.notify", event.getPlayer().getName(), getMessage().toTitleCase(event.getNewGameMode().name())), "essentials.event.gamemode_change.notify");
     }
 }

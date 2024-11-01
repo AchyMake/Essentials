@@ -29,22 +29,15 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length > 1) {
+            if (args.length > 1) {
                 var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
                     var message = getMessage().getBuilder(args, 1);
-                    var targetName = target.getName();
-                    var senderName = player.getName();
-                    getMessage().send(player, "&7You > " + targetName + ": " + message);
-                    getMessage().send(target, "&7" + senderName + " > You: " + message);
-                    getMessage().sendAll("&7" + senderName + " > " + targetName + ": " + message, "essentials.command.whisper.notify");
-                    userdata.setString("last-whisper", target.getUniqueId().toString());
-                    userdataTarget.setString("last-whisper", player.getUniqueId().toString());
+                    getUserdata(target).setString("last-whisper", player.getUniqueId().toString());
+                    getUserdata(player).setString("last-whisper", target.getUniqueId().toString());
+                    target.sendMessage(getMessage().get("commands.whisper.target", player.getName(), message));
+                    player.sendMessage(getMessage().get("commands.whisper.sender", target.getName(), message));
+                    getMessage().sendAll(getMessage().get("commands.whisper.notify", player.getName(), target.getName(), message), "essentials.command.whisper.notify");
                     return true;
                 }
             }
@@ -56,10 +49,10 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
-                        if (target.getName().startsWith(args[0])) {
-                            commands.add(target.getName());
+                getInstance().getOnlinePlayers().forEach(players -> {
+                    if (!getUserdata(players).isVanished()) {
+                        if (players.getName().startsWith(args[0])) {
+                            commands.add(players.getName());
                         }
                     }
                 });

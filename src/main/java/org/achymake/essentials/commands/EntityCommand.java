@@ -37,42 +37,42 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
                     getEntities().setBoolean(entityType, "hostile", value);
-                    getMessage().send(player, entityName + "&6's hostile is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.hostile", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("chunk-limit")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var limit = Integer.parseInt(args[2]);
                     getEntities().setInt(entityType, "chunk-limit", limit);
-                    getMessage().send(player, entityName + "&6's chunk limit is now&f " + limit);
+                    player.sendMessage(getMessage().get("commands.entity.chunk-limit", entityName, String.valueOf(limit)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-spawn")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
                     getEntities().setBoolean(entityType, "disable-spawn", value);
-                    getMessage().send(player, entityName + "&6's disable spawn is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-spawn", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-block-form")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
                     getEntities().setBoolean(entityType, "disable-block-form", value);
-                    getMessage().send(player, entityName + "&6's disable block form is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-block-form", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-block-damage")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
                     getEntities().setBoolean(entityType, "disable-block-damage", value);
-                    getMessage().send(player, entityName + "&6's disable block damage is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-block-damage", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-block-change")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
                     getEntities().setBoolean(entityType, "disable-block-change", value);
-                    getMessage().send(player, entityName + "&6's disable block change is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-block-change", entityName, String.valueOf(value)));
                     return true;
                 }
             } else if (args.length == 4) {
@@ -82,7 +82,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var blockType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
                     getEntities().setBoolean(entityType, "disable-block-interact." + blockType, value);
-                    getMessage().send(player, entityName + "&6's disable block interact." + blockType + " is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-block-interact", entityName, blockType, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-target")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
@@ -90,7 +90,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
                     getEntities().setBoolean(entityType, "disable-target." + targetType, value);
-                    getMessage().send(player, entityName + "&6's disable target&f " + targetType + "&6 is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-target", entityName, targetType, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-damage")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
@@ -98,7 +98,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
                     getEntities().setBoolean(entityType, "disable-damage." + targetType, value);
-                    getMessage().send(player, entityName + "&6's disable damage&f " + targetType + "&6 is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-damage", entityName, targetType, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
                     var entityType = EntityType.valueOf(args[0].toUpperCase());
@@ -106,7 +106,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var spawnReason = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
                     getEntities().setBoolean(entityType, "disabled-spawn-reason." + spawnReason, value);
-                    getMessage().send(player, entityName + "&6's disabled spawn reason&f " + spawnReason + "&6 is now&f " + value);
+                    player.sendMessage(getMessage().get("commands.entity.disabled-spawn-reason", entityName, spawnReason, String.valueOf(value)));
                     return true;
                 }
             }
@@ -204,7 +204,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                         var targetType = EntityType.valueOf(args[2].toUpperCase());
                         commands.add(String.valueOf(getEntities().disableDamage(entityType, targetType)));
                     }
-                    if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
+                    if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                         var spawnReason = CreatureSpawnEvent.SpawnReason.valueOf(args[2].toUpperCase());
                         commands.add(String.valueOf(getEntities().disabledSpawnReason(entityType, spawnReason)));
                     }

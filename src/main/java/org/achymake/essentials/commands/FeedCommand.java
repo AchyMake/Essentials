@@ -30,49 +30,40 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            int timer = getInstance().getConfig().getInt("commands.cooldown.feed");
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
+                int timer = getInstance().getConfig().getInt("commands.cooldown.feed");
                 if (timer > 0) {
-                    if (getCooldown().has(player, "feed", timer)) {
-                        var timeLeft = getCooldown().get(player, "feed", timer);
-                        getMessage().sendActionBar(player, "&cYou have to wait&f " + timeLeft + "&c seconds");
-                    } else {
+                    if (!getCooldown().has(player, "feed", timer)) {
                         player.setFoodLevel(20);
-                        getMessage().sendActionBar(player, "&6Your starvation has been satisfied");
+                        player.sendMessage(getMessage().get("commands.feed.success"));
                         getCooldown().add(player, "feed", timer);
-                    }
+                    } else getMessage().sendActionBar(player, getMessage().get("commands.feed.cooldown", getCooldown().get(player, "feed", timer)));
                 } else {
                     player.setFoodLevel(20);
-                    getMessage().sendActionBar(player, "&6Your starvation has been satisfied");
+                    player.sendMessage(getMessage().get("commands.feed.success"));
                 }
                 return true;
             } else if (args.length == 1) {
-                if (player.hasPermission("players.command.feed.other")) {
+                if (player.hasPermission("essentials.command.feed.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
-                        if (target.hasPermission("players.command.feed.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                        if (!target.hasPermission("essentials.command.feed.exempt")) {
                             target.setFoodLevel(20);
-                            getMessage().sendActionBar(target, "&6Your starvation has been satisfied");
-                            getMessage().send(player, "&6You satisfied&f " + target.getName() + "&6's starvation");
-                        }
-                        return true;
-                    }
+                            target.sendMessage(getMessage().get("commands.feed.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.feed.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.feed.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
-                    getMessage().sendActionBar(target, "&6Your starvation has been satisfied");
-                    return true;
-                }
+                    target.sendMessage(getMessage().get("commands.feed.success"));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

@@ -34,19 +34,16 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (userdata.getTpaFrom() != null) {
-                    var target = player.getServer().getPlayer(userdata.getTpaFrom().getUniqueId());
+                    var target = userdata.getTpaFrom().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdata.getTaskID("tpa");
-                        if (getScheduler().isQueued(taskID)) {
-                            getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpa request");
-                            getMessage().send(target, player.getName() + "&6 accepted tpa request");
-                            getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                        var tpaTask = userdata.getTaskID("tpa");
+                        if (getScheduler().isQueued(tpaTask)) {
+                            target.sendMessage(getMessage().get("commands.tpaccept.tpa.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpaccept.tpa.sender", target.getName()));
+                            getMessage().sendActionBar(target, getMessage().get("events.teleport.success", player.getName()));
                             target.teleport(player);
                             userdataTarget.setString("tpa.sent", null);
                             userdata.setString("tpa.from", null);
@@ -54,21 +51,21 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                 } else if (userdata.getTpaHereFrom() != null) {
-                    var target = player.getServer().getPlayer(userdata.getTpaHereFrom().getUniqueId());
+                    var target = userdata.getTpaHereFrom().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdataTarget.getTaskID("tpahere");
-                        if (getScheduler().isQueued(taskID)) {
-                            getMessage().send(target, player.getName() + "&6 accepted tpahere request");
-                            getMessage().send(player, "&6You accepted&f " + target.getName() + "&6 tpahere request");
-                            getMessage().sendActionBar(player, "&6Teleporting to&f " + player.getName());
+                        var tpaHereTask = userdataTarget.getTaskID("tpahere");
+                        if (getScheduler().isQueued(tpaHereTask)) {
+                            target.sendMessage(getMessage().get("commands.tpaccept.tpahere.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpaccept.tpahere.sender", target.getName()));
+                            getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));
                             player.teleport(target);
                             userdataTarget.setString("tpahere.sent", null);
                             userdata.setString("tpahere.from", null);
                             userdataTarget.disableTask("tpahere");
                         }
                     }
-                } else getMessage().send(player, "&cYou don't have any tp request");
+                } else player.sendMessage(getMessage().get("commands.tpaccept.non-requests"));
                 return true;
             }
         }

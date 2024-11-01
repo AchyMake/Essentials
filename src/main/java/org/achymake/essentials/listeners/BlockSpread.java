@@ -22,7 +22,7 @@ public class BlockSpread implements Listener {
     public BlockSpread() {
         getManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockSpread(BlockSpreadEvent event) {
         if (event.getSource().getType().equals(Material.FIRE)) {
             if (!getConfig().getBoolean("fire.disable-fire-spread"))return;

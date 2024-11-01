@@ -43,7 +43,6 @@ public class PlayerDeath implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = event.getEntity();
-        getUserdata(player).setLocation(player.getLocation(), "death");
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
             if (getConfig().getInt("deaths.drop-player-head.chance") > new Random().nextInt(100)) {
                 event.getDrops().add(getMaterials().getPlayerHead(player, 1));
@@ -55,8 +54,8 @@ public class PlayerDeath implements Listener {
             var lost = new Random().nextDouble(min, max);
             if (getEconomy().has(player, lost)) {
                 getEconomy().remove(player, lost);
-                var message = event.getDeathMessage().replace(player.getName(), "");
-                getMessage().send(player, "&cYou lost&a " + getEconomy().currency() + getEconomy().format(lost) + "&c you" + message);
+                var message = event.getDeathMessage().replace(player.getName(), "you");
+                player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), message));
             }
         }
         if (player.hasPermission("essentials.event.death.keep_inventory")) {
@@ -66,6 +65,10 @@ public class PlayerDeath implements Listener {
         if (player.hasPermission("essentials.event.death.keep_exp")) {
             event.setKeepLevel(true);
             event.setDroppedExp(0);
+        }
+        var location = player.getLocation();
+        if (!location.getBlock().getType().equals(getMaterials().get("lava"))) {
+            getUserdata(player).setLocation(player.getLocation(), "death");
         }
     }
 }

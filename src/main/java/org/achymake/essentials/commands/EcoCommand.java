@@ -30,17 +30,14 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 2) {
+            if (args.length == 2) {
                 var offlinePlayer = player.getServer().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
-                    Userdata userdataOffline = getUserdata(offlinePlayer);
+                    var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setDouble("account", getInstance().getConfig().getDouble("economy.starting-balance"));
-                        getMessage().send(player, "&6You reset&f " + offlinePlayer.getName() + "&6 account to&a " + getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance")));
-                    } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        player.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }
             } else if (args.length == 3) {
@@ -50,24 +47,24 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         getEconomy().add(offlinePlayer, value);
-                        getMessage().send(player, "&6You added&a " + getEconomy().currency() + getEconomy().format(value) + "&6 to&f " + offlinePlayer.getName());
-                    } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        player.sendMessage(getMessage().get("commands.eco.add", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("remove")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         if (getEconomy().has(offlinePlayer, value)) {
                             getEconomy().remove(offlinePlayer, value);
-                            getMessage().send(player, "&6You removed&a " + getEconomy().currency() + getEconomy().format(value) + "&6 from&f " + offlinePlayer.getName());
-                        } else getMessage().send(player, offlinePlayer.getName() + "&c does not have&a " + getEconomy().currency() + getEconomy().format(value));
-                    } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                            player.sendMessage(getMessage().get("commands.eco.remove.success", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("commands.eco.remove.non-sufficient-funds", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(value)));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("set")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setDouble("account", value);
-                        getMessage().send(player, "&6You set&a " + getEconomy().currency() + getEconomy().format(value) + "&6 to&f " + offlinePlayer.getName());
-                    } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                        player.sendMessage(getMessage().get("commands.eco.set", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }
             }
@@ -78,8 +75,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setDouble("account", getInstance().getConfig().getDouble("economy.starting-balance"));
-                        consoleCommandSender.sendMessage("You reset " + offlinePlayer.getName() + " account to " + getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance")));
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                        consoleCommandSender.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }
             } else if (args.length == 3) {
@@ -89,24 +86,24 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         getEconomy().add(offlinePlayer, value);
-                        consoleCommandSender.sendMessage("You added " + getEconomy().currency() + getEconomy().format(value) + " to " + offlinePlayer.getName());
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                        consoleCommandSender.sendMessage(getMessage().get("commands.eco.add", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("remove")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         if (getEconomy().has(offlinePlayer, value)) {
                             getEconomy().remove(offlinePlayer, value);
-                            consoleCommandSender.sendMessage("You removed " + getEconomy().currency() + getEconomy().format(value) + " from " + offlinePlayer.getName());
-                        } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " does not have " + getEconomy().currency() + getEconomy().format(value));
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                            consoleCommandSender.sendMessage(getMessage().get("commands.eco.remove.success", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.eco.remove.non-sufficient-funds", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(value)));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("set")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         getEconomy().set(offlinePlayer, value);
-                        consoleCommandSender.sendMessage("You set " + getEconomy().currency() + getEconomy().format(value) + " to " + offlinePlayer.getName());
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                        consoleCommandSender.sendMessage(getMessage().get("commands.eco.set", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }
             }

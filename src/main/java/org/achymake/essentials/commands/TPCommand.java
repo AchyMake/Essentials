@@ -29,16 +29,13 @@ public class TPCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (!target.hasPermission("essentials.command.tp.exempt")) {
-                        getMessage().sendActionBar(player, "&6Teleporting to&f " + target.getName());
+                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));
                         player.teleport(target.getLocation());
-                    } else getMessage().send(player, "&cYou are not allowed to tp to&f " + target.getName());
+                    } else player.sendMessage(getMessage().get("commands.tp.exempt", target.getName()));
                     return true;
                 }
             }

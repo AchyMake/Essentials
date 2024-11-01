@@ -29,17 +29,14 @@ public class TPHereCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (!target.hasPermission("essentials.command.tphere.exempt")) {
-                        getMessage().sendActionBar(player, "&6Teleporting&f " + target.getName() + "&6 to you");
-                        getMessage().sendActionBar(target, "&6Teleporting to&f " + player.getName());
+                        getMessage().sendActionBar(target, getMessage().get("events.teleport.success", target.getName()));
                         target.teleport(player.getLocation());
-                    } else getMessage().send(player, "&cYou are not allowed to tphere for&f " + target.getName());
+                        player.sendMessage(getMessage().get("commands.tphere.sender", target.getName()));
+                    } else player.sendMessage(getMessage().get("commands.tphere.exempt", target.getName()));
                     return true;
                 }
             }

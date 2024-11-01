@@ -26,11 +26,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 openWorkbench(player);
                 return true;
             } else if (args.length == 1) {
@@ -39,23 +35,22 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openWorkbench(target);
-                            getMessage().send(target, player.getName() + "&6 opened workbench for you");
-                            getMessage().send(player, "&6You opened workbench for&f " + target.getName());
+                            player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.workbench.exempt")) {
                             openWorkbench(target);
-                            getMessage().send(target, player.getName() + "&6 opened workbench for you");
-                            getMessage().send(player, "&6You opened workbench for&f " + target.getName());
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.workbench.exempt", target.getName()));
                         return true;
                     }
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     openWorkbench(target);
+                    consoleCommandSender.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                     return true;
                 }
             }
@@ -68,10 +63,10 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
-                                commands.add(target.getName());
+                    getInstance().getOnlinePlayers().forEach(players -> {
+                        if (!getUserdata(players).isVanished()) {
+                            if (players.getName().startsWith(args[0])) {
+                                commands.add(players.getName());
                             }
                         }
                     });

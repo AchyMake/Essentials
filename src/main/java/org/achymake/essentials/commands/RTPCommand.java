@@ -32,30 +32,23 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.rtp");
                 if (!getCooldown().has(player, "rtp", timer)) {
                     getCooldown().add(player, "rtp", timer);
-                    getMessage().sendActionBar(player, "&6Finding safe locations...");
                     randomTeleport(player);
-                } else getMessage().sendActionBar(player, "&cYou have to wait&f " + getCooldown().get(player, "rtp", timer) + "&c seconds");
+                } else player.sendMessage(getMessage().get("commands.rtp.cooldown", getCooldown().get(player, "rtp", timer)));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.rtp.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getMessage().sendActionBar(player, "&6Finding safe locations...");
                             randomTeleport(player);
                             return true;
                         } else if (!target.hasPermission("essentials.command.rtp.exempt")) {
-                            getMessage().sendActionBar(target, "&6Finding safe locations...");
                             randomTeleport(target);
-                        } else getMessage().send(player, command.getPermissionMessage());
+                        } else player.sendMessage(getMessage().get("commands.rtp.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -64,7 +57,6 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    getMessage().sendActionBar(target, "&6Finding safe locations...");
                     randomTeleport(target);
                     return true;
                 }
@@ -98,16 +90,23 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
         return getInstance().getServer().getWorld(worldName).getHighestBlockAt(x, z);
     }
     private void randomTeleport(Player player) {
-        var block = highestRandomBlock();
-        if (block.isLiquid()) {
-            getMessage().sendActionBar(player, "&cFinding new location due to liquid block");
-            randomTeleport(player);
-        } else {
-            if (!block.getChunk().isLoaded()) {
-                block.getChunk().load();
+        getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
+        var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
+            @Override
+            public void run() {
+                var block = highestRandomBlock();
+                if (block.isLiquid()) {
+                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
+                    randomTeleport(player);
+                } else {
+                    if (!block.getChunk().isLoaded()) {
+                        block.getChunk().load();
+                    }
+                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
+                    player.teleport(block.getLocation().add(0.5,1,0.5));
+                }
             }
-            getMessage().sendActionBar(player, "&6Teleporting to&f random");
-            player.teleport(block.getLocation().add(0.5,1,0.5));
-        }
+        }, 0).getTaskId();
+        getUserdata(player).addTaskID("rtp", taskID);
     }
 }

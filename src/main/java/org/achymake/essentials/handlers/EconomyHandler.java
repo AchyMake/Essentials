@@ -108,7 +108,7 @@ public class EconomyHandler {
     public void openBankWithdraw(Player player) {
         var anvil = getInventoryHandler().openAnvil(player);
         if (anvil != null) {
-            var itemStack = getMaterialHandler().getItem("paper", 1);
+            var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName("0.0");
             itemStack.setItemMeta(itemMeta);
@@ -122,7 +122,7 @@ public class EconomyHandler {
     public void openBankDeposit(Player player) {
         var anvil = getInventoryHandler().openAnvil(player);
         if (anvil != null) {
-            var itemStack = getMaterialHandler().getItem("paper", 1);
+            var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
             itemMeta.setDisplayName("0.0");
             itemStack.setItemMeta(itemMeta);

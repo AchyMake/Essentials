@@ -26,31 +26,30 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+            if (args.length == 1) {
+                var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
+                    var userdataTarget = getUserdata(target);
                     if (target == player) {
-                        getUserdata(player).setBoolean("settings.frozen", !getUserdata(player).isFrozen());
-                        if (getUserdata(player).isFrozen()) {
-                            getMessage().send(player, "&6You froze&f " + target.getName());
-                        } else getMessage().send(player, "&6You unfroze&f " + target.getName());
-                    } else if (!target.hasPermission("players.command.freeze.exempt")) {
-                        getUserdata(target).setBoolean("settings.frozen", !getUserdata(target).isFrozen());
-                        if (getUserdata(target).isFrozen()) {
-                            getMessage().send(player, "&6You froze&f " + target.getName());
-                        } else getMessage().send(player, "&6You unfroze&f " + target.getName());
+                        userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
+                        if (userdataTarget.isFrozen()) {
+                            player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                    } else if (!target.hasPermission("essentials.command.freeze.exempt")) {
+                        userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
+                        if (userdataTarget.isFrozen()) {
+                            player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                     } else getMessage().send(player, command.getPermissionMessage());
                 } else {
                     var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                    if (getUserdata(offlinePlayer).exists()) {
-                        getUserdata(offlinePlayer).setBoolean("settings.frozen", !getUserdata(offlinePlayer).isFrozen());
-                        if (getUserdata(offlinePlayer).isFrozen()) {
-                            getMessage().send(player, "&6You froze&f " + offlinePlayer.getName());
-                        } else getMessage().send(player, "&6You unfroze&f " + offlinePlayer.getName());
-                    } else getMessage().send(player, offlinePlayer.getName() + "&c has never joined");
+                    var userdataOffline = getUserdata(offlinePlayer);
+                    if (userdataOffline.exists()) {
+                        userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
+                        if (userdataOffline.isFrozen()) {
+                            player.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
             }
@@ -58,18 +57,20 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    getUserdata(target).setBoolean("settings.frozen", !getUserdata(target).isFrozen());
-                    if (getUserdata(target).isFrozen()) {
-                        consoleCommandSender.sendMessage("You froze " + target.getName());
-                    } else consoleCommandSender.sendMessage("You unfroze " + target.getName());
+                    var userdataTarget = getUserdata(target);
+                    userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
+                    if (userdataTarget.isFrozen()) {
+                        consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                 } else {
                     var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
-                    if (getUserdata(offlinePlayer).exists()) {
-                        getUserdata(offlinePlayer).setBoolean("settings.frozen", !getUserdata(offlinePlayer).isFrozen());
+                    var userdataOffline = getUserdata(offlinePlayer);
+                    if (userdataOffline.exists()) {
+                        userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
                         if (getUserdata(offlinePlayer).isFrozen()) {
-                            consoleCommandSender.sendMessage("You froze " + offlinePlayer.getName());
-                        } else consoleCommandSender.sendMessage("You unfroze " + offlinePlayer.getName());
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                            consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
             }

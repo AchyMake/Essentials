@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.VanishHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
@@ -31,9 +30,6 @@ public class PlayerQuit implements Listener {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private ScheduleHandler getScheduler() {
-        return getInstance().getScheduleHandler();
-    }
     private PluginManager getManager() {
         return getInstance().getManager();
     }
@@ -57,61 +53,21 @@ public class PlayerQuit implements Listener {
             event.setQuitMessage(null);
             getMessage().sendAll(player.getName() + "&7 left the Server", "essentials.event.quit.notify");
         }
-        removeTeleport(player);
-        removeVanish(player);
-        removeTPA(player);
-        removeTPAHere(player);
-        userdata.setLocation(player.getLocation(), "quit");
-    }
-    private void removeTeleport(Player player) {
-        var userdata = getUserdata(player);
-        if (!userdata.hasTaskID("teleport"))return;
-        userdata.disableTask("teleport");
-    }
-    private void removeVanish(Player player) {
-        var userdata = getUserdata(player);
-        if (!userdata.hasTaskID("vanish"))return;
-        userdata.disableTask("vanish");
-    }
-    private void removeTPA(Player player) {
-        var userdata = getUserdata(player);
+        userdata.disableTasks();
         if (userdata.getTpaSent() != null) {
-            var tpaSent = userdata.getTpaSent();
-            var userdataTarget = getUserdata(tpaSent);
-            userdataTarget.setString("tpa.from", null);
-            if (getScheduler().isQueued(userdata.getTaskID("tpa"))) {
-                userdata.disableTask("tpa");
-            }
+            getUserdata(userdata.getTpaSent()).setString("tpa.from", null);
             userdata.setString("tpa.sent", null);
         } else if (userdata.getTpaFrom() != null) {
-            var tpaFrom = userdata.getTpaFrom();
-            var userdataTarget = getUserdata(tpaFrom);
-            if (getScheduler().isQueued(userdataTarget.getTaskID("tpa"))) {
-                userdata.disableTask("tpa");
-            }
-            userdataTarget.setString("tpa.sent", null);
+            getUserdata(userdata.getTpaFrom()).setString("tpa.sent", null);
             userdata.setString("tpa.from", null);
-        }
-    }
-    private void removeTPAHere(Player player) {
-        var userdata = getUserdata(player);
-        if (userdata.getTpaHereSent() != null) {
-            var tpaHereSent = userdata.getTpaHereSent();
-            var userdataTarget = getUserdata(tpaHereSent);
-            userdataTarget.setString("tpahere.from", null);
-            if (getScheduler().isQueued(userdata.getTaskID("tpahere"))) {
-                userdata.disableTask("tpahere");
-            }
+        } else if (userdata.getTpaHereSent() != null) {
+            getUserdata(userdata.getTpaHereSent()).setString("tpahere.from", null);
             userdata.setString("tpahere.sent", null);
         } else if (userdata.getTpaHereFrom() != null) {
-            var tpaHereFrom = userdata.getTpaHereFrom();
-            var userdataTarget = getUserdata(tpaHereFrom);
-            if (getScheduler().isQueued(userdataTarget.getTaskID("tpahere"))) {
-                userdataTarget.disableTask("tpahere");
-            }
-            userdataTarget.setString("tpahere.sent", null);
+            getUserdata(userdata.getTpaHereFrom()).setString("tpahere.sent", null);
             userdata.setString("tpahere.from", null);
         }
+        userdata.setLocation(player.getLocation(), "quit");
     }
     private void playSound() {
         if (!getConfig().getBoolean("connection.quit.sound.enable"))return;

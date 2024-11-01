@@ -34,24 +34,25 @@ public class PlayerMove implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
-        var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        var from = event.getFrom();
-        var to = event.getTo();
-        if (!hasMoved(from, to))return;
-        if (userdata.isFrozen()) {
-            event.setCancelled(true);
-        } else if (userdata.hasTaskID("teleport")) {
-            if (!getConfig().getBoolean("teleport.cancel-on-move"))return;
-            getMessage().sendActionBar(player, "&cYou moved before teleporting!");
-            userdata.disableTask("teleport");
-        } else if (from.getChunk() != to.getChunk()) {
-            getManager().callEvent(new PlayerChangedChunkEvent(player, from, to));
-        }
+        if (event.getTo() != null) {
+            var from = event.getFrom();
+            var to = event.getTo();
+            if (!hasMoved(from, to))return;
+            var player = event.getPlayer();
+            var userdata = getUserdata(player);
+            if (userdata.isFrozen()) {
+                event.setCancelled(true);
+            } else if (userdata.hasTaskID("teleport")) {
+                if (!getConfig().getBoolean("teleport.cancel-on-move"))return;
+                userdata.disableTask("teleport");
+                player.sendMessage(getMessage().get("events.move"));
+            } else if (from.getChunk() != to.getChunk()) {
+                getManager().callEvent(new PlayerChangedChunkEvent(player, from, to));
+            }
+        } else event.setCancelled(true);
     }
     private boolean hasMoved(Location from, Location to) {
-        if (to == null)return false;
-        else return from.getX() != to.getX()
+        return from.getX() != to.getX()
                 || from.getY() != to.getY()
                 || from.getZ() != to.getZ();
     }

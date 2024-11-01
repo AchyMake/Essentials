@@ -879,6 +879,9 @@ permissions:
   essentials.event.anvil.unsafe:
     description: allows to unsafely use enchantments on anvil
     default: op
+  essentials.event.anvil.safe:
+    description: allows to safely use enchantments on anvil
+    default: op
   essentials.event.sign.color:
     description: uses color codes for sign
     default: op

@@ -52,6 +52,9 @@ public record WorldHandler(World getWorld) {
             return new Location(getWorld(), x, y, z, yaw, pitch);
         } else return getWorld().getSpawnLocation().add(0.5, 0.0, 0.5);
     }
+    public boolean getPVP() {
+        return getWorld().getPVP();
+    }
     public void setPVP(boolean value) {
         getWorld().setPVP(value);
     }

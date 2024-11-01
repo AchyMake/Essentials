@@ -26,34 +26,30 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
+                    var userdataTarget = getUserdata(target);
                     if (target == player) {
-                        var userdataTarget = getUserdata(target);
                         userdataTarget.setBoolean("settings.muted", !userdataTarget.isMuted());
                         if (userdataTarget.isMuted()) {
-                            getMessage().send(player, "&6You muted&f " + target.getName());
-                        } else getMessage().send(player, "&6You unmuted&f " + target.getName());
-                    } else if (!target.hasPermission("players.command.mute.exempt")) {
-                        var userdataTarget = getUserdata(target);
+                            player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                    } else if (!target.hasPermission("essentials.command.mute.exempt")) {
                         userdataTarget.setBoolean("settings.muted", !userdataTarget.isMuted());
                         if (userdataTarget.isMuted()) {
-                            getMessage().send(player, "&6You muted&f " + target.getName());
-                        } else getMessage().send(player, "&6You unmuted&f " + target.getName());
-                    } else getMessage().send(player, command.getPermissionMessage());
+                            player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                    } else player.sendMessage(getMessage().get("commands.mute.exempt", target.getName()));
                 } else {
                     var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setBoolean("settings.muted", !userdataOffline.isMuted());
                         if (userdataOffline.isMuted()) {
-                            getMessage().send(player, "&6You muted&f " + offlinePlayer.getName());
-                        } else getMessage().send(player, "&6You unmuted&f " + offlinePlayer.getName());
-                    } else getMessage().send(player,offlinePlayer.getName() + "&c has never joined");
+                            player.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
             }
@@ -64,17 +60,17 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
                     var userdataTarget = getUserdata(target);
                     userdataTarget.setBoolean("settings.muted", !userdataTarget.isMuted());
                     if (userdataTarget.isMuted()) {
-                        consoleCommandSender.sendMessage("You muted " + target.getName());
-                    } else consoleCommandSender.sendMessage("You unmuted " + target.getName());
+                        consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
                 } else {
                     var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setBoolean("settings.muted", !userdataOffline.isMuted());
                         if (userdataOffline.isMuted()) {
-                            consoleCommandSender.sendMessage("You muted " + offlinePlayer.getName());
-                        } else consoleCommandSender.sendMessage("You unmuted " + offlinePlayer.getName());
-                    } else consoleCommandSender.sendMessage(offlinePlayer.getName() + " has never joined");
+                            consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
             }

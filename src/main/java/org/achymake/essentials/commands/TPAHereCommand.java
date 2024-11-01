@@ -34,10 +34,7 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     if (target != player) {
@@ -49,23 +46,23 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
                                     userdataTarget.setString("tpahere.from", null);
                                     userdata.setString("tpahere.sent", null);
                                     userdata.disableTask("tpahere");
-                                    getMessage().send(player, "&cTeleport request has expired");
-                                    getMessage().send(target, "&cTeleport request has expired");
+                                    target.sendMessage(getMessage().get("commands.tpahere.expired"));
+                                    player.sendMessage(getMessage().get("commands.tpahere.expired"));
                                 }
                             }, 300).getTaskId();
                             userdataTarget.setString("tpahere.from", player.getUniqueId().toString());
                             userdata.setString("tpahere.sent", target.getUniqueId().toString());
                             userdata.addTaskID("tpahere", taskID);
-                            getMessage().send(target, player.getName() + "&6 has sent you a tpahere request");
-                            getMessage().send(target, "&6You can type&a /tpaccept&6 or&c /tpdeny");
-                            getMessage().send(player, "&6You have sent a tpahere request to&f " + target.getName());
-                            getMessage().send(player, "&6You can type&c /tpcancel");
+                            target.sendMessage(getMessage().get("commands.tpahere.target.notify", player.getName()));
+                            target.sendMessage(getMessage().get("commands.tpahere.target.decide"));
+                            player.sendMessage(getMessage().get("commands.tpahere.sender.notify", target.getName()));
+                            player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
                         } else {
-                            getMessage().send(player, "&cYou already sent tp request");
-                            getMessage().send(player, "&cYou can type&f /tpcancel");
+                            player.sendMessage(getMessage().get("commands.tpahere.occupied"));
+                            player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
                         }
                         return true;
-                    } else getMessage().send(player, "&cYou can't send request to your self");
+                    } else player.sendMessage(getMessage().get("commands.tpahere.request-self"));
                     return true;
                 }
             }

@@ -41,19 +41,22 @@ public class EntityDamageByEntity implements Listener {
         var damager = event.getDamager();
         switch (damager) {
             case Arrow arrow -> {
-                if (arrow.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (arrow.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target) return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
@@ -63,115 +66,127 @@ public class EntityDamageByEntity implements Listener {
                 if (userdata.isDisabled()) {
                     event.setCancelled(true);
                 } else if (entity instanceof Player target) {
-                    if (player == target)return;
+                    if (!target.getWorld().getPVP())return;
                     var userdataTarget = getUserdata(target);
                     if (!userdata.isPVP()) {
                         event.setCancelled(true);
-                        getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                        getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                     } else if (!userdataTarget.isPVP()) {
                         event.setCancelled(true);
-                        getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                        getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                     } else disableTeleport(player);
                 }
             }
             case Snowball snowball -> {
-                if (snowball.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (snowball.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target)return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
             }
             case SpectralArrow spectralArrow -> {
-                if (spectralArrow.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (spectralArrow.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target)return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
             }
             case ThrownPotion thrownPotion -> {
-                if (thrownPotion.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (thrownPotion.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target)return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
             }
             case Trident trident -> {
-                if (trident.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (trident.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target)return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
             }
             case WindCharge windCharge -> {
-                if (windCharge.getShooter() instanceof Player player) {
+                if (getEntityHandler(damager).disableDamage(entity)) {
+                    event.setCancelled(true);
+                } else if (windCharge.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
                     if (userdata.isDisabled()) {
                         event.setCancelled(true);
                     } else if (entity instanceof Player target) {
-                        if (player == target)return;
+                        if (!target.getWorld().getPVP())return;
+                        if (target == player)return;
                         var userdataTarget = getUserdata(target);
                         if (!userdata.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but your PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
                         } else if (!userdataTarget.isPVP()) {
                             event.setCancelled(true);
-                            getMessage().sendActionBar(player, "&c&lHey!&7 Sorry but&f " + target.getName() + "&7's PVP is Disabled");
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                         } else disableTeleport(player);
                     }
                 }
             }
             default -> {
-                if (entity instanceof Player player) {
-                    disableTeleport(player);
-                } else {
-                    var entityHandler = getEntityHandler(event.getDamager());
-                    if (!entityHandler.exists())return;
-                    if (!entityHandler.disableDamage(event.getEntity()))return;
+                if (getEntityHandler(damager).disableDamage(entity)) {
                     event.setCancelled(true);
+                } else if (entity instanceof Player player) {
+                    disableTeleport(player);
                 }
             }
         }

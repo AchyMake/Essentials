@@ -24,8 +24,6 @@ public class WorldLoad implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldLoad(WorldLoadEvent event) {
-        var world = event.getWorld();
-        var worldHandler = getWorldHandler(world);
-        worldHandler.reload();
+        getWorldHandler(event.getWorld()).reload();
     }
 }

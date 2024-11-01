@@ -30,21 +30,18 @@ public class SetHomeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (userdata.setHome("home")) {
-                    getMessage().send(player, "home&6 has been set");
-                } else getMessage().send(player, "&cYou have reach your limit of&f " + userdata.getHomes().size() + "&c homes");
+                    player.sendMessage(getMessage().get("commands.sethome.success", "home"));
+                } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(userdata.getHomes().size())));
                 return true;
             } else if (args.length == 1) {
-                var homeName = args[0];
+                var homeName = args[0].toLowerCase();
                 if (!homeName.equalsIgnoreCase("bed")) {
                     if (userdata.setHome(homeName)) {
-                        getMessage().send(player, homeName + "&6 has been set");
-                    } else getMessage().send(player, "&cYou have reach your limit of&f " + userdata.getHomes().size() + "&c homes");
-                } else getMessage().send(player, "&cYou can not set home for&f " + homeName);
+                        player.sendMessage(getMessage().get("commands.sethome.success", homeName));
+                    } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(userdata.getHomes().size())));
+                } else player.sendMessage(getMessage().get("commands.sethome.bed"));
                 return true;
             }
         }

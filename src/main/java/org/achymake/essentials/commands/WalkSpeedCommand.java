@@ -26,28 +26,23 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
-                var value = Double.parseDouble(args[0]);
-                userdata.setMovementSpeed(value);
-                getMessage().send(player, "&6You changed walk speed to&f " + value);
+            if (args.length == 1) {
+                var value = Float.parseFloat(args[0]);
+                getUserdata(player).setWalkSpeed(value);
+                player.sendMessage(getMessage().get("commands.walkspeed.changed", String.valueOf(value)));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.walkspeed.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
-                    var userdataTarget = getUserdata(target);
                     if (target != null) {
-                        var value = Double.parseDouble(args[0]);
+                        var value = Float.parseFloat(args[0]);
                         if (target == player) {
-                            userdataTarget.setMovementSpeed(value);
-                            getMessage().send(player, "&6You changed&f " + target.getName() + " &6walk speed to&f " + value);
+                            getUserdata(target).setWalkSpeed(value);
+                            player.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
                         } else if (!target.hasPermission("essentials.command.walkspeed.exempt")) {
-                            userdataTarget.setMovementSpeed(value);
-                            getMessage().send(player, "&6You changed&f " + target.getName() + " &6walk speed to&f " + value);
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            getUserdata(target).setWalkSpeed(value);
+                            player.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
+                        } else player.sendMessage(getMessage().get("commands.walkspeed.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -55,13 +50,12 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
                 var target = sender.getServer().getPlayerExact(args[1]);
-                var userdataTarget = getUserdata(target);
                 if (target != null) {
-                    var value = Double.parseDouble(args[0]);
-                    userdataTarget.setMovementSpeed(value);
-                    consoleCommandSender.sendMessage("You changed " + target.getName() + " walk speed to " + value);
-                } else consoleCommandSender.sendMessage(args[1] + " is currently offline");
-                return true;
+                    var value = Float.parseFloat(args[0]);
+                    getUserdata(target).setWalkSpeed(value);
+                    consoleCommandSender.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
+                    return true;
+                }
             }
         }
         return false;
@@ -76,10 +70,10 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 commands.add("4");
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.walkspeed.other")) {
-                    getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
-                                commands.add(target.getName());
+                    getInstance().getOnlinePlayers().forEach(players -> {
+                        if (!getUserdata(players).isVanished()) {
+                            if (players.getName().startsWith(args[0])) {
+                                commands.add(players.getName());
                             }
                         }
                     });

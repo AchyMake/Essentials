@@ -26,39 +26,34 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 openCartographyTable(player);
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.cartography.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
                             openCartographyTable(player);
-                            getMessage().send(target, player.getName() + "&6 opened cartography table for you");
-                            getMessage().send(player, "&6You opened cartography table for&f " + target.getName());
+                            target.sendMessage(getMessage().get("commands.cartography.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                             return true;
-                        } else if (target.hasPermission("essentials.command.cartography.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                        } else if (!target.hasPermission("essentials.command.cartography.exempt")) {
                             openCartographyTable(target);
-                            getMessage().send(target, player.getName() + "&6 opened cartography table for you");
-                            getMessage().send(player, "&6You opened cartography table for&f " + target.getName());
-                        }
-                        return true;
-                    }
-                }
-            }
-        } else if (sender instanceof ConsoleCommandSender) {
-            if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
-                if (target != null) {
-                    openCartographyTable(target);
+                            target.sendMessage(getMessage().get("commands.cartography.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.cartography.exempt", target.getName()));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
                 }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 1) {
+                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                if (target != null) {
+                    openCartographyTable(target);
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -84,7 +79,7 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
     private void openCartographyTable(Player player) {
         var inventory = getInstance().getInventoryHandler().openCartographyTable(player);
         if (inventory == null) {
-            getMessage().send(player, "&cServer does not provide this function");
+            player.sendMessage(getMessage().get("error.not-provided"));
         }
     }
 }

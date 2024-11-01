@@ -30,17 +30,14 @@ public class HealCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.heal");
                 if (!getCooldown().has(player, "heal", timer)) {
                     player.setFoodLevel(20);
                     player.setHealth(player.getMaxHealth());
-                    getMessage().sendActionBar(player, "&6Your health has been satisfied");
+                    player.sendMessage(getMessage().get("commands.heal.success"));
                     getCooldown().add(player, "heal", timer);
-                } else getMessage().sendActionBar(player, "&cYou have to wait&f " + getCooldown().get(player, "heal", timer) + "&c seconds");
+                } else getMessage().sendActionBar(player, getMessage().get("commands.heal.cooldown", getCooldown().get(player, "heal", timer)));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.heal.other")) {
@@ -49,14 +46,14 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                         if (target == player) {
                             target.setFoodLevel(20);
                             target.setHealth(target.getMaxHealth());
-                            getMessage().sendActionBar(target, "&6Your health has been satisfied by&f " + player.getName());
-                            getMessage().send(player, "&6You satisfied&f " + target.getName() + "&6's health");
+                            target.sendMessage(getMessage().get("commands.heal.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.heal.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.heal.exempt")) {
                             target.setFoodLevel(20);
                             target.setHealth(target.getMaxHealth());
-                            getMessage().sendActionBar(target, "&6Your health has been satisfied by&f " + player.getName());
-                            getMessage().send(player, "&6You satisfied&f " + target.getName() + "&6's health");
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            target.sendMessage(getMessage().get("commands.heal.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.heal.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.heal.exempt", target.getName()));
                         return true;
                     }
                 }
@@ -67,7 +64,7 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     target.setFoodLevel(20);
                     target.setHealth(target.getMaxHealth());
-                    getMessage().sendActionBar(target, "&6Your health has been satisfied");
+                    target.sendMessage(getMessage().get("commands.heal.success"));
                     return true;
                 }
             }

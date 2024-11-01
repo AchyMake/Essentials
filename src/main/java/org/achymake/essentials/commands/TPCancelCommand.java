@@ -34,37 +34,34 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 if (userdata.getTpaSent() != null) {
                     var target = sender.getServer().getPlayer(userdata.getTpaSent().getUniqueId());
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdata.getTaskID("tpa");
-                        if (getScheduler().isQueued(taskID)) {
-                            getMessage().send(target, player.getName() + "&6 cancelled tpa request");
-                            getMessage().send(player, "&6You cancelled tpa request");
+                        var tpaTask = userdata.getTaskID("tpa");
+                        if (getScheduler().isQueued(tpaTask)) {
                             userdataTarget.setString("tpa.from", null);
                             userdata.setString("tpa.sent", null);
                             userdata.disableTask("tpa");
+                            target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
                     }
                 } else if (userdata.getTpaHereSent() != null) {
                     var target = sender.getServer().getPlayer(userdata.getTpaHereSent().getUniqueId());
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var taskID = userdata.getTaskID("tpahere");
-                        if (getScheduler().isQueued(taskID)) {
-                            getMessage().send(target, player.getName() + "&6 cancelled tpahere request");
-                            getMessage().send(player, "&6You cancelled tpahere request");
+                        var tpaHereTask = userdata.getTaskID("tpahere");
+                        if (getScheduler().isQueued(tpaHereTask)) {
                             userdataTarget.setString("tpahere.from", null);
                             userdata.setString("tpahere.sent", null);
                             userdata.disableTask("tpahere");
+                            target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
+                            player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
                     }
-                } else getMessage().send(player, "&cYou haven't sent any tp request");
+                } else player.sendMessage(getMessage().get("commands.tpcancel.non-requested"));
                 return true;
             }
         }

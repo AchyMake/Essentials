@@ -40,7 +40,7 @@ public class StoreCommand implements CommandExecutor, TabCompleter {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.store"));
                         } else if (!target.hasPermission("essentials.command.store.exempt")) {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.store"));
-                        } else getMessage().send(player, command.getPermissionMessage());
+                        } else player.sendMessage(getMessage().get("commands.store.exempt"));
                     }
                     return true;
                 }

@@ -34,18 +34,16 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 2) {
+            if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("player")) {
-                    getMaterialHandler().giveItem(player, getMaterialHandler().getPlayerHead(sender.getServer().getOfflinePlayer(args[1]), 1));
+                    getMaterialHandler().giveItemStack(player, getMaterialHandler().getPlayerHead(player.getServer().getOfflinePlayer(args[1]), 1));
+                    player.sendMessage(getMessage().get("commands.skull.received", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("custom")) {
                     var skullName = args[1];
                     if (getSkulls().isListed(skullName)) {
-                        getMaterialHandler().giveItem(player, getSkulls().getCustomHead(skullName, 1));
-                        getMessage().send(player, "&6You received&f " + skullName + "&6 skull");
+                        getMaterialHandler().giveItemStack(player, getSkulls().getCustomHead(skullName, 1));
+                        player.sendMessage(getMessage().get("commands.skull.received", skullName));
                         return true;
                     }
                 }
@@ -56,14 +54,14 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     if (args[0].equalsIgnoreCase("player")) {
                         var offlinePlayer = sender.getServer().getOfflinePlayer(args[1]);
-                        getMaterialHandler().giveItem(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
-                        getMessage().send(target, "&6You received&f " + offlinePlayer.getName() + "&6's skull");
+                        getMaterialHandler().giveItemStack(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
+                        target.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
                         return true;
                     } else if (args[0].equalsIgnoreCase("custom")) {
                         var skullName = args[1];
                         if (getSkulls().isListed(skullName)) {
-                            getMaterialHandler().giveItem(target, getSkulls().getCustomHead(skullName, 1));
-                            getMessage().send(target, "&6You received&f " + skullName + "&6's custom skull");
+                            getMaterialHandler().giveItemStack(target, getSkulls().getCustomHead(skullName, 1));
+                            target.sendMessage(getMessage().get("commands.skull.received", skullName));
                             return true;
                         }
                     }

@@ -21,7 +21,9 @@ public class ScheduleHandler {
         return getScheduler().isQueued(taskID);
     }
     public void cancel(int taskID) {
-        getScheduler().cancelTask(taskID);
+        if (isQueued(taskID)) {
+            getScheduler().cancelTask(taskID);
+        }
     }
     public void cancelAll() {
         getScheduler().cancelTasks(getInstance());

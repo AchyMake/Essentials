@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -134,7 +133,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     }
     public String getBanReason() {
         var reason = getConfig().getString("settings.ban-reason");
-        if (reason == null || reason.isEmpty()) {
+        if (reason == null || reason.equalsIgnoreCase("")) {
             return "None";
         } else return getConfig().getString("settings.ban-reason");
     }
@@ -305,6 +304,9 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
         getScheduler().cancel(getTaskID(task));
         setString("tasks." + task, null);
     }
+    public void disableTasks() {
+        getConfig().getConfigurationSection("tasks").getKeys(false).forEach(this::disableTask);
+    }
     public boolean hasJoined() {
         if (exists()) {
             return isLocation("quit");
@@ -327,6 +329,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
         config.set("settings.muted", false);
         config.set("settings.pvp", true);
         config.set("settings.vanished", false);
+        config.createSection("tpa");
+        config.createSection("tpahere");
         config.createSection("homes");
         config.createSection("locations");
         config.createSection("tasks");
@@ -361,47 +365,34 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     public Player getPlayer() {
         return getOfflinePlayer().getPlayer();
     }
-    public void teleport(Location location, String name, long timer) {
+    public void teleport(Location location, String name, int timer) {
         var player = getPlayer();
         if (player != null) {
-            if (hasTaskID("teleport")) {
-                getMessage().sendActionBar(player, "&cYou cannot teleport twice you have to wait");
-            } else {
+            if (!hasTaskID("teleport")) {
                 if (!location.getChunk().isLoaded()) {
                     location.getChunk().load();
                 }
                 if (timer > 0) {
-                    getMessage().sendActionBar(player, "&6Teleporting in&f " + timer + "&6 seconds");
+                    getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(timer)));
                 }
-                var taskID = getScheduler().runLater(new Runnable() {
+                var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
                     @Override
                     public void run() {
                         setString("tasks.teleport", null);
-                        getMessage().sendActionBar(player, "&6Teleporting to&f " + name);
+                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
                         player.teleport(location);
                     }
-                }, timer * 20).getTaskId();
+                }, timer * 20L).getTaskId();
                 addTaskID("teleport", taskID);
-            }
+            } else player.sendMessage(getMessage().get("events.teleport.has-task"));
         }
     }
     @Override
     public OfflinePlayer getOfflinePlayer() {
         return getOfflinePlayer;
     }
-    public double getDefaultMovementSpeed() {
-        return 0.10000000149011612;
-    }
     public float getDefaultFlySpeed() {
         return 0.1F;
-    }
-    public void setMovementSpeed(double amount) {
-        var player = getPlayer();
-        if (player != null) {
-            if (amount > 0) {
-                player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(getDefaultMovementSpeed() * amount);
-            } else player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(getDefaultMovementSpeed());
-        }
     }
     public void setFlySpeed(float amount) {
         var player = getPlayer();
@@ -409,6 +400,17 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             if (amount > 0) {
                 player.setFlySpeed(getDefaultFlySpeed() * amount);
             } else player.setFlySpeed(getDefaultFlySpeed());
+        }
+    }
+    public float getDefaultWalkSpeed() {
+        return 0.2F;
+    }
+    public void setWalkSpeed(float amount) {
+        var player = getPlayer();
+        if (player != null) {
+            if (amount > 0) {
+                player.setWalkSpeed(getDefaultWalkSpeed() * amount);
+            } else player.setWalkSpeed(getDefaultWalkSpeed());
         }
     }
 }

@@ -26,10 +26,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 openLoom(player);
                 return true;
             } else if (args.length == 1) {
@@ -38,25 +35,21 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             openLoom(target);
-                            getMessage().send(target, player.getName() + "&6 opened loom for you");
-                            getMessage().send(player, "&6You opened loom for&f " + target.getName());
-                            return true;
-                        } else if (target.hasPermission("essentials.command.loom.exempt")) {
-                            getMessage().send(player, command.getPermissionMessage());
-                        } else {
+                            player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                        } else if (!target.hasPermission("essentials.command.loom.exempt")) {
                             openLoom(target);
-                            getMessage().send(target, player.getName() + "&6 opened loom for you");
-                            getMessage().send(player, "&6You opened loom for&f " + target.getName());
-                        }
+                            player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.loom.exempt", target.getName()));
                         return true;
                     }
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     openLoom(target);
+                    consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                     return true;
                 }
             }
@@ -84,7 +77,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
     private void openLoom(Player player) {
         var inventory = getInstance().getInventoryHandler().openLoom(player);
         if (inventory == null) {
-            getMessage().send(player, "&cServer does not provide this function");
+            player.sendMessage(getMessage().get("error.not-provided"));
         }
     }
 }

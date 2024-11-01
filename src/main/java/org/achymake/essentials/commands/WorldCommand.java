@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Worlds;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,48 +28,42 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private Server getServer() {
-        return getInstance().getServer();
-    }
     public WorldCommand() {
         getInstance().getCommand("world").setExecutor(this);
     }
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
+                var worldHandler = getWorldHandler(player.getWorld());
                 if (args[0].equalsIgnoreCase("setspawn")) {
-                    getWorldHandler(player.getWorld()).setSpawn(player.getLocation());
-                    getMessage().send(player, player.getWorld().getName() + "&6 changed spawn point");
+                    worldHandler.setSpawn(player.getLocation());
+                    player.sendMessage(getMessage().get("commands.world.setspawn", worldHandler.getName()));
+                    return true;
+                } else if (args[0].equalsIgnoreCase("pvp")) {
+                    worldHandler.setPVP(!worldHandler.getPVP());
+                    if (worldHandler.getPVP()) {
+                        player.sendMessage(getMessage().get("commands.world.pvp.enable", worldHandler.getName()));
+                    } else player.sendMessage(getMessage().get("commands.world.pvp.disable", worldHandler.getName()));
                     return true;
                 }
-                if (args[0].equalsIgnoreCase("pvp")) {
-                    player.getWorld().setPVP(!player.getWorld().getPVP());
-                    if (player.getWorld().getPVP()) {
-                        getMessage().send(player, player.getWorld().getName() + "&6 is now pvp mode");
-                    } else getMessage().send(player, player.getWorld().getName() + "&6 is no longer pvp mode");
-                    return true;
-                }
-            }
-            if (args.length == 2) {
+            } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("teleport")) {
                     var worldName = args[1];
                     var world = getWorlds().get(worldName);
                     if (world != null) {
-                        getMessage().sendActionBar(player, "&6Teleporting to&f " + worldName);
+                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", worldName));
                         player.teleport(getWorldHandler(world).getSpawn());
-                    } else getMessage().send(player, worldName + "&c does not exist");
+                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("remove")) {
+                } else if (args[0].equalsIgnoreCase("remove")) {
                     var worldName = args[1];
                     var world = getWorlds().get(worldName);
                     if (world != null) {
                         getWorldHandler(world).remove();
-                        getMessage().send(player, worldName + "&6 is saved and removed");
-                    } else getMessage().send(player, worldName + "&c does not exist");
+                        player.sendMessage(getMessage().get("commands.world.remove", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("pvp")) {
+                } else if (args[0].equalsIgnoreCase("pvp")) {
                     var worldName = args[1];
                     var world = getWorlds().get(worldName);
                     if (world != null) {
@@ -78,11 +71,10 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         if (world.getPVP()) {
                             getMessage().send(player, worldName + "&6 is now pvp mode");
                         } else getMessage().send(player, worldName  + "&6 is no longer pvp mode");
-                    } else getMessage().send(player, worldName + "&c does not exist");
+                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
                 }
-            }
-            if (args.length == 3) {
+            } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("pvp")) {
                     var worldName = args[1];
                     var world = getWorlds().get(worldName);
@@ -90,77 +82,65 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     if (world != null) {
                         world.setPVP(value);
                         if (world.getPVP()) {
-                            getMessage().send(player, worldName + "&6 is now pvp mode");
-                        } else getMessage().send(player, worldName + "&6 is no longer pvp mode");
-                    } else getMessage().send(player, worldName + "&c does not exist");
+                            player.sendMessage(getMessage().get("commands.world.pvp.enable", world.getName()));
+                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", world.getName()));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("create")) {
+                } else if (args[0].equalsIgnoreCase("create")) {
                     var worldName = args[1];
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
-                    if (getWorlds().getFolder(worldName).exists()) {
-                        getMessage().send(player, worldName + "&c already exist, try use add instead of create");
-                    } else {
-                        getMessage().send(player, worldName + "&6 is about to be created");
+                    if (!getWorlds().getFolder(worldName).exists()) {
+                        player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
                         var info = getWorlds().create(worldName, environment);
-                        getMessage().send(player, info.getName() + "&6 has been created with the following:");
-                        getMessage().send(player, "&6environment:&f " + info.getEnvironment().name());
-                        getMessage().send(player, "&6seed:&f " + info.getSeed());
-                    }
+                        player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
+                        player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
+                        player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
+                    } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("add")) {
+                } else if (args[0].equalsIgnoreCase("add")) {
                     var worldName = args[1];
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
-                    if (getWorlds().getFolder(worldName).exists()) {
-                        if (getWorlds().get(worldName) == null) {
-                            getMessage().send(player, worldName + "&6 is about to be added");
+                    if (getWorlds().get(worldName) == null) {
+                        if (getWorlds().getFolder(worldName).exists()) {
+                            player.sendMessage(getMessage().get("commands.world.add.post-add", worldName));
                             var info = getWorlds().create(worldName, environment);
-                            getMessage().send(player, info.getName() + "&6 has been added with the following:");
-                            getMessage().send(player, "&6environment:&f " + info.getEnvironment().name());
-                            getMessage().send(player, "&6seed:&f " + info.getSeed());
-                        } else getMessage().send(player, worldName + "&c already exist");
-                    } else getMessage().send(player, worldName + "&c folder does not exist");
+                            player.sendMessage(getMessage().get("commands.world.add.title", info.getName()));
+                            player.sendMessage(getMessage().get("commands.world.add.environment", info.getEnvironment().name()));
+                            player.sendMessage(getMessage().get("commands.world.add.seed", String.valueOf(info.getSeed())));
+                        } else player.sendMessage(getMessage().get("commands.world.add.folder-invalid", worldName));
+                    } else player.sendMessage(getMessage().get("commands.world.add.world-exists", worldName));
                     return true;
                 }
-            }
-            if (args.length == 4) {
+            } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("gamerule")) {
                     var worldName = args[1];
                     var world = getWorlds().get(worldName);
                     if (world != null) {
                         var gamerule = args[2];
                         var value = args[3];
-                        getServer().getWorld(worldName).setGameRuleValue(gamerule, value);
-                        getMessage().send(player, worldName + "&6 changed&f " + gamerule + "&6 to&f " + value);
-                    } else getMessage().send(player, worldName + "&c does not exist");
+                        world.setGameRuleValue(gamerule, value);
+                        player.sendMessage(getMessage().get("commands.world.gamerule.changed", worldName, gamerule, value));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
-                }
-                if (args[0].equalsIgnoreCase("create")) {
+                } else if (args[0].equalsIgnoreCase("create")) {
                     var worldName = args[1];
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
                     if (args[3].equalsIgnoreCase("random")) {
-                        if (getWorlds().getFolder(worldName).exists()) {
-                            getMessage().send(player, worldName + "&c already exist");
-                        } else {
-                            getMessage().send(player, worldName + "&6 is about to be created");
+                        if (!getWorlds().getFolder(worldName).exists()) {
+                            player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
                             var info = getWorlds().createRandom(worldName, environment);
-                            getMessage().send(player, info.getName() + "&6 has been created with the following:");
-                            getMessage().send(player, "&6environment:&f " + info.getEnvironment().name());
-                            getMessage().send(player, "&6seed:&f " + info.getSeed());
-                        }
-                    } else {
+                            player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
+                            player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
+                            player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
+                        } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
+                    } else if (!getWorlds().getFolder(worldName).exists()) {
                         var seed = Long.parseLong(args[3]);
-                        if (getWorlds().getFolder(worldName).exists()) {
-                            getMessage().send(player, worldName + "&c already exist");
-                        } else {
-                            getMessage().send(player, worldName + "&6 is about to be created");
-                            var info = getWorlds().create(worldName, environment, seed);
-                            getMessage().send(player, info.getName() + "&6 has been created with the following:");
-                            getMessage().send(player, "&6environment:&f " + info.getEnvironment().name());
-                            getMessage().send(player, "&6seed:&f " + info.getSeed());
-                        }
-                    }
+                        player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
+                        var info = getWorlds().create(worldName, environment, seed);
+                        player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
+                        player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
+                        player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
+                    } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
                     return true;
                 }
             }

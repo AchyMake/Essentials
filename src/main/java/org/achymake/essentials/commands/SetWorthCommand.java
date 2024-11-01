@@ -2,11 +2,9 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.data.Worth;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +17,6 @@ import java.util.List;
 public class SetWorthCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
-    }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
     }
     private Worth getWorth() {
         return getInstance().getWorth();
@@ -41,20 +36,16 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (userdata.isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
+                    var itemName = getMessage().toTitleCase(heldItem.toString());
                     var value = Double.parseDouble(args[0]);
                     getWorth().setWorth(heldItem, value);
-                    var itemName = getMessage().toTitleCase(heldItem.toString());
                     if (getWorth().isListed(heldItem.getType())) {
-                        getMessage().send(player, itemName + "&6 is now worth&a " + getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType())));
-                    } else getMessage().send(player, itemName + "&6 is now worthless");
-                } else getMessage().send(player, "&cYou have to hold an item");
+                        player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType()))));
+                    } else player.sendMessage(getMessage().get("commands.setworth.disable", itemName));
+                } else player.sendMessage(getMessage().get("commands.setworth.air"));
                 return true;
             }
         }

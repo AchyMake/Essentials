@@ -29,54 +29,54 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
+            if (args.length == 0) {
+                if (!getUserdata(player).getHomes().isEmpty()) {
+                    player.sendMessage(getMessage().get("commands.homes.title"));
+                    for (String listedHomes : getUserdata(player).getHomes()) {
+                        player.sendMessage(getMessage().get("commands.homes.listed", listedHomes));
+                    }
+                } else player.sendMessage(getMessage().get("commands.homes.empty"));
                 return true;
-            } else {
-                if (args.length == 0) {
-                    if (!getUserdata(player).getHomes().isEmpty()) {
-                        getMessage().send(player, "&6Homes:");
-                        for (String listedHomes : getUserdata(player).getHomes()) {
-                            getMessage().send(player, "- " + listedHomes);
+            } else if (args.length == 3) {
+                var target = args[1];
+                var targetHome = args[2];
+                if (args[0].equalsIgnoreCase("delete")) {
+                    if (player.hasPermission("essentials.command.homes.delete")) {
+                        var offlinePlayer = sender.getServer().getOfflinePlayer(target);
+                        var userdataOffline = getUserdata(offlinePlayer);
+                        if (userdataOffline.exists()) {
+                            if (userdataOffline.isHome(targetHome)) {
+                                userdataOffline.setString("homes." + targetHome, null);
+                                player.sendMessage(getMessage().get("commands.homes.delete", targetHome, offlinePlayer.getName()));
+                            } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), targetHome));
+                            return true;
                         }
-                    } else getMessage().send(player, "&cYou haven't set any homes yet");
-                    return true;
-                } else if (args.length == 3) {
-                    var target = args[1];
-                    var targetHome = args[2];
-                    if (args[0].equalsIgnoreCase("delete")) {
-                        if (player.hasPermission("essentials.command.homes.delete")) {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(target);
-                            var userdataOffline = getUserdata(offlinePlayer);
-                            if (userdataOffline.exists()) {
-                                if (userdataOffline.getHomes().contains(targetHome)) {
-                                    userdataOffline.setString("homes." + targetHome, null);
-                                    getMessage().send(player, "&6Deleted&f " + targetHome + "&6 of&f " + target);
-                                } else getMessage().send(player, target + "&c doesn't have&f " + targetHome);
-                                return true;
-                            }
-                        }
-                    } else if (args[0].equalsIgnoreCase("teleport")) {
-                        if (player.hasPermission("essentials.command.homes.teleport")) {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(target);
-                            var userdataOffline = getUserdata(offlinePlayer);
-                            if (userdataOffline.exists()) {
-                                if (targetHome.equalsIgnoreCase("bed")) {
-                                    var location = offlinePlayer.getBedSpawnLocation();
-                                    if (location != null) {
-                                        player.teleport(location);
-                                        getMessage().send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
-                                    } else getMessage().send(player, target + "&c do not have a bed");
-                                } else if (userdataOffline.getHomes().contains(targetHome)) {
-                                    var location = userdataOffline.getHome(targetHome);
-                                    if (location != null) {
+                    }
+                } else if (args[0].equalsIgnoreCase("teleport")) {
+                    if (player.hasPermission("essentials.command.homes.teleport")) {
+                        var offlinePlayer = sender.getServer().getOfflinePlayer(target);
+                        var userdataOffline = getUserdata(offlinePlayer);
+                        if (userdataOffline.exists()) {
+                            if (targetHome.equalsIgnoreCase("bed")) {
+                                var location = offlinePlayer.getBedSpawnLocation();
+                                if (location != null) {
+                                    if (!location.getChunk().isLoaded()) {
                                         location.getChunk().load();
-                                        getMessage().send(player, "&6Teleporting&f " + targetHome + "&6 of&f " + target);
-                                        player.teleport(location);
                                     }
-                                } else getMessage().send(player, target + "&c doesn't have&f " + targetHome);
-                                return true;
-                            }
+                                    player.sendMessage(getMessage().get("commands.homes.teleport", targetHome, offlinePlayer.getName()));
+                                    player.teleport(location);
+                                } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), "bed"));
+                            } else if (userdataOffline.isHome(targetHome)) {
+                                var location = userdataOffline.getHome(targetHome);
+                                if (location != null) {
+                                    if (!location.getChunk().isLoaded()) {
+                                        location.getChunk().load();
+                                    }
+                                    player.sendMessage(getMessage().get("commands.homes.teleport", targetHome, offlinePlayer.getName()));
+                                    player.teleport(location);
+                                }
+                            } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), targetHome));
+                            return true;
                         }
                     }
                 }

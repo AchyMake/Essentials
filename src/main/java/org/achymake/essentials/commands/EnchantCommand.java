@@ -34,10 +34,7 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 1) {
+            if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
                     var itemMeta = heldItem.getItemMeta();
@@ -46,13 +43,13 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                         var enchantName = getMessage().toTitleCase(enchantment.getKey().getKey());
                         if (itemMeta.hasEnchant(enchantment)) {
                             heldItem.removeEnchantment(enchantment);
-                            getMessage().send(player, "&6You removed&f " + enchantName);
+                            player.sendMessage(getMessage().get("commands.enchant.remove", enchantName));
                         } else {
                             heldItem.addUnsafeEnchantment(enchantment, 1);
-                            getMessage().send(player, "&6You added&f " + enchantName + "&6 with lvl&f 1");
+                            player.sendMessage(getMessage().get("commands.enchant.add", enchantName, String.valueOf(1)));
                         }
                     }
-                } else getMessage().send(player, "&cYou have to hold an item");
+                } else player.sendMessage(getMessage().get("commands.enchant.air"));
                 return true;
             } else if (args.length == 2) {
                 var heldItem = player.getInventory().getItemInMainHand();
@@ -63,13 +60,13 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                         var amount = Integer.parseInt(args[1]);
                         if (amount > 0) {
                             heldItem.addUnsafeEnchantment(enchantment, amount);
-                            getMessage().send(player, "&6You added&f " + enchantName + "&6 with lvl&f " + amount);
+                            player.sendMessage(getMessage().get("commands.enchant.add", enchantName, String.valueOf(amount)));
                         } else {
                             heldItem.removeEnchantment(enchantment);
-                            getMessage().send(player, "&6You removed&f " + enchantName);
+                            player.sendMessage(getMessage().get("commands.enchant.remove", enchantName));
                         }
                     }
-                } else getMessage().send(player, "&cYou have to hold an item");
+                } else player.sendMessage(getMessage().get("commands.enchant.air"));
                 return true;
             }
         }

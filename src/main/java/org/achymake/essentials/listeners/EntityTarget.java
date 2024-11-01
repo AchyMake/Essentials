@@ -31,16 +31,11 @@ public class EntityTarget implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
         if (event.getTarget() == null)return;
-        var entity = event.getEntity();
-        var target = event.getTarget();
-        if (entity instanceof Player)return;
-        if (target instanceof Player player) {
-            if (!getUserdata(player).isVanished())return;
+        if (event.getEntity() instanceof Player)return;
+        if (getEntityHandler(event.getEntity()).disableTarget(event.getTarget())) {
             event.setCancelled(true);
-        } else {
-            var entityHandler = getEntityHandler(entity);
-            if (!entityHandler.exists())return;
-            if (!entityHandler.disableTarget(target))return;
+        } else if (event.getTarget() instanceof Player player) {
+            if (!getUserdata(player).isVanished())return;
             event.setCancelled(true);
         }
     }

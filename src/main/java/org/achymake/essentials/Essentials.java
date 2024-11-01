@@ -41,6 +41,7 @@ public final class Essentials extends JavaPlugin {
     private EconomyHandler economyHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
+    private ProjectileHandler projectileHandler;
     private ScheduleHandler scheduleHandler;
     private VanishHandler vanishHandler;
     private UpdateChecker updateChecker;
@@ -63,6 +64,7 @@ public final class Essentials extends JavaPlugin {
         economyHandler = new EconomyHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
+        projectileHandler = new ProjectileHandler();
         scheduleHandler = new ScheduleHandler();
         vanishHandler = new VanishHandler();
         updateChecker = new UpdateChecker();
@@ -79,8 +81,9 @@ public final class Essentials extends JavaPlugin {
     @Override
     public void onDisable() {
         getVanishHandler().disable();
-        new PlaceholderProvider().unregister();
+        getProjectileHandler().cancelAll();
         getScheduleHandler().cancelAll();
+        new PlaceholderProvider().unregister();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
     private void commands() {
@@ -207,6 +210,8 @@ public final class Essentials extends JavaPlugin {
         new PlayerToggleFlight();
         new PlayerToggleSneak();
         new PrepareAnvil();
+        new ProjectileHit();
+        new ProjectileLaunch();
         new ServerLoad();
         new SignChange();
         new WorldLoad();
@@ -289,6 +294,9 @@ public final class Essentials extends JavaPlugin {
     }
     public ScheduleHandler getScheduleHandler() {
         return scheduleHandler;
+    }
+    public ProjectileHandler getProjectileHandler() {
+        return projectileHandler;
     }
     public MaterialHandler getMaterialHandler() {
         return materialHandler;

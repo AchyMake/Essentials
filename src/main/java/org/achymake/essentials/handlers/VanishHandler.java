@@ -17,20 +17,11 @@ public class VanishHandler {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
-    private ScheduleHandler getScheduleHandler() {
+    private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
-    }
-    public List<Player> getOnlinePlayers() {
-        var onlinePlayers = new ArrayList<Player>();
-        getInstance().getServer().getOnlinePlayers().forEach(player -> {
-            if (!getVanished().contains(player)) {
-                onlinePlayers.add(player);
-            }
-        });
-        return onlinePlayers;
     }
     public boolean isVanish(OfflinePlayer offlinePlayer) {
         return getUserdata(offlinePlayer).isVanished();
@@ -42,8 +33,7 @@ public class VanishHandler {
         setVanish(offlinePlayer, !isVanish(offlinePlayer));
     }
     public void setVanish(OfflinePlayer offlinePlayer, boolean value) {
-        var userdata = getUserdata(offlinePlayer);
-        userdata.setBoolean("settings.vanished", value);
+        getUserdata(offlinePlayer).setBoolean("settings.vanished", value);
     }
     public void setVanish(Player player, boolean value) {
         var userdata = getUserdata(player);
@@ -54,12 +44,15 @@ public class VanishHandler {
             player.setCollidable(false);
             player.setSilent(true);
             player.setCanPickupItems(false);
-            getInstance().getServer().getOnlinePlayers().forEach(players -> players.hidePlayer(getInstance(), player));
-            getVanished().forEach(vanished -> player.showPlayer(getInstance(), vanished));
+            getInstance().getOnlinePlayers().forEach(players -> {
+                if (!getVanished().contains(players)) {
+                    players.hidePlayer(getInstance(), player);
+                }
+            });
             userdata.setBoolean("settings.vanished", true);
             getVanished().add(player);
             addVanishTask(player);
-            getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
+            getMessage().sendActionBar(player, getMessage().get("events.vanish.enable"));
         } else {
             if (!player.hasPermission("essentials.command.fly")) {
                 player.setAllowFlight(false);
@@ -69,24 +62,25 @@ public class VanishHandler {
             player.setCollidable(true);
             player.setSilent(false);
             player.setCanPickupItems(true);
-            getInstance().getServer().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
-            getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
             userdata.setBoolean("settings.vanished", false);
             userdata.disableTask("vanish");
             getVanished().remove(player);
-            getMessage().sendActionBar(player, "&6&lVanish:&c Disabled");
+            getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
+            if (!getVanished().isEmpty()) {
+                getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
+            }
+            getMessage().sendActionBar(player, getMessage().get("events.vanish.disable"));
         }
     }
     private void addVanishTask(Player player) {
-        var userdata = getUserdata(player);
-        int id = getScheduleHandler().runLater(new Runnable() {
+        int taskID = getScheduler().runLater(new Runnable() {
             @Override
             public void run() {
-                getMessage().sendActionBar(player, "&6&lVanish:&a Enabled");
+                getMessage().sendActionBar(player, getMessage().get("events.vanish.enable"));
                 addVanishTask(player);
             }
         }, 50).getTaskId();
-        userdata.addTaskID("vanish", id);
+        getUserdata(player).addTaskID("vanish", taskID);
     }
     public void disable() {
         if (!getVanished().isEmpty()) {
