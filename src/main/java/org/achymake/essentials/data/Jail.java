@@ -21,51 +21,43 @@ public class Jail {
         return config;
     }
     public Location getLocation() {
-        var worldName = config.getString("world");
-        if (worldName != null) {
-            var world = getInstance().getServer().getWorld(worldName);
-            if (world != null) {
-                var x = config.getDouble("x");
-                var y = config.getDouble("y");
-                var z = config.getDouble("z");
-                var yaw = config.getLong("yaw");
-                var pitch = config.getLong("pitch");
-                return new Location(world, x, y, z, yaw, pitch);
-            } else return null;
+        var world = getInstance().getWorlds().get(config.getString("world"));
+        if (world != null) {
+            var x = config.getDouble("x");
+            var y = config.getDouble("y");
+            var z = config.getDouble("z");
+            var yaw = config.getLong("yaw");
+            var pitch = config.getLong("pitch");
+            return new Location(world, x, y, z, yaw, pitch);
         } else return null;
     }
     public void setLocation(Location location) {
         var world = location.getWorld();
         if (world != null) {
-            var worldName = location.getWorld().getName();
-            var x = location.getX();
-            var y = location.getY();
-            var z = location.getZ();
-            var yaw = location.getYaw();
-            var pitch = location.getPitch();
-            config.set("world", worldName);
-            config.set("x", x);
-            config.set("y", y);
-            config.set("z", z);
-            config.set("yaw", yaw);
-            config.set("pitch", pitch);
-            save();
+            config.set("world", location.getWorld().getName());
+            config.set("x", location.getX());
+            config.set("y", location.getY());
+            config.set("z", location.getZ());
+            config.set("yaw", location.getYaw());
+            config.set("pitch", location.getPitch());
+            try {
+                config.save(file);
+            } catch (IOException e) {
+                getInstance().sendWarning(e.getMessage());
+            }
         }
     }
     private void setup() {
         config.options().copyDefaults(true);
-        save();
-    }
-    public void reload() {
-        if (file.exists()) {
-            config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
-    }
-    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
         }
+    }
+    public void reload() {
+        if (file.exists()) {
+            config = YamlConfiguration.loadConfiguration(file);
+        } else setup();
     }
 }

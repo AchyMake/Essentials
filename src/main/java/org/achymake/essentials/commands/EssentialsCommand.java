@@ -67,7 +67,6 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 commands.add("reload");
-                commands.add("discord");
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     commands.add("userdata");
