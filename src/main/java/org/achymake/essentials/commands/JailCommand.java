@@ -87,20 +87,19 @@ public class JailCommand implements CommandExecutor, TabCompleter {
         var userdataTarget = getUserdata(target);
         userdataTarget.setBoolean("settings.jailed", !userdataTarget.isJailed());
         if (userdataTarget.isJailed()) {
-            var location = userdataTarget.getLocation("jail");
-            if (location != null) {
-                location.getChunk().load();
-                target.teleport(location);
-            }
-            userdataTarget.setString("locations.jail", null);
-        } else {
             userdataTarget.setLocation(target.getLocation(), "jail");
             var location = getJail().getLocation();
             if (location != null) {
                 location.getChunk().load();
                 target.teleport(location);
             }
-            userdataTarget.setBoolean("settings.jailed", true);
+        } else {
+            var location = userdataTarget.getLocation("jail");
+            if (location != null) {
+                location.getChunk().load();
+                target.teleport(location);
+            }
+            userdataTarget.setString("locations.jail", null);
         }
     }
 }
