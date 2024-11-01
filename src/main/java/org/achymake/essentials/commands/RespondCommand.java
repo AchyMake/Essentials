@@ -36,7 +36,7 @@ public class RespondCommand implements CommandExecutor, TabCompleter {
                         var target = player.getServer().getPlayer(userdata.getLastWhisper().getUniqueId());
                         if (target != null) {
                             var userdataTarget = getUserdata(target);
-                            var message = getMessage().getBuilder(args, 1);
+                            var message = getMessage().getBuilder(args, 0);
                             target.sendMessage(getMessage().get("commands.respond.target", player.getName(), message));
                             player.sendMessage(getMessage().get("commands.respond.sender", target.getName(), message));
                             userdata.setString("last-whisper", target.getUniqueId().toString());
