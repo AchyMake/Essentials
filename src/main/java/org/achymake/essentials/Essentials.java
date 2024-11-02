@@ -10,7 +10,6 @@ import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -20,10 +19,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
@@ -247,28 +243,22 @@ public final class Essentials extends JavaPlugin {
         getWorth().reload();
     }
     public void reloadUserdata() {
-        var userdata = new File(getDataFolder(), "userdata");
-        if (userdata.exists() && userdata.isDirectory()) {
-            for (var file : userdata.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    var config = YamlConfiguration.loadConfiguration(file);
-                    try {
-                        config.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        sendWarning(e.getMessage());
-                    }
-                }
-            }
-        }
+        getOfflinePlayers().forEach(offlinePlayer -> getUserdata(offlinePlayer).reload());
     }
     public List<OfflinePlayer> getOfflinePlayers() {
         var listed = new ArrayList<OfflinePlayer>();
+        if (!getUUIDS().isEmpty()) {
+            getUUIDS().forEach(uuid -> listed.add(getOfflinePlayer(uuid)));
+        }
+        return listed;
+    }
+    public List<UUID> getUUIDS() {
+        var listed = new ArrayList<UUID>();
         var folder = new File(getDataFolder(), "userdata");
         if (folder.exists() && folder.isDirectory()) {
             for (var file : folder.listFiles()) {
                 if (file.exists() && file.isFile()) {
-                    var uuidString = file.getName().replace(".yml", "");
-                    listed.add(getOfflinePlayer(UUID.fromString(uuidString)));
+                    listed.add(UUID.fromString(file.getName().replace(".yml", "")));
                 }
             }
         }
