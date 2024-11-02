@@ -73,7 +73,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("commands.kit.cooldown", getCooldown().get(player, kitName, timer)));
                         return true;
                     }
-                }
+                } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.kit.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
@@ -84,7 +84,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                                 getMaterials().giveItemStacks(target, getKits().get(kitName));
                                 target.sendMessage(getMessage().get("commands.kit.receive", kitName));
                                 player.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
-                            }
+                            } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));
                         } else player.sendMessage(getMessage().get("commands.kit.exempt", target.getName()));
                         return true;
                     }

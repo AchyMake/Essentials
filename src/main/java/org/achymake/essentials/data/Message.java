@@ -21,10 +21,14 @@ public class Message {
     private final File file = new File(getInstance().getDataFolder(), "message.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     public String get(String path) {
-        return addColor(config.getString(path));
+        if (config.isString(path)) {
+            return addColor(config.getString(path));
+        } else return path + ": is missing a value";
     }
     public String get(String path, String... format) {
-        return addColor(MessageFormat.format(config.getString(path), format));
+        if (config.isString(path)) {
+            return addColor(MessageFormat.format(config.getString(path), format));
+        } else return path + ": is missing a value";
     }
     private void setup() {
         config.set("error.target.offline", "{0}&c is currently offline");
@@ -60,6 +64,8 @@ public class Message {
         config.set("commands.color.exempt", "&cYou are not allowed to send color codes for&f {0}");
         config.set("commands.delhome.success", "{0}&6 has been deleted");
         config.set("commands.delhome.invalid", "{0}&c does not exists");
+        config.set("commands.delwarp.success", "{0}&6 has been deleted");
+        config.set("commands.delwarp.invalid", "{0}&c does not exists");
         config.set("commands.eco.reset", "&6You reset&f {0}&6 account to&a {1}");
         config.set("commands.eco.add", "&6You added&a {0}&6 to&f {1}");
         config.set("commands.eco.remove.success", "&6You removed&a {0}&6 from&f {1}");
@@ -120,13 +126,13 @@ public class Message {
         config.set("commands.heal.sender", "&6You satisfied&f {0}&6 health");
         config.set("commands.heal.exempt", "&cYou are not allowed to satisfy&f {0}&6 health");
         config.set("commands.help.exempt", "&cYou are not allowed to send help message to&f {0}");
-        config.set("commands.home.invalid", "{0} does not exists");
+        config.set("commands.home.invalid", "{0}&c does not exists");
         config.set("commands.home.has-task", "&cYou cannot teleport twice you have to wait");
         config.set("commands.homes.empty", "&cYou do not have any homes yet");
         config.set("commands.homes.title", "&6Homes:");
         config.set("commands.homes.listed", "- {0}");
-        config.set("commands.homes.delete", "You deleted {0} of {1}");
-        config.set("commands.homes.invalid", "{0} does not have {1} as home");
+        config.set("commands.homes.delete", "&6You deleted&f {0}&6 of&f {1}");
+        config.set("commands.homes.invalid", "{0}&c does not have&f {1}&c as home");
         config.set("commands.homes.teleport", "&6Teleporting to&f {0}&6 of&f {1}");
         config.set("commands.information.title", "&6Information:");
         config.set("commands.information.name", "&6name:&f {0}");
@@ -157,6 +163,7 @@ public class Message {
         config.set("commands.kit.received", "&6You received&f {0}&6 kit");
         config.set("commands.kit.non-sufficient-funds", "&cYou do not have&a {0}&c to receive the&f {1}&c kit");
         config.set("commands.kit.cooldown", "&cYou have to wait&f {0}&c seconds");
+        config.set("commands.kit.invalid", "{0}&c does not exists");
         config.set("commands.kit.sender", "&6You gave&f {0}&6 kit to&f {1}");
         config.set("commands.kit.exempt", "&cYou are not allowed to give kits to&f {0}");
         config.set("commands.loom.sender", "&6You opened loom for&f {0}");
@@ -180,9 +187,9 @@ public class Message {
         config.set("commands.repair.non-damaged", "{0}&c is already fully repaired");
         config.set("commands.repair.cooldown", "&cYou have to wait&f {0}&c seconds");
         config.set("commands.repair.air", "&cYou have to hold an item");
-        config.set("commands.respond.target", "&7{0} > You:&f {1}");
-        config.set("commands.respond.sender", "&7You > {0}:&f {1}");
-        config.set("commands.respond.notify", "&7{0} > {1}:&f {2}");
+        config.set("commands.respond.target", "&7{0} > You&f: {1}");
+        config.set("commands.respond.sender", "&7You > {0}&f: {1}");
+        config.set("commands.respond.notify", "&7{0} > {1}&f: {2}");
         config.set("commands.rtp.cooldown", "&cYou have to wait&f {0}&c seconds");
         config.set("commands.rtp.exempt", "&cYou are not allowed to rtp&f {0}");
         config.set("commands.rtp.post-teleport", "&6Finding locations...");
@@ -253,9 +260,9 @@ public class Message {
         config.set("commands.warp.empty", "&cWarps are currently empty");
         config.set("commands.warp.invalid", "{0}&c does not exists");
         config.set("commands.warp.exempt", "&cYou are not allowed to warp&f {0}");
-        config.set("commands.whisper.target", "&7{0} > You: {1}");
-        config.set("commands.whisper.sender", "&7You > {0}: {1}");
-        config.set("commands.whisper.notify", "&7{0} > {1}: {2}");
+        config.set("commands.whisper.target", "&7{0} > You&f: {1}");
+        config.set("commands.whisper.sender", "&7You > {0}&f: {1}");
+        config.set("commands.whisper.notify", "&7{0} > {1}&f: {2}");
         config.set("commands.workbench.sender", "&6You opened workbench for&f {0}");
         config.set("commands.workbench.exempt", "&cYou are not allowed to open workbench for&f {0}");
         config.set("commands.world.setspawn",  "{0}&6 changed spawn point");
@@ -265,19 +272,19 @@ public class Message {
         config.set("commands.world.create.folder-exists", "{0}&c folder already exists use add instead");
         config.set("commands.world.create.post-create", "{0}&6 is about to be created");
         config.set("commands.world.create.title", "{0}&6 has been created with the following:");
-        config.set("commands.world.create.environment", "&6environment:&f {0}");
-        config.set("commands.world.create.seed", "&6seed:&f {0}");
+        config.set("commands.world.create.environment", "&6environment&f: {0}");
+        config.set("commands.world.create.seed", "&6seed&f: {0}");
         config.set("commands.world.add.post-add", "{0}&6 is about to be added");
-        config.set("commands.world.add.title", "{0}&6 has been created with the following:");
-        config.set("commands.world.add.environment", "&6environment:&f {0}");
-        config.set("commands.world.add.seed", "&6seed:&f {0}");
+        config.set("commands.world.add.title", "{0}&6 has been created with the following&f:");
+        config.set("commands.world.add.environment", "&6environment&f: {0}");
+        config.set("commands.world.add.seed", "&6seed&f: {0}");
         config.set("commands.world.add.folder-invalid", "{0}&c folder does not exists use create instead");
         config.set("commands.world.add.world-exists", "{0}&c already exists");
         config.set("commands.world.gamerule.changed", "{0}&6 changed&f {1}&6 to&f {2}");
         config.set("commands.worth.listed", "{0}&6 is worth&a {1}");
         config.set("commands.worth.unlisted", "{0}&c is not sellable");
-        config.set("events.vanish.enable", "&6&lVanish:&a Enable");
-        config.set("events.vanish.disable", "&6&lVanish:&c Disable");
+        config.set("events.vanish.enable", "&6&lVanish&f:&a Enable");
+        config.set("events.vanish.disable", "&6&lVanish&f:&c Disable");
         config.set("events.teleport.post", "&6Teleporting in&f {0}&6 seconds");
         config.set("events.teleport.success", "&6Teleporting to&f {0}");
         config.set("events.teleport.has-task", "&cYou can not teleport twice you have to wait");
@@ -288,8 +295,8 @@ public class Message {
         config.set("events.gamemode.change", "&6Your gamemode has changed to&f {0}");
         config.set("events.gamemode.notify", "{0}&6 changed gamemode to&f {1}");
         config.set("events.move", "&cYou moved before teleporting!");
-        config.set("events.respawn.title", "&6Death location:");
-        config.set("events.respawn.location", "&6World:&f {0}&6 X:&f{1}&6 Y:&f{2}&6 Z:&f{3}");
+        config.set("events.respawn.title", "&6Death location&f:");
+        config.set("events.respawn.location", "&6World&f: {0}&6 X&f: {1}&6 Y&f: {2}&6 Z&f: {3}");
         config.options().copyDefaults(true);
         try {
             config.save(file);

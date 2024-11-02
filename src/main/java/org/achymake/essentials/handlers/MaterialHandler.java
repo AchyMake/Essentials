@@ -18,7 +18,10 @@ public class MaterialHandler {
         return Material.valueOf(materialName.toUpperCase());
     }
     public ItemStack getItemStack(String materialName, int amount) {
-        return new ItemStack(get(materialName.toUpperCase()), amount);
+        var material = get(materialName.toUpperCase());
+        if (material != null) {
+            return new ItemStack(get(materialName.toUpperCase()), amount);
+        } else return null;
     }
     public void giveItemStack(Player player, ItemStack itemStack) {
         if (itemStack != null) {

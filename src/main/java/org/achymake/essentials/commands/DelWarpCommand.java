@@ -27,7 +27,8 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
-                if (getWarps().isListed(warpName)) {
+                var warp = getWarps().getLocation(warpName);
+                if (warp != null) {
                     getWarps().setLocation(warpName, null);
                     player.sendMessage(getMessage().get("commands.delwarp.success", warpName));
                 } else player.sendMessage(getMessage().get("commands.delwarp.invalid", warpName));
@@ -36,7 +37,8 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
-                if (getWarps().isListed(warpName)) {
+                var warp = getWarps().getLocation(warpName);
+                if (warp != null) {
                     getWarps().setLocation(warpName, null);
                     consoleCommandSender.sendMessage(getMessage().get("commands.delwarp.success", warpName));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.delwarp.invalid", warpName));

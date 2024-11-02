@@ -14,21 +14,17 @@ public class Jail {
     }
     private final File file = new File(getInstance().getDataFolder(), "jail.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-    public File getFile() {
-        return file;
-    }
-    public FileConfiguration getConfig() {
-        return config;
-    }
     public Location getLocation() {
-        var world = getInstance().getWorlds().get(config.getString("world"));
-        if (world != null) {
-            var x = config.getDouble("x");
-            var y = config.getDouble("y");
-            var z = config.getDouble("z");
-            var yaw = config.getLong("yaw");
-            var pitch = config.getLong("pitch");
-            return new Location(world, x, y, z, yaw, pitch);
+        if (config.isString("world")) {
+            var world = getInstance().getWorlds().get(config.getString("world"));
+            if (world != null) {
+                var x = config.getDouble("x");
+                var y = config.getDouble("y");
+                var z = config.getDouble("z");
+                var yaw = config.getLong("yaw");
+                var pitch = config.getLong("pitch");
+                return new Location(world, x, y, z, yaw, pitch);
+            } else return null;
         } else return null;
     }
     public void setLocation(Location location) {
