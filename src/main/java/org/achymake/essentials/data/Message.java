@@ -69,7 +69,7 @@ public class Message {
         config.addDefault("commands.eco.reset", "&6You reset&f {0}&6 account to&a {1}");
         config.addDefault("commands.eco.add", "&6You added&a {0}&6 to&f {1}");
         config.addDefault("commands.eco.remove.success", "&6You removed&a {0}&6 from&f {1}");
-        config.addDefault("commands.eco.non-sufficient-funds", "{0}&c does not have&a {1}");
+        config.addDefault("commands.eco.remove.non-sufficient-funds", "{0}&c does not have&a {1}");
         config.addDefault("commands.eco.set", "&6You set&a {0}&6 to&f {1}");
         config.addDefault("commands.enchant.add", "&6You added&f {0}&6 with lvl&f {1}");
         config.addDefault("commands.enchant.remove", "&6You removed&f {0}");
