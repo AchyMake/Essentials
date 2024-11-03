@@ -56,17 +56,15 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         var warpName = args[0].toLowerCase();
                         var warp = getWarps().getLocation(warpName);
-                        if (target == player) {
-                            if (warp != null) {
+                        if (warp != null) {
+                            if (target == player) {
                                 getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                            } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
-                        } else if (!target.hasPermission("essentials.command.warp.exempt")) {
-                            if (warp != null) {
+                            } else if (!target.hasPermission("essentials.command.warp.exempt")) {
                                 getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
-                            } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
-                        } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
-                        return true;
-                    }
+                            } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
@@ -79,8 +77,8 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                     if (warp != null) {
                         userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
-                    return true;
-                }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
+                return true;
             }
         }
         return false;

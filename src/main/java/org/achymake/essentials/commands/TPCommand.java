@@ -36,8 +36,8 @@ public class TPCommand implements CommandExecutor, TabCompleter {
                         getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));
                         player.teleport(target.getLocation());
                     } else player.sendMessage(getMessage().get("commands.tp.exempt", target.getName()));
-                    return true;
-                }
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

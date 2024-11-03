@@ -43,8 +43,8 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                             getUserdata(target).setWalkSpeed(value);
                             player.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
                         } else player.sendMessage(getMessage().get("commands.walkspeed.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
@@ -54,8 +54,8 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                     var value = Float.parseFloat(args[0]);
                     getUserdata(target).setWalkSpeed(value);
                     consoleCommandSender.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
-                    return true;
-                }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
+                return true;
             }
         }
         return false;

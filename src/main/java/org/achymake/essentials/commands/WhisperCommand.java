@@ -38,8 +38,8 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
                     target.sendMessage(getMessage().get("commands.whisper.target", player.getName(), message));
                     player.sendMessage(getMessage().get("commands.whisper.sender", target.getName(), message));
                     getMessage().sendAll(getMessage().get("commands.whisper.notify", player.getName(), target.getName(), message), "essentials.command.whisper.notify");
-                    return true;
-                }
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -49,10 +49,10 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                getInstance().getOnlinePlayers().forEach(players -> {
-                    if (!getUserdata(players).isVanished()) {
-                        if (players.getName().startsWith(args[0])) {
-                            commands.add(players.getName());
+                getInstance().getOnlinePlayers().forEach(target -> {
+                    if (!getUserdata(target).isVanished()) {
+                        if (target.getName().startsWith(args[0])) {
+                            commands.add(target.getName());
                         }
                     }
                 });

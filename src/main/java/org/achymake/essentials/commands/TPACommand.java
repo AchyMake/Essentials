@@ -62,8 +62,8 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
                         }
                     } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
-                    return true;
-                }
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

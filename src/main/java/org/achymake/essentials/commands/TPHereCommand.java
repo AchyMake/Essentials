@@ -37,8 +37,8 @@ public class TPHereCommand implements CommandExecutor, TabCompleter {
                         target.teleport(player.getLocation());
                         player.sendMessage(getMessage().get("commands.tphere.sender", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.tphere.exempt", target.getName()));
-                    return true;
-                }
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

@@ -27,32 +27,32 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openWorkbench(player);
+                getInstance().getInventoryHandler().openWorkbench(player);
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
                     var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openWorkbench(target);
+                            getInstance().getInventoryHandler().openWorkbench(target);
                             player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.workbench.exempt")) {
-                            openWorkbench(target);
+                            getInstance().getInventoryHandler().openWorkbench(target);
                             player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.workbench.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openWorkbench(target);
+                    getInstance().getInventoryHandler().openWorkbench(target);
                     consoleCommandSender.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
-                    return true;
-                }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -74,8 +74,5 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openWorkbench(Player player) {
-        getInstance().getInventoryHandler().openWorkbench(player);
     }
 }
