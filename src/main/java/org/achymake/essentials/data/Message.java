@@ -192,7 +192,7 @@ public class Message {
         config.addDefault("commands.portal.primary.invalid", "&cYou have to add primary location");
         config.addDefault("commands.portal.secondary.invalid", "&cYou have to add secondary location");
         config.addDefault("commands.portal.set.primary", "&6You resized primary location for&f {0}&6 portal");
-        config.addDefault("commands.portal.set.secondary", "&6You resized primary location for&f {0}&6 portal");
+        config.addDefault("commands.portal.set.secondary", "&6You resized secondary location for&f {0}&6 portal");
         config.addDefault("commands.portal.set.portal-type", "&6You changed portal-type to&f {0}&6for portal&f {1}");
         config.addDefault("commands.portal.create.success", "&6You created a portal named&f {0}");
         config.addDefault("commands.pvp.enable", "&6&lPVP:&a Enable");
