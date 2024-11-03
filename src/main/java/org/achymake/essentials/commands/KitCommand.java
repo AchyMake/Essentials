@@ -86,14 +86,18 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
                             } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));
                         } else player.sendMessage(getMessage().get("commands.kit.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 0) {
-                consoleCommandSender.sendMessage("Kits:");
-                getKits().getListed().forEach(kits -> consoleCommandSender.sendMessage("- " + kits));
+                if (!getKits().getListed().isEmpty()) {
+                    consoleCommandSender.sendMessage(getMessage().get("commands.kit.title"));
+                    getKits().getListed().forEach(kits -> {
+                        consoleCommandSender.sendMessage(getMessage().get("commands.kit.listed", kits));
+                    });
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.kit.empty"));
                 return true;
             } else if (args.length == 2) {
                 var target = sender.getServer().getPlayerExact(args[1]);
@@ -103,9 +107,9 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                         getMaterials().giveItemStacks(target, getKits().get(kitName));
                         target.sendMessage(getMessage().get("commands.kit.receive", kitName));
                         consoleCommandSender.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
-                        return true;
-                    }
-                }
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.kit.invalid", kitName));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

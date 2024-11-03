@@ -3,6 +3,7 @@ package org.achymake.essentials.data;
 import org.achymake.essentials.Essentials;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.WorldInfo;
 
@@ -58,5 +59,9 @@ public class Worlds {
         creator.environment(environment);
         creator.seed(new Random().nextLong());
         return creator.createWorld();
+    }
+    public Block highestRandomBlock(String worldName, int spread) {
+        var random = new Random();
+        return get(worldName).getHighestBlockAt(random.nextInt(0, spread), random.nextInt(0, spread));
     }
 }

@@ -26,36 +26,38 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
-                openStonecutter(player);
+            if (args.length == 0) {
+                if (getInstance().getInventoryHandler().openStonecutter(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.stonecutter.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openStonecutter(target);
-                            player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openStonecutter(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.stonecutter.exempt")) {
-                            openStonecutter(target);
-                            player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openStonecutter(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.stonecutter.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.invalid", args[0]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openStonecutter(target);
-                    consoleCommandSender.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
-                    return true;
-                }
+                    if (getInstance().getInventoryHandler().openStonecutter(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", args[0]));
+                return true;
             }
         }
         return false;
@@ -77,11 +79,5 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openStonecutter(Player player) {
-        var inventory = getInstance().getInventoryHandler().openStonecutter(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

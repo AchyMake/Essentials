@@ -31,7 +31,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = player.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     var jail = getJail().getLocation();
                     if (jail != null) {
@@ -74,8 +74,8 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                             }
                         } else player.sendMessage(getMessage().get("commands.jail.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.jail.invalid"));
-                    return true;
-                }
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
@@ -102,8 +102,8 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                             consoleCommandSender.sendMessage(getMessage().get("commands.jail.enable", target.getName()));
                         }
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.jail.invalid"));
-                    return true;
-                }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

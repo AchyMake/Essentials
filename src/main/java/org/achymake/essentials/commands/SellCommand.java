@@ -47,7 +47,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                         heldItem.setAmount(0);
                         player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
                     } else player.sendMessage(getMessage().get("commands.sell.unsellable"));
-                } else player.sendMessage(getMessage().get("commands.sell.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("all")) {
@@ -80,7 +80,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                                     player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
                                 } else player.sendMessage(getMessage().get("commands.sell.insufficient", itemName));
                             } else player.sendMessage(getMessage().get("commands.sell.unsellable"));
-                        } else player.sendMessage(getMessage().get("commands.sell.air"));
+                        } else player.sendMessage(getMessage().get("error.item.invalid"));
                     }
                 }
             }

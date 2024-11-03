@@ -42,7 +42,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                         heldItem.setAmount(heldItem.getAmount() - 1);
                         player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
                     } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));
-                } else player.sendMessage(getMessage().get("commands.hat.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.hat.other")) {
@@ -66,9 +66,9 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                                     player.sendMessage(getMessage().get("commands.hat.target-success", target.getName(), getMessage().toTitleCase(heldItem.getType().toString())));
                                 } else player.sendMessage(getMessage().get("commands.hat.target-occupied", target.getName(), getMessage().toTitleCase(helmet.getType().toString())));
                             } else player.sendMessage(getMessage().get("commands.hat.exempt", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.hat.air"));
-                        return true;
-                    }
+                        } else player.sendMessage(getMessage().get("error.item.invalid"));
+                    } else player.sendMessage(getMessage().get("error.target.invalid", args[0]));
+                    return true;
                 }
             }
         }

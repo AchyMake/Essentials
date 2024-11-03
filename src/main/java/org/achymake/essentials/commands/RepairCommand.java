@@ -42,7 +42,7 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
                         } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
                     } else player.sendMessage(getMessage().get("commands.repair.cooldown", getCooldown().get(player, "repair", timer)));
-                } else player.sendMessage(getMessage().get("commands.repair.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("force")) {
@@ -52,7 +52,7 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
                             if (getMaterials().repair(heldItem)) {
                                 player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
                             } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
-                        } else player.sendMessage(getMessage().get("commands.repair.air"));
+                        } else player.sendMessage(getMessage().get("error.item.invalid"));
                         return true;
                     }
                 }

@@ -197,7 +197,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerMove();
         new PlayerQuit();
         new PlayerRespawn();
-        if (!isSpigot()) {
+        if (!isBukkit()) {
             new PlayerShearBlock();
         }
         new PlayerShearEntity();
@@ -243,7 +243,9 @@ public final class Essentials extends JavaPlugin {
         getWorth().reload();
     }
     public void reloadUserdata() {
-        getOfflinePlayers().forEach(offlinePlayer -> getUserdata(offlinePlayer).reload());
+        if (!getOfflinePlayers().isEmpty()) {
+            getOfflinePlayers().forEach(offlinePlayer -> getUserdata(offlinePlayer).reload());
+        }
     }
     public List<OfflinePlayer> getOfflinePlayers() {
         var listed = new ArrayList<OfflinePlayer>();
@@ -360,8 +362,8 @@ public final class Essentials extends JavaPlugin {
     public String getMinecraftProvider() {
         return getServer().getName();
     }
-    public boolean isSpigot() {
-        return getMinecraftProvider().equals("CraftBukkit");
+    public boolean isBukkit() {
+        return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
         return getServer().getOfflinePlayer(uuid);

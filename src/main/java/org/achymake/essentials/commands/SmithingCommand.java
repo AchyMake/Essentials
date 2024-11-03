@@ -27,31 +27,37 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openSmithingTable(player);
+                if (getInstance().getInventoryHandler().openSmithingTable(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.smithing.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openSmithingTable(player);
-                            player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.smithing.exempt")) {
-                            openSmithingTable(target);
-                            player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
-                        } else getMessage().send(player, command.getPermissionMessage());
+                            if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.smithing.exempt", target.getName()));
                         return true;
                     }
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openSmithingTable(target);
-                    return true;
-                }
+                    if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -73,11 +79,5 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openSmithingTable(Player player) {
-        var inventory = getInstance().getInventoryHandler().openSmithingTable(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

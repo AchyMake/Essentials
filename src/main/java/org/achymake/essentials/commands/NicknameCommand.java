@@ -29,29 +29,21 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
             if (args.length == 0) {
-                var name = userdata.getName();
-                var displayName = userdata.getDisplayName();
-                if (!displayName.equals(name)) {
-                    userdata.setString("display-name", name);
-                    player.sendMessage(getMessage().get("commands.nickname.self", name));
-                    return true;
-                }
+                getUserdata(player).setString("display-name", getUserdata(player).getName());
+                player.sendMessage(getMessage().get("commands.nickname.self", getUserdata(player).getName()));
+                return true;
             } else if (args.length == 1) {
-                var rename = args[0];
-                userdata.setString("display-name", rename);
-                player.sendMessage(getMessage().get("commands.nickname.self", rename));
+                getUserdata(player).setString("display-name", args[0]);
+                player.sendMessage(getMessage().get("commands.nickname.self", args[0]));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.nickname.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
                     if (target != null) {
-                        var rename = args[0];
-                        var userdataTarget = getUserdata(target);
                         if (!target.hasPermission("essentials.command.nickname.exempt")) {
-                            userdataTarget.setString("display-name", rename);
-                            player.sendMessage(getMessage().get("commands.nickname.sender", target.getName(), rename));
+                            getUserdata(target).setString("display-name", args[0]);
+                            player.sendMessage(getMessage().get("commands.nickname.sender", target.getName(), args[0]));
                         } else player.sendMessage(getMessage().get("commands.nickname.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                     return true;

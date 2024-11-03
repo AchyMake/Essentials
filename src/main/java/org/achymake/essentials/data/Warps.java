@@ -18,6 +18,9 @@ public class Warps {
     public Set<String> getListed() {
         return config.getKeys(false);
     }
+    public boolean isListed(String warpName) {
+        return getListed().contains(warpName);
+    }
     public Location getLocation(String warpName) {
         if (config.isConfigurationSection(warpName)) {
             if (config.isString(warpName + ".world")) {

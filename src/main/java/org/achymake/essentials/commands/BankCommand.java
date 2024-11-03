@@ -54,7 +54,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().add(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
                             player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
-                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                     return true;
                 } else if (args[0].equalsIgnoreCase("deposit")) {
@@ -64,7 +64,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().addBank(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
                             player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
-                        } else player.sendMessage(getMessage().get("commands.bank.deposit.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                        } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                     return true;
                 }

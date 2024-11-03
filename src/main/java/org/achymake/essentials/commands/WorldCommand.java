@@ -90,25 +90,25 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     var worldName = args[1];
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
                     if (!getWorlds().getFolder(worldName).exists()) {
-                        player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
+                        player.sendMessage(getMessage().get("creator.post", worldName));
                         var info = getWorlds().create(worldName, environment);
-                        player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
-                        player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
-                        player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
-                    } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
+                        player.sendMessage(getMessage().get("creator.title", info.getName()));
+                        player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
+                        player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
+                    } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
                     return true;
                 } else if (args[0].equalsIgnoreCase("add")) {
                     var worldName = args[1];
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
                     if (getWorlds().get(worldName) == null) {
                         if (getWorlds().getFolder(worldName).exists()) {
-                            player.sendMessage(getMessage().get("commands.world.add.post-add", worldName));
+                            player.sendMessage(getMessage().get("creator.post", worldName));
                             var info = getWorlds().create(worldName, environment);
-                            player.sendMessage(getMessage().get("commands.world.add.title", info.getName()));
-                            player.sendMessage(getMessage().get("commands.world.add.environment", info.getEnvironment().name()));
-                            player.sendMessage(getMessage().get("commands.world.add.seed", String.valueOf(info.getSeed())));
-                        } else player.sendMessage(getMessage().get("commands.world.add.folder-invalid", worldName));
-                    } else player.sendMessage(getMessage().get("commands.world.add.world-exists", worldName));
+                            player.sendMessage(getMessage().get("creator.title", info.getName()));
+                            player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
+                            player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
+                        } else player.sendMessage(getMessage().get("error.world.folder-invalid", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.exists", worldName));
                     return true;
                 }
             } else if (args.length == 4) {
@@ -127,20 +127,20 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     var environment = World.Environment.valueOf(args[2].toUpperCase());
                     if (args[3].equalsIgnoreCase("random")) {
                         if (!getWorlds().getFolder(worldName).exists()) {
-                            player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
+                            player.sendMessage(getMessage().get("creator.post", worldName));
                             var info = getWorlds().createRandom(worldName, environment);
-                            player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
-                            player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
-                            player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
-                        } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
+                            player.sendMessage(getMessage().get("creator.title", info.getName()));
+                            player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
+                            player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
+                        } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
                     } else if (!getWorlds().getFolder(worldName).exists()) {
                         var seed = Long.parseLong(args[3]);
-                        player.sendMessage(getMessage().get("commands.world.create.post-create", worldName));
+                        player.sendMessage(getMessage().get("creator.post", worldName));
                         var info = getWorlds().create(worldName, environment, seed);
-                        player.sendMessage(getMessage().get("commands.world.create.title", info.getName()));
-                        player.sendMessage(getMessage().get("commands.world.create.environment", info.getEnvironment().name()));
-                        player.sendMessage(getMessage().get("commands.world.create.seed", String.valueOf(info.getSeed())));
-                    } else player.sendMessage(getMessage().get("commands.world.create.folder-exists", worldName));
+                        player.sendMessage(getMessage().get("creator.title", info.getName()));
+                        player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
+                        player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
+                    } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
                     return true;
                 }
             }

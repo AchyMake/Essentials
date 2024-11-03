@@ -27,32 +27,36 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openGrindstone(player);
+                if (getInstance().getInventoryHandler().openGrindstone(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.grindstone.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openGrindstone(target);
-                            target.sendMessage(getMessage().get("commands.grindstone.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openGrindstone(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.grindstone.exempt")) {
-                            openGrindstone(target);
-                            target.sendMessage(getMessage().get("commands.grindstone.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openGrindstone(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.grindstone.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openGrindstone(target);
-                    return true;
-                }
+                    if (getInstance().getInventoryHandler().openGrindstone(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -74,11 +78,5 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openGrindstone(Player player) {
-        var inventory = getInstance().getInventoryHandler().openGrindstone(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

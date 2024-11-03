@@ -56,7 +56,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                         if (getEconomy().has(offlinePlayer, value)) {
                             getEconomy().remove(offlinePlayer, value);
                             player.sendMessage(getMessage().get("commands.eco.remove.success", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
-                        } else player.sendMessage(getMessage().get("commands.eco.remove.non-sufficient-funds", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(value)));
+                        } else player.sendMessage(getMessage().get("commands.eco.remove.insufficient-funds", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(value)));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("set")) {

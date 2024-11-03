@@ -36,8 +36,8 @@ public class AsyncPlayerChat implements Listener {
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
         var userdata = getUserdata(player);
-        var message = event.getMessage();
         if (!userdata.isMuted()) {
+            var message = event.getMessage();
             if (getVanishHandler().isVanish(player)) {
                 var vanishColor = getInstance().getConfig().getString("vanish-chat-color");
                 var vanishFormat = getMessage().addColor(vanishColor + userdata.getDisplayName() + "&f: ");

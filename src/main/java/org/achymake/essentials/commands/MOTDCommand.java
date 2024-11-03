@@ -34,19 +34,27 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                 getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
                 return true;
             } else if (args.length == 1) {
-                getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day." + args[0]));
+                var motd = args[0];
+                if (getConfig().isList("message-of-the-day." + motd)) {
+                    getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day." + motd));
+                } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.motd.other")) {
                     var target = sender.getServer().getPlayerExact(args[1]);
+                    var motd = args[0];
                     if (target != null) {
                         if (target == player) {
-                            getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
+                            if (getConfig().isList("message-of-the-day." + motd)) {
+                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + motd));
+                            } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
                         } else if (!target.hasPermission("essentials.command.motd.exempt")) {
-                            getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
+                            if (getConfig().isList("message-of-the-day." + motd)) {
+                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + motd));
+                            } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
                         } else player.sendMessage(getMessage().get("commands.motd.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
@@ -54,14 +62,20 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                 getMessage().sendStringList(consoleCommandSender, getInstance().getConfig().getStringList("message-of-the-day.welcome"));
                 return true;
             } else if (args.length == 1) {
-                getMessage().sendStringList(consoleCommandSender, getInstance().getConfig().getStringList("message-of-the-day." + args[0]));
+                var motd = args[0];
+                if (getConfig().isList("message-of-the-day." + motd)) {
+                    getMessage().sendStringList(consoleCommandSender, getInstance().getConfig().getStringList("message-of-the-day." + motd));
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", motd));
                 return true;
             } else if (args.length == 2) {
                 var target = sender.getServer().getPlayerExact(args[1]);
                 if (target != null) {
-                    getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day." + args[0]));
-                    return true;
-                }
+                    var motd = args[0];
+                    if (getConfig().isList("message-of-the-day." + motd)) {
+                        getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day." + motd));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
+                return true;
             }
         }
         return false;

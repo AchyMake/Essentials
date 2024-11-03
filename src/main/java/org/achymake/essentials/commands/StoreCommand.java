@@ -26,10 +26,7 @@ public class StoreCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (getUserdata(player).isDisabled()) {
-                getMessage().send(player, command.getPermissionMessage() + ": " + command.getName());
-                return true;
-            } else if (args.length == 0) {
+            if (args.length == 0) {
                 getMessage().sendStringList(player, getInstance().getConfig().getStringList("message-of-the-day.store"));
                 return true;
             } else if (args.length == 1) {
@@ -38,20 +35,23 @@ public class StoreCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.store"));
+                            player.sendMessage(getMessage().get("commands.store.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.store.exempt")) {
                             getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.store"));
+                            player.sendMessage(getMessage().get("commands.store.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.store.exempt"));
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     getMessage().sendStringList(target, getInstance().getConfig().getStringList("message-of-the-day.store"));
-                    return true;
-                }
+                    consoleCommandSender.sendMessage(getMessage().get("commands.store.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

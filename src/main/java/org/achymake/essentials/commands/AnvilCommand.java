@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +27,23 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openAnvil(player);
+                if (getInstance().getInventoryHandler().openAnvil(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.anvil.other")) {
                     var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openAnvil(target);
-                            target.sendMessage(getMessage().get("commands.anvil.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openAnvil(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.anvil.exempt")) {
-                            openAnvil(target);
-                            target.sendMessage(getMessage().get("commands.anvil.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openAnvil(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.anvil.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -52,7 +53,9 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openAnvil(target);
+                    if (getInstance().getInventoryHandler().openAnvil(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -76,11 +79,5 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openAnvil(Player player) {
-        var inventory = getInstance().getInventoryHandler().openAnvil(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

@@ -30,7 +30,7 @@ public class SetWarpCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
-                if (getWarps().getLocation(warpName) != null) {
+                if (getWarps().isListed(warpName)) {
                     getWarps().setLocation(warpName, player.getLocation());
                     player.sendMessage(getMessage().get("commands.setwarp.relocated", warpName));
                 } else {

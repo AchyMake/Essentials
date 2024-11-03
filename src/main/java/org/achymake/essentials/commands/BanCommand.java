@@ -47,7 +47,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     userdataTarget.setLong("settings.ban-expire", getDateHandler().addYears(value));
                                 }
                                 userdataTarget.setBoolean("settings.banned", true);
-                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
+                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, "none"));
                                 target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
                             } else if (target.hasPermission("essentials.command.ban.exempt")) {
                                 player.sendMessage(getMessage().get("commands.ban.exempt", target.getName()));
@@ -60,7 +60,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     userdataTarget.setLong("settings.ban-expire", getDateHandler().addYears(value));
                                 }
                                 userdataTarget.setBoolean("settings.banned", true);
-                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
+                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, "none"));
                                 target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
                             } else player.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
@@ -76,7 +76,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                         userdataOffline.setLong("settings.ban-expire", getDateHandler().addYears(value));
                                     }
                                     userdataOffline.setBoolean("settings.banned", true);
-                                    player.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date));
+                                    player.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date, "none"));
                                 } else player.sendMessage(getMessage().get("commands.ban.banned", offlinePlayer.getName()));
                             } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                         }
@@ -102,7 +102,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 }
                                 userdataTarget.setBoolean("settings.banned", true);
                                 userdataTarget.setString("settings.ban-reason", reason);
-                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
+                                player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, reason));
                                 target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
                             } else if (!target.hasPermission("essentials.command.ban.exempt")) {
                                 if (!userdataTarget.isBanned()) {
@@ -115,7 +115,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     }
                                     userdataTarget.setBoolean("settings.banned", true);
                                     userdataTarget.setString("settings.ban-reason", reason);
-                                    player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
+                                    player.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, reason));
                                     target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
                                 } else player.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                             } else player.sendMessage(getMessage().get("commands.ban.exempt", target.getName()));
@@ -133,7 +133,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     }
                                     userdataOffline.setBoolean("settings.banned", true);
                                     userdataOffline.setString("settings.ban-reason", reason);
-                                    player.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date));
+                                    player.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date, reason));
                                 } else player.sendMessage(getMessage().get("commands.ban.banned", offlinePlayer.getName()));
                             } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                         }
@@ -159,8 +159,8 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     userdataTarget.setLong("settings.ban-expire", getDateHandler().addYears(value));
                                 }
                                 userdataTarget.setBoolean("settings.banned", true);
-                                consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
-                                target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
+                                consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, "none"));
+                                target.kickPlayer(userdataTarget.getBanReason());
                             } else consoleCommandSender.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
@@ -175,7 +175,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                         userdataOffline.setLong("settings.ban-expire", getDateHandler().addYears(value));
                                     }
                                     userdataOffline.setBoolean("settings.banned", true);
-                                    consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date));
+                                    consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date, "none"));
                                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                             }
                         }
@@ -201,8 +201,8 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 }
                                 userdataTarget.setBoolean("settings.banned", true);
                                 userdataTarget.setString("settings.ban-reason", reason);
-                                consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date));
-                                target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
+                                consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", target.getName(), String.valueOf(value), date, reason));
+                                target.kickPlayer(userdataTarget.getBanReason());
                             } else consoleCommandSender.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
                             var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
@@ -218,7 +218,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                     }
                                     userdataOffline.setBoolean("settings.banned", true);
                                     userdataOffline.setString("settings.ban-reason", reason);
-                                    consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date));
+                                    consoleCommandSender.sendMessage(getMessage().get("commands.ban.success", offlinePlayer.getName(), String.valueOf(value), date, reason));
                                 } else consoleCommandSender.sendMessage(getMessage().get("commands.ban.banned", offlinePlayer.getName()));
                             } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                         }

@@ -45,7 +45,7 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
                     if (getWorth().isListed(heldItem.getType())) {
                         player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType()))));
                     } else player.sendMessage(getMessage().get("commands.setworth.disable", itemName));
-                } else player.sendMessage(getMessage().get("commands.setworth.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             }
         }

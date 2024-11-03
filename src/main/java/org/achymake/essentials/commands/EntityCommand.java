@@ -204,7 +204,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                         var targetType = EntityType.valueOf(args[2].toUpperCase());
                         commands.add(String.valueOf(getEntities().disableDamage(entityType, targetType)));
                     }
-                    if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
+                    if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
                         var spawnReason = CreatureSpawnEvent.SpawnReason.valueOf(args[2].toUpperCase());
                         commands.add(String.valueOf(getEntities().disabledSpawnReason(entityType, spawnReason)));
                     }

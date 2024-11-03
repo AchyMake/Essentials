@@ -33,7 +33,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 } else getMessage().sendActionBar(player, getMessage().get("commands.fly.disable"));
                 return true;
             } else if (args.length == 1) {
-                if (player.hasPermission("players.command.fly.other")) {
+                if (player.hasPermission("essentials.command.fly.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
@@ -41,7 +41,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                             if (target.getAllowFlight()) {
                                 getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
                             } else getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
-                        } else if (!target.hasPermission("players.command.fly.exempt")) {
+                        } else if (!target.hasPermission("essentials.command.fly.exempt")) {
                             target.setAllowFlight(!target.getAllowFlight());
                             if (target.getAllowFlight()) {
                                 getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
@@ -77,7 +77,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (player.hasPermission("players.command.fly.other")) {
+                if (player.hasPermission("essentials.command.fly.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
                             if (target.getName().startsWith(args[0])) {

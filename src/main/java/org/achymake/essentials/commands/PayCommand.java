@@ -44,7 +44,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                                 getEconomy().remove(player, amount);
                                 target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currency() + getEconomy().format(amount), player.getName()));
                                 player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currency() + getEconomy().format(amount)));
-                            } else player.sendMessage(getMessage().get("commands.pay.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount), target.getName()));
+                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), target.getName()));
                         } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("commands.pay.self"));
                 } else {
@@ -56,7 +56,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                                 getEconomy().add(offlinePlayer, amount);
                                 getEconomy().remove(player, amount);
                                 player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(amount)));
-                            } else player.sendMessage(getMessage().get("commands.pay.non-sufficient-funds", getEconomy().currency() + getEconomy().format(amount), offlinePlayer.getName()));
+                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), offlinePlayer.getName()));
                         } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }

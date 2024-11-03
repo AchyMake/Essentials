@@ -2,6 +2,7 @@ package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.ScheduleHandler;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -411,6 +412,50 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             if (amount > 0) {
                 player.setWalkSpeed(getDefaultWalkSpeed() * amount);
             } else player.setWalkSpeed(getDefaultWalkSpeed());
+        }
+    }
+    public boolean setGameMode(String mode) {
+        var player = getPlayer();
+        if (player != null) {
+            if (mode.equalsIgnoreCase("adventure")) {
+                player.setGameMode(GameMode.ADVENTURE);
+                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.adventure"));
+                return true;
+            } else if (mode.equalsIgnoreCase("creative")) {
+                player.setGameMode(GameMode.CREATIVE);
+                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.creative"));
+                return true;
+            } else if (mode.equalsIgnoreCase("spectator")) {
+                player.setGameMode(GameMode.SPECTATOR);
+                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.spectator"));
+                return true;
+            } else if (mode.equalsIgnoreCase("survival")) {
+                player.setGameMode(GameMode.SURVIVAL);
+                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.survival"));
+                return true;
+            } else return false;
+        } else return false;
+    }
+    public void randomTeleport() {
+        var player = getPlayer();
+        if (player != null) {
+            getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
+            getScheduler().runLater(new Runnable() {
+                @Override
+                public void run() {
+                    var block = getWorlds().highestRandomBlock(getMain().getString("commands.rtp.world"), getMain().getInt("commands.rtp.spread"));
+                    if (block.isLiquid()) {
+                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
+                        randomTeleport();
+                    } else {
+                        if (!block.getChunk().isLoaded()) {
+                            block.getChunk().load();
+                        }
+                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
+                        player.teleport(block.getLocation().add(0.5,1,0.5));
+                    }
+                }
+            }, 0);
         }
     }
 }

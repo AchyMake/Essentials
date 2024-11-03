@@ -44,8 +44,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                                 getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
                             } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.invalid", args[0]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
@@ -55,8 +55,8 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                     if (getSpawn().getLocation() != null) {
                         getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.spawn.invalid"));
-                    return true;
-                }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", args[0]));
+                return true;
             }
         }
         return false;

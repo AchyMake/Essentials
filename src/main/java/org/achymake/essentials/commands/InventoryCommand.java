@@ -36,9 +36,9 @@ public class InventoryCommand implements CommandExecutor, TabCompleter {
                         if (!target.hasPermission("essentials.command.inventory.exempt")) {
                             player.openInventory(target.getInventory()).setTitle(getMessage().get("commands.inventory.title", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.inventory.exempt"));
-                        return true;
-                    }
-                }
+                    } else player.sendMessage(getMessage().get("commands.inventory.self"));
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

@@ -2,14 +2,11 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -18,9 +15,6 @@ import java.util.List;
 public class EnchantCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
-    }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -38,7 +32,7 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
                     var itemMeta = heldItem.getItemMeta();
-                    var enchantment = Enchantment.getByName(args[0].toUpperCase());
+                    var enchantment = getMaterials().getEnchantment(args[0]);
                     if (enchantment != null) {
                         var enchantName = getMessage().toTitleCase(enchantment.getKey().getKey());
                         if (itemMeta.hasEnchant(enchantment)) {
@@ -49,12 +43,12 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.enchant.add", enchantName, String.valueOf(1)));
                         }
                     }
-                } else player.sendMessage(getMessage().get("commands.enchant.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 2) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    var enchantment = Enchantment.getByName(args[0].toUpperCase());
+                    var enchantment = getMaterials().getEnchantment(args[0]);
                     if (enchantment != null) {
                         var enchantName = getMessage().toTitleCase(enchantment.getKey().getKey());
                         var amount = Integer.parseInt(args[1]);
@@ -66,7 +60,7 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.enchant.remove", enchantName));
                         }
                     }
-                } else player.sendMessage(getMessage().get("commands.enchant.air"));
+                } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             }
         }
@@ -77,14 +71,14 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                for (var enchantment : Enchantment.values()) {
+                getMaterials().getEnchantments().forEach(enchantment -> {
                     var enchantName = enchantment.getKey().getKey();
                     if (enchantName.startsWith(args[0])) {
                         commands.add(enchantName);
                     }
-                }
+                });
             } else if (args.length == 2) {
-                commands.add(String.valueOf(Enchantment.getByName(args[0].toUpperCase()).getMaxLevel()));
+                commands.add(String.valueOf(getMaterials().getEnchantment(args[0]).getMaxLevel()));
             }
         }
         return commands;

@@ -5,6 +5,7 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Skulls;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -36,36 +37,58 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("player")) {
-                    getMaterialHandler().giveItemStack(player, getMaterialHandler().getPlayerHead(player.getServer().getOfflinePlayer(args[1]), 1));
-                    player.sendMessage(getMessage().get("commands.skull.received", args[1]));
+                    var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                    getMaterialHandler().giveItemStack(player, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
+                    player.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("custom")) {
                     var skullName = args[1];
                     if (getSkulls().isListed(skullName)) {
                         getMaterialHandler().giveItemStack(player, getSkulls().getCustomHead(skullName, 1));
                         player.sendMessage(getMessage().get("commands.skull.received", skullName));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("commands.skull.invalid", skullName));
+                    return true;
                 }
-            }
-        } else if (sender instanceof ConsoleCommandSender) {
-            if (args.length == 3) {
+            } else if (args.length == 3) {
                 var target = getInstance().getServer().getPlayerExact(args[2]);
                 if (target != null) {
                     if (args[0].equalsIgnoreCase("player")) {
-                        var offlinePlayer = sender.getServer().getOfflinePlayer(args[1]);
+                        var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
                         getMaterialHandler().giveItemStack(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
                         target.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
+                        player.sendMessage(getMessage().get("commands.skull.sender", offlinePlayer.getName()));
                         return true;
                     } else if (args[0].equalsIgnoreCase("custom")) {
                         var skullName = args[1];
                         if (getSkulls().isListed(skullName)) {
                             getMaterialHandler().giveItemStack(target, getSkulls().getCustomHead(skullName, 1));
                             target.sendMessage(getMessage().get("commands.skull.received", skullName));
-                            return true;
-                        }
+                            player.sendMessage(getMessage().get("commands.skull.sender", skullName));
+                        } else player.sendMessage(getMessage().get("commands.skull.invalid", skullName));
                     }
-                }
+                } else player.sendMessage(getMessage().get("error.target.invalid", args[2]));
+                return true;
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 3) {
+                var target = getInstance().getServer().getPlayerExact(args[2]);
+                if (target != null) {
+                    if (args[0].equalsIgnoreCase("player")) {
+                        var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        getMaterialHandler().giveItemStack(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
+                        target.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
+                        consoleCommandSender.sendMessage(getMessage().get("commands.skull.sender", offlinePlayer.getName()));
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("custom")) {
+                        var skullName = args[1];
+                        if (getSkulls().isListed(skullName)) {
+                            getMaterialHandler().giveItemStack(target, getSkulls().getCustomHead(skullName, 1));
+                            target.sendMessage(getMessage().get("commands.skull.received", skullName));
+                            consoleCommandSender.sendMessage(getMessage().get("commands.skull.sender", skullName));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.skull.invalid", skullName));
+                    }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", args[2]));
+                return true;
             }
         }
         return false;
@@ -76,7 +99,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 commands.add("player");
-                if (!getInstance().isSpigot()) {
+                if (!getInstance().isBukkit()) {
                     commands.add("custom");
                 }
             } else if (args.length == 2) {
@@ -89,7 +112,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                         }
                     });
                 } else if (args[0].equalsIgnoreCase("custom")) {
-                    if (!getInstance().isSpigot()) {
+                    if (!getInstance().isBukkit()) {
                         commands.addAll(getSkulls().getListed());
                     }
                 }

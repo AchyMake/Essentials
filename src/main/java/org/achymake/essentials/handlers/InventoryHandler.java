@@ -9,7 +9,7 @@ public class InventoryHandler {
         return Essentials.getInstance();
     }
     private boolean isSpigot() {
-        return getInstance().isSpigot();
+        return getInstance().isBukkit();
     }
     public InventoryView openAnvil(Player player) {
         if (isSpigot()) {

@@ -55,7 +55,7 @@ public class Skulls {
         }
     }
     public void reload() {
-        if (getInstance().isSpigot())return;
+        if (getInstance().isBukkit())return;
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
         } else setup();

@@ -27,21 +27,23 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openCartographyTable(player);
+                if (getInstance().getInventoryHandler().openCartographyTable(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.cartography.other")) {
                     var target = player.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openCartographyTable(player);
-                            target.sendMessage(getMessage().get("commands.cartography.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openCartographyTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.cartography.exempt")) {
-                            openCartographyTable(target);
-                            target.sendMessage(getMessage().get("commands.cartography.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openCartographyTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.cartography.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -51,7 +53,9 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openCartographyTable(target);
+                    if (getInstance().getInventoryHandler().openCartographyTable(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -75,11 +79,5 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openCartographyTable(Player player) {
-        var inventory = getInstance().getInventoryHandler().openCartographyTable(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

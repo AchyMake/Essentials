@@ -27,31 +27,36 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                openLoom(player);
+                if (getInstance().getInventoryHandler().openLoom(player) == null) {
+                    player.sendMessage(getMessage().get("error.not-provided"));
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.loom.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            openLoom(target);
-                            player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.loom.exempt")) {
-                            openLoom(target);
-                            player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                                player.sendMessage(getMessage().get("error.not-provided"));
+                            } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.loom.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    openLoom(target);
-                    consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
-                    return true;
-                }
+                    if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;
@@ -73,11 +78,5 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void openLoom(Player player) {
-        var inventory = getInstance().getInventoryHandler().openLoom(player);
-        if (inventory == null) {
-            player.sendMessage(getMessage().get("error.not-provided"));
-        }
     }
 }

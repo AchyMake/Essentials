@@ -35,8 +35,8 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                 if (!getCooldown().has(player, "heal", timer)) {
                     player.setFoodLevel(20);
                     player.setHealth(player.getMaxHealth());
-                    player.sendMessage(getMessage().get("commands.heal.success"));
                     getCooldown().add(player, "heal", timer);
+                    player.sendMessage(getMessage().get("commands.heal.success"));
                 } else getMessage().sendActionBar(player, getMessage().get("commands.heal.cooldown", getCooldown().get(player, "heal", timer)));
                 return true;
             } else if (args.length == 1) {
@@ -46,27 +46,28 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                         if (target == player) {
                             target.setFoodLevel(20);
                             target.setHealth(target.getMaxHealth());
-                            target.sendMessage(getMessage().get("commands.heal.target", player.getName()));
+                            target.sendMessage(getMessage().get("commands.heal.success"));
                             player.sendMessage(getMessage().get("commands.heal.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.heal.exempt")) {
                             target.setFoodLevel(20);
                             target.setHealth(target.getMaxHealth());
-                            target.sendMessage(getMessage().get("commands.heal.target", player.getName()));
+                            target.sendMessage(getMessage().get("commands.heal.success"));
                             player.sendMessage(getMessage().get("commands.heal.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.heal.exempt", target.getName()));
-                        return true;
-                    }
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    return true;
                 }
             }
-        } else if (sender instanceof ConsoleCommandSender) {
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
                     target.setHealth(target.getMaxHealth());
                     target.sendMessage(getMessage().get("commands.heal.success"));
-                    return true;
-                }
+                    consoleCommandSender.sendMessage(getMessage().get("commands.heal.sender", target.getName()));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                return true;
             }
         }
         return false;

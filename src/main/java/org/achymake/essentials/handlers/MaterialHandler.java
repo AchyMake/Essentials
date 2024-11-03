@@ -4,18 +4,26 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 public class MaterialHandler {
     public Material get(String materialName) {
         return Material.valueOf(materialName.toUpperCase());
+    }
+    public Enchantment getEnchantment(String enchantmentName) {
+        return Enchantment.getByName(enchantmentName.toUpperCase());
+    }
+    public ArrayList<Enchantment> getEnchantments() {
+        return new ArrayList<Enchantment>(Arrays.asList(Enchantment.values()));
     }
     public ItemStack getItemStack(String materialName, int amount) {
         var material = get(materialName.toUpperCase());
