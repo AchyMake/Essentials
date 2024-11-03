@@ -27,6 +27,7 @@ public final class Essentials extends JavaPlugin {
     private Jail jail;
     private Kits kits;
     private Message message;
+    private Portals portals;
     private Skulls skulls;
     private Spawn spawn;
     private Warps warps;
@@ -50,6 +51,7 @@ public final class Essentials extends JavaPlugin {
         jail = new Jail();
         kits = new Kits();
         message = new Message();
+        portals = new Portals();
         skulls = new Skulls();
         spawn = new Spawn();
         warps = new Warps();
@@ -124,6 +126,7 @@ public final class Essentials extends JavaPlugin {
         new MuteCommand();
         new NicknameCommand();
         new PayCommand();
+        new PortalCommand();
         new PVPCommand();
         new RepairCommand();
         new RespondCommand();
@@ -195,6 +198,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerLevelChange();
         new PlayerLogin();
         new PlayerMove();
+        new PlayerPortal();
         new PlayerQuit();
         new PlayerRespawn();
         if (!isBukkit()) {
@@ -237,6 +241,7 @@ public final class Essentials extends JavaPlugin {
         getJail().reload();
         getKits().reload();
         getMessage().reload();
+        getPortals().reload();
         getSkulls().reload();
         getSpawn().reload();
         getWarps().reload();
@@ -328,6 +333,9 @@ public final class Essentials extends JavaPlugin {
     }
     public Skulls getSkulls() {
         return skulls;
+    }
+    public Portals getPortals() {
+        return portals;
     }
     public Message getMessage() {
         return message;

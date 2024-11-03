@@ -185,6 +185,16 @@ public class Message {
         config.addDefault("commands.pay.insufficient-funds", "&cYou do not have&a {0}&c to pay&f {1}");
         config.addDefault("commands.pay.minimum-payment", "&cYou have to at least pay&a {0}");
         config.addDefault("commands.pay.self", "&cYou can not pay your self");
+        config.addDefault("commands.portal.wand", "&6You received portal wand");
+        config.addDefault("commands.portal.remove.success", "{0}&6 has been removed");
+        config.addDefault("commands.portal.invalid", "{0}&c does not exist");
+        config.addDefault("commands.portal.exists", "{0}&c already exist");
+        config.addDefault("commands.portal.primary.invalid", "&cYou have to add primary location");
+        config.addDefault("commands.portal.secondary.invalid", "&cYou have to add secondary location");
+        config.addDefault("commands.portal.set.primary", "&6You resized primary location for&f {0}&6 portal");
+        config.addDefault("commands.portal.set.secondary", "&6You resized primary location for&f {0}&6 portal");
+        config.addDefault("commands.portal.set.portal-type", "&6You changed portal-type to&f {0}&6for portal&f {1}");
+        config.addDefault("commands.portal.create.success", "&6You created a portal named&f {0}");
         config.addDefault("commands.pvp.enable", "&6&lPVP:&a Enable");
         config.addDefault("commands.pvp.disable", "&6&lPVP:&c Disable");
         config.addDefault("commands.pvp.sender", "&6You {0} pvp for&f {1}");
@@ -283,6 +293,8 @@ public class Message {
         config.addDefault("commands.worth.unlisted", "{0}&c is not sellable");
         config.addDefault("events.vanish.enable", "&6&lVanish&f:&a Enable");
         config.addDefault("events.vanish.disable", "&6&lVanish&f:&c Disable");
+        config.addDefault("events.portal.secondary", "&6Secondary location saved");
+        config.addDefault("events.portal.primary", "&6Primary location saved");
         config.addDefault("events.teleport.post", "&6Teleporting in&f {0}&6 seconds");
         config.addDefault("events.teleport.success", "&6Teleporting to&f {0}");
         config.addDefault("events.teleport.has-task", "&cYou can not teleport twice you have to wait");

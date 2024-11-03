@@ -24,10 +24,32 @@ public class PlayerTeleport implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        if (getUserdata(event.getPlayer()).isDisabled()) {
+        var userdata = getUserdata(event.getPlayer());
+        if (userdata.isDisabled()) {
             event.setCancelled(true);
+        } else if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
+            if (getInstance().getPortals().isWithin(event.getFrom())) {
+                var warp = getInstance().getWarps().getLocation(getInstance().getPortals().getWarp(event.getFrom()));
+                if (warp != null) {
+                    event.setTo(warp);
+                }
+            }
+        } else if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_PORTAL)) {
+            if (getInstance().getPortals().isWithin(event.getFrom())) {
+                var warp = getInstance().getWarps().getLocation(getInstance().getPortals().getWarp(event.getFrom()));
+                if (warp != null) {
+                    event.setTo(warp);
+                }
+            }
+        } else if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.END_GATEWAY)) {
+            if (getInstance().getPortals().isWithin(event.getFrom())) {
+                var warp = getInstance().getWarps().getLocation(getInstance().getPortals().getWarp(event.getFrom()));
+                if (warp != null) {
+                    event.setTo(warp);
+                }
+            }
         } else if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-            getUserdata(event.getPlayer()).setLocation(event.getFrom(), "recent");
+            userdata.setLocation(event.getFrom(), "recent");
         }
     }
 }

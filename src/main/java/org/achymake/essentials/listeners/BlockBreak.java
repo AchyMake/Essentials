@@ -2,6 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
+import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -23,6 +24,9 @@ public class BlockBreak implements Listener {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
+    private Portals getPortals() {
+        return getInstance().getPortals();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -37,6 +41,10 @@ public class BlockBreak implements Listener {
         var player = event.getPlayer();
         if (getUserdata(player).isDisabled()) {
             event.setCancelled(true);
+        } else if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
+            event.setCancelled(true);
+            getPortals().setPrimary(player.getInventory().getItemInMainHand(), event.getBlock());
+            player.sendMessage(getMessage().get("events.portal.primary"));
         } else notifyBlockBreak(player, event.getBlock());
     }
     private void notifyBlockBreak(Player player, Block block) {

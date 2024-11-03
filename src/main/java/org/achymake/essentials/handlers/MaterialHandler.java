@@ -1,7 +1,9 @@
 package org.achymake.essentials.handlers;
 
+import org.achymake.essentials.Essentials;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -9,7 +11,9 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +28,12 @@ public class MaterialHandler {
     }
     public ArrayList<Enchantment> getEnchantments() {
         return new ArrayList<Enchantment>(Arrays.asList(Enchantment.values()));
+    }
+    public PersistentDataContainer getData(ItemMeta itemMeta) {
+        return itemMeta.getPersistentDataContainer();
+    }
+    public NamespacedKey getKey(String key) {
+        return new NamespacedKey(Essentials.getInstance(), key);
     }
     public ItemStack getItemStack(String materialName, int amount) {
         var material = get(materialName.toUpperCase());

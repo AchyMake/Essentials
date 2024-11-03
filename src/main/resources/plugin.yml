@@ -220,6 +220,11 @@ commands:
     permission: essentials.command.pay
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  portal:
+    description: create portals
+    permission: essentials.command.portal
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   pvp:
     description: toggle pvp
     permission: essentials.command.pvp
@@ -668,6 +673,9 @@ permissions:
     default: op
   essentials.command.pay:
     description: pay others
+    default: op
+  essentials.command.portal:
+    description: create portals
     default: op
   essentials.command.pvp:
     description: toggle pvp
