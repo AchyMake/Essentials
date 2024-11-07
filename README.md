@@ -21,25 +21,19 @@ Example for getting Userdata
 ```java
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
+import org.bukkit.Bukkit;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreak implements Listener {
-    private Essentials getInstance() {
-        return Essentials.getInstance();
-    }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
-    }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+        return Essentials.getInstance().getUserdata(offlinePlayer);
     }
     public BlockBreak() {
-        getManager().registerEvents(this, getInstance());
+        Bukkit.getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
-        var player = event.getPlayer();
-        var userdata = getUserdata(player);
+        var userdata = getUserdata(event.getPlayer());
         if (userdata.isDisabled) {
             event.setCancelled(true);
         }
