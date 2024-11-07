@@ -20,9 +20,8 @@ Example for getting Userdata
 
 ```java
 import org.achymake.essentials.Essentials;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreak implements Listener {
     private Essentials getInstance() {
