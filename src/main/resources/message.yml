@@ -4,11 +4,20 @@ error:
     invalid: '{0}&c has never joined'
   world:
     invalid: '{0}&c does not exists'
+    exists: '{0}&c already exists'
+    folder-exists: '{0}&c folder already exists'
+    folder-invalid: '{0}&c folder does not exists'
+  item:
+    invalid: '&cYou have to hold an item'
   not-provided: '&cServer does not provide this function'
+creator:
+  post: '{0}&6 is about to be created'
+  title: '{0}&6 has been created with the following:'
+  environment: '&6environment&f: {0}'
+  seed: '&6seed&f: {0}'
 commands:
   announcement: '&6Server&f: {0}'
   anvil:
-    target: '{0}&6 opened anvil for you'
     sender: '&6You opened anvil for&f {0}'
     exempt: '&cYou are not allowed to open anvil for&f {0}'
   back:
@@ -19,7 +28,7 @@ commands:
       title: '&6Top 10 Balance:'
       listed: '&6{0}&f {1}&a {2}'
   ban:
-    success: '&6You banned&f {0}&6 for&f {1} {2}'
+    success: '&6You banned&f {0}&6 for&f {1} {2}&6 reason&f: {3}'
     exempt: '&cYou are not allowed to ban&f {0}'
     banned: '{0}&c is already banned'
   bank:
@@ -30,15 +39,14 @@ commands:
     withdraw:
       success: '&6You withdrew&a {0}&6 from bank'
       left: '&6You now have&a {0}&6 left in the bank'
-      non-sufficient-funds: '&cYou do not have&a {0}&c to withdraw from bank'
+      insufficient-funds: '&cYou do not have&a {0}&c to withdraw from bank'
       minimum: '&cYou have to withdraw at least&a {0}'
     deposit:
       success: '&6You deposit&a {0}&6 to bank'
       left: '&6You now have&a {0}&6 left in the bank'
-      non-sufficient-funds: '&cYou do not have&a {0}&c to deposit'
+      insufficient-funds: '&cYou do not have&a {0}&c to deposit'
       minimum: '&cYou have to deposit at least&a {0}'
   cartography:
-    target: '{0}&6 opened cartography table for you'
     sender: '&6You opened cartography table for&f {0}'
     exempt: '&cYou are not allowed to open cartography table for&f {0}'
   color:
@@ -55,14 +63,12 @@ commands:
     add: '&6You added&a {0}&6 to&f {1}'
     remove:
       success: '&6You removed&a {0}&6 from&f {1}'
-      non-sufficient-funds: '{0}&c does not have&a {1}'
+      insufficient-funds: '{0}&c does not have&a {1}'
     set: '&6You set&a {0}&6 to&f {1}'
   enchant:
     add: '&6You added&f {0}&6 with lvl&f {1}'
     remove: '&6You removed&f {0}'
-    air: '&cYou have to hold an item'
   enchanting:
-    target: '{0}&6 opened enchanting table for you'
     sender: '&6You opened enchanting table for&f {0}'
     exempt: '&cYou are not allowed to open enchanting table for&f {0}'
   enderchest:
@@ -82,7 +88,6 @@ commands:
   feed:
     cooldown: '&cYou have to wait&f {0}&c seconds'
     success: '&6Your starvation has been satisfied'
-    target: '{0}&6 satisfied your starvation'
     sender: '&6You satisfied&f {0}&6 starvation'
     exempt: '&cYou are not allowed to satisfy&f {0}&6 starvation'
   fly:
@@ -104,10 +109,11 @@ commands:
     creative: '&6&lGamemode:&f Creative'
     survival: '&6&lGamemode:&f Survival'
     spectator: '&6&lGamemode:&f Spectator'
+    sender: '&6You changed&f {0}&6 gamemode to&f {1}'
+    invalid: '{0}&c is not a gamemode'
     exempt: '&cYou are not allowed to change gamemode for&f {0}'
   give: '&6You gave&f {0} {1} {2}'
   grindstone:
-    target: '{0}&6 opened grindstone for you'
     sender: '&6You opened grindstone for&f {0}'
     exempt: '&cYou are not allowed to open grindstone for&f {0}'
   hat:
@@ -115,15 +121,14 @@ commands:
     occupied: '&6You are already wearing&f {0}'
     target-success: '{0}&6 is now wearing&f {1}'
     target-occupied: '{0}&c is already wearing&f {1}'
-    air: '&cYou have to hold an item'
     exempt: '&cYou are not allowed to change hat for&f {0}'
   heal:
     cooldown: '&cYou have to wait&f {0}&c seconds'
     success: '&6Your health has been satisfied'
-    target: '{0}&6 satisfied your health'
     sender: '&6You satisfied&f {0}&6 health'
     exempt: '&cYou are not allowed to satisfy&f {0}&6 health'
   help:
+    sender: '&6You sent help message to&f {0}'
     exempt: '&cYou are not allowed to send help message to&f {0}'
   home:
     invalid: '{0}&c does not exists'
@@ -154,6 +159,7 @@ commands:
     quit-location: '&6quit-location:&7 World:&f{0}&7 X:&f{1}&7 Y:&f{2}&7 Z:&f{3}'
     uuid: '&6uuid:&f {0}'
   inventory:
+    self: '&cYou can not open an inventory of your own'
     exempt: '&cYou are not allowed to open&f {0}&6 inventory'
     title: '{0} inventory'
   jail:
@@ -175,6 +181,7 @@ commands:
     sender: '&6You opened loom for&f {0}'
     exempt: '&cYou are not allowed to open loom for&f {0}'
   motd:
+    invalid: '{0}&c does not exist'
     exempt: '&cYou are not allowed to send motd to&f {0}'
   mute:
     enable: '&6You muted&f {0}'
@@ -187,34 +194,52 @@ commands:
   pay:
     target: '&6You received&a {0}&6 from&f {1}'
     sender: '&6You paid&a {0}&f {1}'
-    non-sufficient-funds: '&cYou do not have&a {0}&c to pay&f {1}'
+    insufficient-funds: '&cYou do not have&a {0}&c to pay&f {1}'
     minimum-payment: '&cYou have to at least pay&a {0}'
     self: '&cYou can not pay your self'
+  portal:
+    wand: '&6You received portal wand'
+    remove:
+      success: '{0}&6 has been removed'
+    invalid: '{0}&c does not exist'
+    exists: '{0}&c already exist'
+    primary:
+      invalid: '&cYou have to add primary location'
+    secondary:
+      invalid: '&cYou have to add secondary location'
+    set:
+      primary: '&6You resized primary location for&f {0}&6 portal'
+      secondary: '&6You resized secondary location for&f {0}&6 portal'
+      portal-type: '&6You changed portal-type to&f {0}&6for portal&f {1}'
+    create:
+      success: '&6You created a portal named&f {0}'
   pvp:
     enable: '&6&lPVP:&a Enable'
     disable: '&6&lPVP:&c Disable'
     sender: '&6You {0} pvp for&f {1}'
+    exempt: '&cYou are not allowed to toggle pvp for&f {0}'
   repair:
     damaged: '&6You repaired&f {0}'
     non-damaged: '{0}&c is already fully repaired'
     cooldown: '&cYou have to wait&f {0}&c seconds'
-    air: '&cYou have to hold an item'
   respond:
     target: '&7{0} > You&f: {1}'
     sender: '&7You > {0}&f: {1}'
     notify: '&7{0} > {1}&f: {2}'
+    invalid: '&cYou do not have a recent whisper'
   rtp:
     cooldown: '&cYou have to wait&f {0}&c seconds'
+    sender: '&6You teleported&f {0}&6 to a random location'
     exempt: '&cYou are not allowed to rtp&f {0}'
     post-teleport: '&6Finding locations...'
     liquid: '&cFinding new location due to liquid block'
     teleport: '&6Teleporting to&f random'
   rules:
+    sender: '&6You sent rules message to&f {0}'
     exempt: '&cYou are not allowed to send rules to&f {0}'
   sell:
     sellable: '&6You sold&f {0} {1}&6 for&a {2}'
     unsellable: '{0}&c is not able to sell'
-    air: '&cYou have to hold an item'
     insufficient: '&cYou do not have enough&f {0}'
   sethome:
     success: '{0}&6 has been set'
@@ -232,9 +257,10 @@ commands:
   setworth:
     enable: '{0}&6 is now&a {1}'
     disable: '{0}&6 is now worthless'
-    air: '&cYou have to hold an item'
   skull:
     received: '&6You received&f {0}&6 skull'
+    sender: '&6You gave&f {0}&6 a&f {1}&6 skull'
+    invalid: '{0}&c does not exist'
   smithing:
     sender: '&6You opened smithing table for&f {0}'
   spawn:
@@ -244,6 +270,7 @@ commands:
     sender: '&6You opened stonecutter for&f {0}'
     exempt: '&cYou are not allowed to open stonecutter for&f {0}'
   store:
+    sender: '&6You sent store message to&f {0}'
     exempt: '&cYou are not allowed to send store to&f {0}'
   tpaccept:
     tpa:
@@ -316,19 +343,6 @@ commands:
       enable: '{0}&6 is now pvp mode'
       disable: '{0}&6 is no longer pvp mode'
     remove: '{0}&6 is saved and removed'
-    create:
-      folder-exists: '{0}&c folder already exists use add instead'
-      post-create: '{0}&6 is about to be created'
-      title: '{0}&6 has been created with the following:'
-      environment: '&6environment&f: {0}'
-      seed: '&6seed&f: {0}'
-    add:
-      post-add: '{0}&6 is about to be added'
-      title: '{0}&6 has been created with the following&f:'
-      environment: '&6environment&f: {0}'
-      seed: '&6seed&f: {0}'
-      folder-invalid: '{0}&c folder does not exists use create instead'
-      world-exists: '{0}&c already exists'
     gamerule:
       changed: '{0}&6 changed&f {1}&6 to&f {2}'
   worth:
@@ -338,11 +352,13 @@ events:
   vanish:
     enable: '&6&lVanish&f:&a Enable'
     disable: '&6&lVanish&f:&c Disable'
+  portal:
+    secondary: '&6Secondary location saved'
+    primary: '&6Primary location saved'
   teleport:
     post: '&6Teleporting in&f {0}&6 seconds'
     success: '&6Teleporting to&f {0}'
     has-task: '&cYou can not teleport twice you have to wait'
-  damage: '&cYou got damaged before teleporting!'
   pvp:
     self: '&cYour PVP is Disabled'
     target: '{0}&c PVP is Disabled'
@@ -351,6 +367,7 @@ events:
     change: '&6Your gamemode has changed to&f {0}'
     notify: '{0}&6 changed gamemode to&f {1}'
   move: '&cYou moved before teleporting!'
+  damage: '&cYou got damaged before teleporting!'
   respawn:
     title: '&6Death location&f:'
     location: '&6World&f: {0}&6 X&f: {1}&6 Y&f: {2}&6 Z&f: {3}'

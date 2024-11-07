@@ -16,3 +16,34 @@ JitPack.io Check Repository = https://jitpack.io/#AchyMake/Essentials
     </dependency>
 </dependencies>
 ```
+Example for getting Userdata
+
+```java
+import org.achymake.essentials.Essentials;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.achymake.essentials.data.Userdata;
+import org.bukkit.plugin.Plugin;
+
+public class BlockBreak implements Listener {
+    private Essentials getInstance() {
+        return Essentials.getInstance();
+    }
+    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
+        return getInstance().getUserdata(offlinePlayer);
+    }
+    private PluginManager getManager() {
+        return getInstance().getManager();
+    }
+    public BlockBreak() {
+        getManager().registerEvents(this, getInstance());
+    }
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onBlockBreak(BlockBreakEvent event) {
+        var player = event.getPlayer();
+        var userdata = getUserdata(player);
+        if (userdata.isDisabled) {
+            event.setCancelled(true);
+        }
+    }
+}
+```

@@ -1,12 +1,12 @@
-block-type: NETHER_PORTAL
-warp: test
-location-1:
-  world: test
-  x: 54
-  y: 6
-  z: 35
-location-2:
-  world: test
-  x: 57
-  y: 4
-  z: 35
+portal-type: NETHER_PORTAL
+warp: warpName
+primary:
+  world: worldName
+  x: 0
+  y: 0
+  z: 0
+secondary:
+  world: worldName
+  x: 0
+  y: 0
+  z: 0
