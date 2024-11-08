@@ -25,8 +25,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.block.BlockBreakEvent;
 
 public class BlockBreak implements Listener {
+    private Essentials getInstance() {
+        return Essentials.getInstance();
+    }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return Essentials.getInstance().getUserdata(offlinePlayer);
+        return getInstance().getUserdata(offlinePlayer);
     }
     public BlockBreak() {
         Bukkit.getPluginManager().registerEvents(this, getInstance());
