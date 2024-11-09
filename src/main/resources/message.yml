@@ -104,6 +104,7 @@ commands:
   freeze:
     enable: '&6You froze&f {0}'
     disable: '&6You unfroze&f {0}'
+    exempt: '&cYou are not allowed to freeze&f {0}'
   gamemode:
     adventure: '&6&lGamemode:&f Adventure'
     creative: '&6&lGamemode:&f Creative'
@@ -371,3 +372,10 @@ events:
   respawn:
     title: '&6Death location&f:'
     location: '&6World&f: {0}&6 X&f: {1}&6 Y&f: {2}&6 Z&f: {3}'
+  quit:
+    notify: '{0}&7 left the Server'
+  join:
+    notify: '{0}&7 joined the Server'
+    vanished: '{0}&6 joined while vanished'
+  login:
+    banned: '&cReason&f: {0}&c, Expires&f: {1}'
