@@ -127,22 +127,22 @@ commands:
     usage: /help
   gma:
     description: changes to adventure
-    permission: essentials.command.gma
+    permission: essentials.command.gamemode.adventure
     permission-message: You do not have the permissions to execute the command
     usage: /help
   gmc:
     description: changes to creative
-    permission: essentials.command.gmc
+    permission: essentials.command.gamemode.creative
     permission-message: You do not have the permissions to execute the command
     usage: /help
   gms:
     description: changes to survival
-    permission: essentials.command.gms
+    permission: essentials.command.gamemode.survival
     permission-message: You do not have the permissions to execute the command
     usage: /help
   gmsp:
     description: changes to spectator
-    permission: essentials.command.gmsp
+    permission: essentials.command.gamemode.spectator
     permission-message: You do not have the permissions to execute the command
     usage: /help
   grindstone:
@@ -528,40 +528,31 @@ permissions:
     description: freezes player
     default: op
   essentials.command.gamemode:
-    description: changes gamemode
+    description: gamemode command
     default: op
   essentials.command.gamemode.adventure:
-    description: changes gamemode
+    description: changes gamemode to adventure
     default: op
   essentials.command.gamemode.creative:
-    description: changes gamemode
+    description: changes gamemode to creative
     default: op
   essentials.command.gamemode.survival:
-    description: changes gamemode
+    description: changes gamemode to survival
     default: op
   essentials.command.gamemode.spectator:
-    description: changes gamemode
+    description: changes gamemode to spectator
     default: op
   essentials.command.gamemode.other:
     description: changes targets gamemode
     default: op
   essentials.command.gamemode.exempt:
-    description: exempts changes gamemode
+    description: exempts changes gamemode by others
+    default: op
+  essentials.command.gamemode.notify:
+    description: notify gamemode changes
     default: op
   essentials.command.give:
     description: give items
-    default: op
-  essentials.command.gma:
-    description: changes to adventure
-    default: op
-  essentials.command.gmc:
-    description: changes to creative
-    default: op
-  essentials.command.gms:
-    description: changes to survival
-    default: op
-  essentials.command.gmsp:
-    description: changes to spectator
     default: op
   essentials.command.grindstone:
     description: opens grindstone by command
@@ -856,9 +847,6 @@ permissions:
     default: op
   essentials.event.death.keep_exp:
     description: keeps exp on death
-    default: op
-  essentials.event.gamemode_change.notify:
-    description: notify game mode changes
     default: op
   essentials.event.join.message:
     description: sends join message

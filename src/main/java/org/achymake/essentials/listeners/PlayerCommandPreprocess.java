@@ -34,9 +34,7 @@ public class PlayerCommandPreprocess implements Listener {
     }
     private boolean isDisabled(String message) {
         for (var disabled : getInstance().getConfig().getStringList("commands.disable")) {
-            if (message.toLowerCase().startsWith("/" + disabled.toLowerCase())) {
-                return true;
-            }
+            return message.toLowerCase().startsWith("/" + disabled.toLowerCase());
         }
         return false;
     }

@@ -22,19 +22,19 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getMessage().send(player, "&6" + getInstance().name() + ":&f " + getInstance().version());
+                player.sendMessage(getMessage().addColor("&6" + getInstance().name() + "&f: " + getInstance().version()));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     getInstance().reload();
-                    getMessage().send(player, "&6Essentials:&f reloaded");
+                    player.sendMessage(getMessage().addColor("&6" + getInstance().name() + "&f: reloaded"));
                     return true;
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     if (args[1].equalsIgnoreCase("userdata")) {
                         getInstance().reloadUserdata();
-                        getMessage().send(player, "&6Essentials:&f reloaded > userdata");
+                        player.sendMessage(getMessage().addColor("&6" + getInstance().name() + "&f: reloaded > userdata"));
                         return true;
                     }
                 }
@@ -46,14 +46,14 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     getInstance().reload();
-                    consoleCommandSender.sendMessage("Essentials: reloaded");
+                    consoleCommandSender.sendMessage(getInstance().name() + ": reloaded");
                     return true;
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     if (args[1].equalsIgnoreCase("userdata")) {
                         getInstance().reloadUserdata();
-                        consoleCommandSender.sendMessage("Essentials: reloaded > userdata");
+                        consoleCommandSender.sendMessage(getInstance().name() + ": reloaded > userdata");
                         return true;
                     }
                 }

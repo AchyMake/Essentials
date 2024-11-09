@@ -51,7 +51,7 @@ public class PlayerQuit implements Listener {
             playSound();
         } else {
             event.setQuitMessage(null);
-            getMessage().sendAll(player.getName() + "&7 left the Server", "essentials.event.quit.notify");
+            getMessage().sendAll(getMessage().get("events.quit.notify", player.getName()), "essentials.event.quit.notify");
         }
         userdata.disableTasks();
         if (userdata.getTpaSent() != null) {

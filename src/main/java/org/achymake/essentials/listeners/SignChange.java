@@ -33,8 +33,10 @@ public class SignChange implements Listener {
             event.setCancelled(true);
         } else if (player.hasPermission("essentials.event.sign.color")) {
             for (int i = 0; i < event.getLines().length; i++) {
-                if (!event.getLine(i).contains("&"))return;
-                event.setLine(i, getMessage().addColor(event.getLine(i)));
+                var message = event.getLine(i);
+                if (message == null)return;
+                if (!message.contains("&"))return;
+                event.setLine(i, getMessage().addColor(message));
             }
         }
     }

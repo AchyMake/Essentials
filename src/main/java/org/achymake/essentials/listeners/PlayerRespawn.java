@@ -4,7 +4,9 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Spawn;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,6 +23,9 @@ public class PlayerRespawn implements Listener {
     private Spawn getSpawn() {
         return getInstance().getSpawn();
     }
+    private WorldHandler getWorldHandler(World world) {
+        return getInstance().getWorldHandler(world);
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -35,6 +40,16 @@ public class PlayerRespawn implements Listener {
         if (!event.getRespawnReason().equals(PlayerRespawnEvent.RespawnReason.DEATH))return;
         var player = event.getPlayer();
         var userdata = getUserdata(player);
+        if (player.hasPermission("essentials.event.death.location")) {
+            var location = userdata.getLocation("death");
+            if (location == null)return;
+            var world = getWorldHandler(location.getWorld()).getDisplayName();
+            var x = String.valueOf(location.getBlockX());
+            var y = String.valueOf(location.getBlockY());
+            var z = String.valueOf(location.getBlockZ());
+            player.sendMessage(getMessage().get("events.respawn.title"));
+            player.sendMessage(getMessage().get("events.respawn.location", world, x, y, z));
+        }
         if (event.isAnchorSpawn())return;
         if (event.isBedSpawn())return;
         var home = userdata.getLocation("home");
@@ -42,16 +57,6 @@ public class PlayerRespawn implements Listener {
             event.setRespawnLocation(home);
         } else if (getSpawn().getLocation() != null) {
             event.setRespawnLocation(getSpawn().getLocation());
-        }
-        if (player.hasPermission("essentials.event.death.location")) {
-            var location = userdata.getLocation("death");
-            if (location == null)return;
-            var world = getInstance().getWorldHandler(location.getWorld()).getDisplayName();
-            var x = location.getBlockX();
-            var y = location.getBlockY();
-            var z = location.getBlockZ();
-            player.sendMessage(getMessage().get("events.respawn.title"));
-            player.sendMessage(getMessage().get("events.respawn.location", world, String.valueOf(x), String.valueOf(y), String.valueOf(z)));
         }
     }
 }

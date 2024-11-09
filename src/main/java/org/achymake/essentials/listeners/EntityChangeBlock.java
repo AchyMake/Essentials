@@ -25,8 +25,9 @@ public class EntityChangeBlock implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        if (event.getEntity() instanceof Player)return;
-        if (!getEntityHandler(event.getEntity()).disableBlockChange())return;
+        var entity = event.getEntity();
+        if (entity instanceof Player)return;
+        if (!getEntityHandler(entity).disableBlockChange())return;
         event.setCancelled(true);
     }
 }

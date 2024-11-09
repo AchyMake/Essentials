@@ -40,8 +40,8 @@ public class UpdateChecker {
                     public void run() {
                         getLatest((latest) -> {
                             if (!getVersion().equals(latest)) {
-                                getMessage().send(player, getName() + "&6 has new update:");
-                                getMessage().send(player, "-&a https://www.spigotmc.org/resources/120466/");
+                                player.sendMessage(getMessage().addColor(getName() + "&6 has new update"));
+                                player.sendMessage(getMessage().addColor("-&a https://www.spigotmc.org/resources/120466/"));
                             }
                         });
                     }

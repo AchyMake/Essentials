@@ -43,11 +43,10 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        if (getVanishHandler().isVanish(player)) {
-            event.setJoinMessage(null);
-            setVanish(player);
-        } else {
-            hideVanished(player);
+        if (!getUserdata(player).isVanished()) {
+            if (!getVanishHandler().getVanished().isEmpty()) {
+                getVanishHandler().getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
+            }
             if (getConfig().getBoolean("connection.join.enable")) {
                 sendJoinSound();
                 event.setJoinMessage(getJoinMessage(player));
@@ -56,9 +55,13 @@ public class PlayerJoin implements Listener {
                 event.setJoinMessage(getJoinMessage(player));
             } else {
                 event.setJoinMessage(null);
-                getMessage().sendAll(player.getName() + "&7 joined the Server", "essentials.event.join.notify");
+                getMessage().sendAll(getMessage().get("events.join.notify", player.getName()), "essentials.event.join.notify");
             }
             sendMotd(player);
+        } else {
+            event.setJoinMessage(null);
+            getVanishHandler().setVanish(player, true);
+            getVanishHandler().getVanished().forEach(vanished -> vanished.sendMessage(getMessage().get("events.join.vanished", player.getName())));
         }
         getUpdateChecker().getUpdate(player);
     }
@@ -72,14 +75,6 @@ public class PlayerJoin implements Listener {
                 } else getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
             }
         }, 0);
-    }
-    private void hideVanished(Player player) {
-        if (getVanishHandler().getVanished().isEmpty())return;
-        getVanishHandler().getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
-    }
-    private void setVanish(Player player) {
-        getVanishHandler().setVanish(player, true);
-        getVanishHandler().getVanished().forEach(vanished -> getMessage().send(vanished, player.getName() + "&6 joined while vanished"));
     }
     private void sendJoinSound() {
         if (!getConfig().getBoolean("connection.join.sound.enable"))return;

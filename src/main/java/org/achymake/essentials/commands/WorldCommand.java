@@ -69,8 +69,8 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     if (world != null) {
                         world.setPVP(!world.getPVP());
                         if (world.getPVP()) {
-                            getMessage().send(player, worldName + "&6 is now pvp mode");
-                        } else getMessage().send(player, worldName  + "&6 is no longer pvp mode");
+                            player.sendMessage(getMessage().get("commands.world.pvp.enable", worldName));
+                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", worldName));
                     } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
                     return true;
                 }

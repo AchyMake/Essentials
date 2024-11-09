@@ -40,7 +40,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
                         if (userdataTarget.isFrozen()) {
                             player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
-                    } else getMessage().send(player, command.getPermissionMessage());
+                    } else player.sendMessage(getMessage().get("commands.freeze.exempt", target.getName()));
                 } else {
                     var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);

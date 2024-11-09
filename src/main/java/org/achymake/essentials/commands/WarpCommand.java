@@ -33,7 +33,6 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (!getWarps().getListed().isEmpty()) {
                     player.sendMessage(getMessage().get("commands.warp.title"));
-                    getMessage().send(player, "&6Warps:");
                     getWarps().getListed().forEach(warps -> {
                         if (player.hasPermission("essentials.command.warp." + warps)) {
                             player.sendMessage(getMessage().get("commands.warp.listed", warps));

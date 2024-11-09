@@ -54,10 +54,10 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                                 var helmet = target.getInventory().getHelmet();
                                 if (helmet == null) {
                                     var name = getMessage().toTitleCase(heldItem.getType().toString());
-                                    getMessage().send(player, target.getName() + "&6 is now wearing&f " + name);
+                                    player.sendMessage(getMessage().get("commands.hat.target-success", target.getName(), name));
                                     target.getInventory().setHelmet(getMaterials().getItemStack(heldItem.getType().toString(), 1));
                                     heldItem.setAmount(heldItem.getAmount() - 1);
-                                } else getMessage().send(player, target.getName() + "&c is already wearing&f " + getMessage().toTitleCase(helmet.getType().toString()));
+                                } else player.sendMessage(getMessage().get("commands.hat.target-occupied", target.getName(), getMessage().toTitleCase(helmet.getType().toString())));
                             } else if (!target.hasPermission("essentials.command.hat.exempt")) {
                                 var helmet = target.getInventory().getHelmet();
                                 if (helmet == null) {

@@ -108,6 +108,7 @@ public class Message {
         config.addDefault("commands.flyspeed.exempt", "&cYou are not allowed to change flyspeed for&f {1}");
         config.addDefault("commands.freeze.enable", "&6You froze&f {0}");
         config.addDefault("commands.freeze.disable", "&6You unfroze&f {0}");
+        config.addDefault("commands.freeze.exempt", "&cYou are not allowed to freeze&f {0}");
         config.addDefault("commands.gamemode.adventure", "&6&lGamemode:&f Adventure");
         config.addDefault("commands.gamemode.creative", "&6&lGamemode:&f Creative");
         config.addDefault("commands.gamemode.survival", "&6&lGamemode:&f Survival");
@@ -307,6 +308,10 @@ public class Message {
         config.addDefault("events.damage", "&cYou got damaged before teleporting!");
         config.addDefault("events.respawn.title", "&6Death location&f:");
         config.addDefault("events.respawn.location", "&6World&f: {0}&6 X&f: {1}&6 Y&f: {2}&6 Z&f: {3}");
+        config.addDefault("events.quit.notify", "{0}&7 left the Server");
+        config.addDefault("events.join.notify", "{0}&7 joined the Server");
+        config.addDefault("events.join.vanished", "{0}&6 joined while vanished");
+        config.addDefault("events.login.banned", "&cReason&f: {0}&c, Expires&f: {1}");
         config.options().copyDefaults(true);
         try {
             config.save(file);
@@ -319,11 +324,8 @@ public class Message {
             config = YamlConfiguration.loadConfiguration(file);
         } else setup();
     }
-    public void send(Player player, String message) {
-        player.sendMessage(addColor(message));
-    }
     public void sendStringList(Player player, List<String> strings) {
-        strings.forEach(string -> send(player, string.replaceAll("%player%", player.getName())));
+        strings.forEach(string -> player.sendMessage(addColor(string.replaceAll("%player%", player.getName()))));
     }
     public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
@@ -345,28 +347,31 @@ public class Message {
         strings.forEach(string -> sender.sendMessage(string.replaceAll("%player%", sender.getName())));
     }
     public String getBuilder(String[] args, int value) {
-        var stringBuilder = new StringBuilder();
+        var builder = getBuilder();
         for(var i = value; i < args.length; i++) {
-            stringBuilder.append(args[i]);
-            stringBuilder.append(" ");
+            builder.append(args[i]);
+            builder.append(" ");
         }
-        return stringBuilder.toString().strip();
+        return builder.toString().strip();
     }
     public String toTitleCase(String string) {
         if (string.contains(" ")) {
-            var stringBuilder = new StringBuilder();
+            var builder = getBuilder();
             for (var strings : string.split(" ")) {
-                stringBuilder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
-                stringBuilder.append(" ");
+                builder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
+                builder.append(" ");
             }
-            return stringBuilder.toString().strip();
+            return builder.toString().strip();
         } else if (string.contains("_")) {
-            var stringBuilder = new StringBuilder();
+            var builder = getBuilder();
             for (var strings : string.split("_")) {
-                stringBuilder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
-                stringBuilder.append(" ");
+                builder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
+                builder.append(" ");
             }
-            return stringBuilder.toString().strip();
+            return builder.toString().strip();
         } else return string.toUpperCase().charAt(0) + string.substring(1).toLowerCase();
+    }
+    public StringBuilder getBuilder() {
+        return new StringBuilder();
     }
 }

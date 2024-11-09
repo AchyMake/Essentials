@@ -26,7 +26,10 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            if (args.length == 1) {
+            if (args.length == 0) {
+                getUserdata(player).setWalkSpeed(0);
+                player.sendMessage(getMessage().get("commands.walkspeed.changed", "Default"));
+            } else if (args.length == 1) {
                 var value = Float.parseFloat(args[0]);
                 getUserdata(player).setWalkSpeed(value);
                 player.sendMessage(getMessage().get("commands.walkspeed.changed", String.valueOf(value)));
