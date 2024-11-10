@@ -1,5 +1,4 @@
 notify-update: true
-vanish-chat-color: "&c"
 economy:
   enable: true
   currency: "€"
