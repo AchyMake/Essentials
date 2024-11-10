@@ -1,5 +1,6 @@
 package org.achymake.essentials.data;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.bukkit.GameMode;
@@ -457,5 +458,21 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
                 }
             }, 0);
         }
+    }
+    public String prefix() {
+        var player = getPlayer();
+        if (player != null) {
+            if (PlaceholderAPI.isRegistered("vault")) {
+                return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
+            } else return "";
+        } else return "";
+    }
+    public String suffix() {
+        var player = getPlayer();
+        if (player != null) {
+            if (PlaceholderAPI.isRegistered("vault")) {
+                return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
+            } else return "";
+        } else return "";
     }
 }

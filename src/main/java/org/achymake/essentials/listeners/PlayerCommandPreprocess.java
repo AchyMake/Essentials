@@ -28,14 +28,12 @@ public class PlayerCommandPreprocess implements Listener {
         if (getUserdata(player).isDisabled()) {
             event.setCancelled(true);
         } else if (!player.hasPermission("essentials.event.command.exempt")) {
-            if (!isDisabled(event.getMessage()))return;
-            event.setCancelled(true);
+            var message = event.getMessage();
+            getInstance().getConfig().getStringList("commands.disable").forEach(disabled -> {
+                if (message.toLowerCase().startsWith("/" + disabled)) {
+                    event.setCancelled(true);
+                }
+            });
         }
-    }
-    private boolean isDisabled(String message) {
-        for (var disabled : getInstance().getConfig().getStringList("commands.disable")) {
-            return message.toLowerCase().startsWith("/" + disabled.toLowerCase());
-        }
-        return false;
     }
 }

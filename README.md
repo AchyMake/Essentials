@@ -1,23 +1,22 @@
 JitPack.io Check Repository = https://jitpack.io/#AchyMake/Essentials
 ```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
-<dependencies>
-    <dependency>
-        <groupId>com.github.AchyMake</groupId>
-        <artifactId>Essentials</artifactId>
-        <version>LATEST</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.github.AchyMake</groupId>
+            <artifactId>Essentials</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 ```
 Example for getting Userdata
-
 ```java
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;

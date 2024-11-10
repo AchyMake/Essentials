@@ -15,6 +15,20 @@ homes:
   default: 3
   vip: 6
   staff: 12
+chat:
+  format:
+    vanished: "&d%player%&f: "
+    op: "%prefix%&c%player%%suffix%&f: "
+    default: "%prefix%%player%%suffix%&f: "
+  censor:
+    - nigga
+    - fuck
+    - penis
+    - ass
+    - porn
+    - cum
+    - pussy
+    - vagina
 commands:
   rtp:
     world: world

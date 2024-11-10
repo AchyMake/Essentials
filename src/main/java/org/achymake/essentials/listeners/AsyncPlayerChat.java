@@ -1,12 +1,11 @@
 package org.achymake.essentials.listeners;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.VanishHandler;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,6 +15,9 @@ import org.bukkit.plugin.PluginManager;
 public class AsyncPlayerChat implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
+    }
+    private FileConfiguration getConfig() {
+        return getInstance().getConfig();
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
@@ -37,35 +39,41 @@ public class AsyncPlayerChat implements Listener {
         var player = event.getPlayer();
         var userdata = getUserdata(player);
         if (!userdata.isMuted()) {
-            var message = event.getMessage();
+            var message = censor(event.getMessage());
             if (getVanishHandler().isVanish(player)) {
-                var vanishColor = getInstance().getConfig().getString("vanish-chat-color");
-                var vanishFormat = getMessage().addColor(vanishColor + userdata.getDisplayName() + "&f: ");
+                var formatString = getMessage().addColor(getConfig().getString("chat.format.vanished"));
+                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
+                var result = addPlayer.replace("%suffix%", userdata.suffix());
                 event.setCancelled(true);
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(vanishFormat + getMessage().addColor(message));
-                    } else vanished.sendMessage(vanishFormat + message);
+                        vanished.sendMessage(result + getMessage().addColor(message));
+                    } else vanished.sendMessage(result + message);
                 });
             } else if (player.isOp()) {
-                var opFormat = getMessage().addColor(prefix(player) + "&4" + userdata.getDisplayName() + "&f" + suffix(player) + "&f: ");
-                event.setFormat(opFormat + getMessage().addColor(message));
+                var formatString = getMessage().addColor(getConfig().getString("chat.format.op"));
+                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
+                var result = addPlayer.replace("%suffix%", userdata.suffix());
+                event.setFormat(result + getMessage().addColor(message));
             } else {
-                var format = getMessage().addColor(prefix(player) + userdata.getDisplayName() + suffix(player) + "&f: ");
+                var formatString = getMessage().addColor(getConfig().getString("chat.format.default"));
+                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
+                var result = addPlayer.replace("%suffix%", userdata.suffix());
                 if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(format + getMessage().addColor(message));
-                } else event.setFormat(format + message);
+                    event.setFormat(result + getMessage().addColor(message));
+                } else event.setFormat(result + message);
             }
         } else event.setCancelled(true);
     }
-    public String prefix(Player player) {
-        if (PlaceholderAPI.isRegistered("vault")) {
-            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
-        } else return "";
-    }
-    public String suffix(Player player) {
-        if (PlaceholderAPI.isRegistered("vault")) {
-            return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
-        } else return "";
+    private String censor(String message) {
+        for (var censored : getConfig().getStringList("chat.censor")) {
+            if (message.toLowerCase().contains(censored.toLowerCase())) {
+                return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
+            }
+        }
+        return message;
     }
 }
