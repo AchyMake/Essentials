@@ -49,8 +49,8 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                     var amount = Integer.parseInt(args[1]);
                     getMaterials().setEnchantment(heldItem, enchantName, amount);
                     if (amount > 0) {
-                        player.sendMessage(getMessage().get("commands.enchant.add", enchantName, String.valueOf(amount)));
-                    } else player.sendMessage(getMessage().get("commands.enchant.remove", enchantName));
+                        player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(amount)));
+                    } else player.sendMessage(getMessage().get("commands.enchant.remove", getMessage().toTitleCase(enchantName)));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             }
