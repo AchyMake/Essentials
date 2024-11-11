@@ -22,7 +22,7 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
         return getInstance().getMessage();
     }
     public SpawnerCommand() {
-        getInstance().getCommand("spawners").setExecutor(this);
+        getInstance().getCommand("spawner").setExecutor(this);
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

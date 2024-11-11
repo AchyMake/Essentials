@@ -898,3 +898,6 @@ permissions:
   essentials.event.sign.color:
     description: uses color codes for sign
     default: op
+  essentials.event.block_break.spawner:
+    description: allows to obtain spawner by silk touch
+    default: op
