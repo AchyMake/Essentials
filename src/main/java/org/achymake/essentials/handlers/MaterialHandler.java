@@ -6,25 +6,40 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
 public class MaterialHandler {
+    private Essentials getInstance() {
+        return Essentials.getInstance();
+    }
     public Material get(String materialName) {
         return Material.valueOf(materialName.toUpperCase());
     }
     public Enchantment getEnchantment(String enchantmentName) {
         return Enchantment.getByName(enchantmentName.toUpperCase());
+    }
+    public void setEnchantment(ItemStack itemStack, String enchantmentName, int amount) {
+        if (amount > 0) {
+            itemStack.getItemMeta().addEnchant(getEnchantment(enchantmentName), amount, true);
+        } else itemStack.removeEnchantment(getEnchantment(enchantmentName));
+    }
+    public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {
+        return itemStack.getItemMeta().hasEnchant(getEnchantment(enchantmentName));
     }
     public ArrayList<Enchantment> getEnchantments() {
         return new ArrayList<Enchantment>(Arrays.asList(Enchantment.values()));
@@ -55,6 +70,54 @@ public class MaterialHandler {
     }
     public Item dropItem(Location location, ItemStack itemStack) {
         return location.getWorld().dropItem(location, itemStack);
+    }
+    public ItemStack getSpawner(String entityType, int amount) {
+        var spawner = getItemStack("spawner", amount);
+        var itemMeta = spawner.getItemMeta();
+        var listed = new ArrayList<String>();
+        if (getInstance().getConfig().isList("spawner.lore")) {
+            for(var string : getInstance().getConfig().getStringList("spawner.lore")) {
+                listed.add(getInstance().getMessage().addColor(string));
+            }
+            itemMeta.setLore(listed);
+        }
+        if (getInstance().getConfig().isString("spawner.display")) {
+            var name = getInstance().getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
+            itemMeta.setDisplayName(name.replaceAll("%entity_type%", getInstance().getMessage().toTitleCase(entityType.toUpperCase())));
+        }
+        getData(itemMeta).set(getKey("spawnedType"), PersistentDataType.STRING, entityType.toUpperCase());
+        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+        spawner.setItemMeta(itemMeta);
+        return spawner;
+    }
+    public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
+        var container = getData(heldItem.getItemMeta());
+        if (container.has(getKey("spawnedType"), PersistentDataType.STRING)) {
+            var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
+            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getKey("spawnedType"), PersistentDataType.STRING)));
+            creatureSpawner.setSpawnCount(container.get(getKey("spawnCount"), PersistentDataType.INTEGER));
+            creatureSpawner.setSpawnRange(container.get(getKey("spawnRange"), PersistentDataType.INTEGER));
+            creatureSpawner.setDelay(container.get(getKey("delay"), PersistentDataType.INTEGER));
+            creatureSpawner.setMaxSpawnDelay(container.get(getKey("maxSpawnDelay"), PersistentDataType.INTEGER));
+            creatureSpawner.setMinSpawnDelay(container.get(getKey("minSpawnDelay"), PersistentDataType.INTEGER));
+            creatureSpawner.update();
+        }
+    }
+    public Item dropSpawner(Block block) {
+        var creatureSpawner = (CreatureSpawner) block.getState();
+        var itemStack = getItemStack("spawner", 1);
+        if (creatureSpawner.getSpawnedType() != null) {
+            var meta = itemStack.getItemMeta();
+            var container = getData(meta);
+            container.set(getKey("spawnedType"), PersistentDataType.STRING, creatureSpawner.getSpawnedType().toString());
+            container.set(getKey("spawnCount"), PersistentDataType.INTEGER, creatureSpawner.getSpawnCount());
+            container.set(getKey("spawnRange"), PersistentDataType.INTEGER, creatureSpawner.getSpawnRange());
+            container.set(getKey("delay"), PersistentDataType.INTEGER, creatureSpawner.getDelay());
+            container.set(getKey("maxSpawnDelay"), PersistentDataType.INTEGER, creatureSpawner.getMaxSpawnDelay());
+            container.set(getKey("minSpawnDelay"), PersistentDataType.INTEGER, creatureSpawner.getMinSpawnDelay());
+            itemStack.setItemMeta(meta);
+        }
+        return block.getWorld().dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
     }
     public ItemStack getPlayerHead(OfflinePlayer offlinePlayer, int amount) {
         var itemStack = getItemStack("player_head", amount);

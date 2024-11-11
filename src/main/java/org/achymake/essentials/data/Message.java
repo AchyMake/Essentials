@@ -235,6 +235,23 @@ public class Message {
         config.addDefault("commands.smithing.sender", "&6You opened smithing table for&f {0}");
         config.addDefault("commands.spawn.invalid", "&cSpawn has not been set");
         config.addDefault("commands.spawn.exempt", "&cYou are not allowed to tp&f {0}&c to spawn");
+
+        config.addDefault("commands.spawner.info.title", "&6Spawner info:");
+        config.addDefault("commands.spawner.info.entity-type", "&6entity-type&f: {0}");
+        config.addDefault("commands.spawner.info.spawn-count", "&6spawn-count&f: {0}");
+        config.addDefault("commands.spawner.info.delay", "&6delay&f: {0}");
+        config.addDefault("commands.spawner.info.max-spawn-delay", "&6max-spawn-delay&f: {0}");
+        config.addDefault("commands.spawner.info.min-spawn-delay", "&6min-spawn-delay&f: {0}");
+        config.addDefault("commands.spawner.info.spawn-range", "&6spawn-range&f: {0}");
+        config.addDefault("commands.spawner.info.non-spawner", "&cYou have to look at a&f Spawner");
+        config.addDefault("commands.spawner.info.invalid", "&cYou have to look at a block at least 1 block away");
+        config.addDefault("commands.spawner.set.entity-type", "&6Spawner entity type is now set to&f {0}");
+        config.addDefault("commands.spawner.set.spawn-count", "&6Spawner spawn count is now set to&f {0}");
+        config.addDefault("commands.spawner.set.max-spawn-delay", "&6Spawner max spawn delay is now set to&f {0}");
+        config.addDefault("commands.spawner.set.min-spawn-delay", "&6Spawner min spawn delay is now set to&f {0}");
+        config.addDefault("commands.spawner.set.spawn-range", "&6Spawner spawn range is now set to&f {0}");
+        config.addDefault("commands.spawner.give", "&6You gave&f {0} {1} {2}&6 spawner");
+
         config.addDefault("commands.stonecutter.sender", "&6You opened stonecutter for&f {0}");
         config.addDefault("commands.stonecutter.exempt", "&cYou are not allowed to open stonecutter for&f {0}");
         config.addDefault("commands.store.sender", "&6You sent store message to&f {0}");

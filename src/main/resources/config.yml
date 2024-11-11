@@ -146,6 +146,11 @@ levels:
       type: ENTITY_VEX_AMBIENT
       volume: 2.5
       pitch: 1.0
+spawner:
+  display: "&dSpawner:&f %entity_type%"
+  lore:
+    - "&9Obtained by:"
+    - "&fSilk Touch"
 notification:
   # Permissions
   # essentials.event.block_break.notify
