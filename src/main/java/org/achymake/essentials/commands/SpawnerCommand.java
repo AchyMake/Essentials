@@ -34,7 +34,9 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
                         if (block != null) {
                             if (block.getState() instanceof CreatureSpawner spawner) {
                                 player.sendMessage(getMessage().get("commands.spawner.info.title"));
-                                player.sendMessage(getMessage().get("commands.spawner.info.entity-type", getMessage().toTitleCase(spawner.getSpawnedType().toString())));
+                                if (spawner.getSpawnedType() != null) {
+                                    player.sendMessage(getMessage().get("commands.spawner.info.entity-type", getMessage().toTitleCase(spawner.getSpawnedType().toString())));
+                                } else player.sendMessage(getMessage().get("commands.spawner.info.entity-type", "None"));
                                 player.sendMessage(getMessage().get("commands.spawner.info.spawn-count", String.valueOf(spawner.getSpawnCount())));
                                 player.sendMessage(getMessage().get("commands.spawner.info.delay", String.valueOf(spawner.getDelay())));
                                 player.sendMessage(getMessage().get("commands.spawner.info.max-spawn-delay", String.valueOf(spawner.getMaxSpawnDelay())));
