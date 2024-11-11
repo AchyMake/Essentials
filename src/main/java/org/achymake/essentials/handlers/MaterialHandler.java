@@ -34,8 +34,10 @@ public class MaterialHandler {
         return Enchantment.getByName(enchantmentName.toUpperCase());
     }
     public void setEnchantment(ItemStack itemStack, String enchantmentName, int amount) {
+        var meta = itemStack.getItemMeta();
         if (amount > 0) {
-            itemStack.getItemMeta().addEnchant(getEnchantment(enchantmentName), amount, true);
+            meta.addEnchant(getEnchantment(enchantmentName), amount, true);
+            itemStack.setItemMeta(meta);
         } else itemStack.removeEnchantment(getEnchantment(enchantmentName));
     }
     public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {
@@ -74,8 +76,8 @@ public class MaterialHandler {
     public ItemStack getSpawner(String entityType, int amount) {
         var spawner = getItemStack("spawner", amount);
         var itemMeta = spawner.getItemMeta();
-        var listed = new ArrayList<String>();
         if (getInstance().getConfig().isList("spawner.lore")) {
+            var listed = new ArrayList<String>();
             for(var string : getInstance().getConfig().getStringList("spawner.lore")) {
                 listed.add(getInstance().getMessage().addColor(string));
             }
@@ -102,12 +104,8 @@ public class MaterialHandler {
         var creatureSpawner = (CreatureSpawner) block.getState();
         var itemStack = getItemStack("spawner", 1);
         if (creatureSpawner.getSpawnedType() != null) {
-            var meta = itemStack.getItemMeta();
-            var container = getData(meta);
-            container.set(getKey("entity_type"), PersistentDataType.STRING, creatureSpawner.getSpawnedType().toString());
-            itemStack.setItemMeta(meta);
-        }
-        return block.getWorld().dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
+            return dropItem(block.getLocation().add(0.5, 0.3, 0.5), getSpawner(creatureSpawner.getSpawnedType().toString(), 1));
+        } else return dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
     }
     public ItemStack getPlayerHead(OfflinePlayer offlinePlayer, int amount) {
         var itemStack = getItemStack("player_head", amount);
