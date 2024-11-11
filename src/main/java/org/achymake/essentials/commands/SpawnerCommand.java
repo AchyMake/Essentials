@@ -199,17 +199,8 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("give")) {
                     if (player.hasPermission("essentials.command.spawner.give")) {
                         commands.add("1");
-                        commands.add("5");
-                        commands.add("10");
-                    }
-                }
-            } else if (args.length == 5) {
-                if (args[0].equalsIgnoreCase("give")) {
-                    if (player.hasPermission("essentials.command.spawner.give")) {
-                        commands.add("1");
                         commands.add("2");
                         commands.add("3");
-                        commands.add("4");
                     }
                 }
             }
