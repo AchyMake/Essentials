@@ -53,6 +53,7 @@ public class BlockBreak implements Listener {
                 if (getMaterials().hasEnchantment(player.getInventory().getItemInMainHand(), "silk_touch")) {
                     if (player.hasPermission("essentials.event.block_break.spawner")) {
                         getMaterials().dropSpawner(block);
+                        event.setExpToDrop(0);
                     }
                 }
             }

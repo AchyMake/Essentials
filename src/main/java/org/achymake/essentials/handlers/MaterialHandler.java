@@ -85,21 +85,16 @@ public class MaterialHandler {
             var name = getInstance().getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
             itemMeta.setDisplayName(name.replaceAll("%entity_type%", getInstance().getMessage().toTitleCase(entityType.toUpperCase())));
         }
-        getData(itemMeta).set(getKey("spawnedType"), PersistentDataType.STRING, entityType.toUpperCase());
+        getData(itemMeta).set(getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());
         itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         spawner.setItemMeta(itemMeta);
         return spawner;
     }
     public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
         var container = getData(heldItem.getItemMeta());
-        if (container.has(getKey("spawnedType"), PersistentDataType.STRING)) {
+        if (container.has(getKey("entity_type"), PersistentDataType.STRING)) {
             var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
-            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getKey("spawnedType"), PersistentDataType.STRING)));
-            creatureSpawner.setSpawnCount(container.get(getKey("spawnCount"), PersistentDataType.INTEGER));
-            creatureSpawner.setSpawnRange(container.get(getKey("spawnRange"), PersistentDataType.INTEGER));
-            creatureSpawner.setDelay(container.get(getKey("delay"), PersistentDataType.INTEGER));
-            creatureSpawner.setMaxSpawnDelay(container.get(getKey("maxSpawnDelay"), PersistentDataType.INTEGER));
-            creatureSpawner.setMinSpawnDelay(container.get(getKey("minSpawnDelay"), PersistentDataType.INTEGER));
+            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getKey("entity_type"), PersistentDataType.STRING)));
             creatureSpawner.update();
         }
     }
@@ -109,12 +104,7 @@ public class MaterialHandler {
         if (creatureSpawner.getSpawnedType() != null) {
             var meta = itemStack.getItemMeta();
             var container = getData(meta);
-            container.set(getKey("spawnedType"), PersistentDataType.STRING, creatureSpawner.getSpawnedType().toString());
-            container.set(getKey("spawnCount"), PersistentDataType.INTEGER, creatureSpawner.getSpawnCount());
-            container.set(getKey("spawnRange"), PersistentDataType.INTEGER, creatureSpawner.getSpawnRange());
-            container.set(getKey("delay"), PersistentDataType.INTEGER, creatureSpawner.getDelay());
-            container.set(getKey("maxSpawnDelay"), PersistentDataType.INTEGER, creatureSpawner.getMaxSpawnDelay());
-            container.set(getKey("minSpawnDelay"), PersistentDataType.INTEGER, creatureSpawner.getMinSpawnDelay());
+            container.set(getKey("entity_type"), PersistentDataType.STRING, creatureSpawner.getSpawnedType().toString());
             itemStack.setItemMeta(meta);
         }
         return block.getWorld().dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
