@@ -40,107 +40,93 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(getMessage().get("commands.world.setspawn", worldHandler.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("pvp")) {
-                    worldHandler.setPVP(!worldHandler.getPVP());
-                    if (worldHandler.getPVP()) {
+                    var world = player.getWorld();
+                    world.setPVP(!world.getPVP());
+                    if (world.getPVP()) {
                         player.sendMessage(getMessage().get("commands.world.pvp.enable", worldHandler.getName()));
                     } else player.sendMessage(getMessage().get("commands.world.pvp.disable", worldHandler.getName()));
                     return true;
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("teleport")) {
-                    var worldName = args[1];
-                    var world = getWorlds().get(worldName);
+                    var world = getWorlds().get(args[1]);
                     if (world != null) {
-                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", worldName));
+                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", args[1]));
                         player.teleport(getWorldHandler(world).getSpawn());
-                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("remove")) {
-                    var worldName = args[1];
-                    var world = getWorlds().get(worldName);
+                    var world = getWorlds().get(args[1]);
                     if (world != null) {
                         getWorldHandler(world).remove();
-                        player.sendMessage(getMessage().get("commands.world.remove", worldName));
-                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
+                        player.sendMessage(getMessage().get("commands.world.remove", args[1]));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("pvp")) {
-                    var worldName = args[1];
-                    var world = getWorlds().get(worldName);
+                    var world = getWorlds().get(args[1]);
                     if (world != null) {
                         world.setPVP(!world.getPVP());
                         if (world.getPVP()) {
-                            player.sendMessage(getMessage().get("commands.world.pvp.enable", worldName));
-                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", worldName));
-                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
+                            player.sendMessage(getMessage().get("commands.world.pvp.enable", args[1]));
+                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", args[1]));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("pvp")) {
-                    var worldName = args[1];
-                    var world = getWorlds().get(worldName);
-                    var value = Boolean.parseBoolean(args[2]);
+                    var world = getWorlds().get(args[1]);
                     if (world != null) {
-                        world.setPVP(value);
+                        world.setPVP(Boolean.parseBoolean(args[2]));
                         if (world.getPVP()) {
                             player.sendMessage(getMessage().get("commands.world.pvp.enable", world.getName()));
                         } else player.sendMessage(getMessage().get("commands.world.pvp.disable", world.getName()));
-                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("create")) {
-                    var worldName = args[1];
-                    var environment = World.Environment.valueOf(args[2].toUpperCase());
-                    if (!getWorlds().getFolder(worldName).exists()) {
-                        player.sendMessage(getMessage().get("creator.post", worldName));
-                        var info = getWorlds().create(worldName, environment);
+                    if (!getWorlds().getFolder(args[1]).exists()) {
+                        player.sendMessage(getMessage().get("creator.post", args[1]));
+                        var info = getWorlds().create(args[1], World.Environment.valueOf(args[2].toUpperCase()));
                         player.sendMessage(getMessage().get("creator.title", info.getName()));
                         player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
                         player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
-                    } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.folder-exists", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("add")) {
-                    var worldName = args[1];
-                    var environment = World.Environment.valueOf(args[2].toUpperCase());
-                    if (getWorlds().get(worldName) == null) {
-                        if (getWorlds().getFolder(worldName).exists()) {
-                            player.sendMessage(getMessage().get("creator.post", worldName));
-                            var info = getWorlds().create(worldName, environment);
+                    if (getWorlds().get(args[1]) == null) {
+                        if (getWorlds().getFolder(args[1]).exists()) {
+                            player.sendMessage(getMessage().get("creator.post", args[1]));
+                            var info = getWorlds().create(args[1], World.Environment.valueOf(args[2].toUpperCase()));
                             player.sendMessage(getMessage().get("creator.title", info.getName()));
                             player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
                             player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
-                        } else player.sendMessage(getMessage().get("error.world.folder-invalid", worldName));
-                    } else player.sendMessage(getMessage().get("error.world.exists", worldName));
+                        } else player.sendMessage(getMessage().get("error.world.folder-invalid", args[1]));
+                    } else player.sendMessage(getMessage().get("error.world.exists", args[1]));
                     return true;
                 }
             } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("gamerule")) {
-                    var worldName = args[1];
-                    var world = getWorlds().get(worldName);
+                    var world = getWorlds().get(args[1]);
                     if (world != null) {
-                        var gamerule = args[2];
-                        var value = args[3];
-                        world.setGameRuleValue(gamerule, value);
-                        player.sendMessage(getMessage().get("commands.world.gamerule.changed", worldName, gamerule, value));
-                    } else player.sendMessage(getMessage().get("error.world.invalid", worldName));
+                        world.setGameRuleValue(args[2], args[3]);
+                        player.sendMessage(getMessage().get("commands.world.gamerule.changed", args[1], args[2], args[3]));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("create")) {
-                    var worldName = args[1];
-                    var environment = World.Environment.valueOf(args[2].toUpperCase());
                     if (args[3].equalsIgnoreCase("random")) {
-                        if (!getWorlds().getFolder(worldName).exists()) {
-                            player.sendMessage(getMessage().get("creator.post", worldName));
-                            var info = getWorlds().createRandom(worldName, environment);
+                        if (!getWorlds().getFolder(args[1]).exists()) {
+                            player.sendMessage(getMessage().get("creator.post", args[1]));
+                            var info = getWorlds().createRandom(args[1], World.Environment.valueOf(args[2].toUpperCase()));
                             player.sendMessage(getMessage().get("creator.title", info.getName()));
                             player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
                             player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
-                        } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
-                    } else if (!getWorlds().getFolder(worldName).exists()) {
-                        var seed = Long.parseLong(args[3]);
-                        player.sendMessage(getMessage().get("creator.post", worldName));
-                        var info = getWorlds().create(worldName, environment, seed);
+                        } else player.sendMessage(getMessage().get("error.world.folder-exists", args[1]));
+                    } else if (!getWorlds().getFolder(args[1]).exists()) {
+                        player.sendMessage(getMessage().get("creator.post", args[1]));
+                        var info = getWorlds().create(args[1], World.Environment.valueOf(args[2].toUpperCase()), Long.parseLong(args[3]));
                         player.sendMessage(getMessage().get("creator.title", info.getName()));
                         player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
                         player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
-                    } else player.sendMessage(getMessage().get("error.world.folder-exists", worldName));
+                    } else player.sendMessage(getMessage().get("error.world.folder-exists", args[1]));
                     return true;
                 }
             }

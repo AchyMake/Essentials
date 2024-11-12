@@ -32,7 +32,8 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
                 if (userdataOffline.exists()) {
                     if (userdataOffline.isBanned()) {
                         userdataOffline.setBoolean("settings.banned", false);
-                        userdataOffline.setString("settings.ban-reason", "");
+                        userdataOffline.setString("settings.ban-reason", null);
+                        userdataOffline.setInt("settings.ban-expire", 0);
                         player.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
                     } else player.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                 }
@@ -45,7 +46,8 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
                 if (userdataOffline.exists()) {
                     if (userdataOffline.isBanned()) {
                         userdataOffline.setBoolean("settings.banned", false);
-                        userdataOffline.setString("settings.ban-reason", "");
+                        userdataOffline.setString("settings.ban-reason", null);
+                        userdataOffline.setInt("settings.ban-expire", 0);
                         consoleCommandSender.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                     return true;

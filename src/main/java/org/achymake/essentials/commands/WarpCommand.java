@@ -96,10 +96,10 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 });
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
-                    getInstance().getOnlinePlayers().forEach(players -> {
-                        if (!getUserdata(players).isVanished()) {
-                            if (players.getName().startsWith(args[0])) {
-                                commands.add(players.getName());
+                    getInstance().getOnlinePlayers().forEach(target -> {
+                        if (!getUserdata(target).isVanished()) {
+                            if (target.getName().startsWith(args[0])) {
+                                commands.add(target.getName());
                             }
                         }
                     });

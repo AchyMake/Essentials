@@ -10,7 +10,6 @@ import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
@@ -301,9 +300,6 @@ public final class Essentials extends JavaPlugin {
     }
     public InventoryHandler getInventoryHandler() {
         return inventoryHandler;
-    }
-    public EntityHandler getEntityHandler(Entity getEntity) {
-        return new EntityHandler(getEntity);
     }
     public EconomyHandler getEconomyHandler() {
         return economyHandler;

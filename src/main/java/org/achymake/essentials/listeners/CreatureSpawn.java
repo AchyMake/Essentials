@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.handlers.EntityHandler;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +16,8 @@ public class CreatureSpawn implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler(Entity getEntity) {
-        return getInstance().getEntityHandler(getEntity);
+    private Entities getEntities() {
+        return getInstance().getEntities();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -27,21 +27,19 @@ public class CreatureSpawn implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
-        var chunk = event.getLocation().getChunk();
-        var entityHandler = getEntityHandler(entity);
-        if (entityHandler.disableSpawnReason(event.getSpawnReason())) {
+        if (event.getEntity() instanceof Player)return;
+        if (getEntities().disabledSpawnReason(event.getEntityType(), event.getSpawnReason())) {
+            event.setCancelled(true);
+        } else if (getEntities().disableSpawn(event.getEntityType())) {
             event.setCancelled(true);
         } else {
-            var chunkLimit = entityHandler.chunkLimit();
-            if (entityHandler.disableSpawn()) {
-                event.setCancelled(true);
-            } else if (chunkLimit > 0) {
+            var chunkLimit = getEntities().chunkLimit(event.getEntityType());
+            if (chunkLimit > 0) {
+                var chunk = event.getLocation().getChunk();
                 var listed = new ArrayList<Entity>();
-                for (var chunkEntities : chunk.getEntities()) {
-                    if (chunkEntities.getType().equals(event.getEntityType())) {
-                        listed.add(entity);
+                for (var entities : chunk.getEntities()) {
+                    if (entities.getType().equals(event.getEntityType())) {
+                        listed.add(event.getEntity());
                     }
                 }
                 if (listed.size() >= chunkLimit) {

@@ -63,10 +63,10 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    getInstance().getOnlinePlayers().forEach(players -> {
-                        if (!getUserdata(players).isVanished()) {
-                            if (players.getName().startsWith(args[0])) {
-                                commands.add(players.getName());
+                    getInstance().getOnlinePlayers().forEach(target -> {
+                        if (!getUserdata(target).isVanished()) {
+                            if (target.getName().startsWith(args[0])) {
+                                commands.add(target.getName());
                             }
                         }
                     });

@@ -1,8 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.handlers.EntityHandler;
-import org.bukkit.entity.Entity;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,8 +13,8 @@ public class EntityChangeBlock implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler(Entity getEntity) {
-        return getInstance().getEntityHandler(getEntity);
+    private Entities getEntities() {
+        return getInstance().getEntities();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -25,9 +24,8 @@ public class EntityChangeBlock implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        var entity = event.getEntity();
-        if (entity instanceof Player)return;
-        if (!getEntityHandler(entity).disableBlockChange())return;
+        if (event.getEntity() instanceof Player)return;
+        if (!getEntities().disableBlockChange(event.getEntityType()))return;
         event.setCancelled(true);
     }
 }

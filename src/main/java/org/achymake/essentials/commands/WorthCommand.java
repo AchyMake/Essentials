@@ -15,7 +15,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private MaterialHandler getMaterialHandler() {
+    private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
     private EconomyHandler getEconomy() {
@@ -34,20 +34,16 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var material = getMaterialHandler().get(args[0]);
-                var materialName = getMessage().toTitleCase(material.toString());
-                if (getWorth().isListed(material)) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", materialName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
-                } else player.sendMessage(getMessage().get("commands.worth.unlisted", materialName));
+                if (getWorth().isListed(getMaterials().get(args[0]))) {
+                    player.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(args[0]), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                } else player.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(args[0])));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var material = getMaterialHandler().get(args[0]);
-                var materialName = getMessage().toTitleCase(material.toString());
-                if (getWorth().isListed(material)) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", materialName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
-                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", materialName));
+                if (getWorth().isListed(getMaterials().get(args[0]))) {
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(args[0]), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(args[0])));
                 return true;
             }
         }

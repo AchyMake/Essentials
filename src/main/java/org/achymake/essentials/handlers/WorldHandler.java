@@ -20,7 +20,7 @@ public record WorldHandler(World getWorld) {
         return new File(getInstance().getDataFolder(), "worlds/" + getName() + ".yml");
     }
     public File getFolder() {
-        return new File(getInstance().getServer().getWorldContainer(), getName());
+        return getWorld().getWorldFolder();
     }
     public boolean exists() {
         return getFile().exists();
