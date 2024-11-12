@@ -78,8 +78,8 @@ public final class Essentials extends JavaPlugin {
     @Override
     public void onDisable() {
         getVanishHandler().disable();
-        getProjectileHandler().cancelAll();
-        getScheduleHandler().cancelAll();
+        getProjectileHandler().disable();
+        getScheduleHandler().disable();
         new PlaceholderProvider().unregister();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }

@@ -25,7 +25,7 @@ public class ScheduleHandler {
             getScheduler().cancelTask(taskID);
         }
     }
-    public void cancelAll() {
+    public void disable() {
         getScheduler().cancelTasks(getInstance());
     }
 }

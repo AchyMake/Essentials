@@ -44,7 +44,7 @@ public class ProjectileHandler {
             getProjectiles().remove(projectile);
         }
     }
-    public void cancelAll() {
+    public void disable() {
         if (!getProjectiles().isEmpty()) {
             getProjectiles().forEach((projectile, taskID) -> {
                 if (getScheduler().isQueued(taskID)) {
