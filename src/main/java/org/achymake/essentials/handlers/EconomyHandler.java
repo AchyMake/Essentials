@@ -31,7 +31,7 @@ public class EconomyHandler {
     public HashMap<OfflinePlayer, Double> getAccounts() {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (offlinePlayer.hasPlayedBefore()) {
+            if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
                 if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
                     accounts.put(offlinePlayer, get(offlinePlayer));
                 }
@@ -42,7 +42,7 @@ public class EconomyHandler {
     public HashMap<OfflinePlayer, Double> getBankAccounts() {
         var bankAccounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (offlinePlayer.hasPlayedBefore()) {
+            if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
                 if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
                     bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
                 }
