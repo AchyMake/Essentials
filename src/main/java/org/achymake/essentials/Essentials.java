@@ -6,6 +6,7 @@ import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -371,6 +372,6 @@ public final class Essentials extends JavaPlugin {
         return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
-        return getServer().getOfflinePlayer(uuid);
+        return Bukkit.getOfflinePlayer(uuid);
     }
 }
