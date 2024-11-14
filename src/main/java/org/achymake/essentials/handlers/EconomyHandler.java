@@ -28,14 +28,13 @@ public class EconomyHandler {
     private InventoryHandler getInventoryHandler() {
         return getInstance().getInventoryHandler();
     }
-    private List<OfflinePlayer> getOfflinePlayers() {
-        return getInstance().getOfflinePlayers();
-    }
     public HashMap<OfflinePlayer, Double> getAccounts() {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
-                accounts.put(offlinePlayer, get(offlinePlayer));
+            if (offlinePlayer.hasPlayedBefore()) {
+                if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
+                    accounts.put(offlinePlayer, get(offlinePlayer));
+                }
             }
         }
         return accounts;
@@ -43,8 +42,10 @@ public class EconomyHandler {
     public HashMap<OfflinePlayer, Double> getBankAccounts() {
         var bankAccounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
-                bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
+            if (offlinePlayer.hasPlayedBefore()) {
+                if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
+                    bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
+                }
             }
         }
         return bankAccounts;
