@@ -235,7 +235,6 @@ public class Message {
         config.addDefault("commands.smithing.sender", "&6You opened smithing table for&f {0}");
         config.addDefault("commands.spawn.invalid", "&cSpawn has not been set");
         config.addDefault("commands.spawn.exempt", "&cYou are not allowed to tp&f {0}&c to spawn");
-
         config.addDefault("commands.spawner.info.title", "&6Spawner info:");
         config.addDefault("commands.spawner.info.entity-type", "&6entity-type&f: {0}");
         config.addDefault("commands.spawner.info.spawn-count", "&6spawn-count&f: {0}");
@@ -251,7 +250,6 @@ public class Message {
         config.addDefault("commands.spawner.set.min-spawn-delay", "&6Spawner min spawn delay is now set to&f {0}");
         config.addDefault("commands.spawner.set.spawn-range", "&6Spawner spawn range is now set to&f {0}");
         config.addDefault("commands.spawner.give", "&6You gave&f {0} {1} {2}&6 spawner");
-
         config.addDefault("commands.stonecutter.sender", "&6You opened stonecutter for&f {0}");
         config.addDefault("commands.stonecutter.exempt", "&cYou are not allowed to open stonecutter for&f {0}");
         config.addDefault("commands.store.sender", "&6You sent store message to&f {0}");
