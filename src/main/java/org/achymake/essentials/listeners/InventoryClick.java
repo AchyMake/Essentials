@@ -56,8 +56,8 @@ public class InventoryClick implements Listener {
                             getEconomy().add(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
                             player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
-                            event.getInventory().close();
                             getEconomy().closeBank(player);
+                            event.getInventory().close();
                         } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                 } else if (title.contains("deposit")) {
@@ -67,8 +67,8 @@ public class InventoryClick implements Listener {
                             getEconomy().addBank(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
                             player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
-                            event.getInventory().close();
                             getEconomy().closeBank(player);
+                            event.getInventory().close();
                         } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                 }

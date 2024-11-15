@@ -133,6 +133,7 @@ public class EconomyHandler {
         } else player.sendMessage(getInstance().getMessage().get("error.not-provided"));
     }
     public void closeBank(Player player) {
+        if (banks.get(player).getTopInventory().isEmpty())return;
         banks.get(player).getTopInventory().forEach(itemStack -> {
             if (itemStack == null)return;
             itemStack.setAmount(0);
