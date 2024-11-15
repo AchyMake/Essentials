@@ -133,11 +133,11 @@ public class EconomyHandler {
         } else player.sendMessage(getInstance().getMessage().get("error.not-provided"));
     }
     public void closeBank(Player player) {
-        if (!banks.get(player).getTopInventory().isEmpty()) {
-            banks.get(player).getTopInventory().forEach(itemStack -> itemStack.setAmount(0));
-        }
+        banks.get(player).getTopInventory().forEach(itemStack -> {
+            if (itemStack == null)return;
+            itemStack.setAmount(0);
+        });
         banks.remove(player);
-        getUserdata(player).setBoolean("settings.bank-opened", false);
     }
     public Map<Player, InventoryView> getBanks() {
         return banks;
