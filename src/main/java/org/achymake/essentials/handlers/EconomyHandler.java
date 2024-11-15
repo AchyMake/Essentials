@@ -111,28 +111,26 @@ public class EconomyHandler {
         if (anvil != null) {
             var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("0.0");
+            itemMeta.setDisplayName(String.valueOf(getMinimumBankWithdraw()));
             itemStack.setItemMeta(itemMeta);
             anvil.setTitle("Bank: Withdraw");
             anvil.setItem(0, itemStack);
             player.updateInventory();
             banks.put(player, anvil);
-            getUserdata(player).setBoolean("settings.bank-opened", true);
-        }
+        } else player.sendMessage(getInstance().getMessage().get("error.not-provided"));
     }
     public void openBankDeposit(Player player) {
         var anvil = getInventoryHandler().openAnvil(player);
         if (anvil != null) {
             var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("0.0");
+            itemMeta.setDisplayName(String.valueOf(getMinimumBankDeposit()));
             itemStack.setItemMeta(itemMeta);
             anvil.setTitle("Bank: Deposit");
             anvil.setItem(0, itemStack);
             player.updateInventory();
             banks.put(player, anvil);
-            getUserdata(player).setBoolean("settings.bank-opened", true);
-        }
+        } else player.sendMessage(getInstance().getMessage().get("error.not-provided"));
     }
     public void closeBank(Player player) {
         if (!banks.get(player).getTopInventory().isEmpty()) {

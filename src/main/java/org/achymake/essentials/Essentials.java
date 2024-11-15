@@ -183,6 +183,8 @@ public final class Essentials extends JavaPlugin {
         new EntityMount();
         new EntityTarget();
         new EntityTargetLivingEntity();
+        new InventoryClick();
+        new InventoryClose();
         new NotePlay();
         new PlayerBucketEmpty();
         new PlayerBucketEntity();

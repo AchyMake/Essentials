@@ -43,6 +43,10 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         }
                         return true;
                     }
+                } else if (args[0].equalsIgnoreCase("withdraw")) {
+                    getEconomy().openBankWithdraw(player);
+                } else if (args[0].equalsIgnoreCase("deposit")) {
+                    getEconomy().openBankDeposit(player);
                 }
             } else if (args.length == 2) {
                 var userdata = getUserdata(player);
