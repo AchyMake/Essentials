@@ -64,6 +64,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                             }
                         }
                     }
+                    return true;
                 } else {
                     var amount = Integer.parseInt(args[0]);
                     if (amount > 0) {
@@ -81,6 +82,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                                 } else player.sendMessage(getMessage().get("commands.sell.insufficient", itemName));
                             } else player.sendMessage(getMessage().get("commands.sell.unsellable"));
                         } else player.sendMessage(getMessage().get("error.item.invalid"));
+                        return true;
                     }
                 }
             }
