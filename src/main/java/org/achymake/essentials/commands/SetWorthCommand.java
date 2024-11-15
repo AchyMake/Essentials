@@ -39,7 +39,7 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    var itemName = getMessage().toTitleCase(heldItem.toString());
+                    var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                     var value = Double.parseDouble(args[0]);
                     getWorth().setWorth(heldItem, value);
                     if (getWorth().isListed(heldItem.getType())) {
