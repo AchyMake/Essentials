@@ -7,7 +7,6 @@ import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -144,6 +143,7 @@ public final class Essentials extends JavaPlugin {
         new SpawnerCommand();
         new StonecutterCommand();
         new StoreCommand();
+        new TimeCommand();
         new TPAcceptCommand();
         new TPACommand();
         new TPAHereCommand();
@@ -189,7 +189,6 @@ public final class Essentials extends JavaPlugin {
         new PlayerBucketEmpty();
         new PlayerBucketEntity();
         new PlayerBucketFill();
-        new PlayerChangedChunk();
         new PlayerCommandPreprocess();
         new PlayerDeath();
         new PlayerGameModeChange();
@@ -204,9 +203,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerPortal();
         new PlayerQuit();
         new PlayerRespawn();
-        if (!isBukkit()) {
-            new PlayerShearBlock();
-        }
+        new PlayerShearBlock();
         new PlayerShearEntity();
         new PlayerSpawnLocation();
         new PlayerTeleport();
@@ -312,9 +309,6 @@ public final class Essentials extends JavaPlugin {
     }
     public CooldownHandler getCooldownHandler() {
         return cooldownHandler;
-    }
-    public ChunkHandler getChunkHandler(Chunk getChunk) {
-        return new ChunkHandler(getChunk);
     }
     public Worth getWorth() {
         return worth;

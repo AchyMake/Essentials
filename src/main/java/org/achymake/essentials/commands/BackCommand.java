@@ -78,19 +78,18 @@ public class BackCommand implements CommandExecutor, TabCompleter {
         if (player.hasPermission("essentials.command.back.death")) {
             var death = userdata.getLocation("death");
             if (death != null) {
-                var worldName = death.getWorld().getName();
+                var worldName = death.getWorld().getName().toLowerCase();
                 if (player.hasPermission("essentials.command.back.world." + worldName)) {
                     userdata.teleport(death, "death", delay);
-                    userdata.setString("locations.death", null);
                 }
             } else if (recent != null) {
-                var worldName = recent.getWorld().getName();
+                var worldName = recent.getWorld().getName().toLowerCase();
                 if (player.hasPermission("essentials.command.back.world." + worldName)) {
                     userdata.teleport(recent, "recent", delay);
                 }
             }
         } else if (recent != null) {
-            var worldName = recent.getWorld().getName();
+            var worldName = recent.getWorld().getName().toLowerCase();
             if (player.hasPermission("essentials.command.back.world." + worldName)) {
                 userdata.teleport(recent, "recent", delay);
             }

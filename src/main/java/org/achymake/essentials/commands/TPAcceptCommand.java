@@ -39,7 +39,7 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                     var target = userdata.getTpaFrom().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
-                        var tpaTask = userdata.getTaskID("tpa");
+                        var tpaTask = userdataTarget.getTaskID("tpa");
                         if (getScheduler().isQueued(tpaTask)) {
                             target.sendMessage(getMessage().get("commands.tpaccept.tpa.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpaccept.tpa.sender", target.getName()));

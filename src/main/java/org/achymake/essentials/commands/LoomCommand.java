@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.InventoryHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
+    private InventoryHandler getInventoryHandler() {
+        return getInstance().getInventoryHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -27,7 +31,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getInstance().getInventoryHandler().openLoom(player) == null) {
+                if (getInventoryHandler().openLoom(player) == null) {
                     player.sendMessage(getMessage().get("error.not-provided"));
                 }
                 return true;
@@ -36,11 +40,11 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                            if (getInventoryHandler().openLoom(target) == null) {
                                 player.sendMessage(getMessage().get("error.not-provided"));
                             } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.loom.exempt")) {
-                            if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                            if (getInventoryHandler().openLoom(target) == null) {
                                 player.sendMessage(getMessage().get("error.not-provided"));
                             } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.loom.exempt", target.getName()));
@@ -52,7 +56,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (getInstance().getInventoryHandler().openLoom(target) == null) {
+                    if (getInventoryHandler().openLoom(target) == null) {
                         consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));

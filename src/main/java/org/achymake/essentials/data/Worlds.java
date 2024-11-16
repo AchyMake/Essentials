@@ -4,10 +4,11 @@ import org.achymake.essentials.Essentials;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.generator.WorldInfo;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Worlds {
@@ -16,6 +17,9 @@ public class Worlds {
     }
     private WorldCreator getCreator(String worldName) {
         return new WorldCreator(worldName);
+    }
+    public List<World> getListed() {
+        return new ArrayList<World>(getInstance().getServer().getWorlds());
     }
     public World get(String worldName) {
         return getInstance().getServer().getWorld(worldName);
@@ -26,22 +30,25 @@ public class Worlds {
     public void setup() {
         var worlds = new File(getInstance().getDataFolder(), "worlds");
         if (worlds.exists() && worlds.isDirectory()) {
-            for (var files : worlds.listFiles()) {
-                var worldName = files.getName().replace(".yml", "");
+            for (var file : worlds.listFiles()) {
+                var worldName = file.getName().replace(".yml", "");
                 if (get(worldName) == null) {
                     if (getFolder(worldName).exists()) {
-                        var config = YamlConfiguration.loadConfiguration(files);
-                        var info = create(worldName, World.Environment.valueOf(config.getString("environment")), config.getLong("seed"));
+                        var info = add(worldName);
                         getInstance().sendInfo(info.getName() + " has been created with the following:");
                         getInstance().sendInfo("environment: " + info.getEnvironment().name());
                         getInstance().sendInfo("seed: " + info.getSeed());
                     } else {
-                        files.delete();
-                        getInstance().sendWarning(worldName + " does not exist " + files.getName() + " has been deleted");
+                        file.delete();
+                        getInstance().sendWarning(worldName + " does not exist " + file.getName() + " has been deleted");
                     }
                 }
             }
         }
+    }
+    public WorldInfo add(String worldName) {
+        var creator = getCreator(worldName);
+        return creator.createWorld();
     }
     public WorldInfo create(String worldName, World.Environment environment) {
         var creator = getCreator(worldName);

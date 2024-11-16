@@ -8,18 +8,18 @@ public class InventoryHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private boolean isSpigot() {
+    private boolean isBukkit() {
         return getInstance().isBukkit();
     }
     public InventoryView openAnvil(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openAnvil(null, true);
+        if (!isBukkit()) {
+            return player.openAnvil(null, true);
+        } else return null;
     }
     public InventoryView openCartographyTable(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openCartographyTable(null, true);
+        if (!isBukkit()) {
+            return player.openCartographyTable(null, true);
+        } else return null;
     }
     public InventoryView openEnchanting(Player player) {
         return player.openEnchanting(null, true);
@@ -28,24 +28,24 @@ public class InventoryHandler {
         return player.openInventory(target.getEnderChest());
     }
     public InventoryView openGrindstone(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openGrindstone(null, true);
+        if (!isBukkit()) {
+            return player.openGrindstone(null, true);
+        } else return null;
     }
     public InventoryView openLoom(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openLoom(null, true);
+        if (!isBukkit()) {
+            return player.openLoom(null, true);
+        } else return null;
     }
     public InventoryView openStonecutter(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openStonecutter(null, true);
+        if (!isBukkit()) {
+            return player.openStonecutter(null, true);
+        } else return null;
     }
     public InventoryView openSmithingTable(Player player) {
-        if (isSpigot()) {
-            return null;
-        } else return player.openSmithingTable(null, true);
+        if (!isBukkit()) {
+            return player.openSmithingTable(null, true);
+        } else return null;
     }
     public InventoryView openWorkbench(Player player) {
         return player.openWorkbench(null, true);

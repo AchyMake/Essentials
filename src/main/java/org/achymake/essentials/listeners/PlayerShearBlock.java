@@ -20,7 +20,9 @@ public class PlayerShearBlock implements Listener {
         return getInstance().getManager();
     }
     public PlayerShearBlock() {
-        getManager().registerEvents(this, getInstance());
+        if (!getInstance().isBukkit()) {
+            getManager().registerEvents(this, getInstance());
+        }
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerShearEntity(PlayerShearBlockEvent event) {

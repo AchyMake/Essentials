@@ -48,18 +48,29 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("teleport")) {
-                    var world = getWorlds().get(args[1]);
-                    if (world != null) {
-                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", args[1]));
-                        player.teleport(getWorldHandler(world).getSpawn());
-                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
+                if (args[0].equalsIgnoreCase("add")) {
+                    if (getWorlds().get(args[1]) == null) {
+                        if (getWorlds().getFolder(args[1]).exists()) {
+                            player.sendMessage(getMessage().get("creator.post", args[1]));
+                            var info = getWorlds().add(args[1]);
+                            player.sendMessage(getMessage().get("creator.title", info.getName()));
+                            player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
+                            player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
+                        } else player.sendMessage(getMessage().get("error.world.folder-invalid", args[1]));
+                    } else player.sendMessage(getMessage().get("error.world.exists", args[1]));
                     return true;
-                } else if (args[0].equalsIgnoreCase("remove")) {
+                } else if (args[0].equalsIgnoreCase("info")) {
                     var world = getWorlds().get(args[1]);
                     if (world != null) {
-                        getWorldHandler(world).remove();
-                        player.sendMessage(getMessage().get("commands.world.remove", args[1]));
+                        player.sendMessage(getMessage().get("commands.world.info.title", world.getName()));
+                        player.sendMessage(getMessage().get("commands.world.info.pvp", String.valueOf(world.getPVP())));
+                        player.sendMessage(getMessage().get("commands.world.info.difficulty", getMessage().toTitleCase(world.getDifficulty().name())));
+                        player.sendMessage(getMessage().get("commands.world.info.seed", String.valueOf(world.getSeed())));
+                        player.sendMessage(getMessage().get("commands.world.info.environment", getMessage().toTitleCase(world.getEnvironment().name())));
+                        player.sendMessage(getMessage().get("commands.world.info.gamerule.title"));
+                        for (var gameRules : world.getGameRules()) {
+                            player.sendMessage(getMessage().get("commands.world.info.gamerule.listed", gameRules, world.getGameRuleValue(gameRules)));
+                        }
                     } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 } else if (args[0].equalsIgnoreCase("pvp")) {
@@ -71,18 +82,23 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("commands.world.pvp.disable", args[1]));
                     } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
-                }
-            } else if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("pvp")) {
+                } else if (args[0].equalsIgnoreCase("remove")) {
                     var world = getWorlds().get(args[1]);
                     if (world != null) {
-                        world.setPVP(Boolean.parseBoolean(args[2]));
-                        if (world.getPVP()) {
-                            player.sendMessage(getMessage().get("commands.world.pvp.enable", world.getName()));
-                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", world.getName()));
+                        getWorldHandler(world).remove();
+                        player.sendMessage(getMessage().get("commands.world.remove", args[1]));
                     } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
-                } else if (args[0].equalsIgnoreCase("create")) {
+                } else if (args[0].equalsIgnoreCase("teleport")) {
+                    var world = getWorlds().get(args[1]);
+                    if (world != null) {
+                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", args[1]));
+                        player.teleport(getWorldHandler(world).getSpawn());
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
+                    return true;
+                }
+            } else if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("create")) {
                     if (!getWorlds().getFolder(args[1]).exists()) {
                         player.sendMessage(getMessage().get("creator.post", args[1]));
                         var info = getWorlds().create(args[1], World.Environment.valueOf(args[2].toUpperCase()));
@@ -91,27 +107,26 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
                     } else player.sendMessage(getMessage().get("error.world.folder-exists", args[1]));
                     return true;
-                } else if (args[0].equalsIgnoreCase("add")) {
-                    if (getWorlds().get(args[1]) == null) {
-                        if (getWorlds().getFolder(args[1]).exists()) {
-                            player.sendMessage(getMessage().get("creator.post", args[1]));
-                            var info = getWorlds().create(args[1], World.Environment.valueOf(args[2].toUpperCase()));
-                            player.sendMessage(getMessage().get("creator.title", info.getName()));
-                            player.sendMessage(getMessage().get("creator.environment", info.getEnvironment().name()));
-                            player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
-                        } else player.sendMessage(getMessage().get("error.world.folder-invalid", args[1]));
-                    } else player.sendMessage(getMessage().get("error.world.exists", args[1]));
+                } else if (args[0].equalsIgnoreCase("difficulty")) {
+                    var world = getWorlds().get(args[1]);
+                    if (world != null) {
+                        if (getWorldHandler(world).setDifficulty(args[2])) {
+                            player.sendMessage(getMessage().get("commands.world.difficulty.success", world.getName(), getMessage().toTitleCase(args[2])));
+                        } else player.sendMessage(getMessage().get("commands.world.difficulty.invalid", args[2]));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
+                    return true;
+                } else if (args[0].equalsIgnoreCase("pvp")) {
+                    var world = getWorlds().get(args[1]);
+                    if (world != null) {
+                        world.setPVP(Boolean.parseBoolean(args[2]));
+                        if (world.getPVP()) {
+                            player.sendMessage(getMessage().get("commands.world.pvp.enable", world.getName()));
+                        } else player.sendMessage(getMessage().get("commands.world.pvp.disable", world.getName()));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
                     return true;
                 }
             } else if (args.length == 4) {
-                if (args[0].equalsIgnoreCase("gamerule")) {
-                    var world = getWorlds().get(args[1]);
-                    if (world != null) {
-                        world.setGameRuleValue(args[2], args[3]);
-                        player.sendMessage(getMessage().get("commands.world.gamerule.changed", args[1], args[2], args[3]));
-                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
-                    return true;
-                } else if (args[0].equalsIgnoreCase("create")) {
+                if (args[0].equalsIgnoreCase("create")) {
                     if (args[3].equalsIgnoreCase("random")) {
                         if (!getWorlds().getFolder(args[1]).exists()) {
                             player.sendMessage(getMessage().get("creator.post", args[1]));
@@ -128,6 +143,13 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage(getMessage().get("creator.seed", String.valueOf(info.getSeed())));
                     } else player.sendMessage(getMessage().get("error.world.folder-exists", args[1]));
                     return true;
+                } else if (args[0].equalsIgnoreCase("gamerule")) {
+                    var world = getWorlds().get(args[1]);
+                    if (world != null) {
+                        world.setGameRuleValue(args[2], args[3]);
+                        player.sendMessage(getMessage().get("commands.world.gamerule.changed", args[1], args[2], args[3]));
+                    } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
+                    return true;
                 }
             }
         }
@@ -135,41 +157,51 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
     }
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> commands = new ArrayList<>();
-        if (sender instanceof Player player) {
+        if (sender instanceof Player) {
             if (args.length == 1) {
                 commands.add("add");
                 commands.add("create");
+                commands.add("difficulty");
+                commands.add("info");
                 commands.add("gamerule");
                 commands.add("pvp");
                 commands.add("remove");
                 commands.add("setspawn");
                 commands.add("teleport");
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("gamerule") | args[0].equalsIgnoreCase("pvp") | args[0].equalsIgnoreCase("remove") | args[0].equalsIgnoreCase("teleport")) {
-                    for (var worlds : player.getServer().getWorlds()) {
+                if (args[0].equalsIgnoreCase("gamerule") |
+                        args[0].equalsIgnoreCase("pvp") |
+                        args[0].equalsIgnoreCase("remove") |
+                        args[0].equalsIgnoreCase("teleport") |
+                        args[0].equalsIgnoreCase("difficulty") |
+                        args[0].equalsIgnoreCase("info")) {
+                    for (var worlds : getWorlds().getListed()) {
                         commands.add(worlds.getName());
                     }
                 }
             } else if (args.length == 3) {
-                if (args[0].equalsIgnoreCase("add")) {
-                    commands.add("normal");
-                    commands.add("nether");
-                    commands.add("the_end");
-                }
                 if (args[0].equalsIgnoreCase("create")) {
                     commands.add("normal");
                     commands.add("nether");
                     commands.add("the_end");
                 }
+                if (args[0].equalsIgnoreCase("difficulty")) {
+                    if (getWorlds().get(args[1]) != null) {
+                        commands.add("peaceful");
+                        commands.add("easy");
+                        commands.add("normal");
+                        commands.add("hard");
+                    }
+                }
                 if (args[0].equalsIgnoreCase("pvp")) {
                     commands.add(String.valueOf(getWorlds().get(args[1]).getPVP()));
                 }
                 if (args[0].equalsIgnoreCase("gamerule")) {
-                    Collections.addAll(commands, player.getServer().getWorld(args[1]).getGameRules());
+                    Collections.addAll(commands, getWorlds().get(args[1]).getGameRules());
                 }
             } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("gamerule")) {
-                    commands.add(player.getServer().getWorld(args[1]).getGameRuleValue(args[2]));
+                    commands.add(getWorlds().get(args[1]).getGameRuleValue(args[2]));
                 }
                 if (args[0].equalsIgnoreCase("create")) {
                     commands.add("random");

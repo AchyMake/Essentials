@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.events.PlayerChangedChunkEvent;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,14 +45,12 @@ public class PlayerMove implements Listener {
                 if (!getConfig().getBoolean("teleport.cancel-on-move"))return;
                 userdata.disableTask("teleport");
                 player.sendMessage(getMessage().get("events.move"));
-            } else if (from.getChunk() != to.getChunk()) {
-                getManager().callEvent(new PlayerChangedChunkEvent(player, from, to));
             }
         } else event.setCancelled(true);
     }
     private boolean hasMoved(Location from, Location to) {
-        return from.getX() != to.getX()
-                || from.getY() != to.getY()
-                || from.getZ() != to.getZ();
+        return from.getX() != to.getX() ||
+                from.getY() != to.getY() ||
+                from.getZ() != to.getZ();
     }
 }

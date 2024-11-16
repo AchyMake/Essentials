@@ -312,6 +312,11 @@ commands:
     permission: essentials.command.store
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  time:
+    description: time command
+    permission: essentials.command.time
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   tpaccept:
     description: tpaccept
     permission: essentials.command.tpaccept
@@ -777,6 +782,9 @@ permissions:
     default: op
   essentials.command.store.exempt:
     description: opens stonecutter by command
+    default: op
+  essentials.command.time:
+    description: time command
     default: op
   essentials.command.tpaccept:
     description: tpaccept

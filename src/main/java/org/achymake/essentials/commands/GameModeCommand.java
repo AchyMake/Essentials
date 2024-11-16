@@ -32,6 +32,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
                     if (!getUserdata(player).setGameMode(mode)) {
                         player.sendMessage(getMessage().get("commands.gamemode.invalid", mode));
                     }
+                    return true;
                 }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {

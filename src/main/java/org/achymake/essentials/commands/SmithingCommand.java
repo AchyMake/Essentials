@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.InventoryHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
+    private InventoryHandler getInventoryHandler() {
+        return getInstance().getInventoryHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -27,7 +31,7 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getInstance().getInventoryHandler().openSmithingTable(player) == null) {
+                if (getInventoryHandler().openSmithingTable(player) == null) {
                     player.sendMessage(getMessage().get("error.not-provided"));
                 }
                 return true;
@@ -36,12 +40,12 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                            if (getInventoryHandler().openSmithingTable(target) == null) {
                                 player.sendMessage(getMessage().get("error.not-provided"));
                             } else player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.smithing.exempt")) {
-                            if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                            if (getInventoryHandler().openSmithingTable(target) == null) {
                                 player.sendMessage(getMessage().get("error.not-provided"));
                             } else player.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.smithing.exempt", target.getName()));
@@ -53,7 +57,7 @@ public class SmithingCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    if (getInstance().getInventoryHandler().openSmithingTable(target) == null) {
+                    if (getInventoryHandler().openSmithingTable(target) == null) {
                         consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.smithing.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));

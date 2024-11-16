@@ -64,7 +64,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                                     getEconomy().remove(player, getKits().getPrice(kitName));
                                     getCooldown().add(player, kitName, timer);
                                     player.sendMessage(getMessage().get("commands.kit.receive", kitName));
-                                } else player.sendMessage(getMessage().get("commands.kit.non-sufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
+                                } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                             } else {
                                 getMaterials().giveItemStacks(player, getKits().get(kitName));
                                 getCooldown().add(player, kitName, timer);

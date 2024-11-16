@@ -1,7 +1,6 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
-import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -18,9 +17,6 @@ public record WorldHandler(World getWorld) {
     }
     private File getFile() {
         return new File(getInstance().getDataFolder(), "worlds/" + getName() + ".yml");
-    }
-    public File getFolder() {
-        return getWorld().getWorldFolder();
     }
     public boolean exists() {
         return getFile().exists();
@@ -58,8 +54,20 @@ public record WorldHandler(World getWorld) {
     public void setPVP(boolean value) {
         getWorld().setPVP(value);
     }
-    public void setDifficulty(Difficulty difficulty) {
-        getWorld().setDifficulty(difficulty);
+    public boolean setDifficulty(String difficultyString) {
+        if (difficultyString.equalsIgnoreCase("peaceful")) {
+            getWorld().setDifficulty(Difficulty.PEACEFUL);
+            return true;
+        } else if (difficultyString.equalsIgnoreCase("easy")) {
+            getWorld().setDifficulty(Difficulty.EASY);
+            return true;
+        } else if (difficultyString.equalsIgnoreCase("normal")) {
+            getWorld().setDifficulty(Difficulty.NORMAL);
+            return true;
+        } else if (difficultyString.equalsIgnoreCase("hard")) {
+            getWorld().setDifficulty(Difficulty.HARD);
+            return true;
+        } else return false;
     }
     private void setup() {
         var file = getFile();
@@ -96,11 +104,6 @@ public record WorldHandler(World getWorld) {
     public World.Environment getEnvironment() {
         return getWorld().getEnvironment();
     }
-    public Chunk getChunk(long chunkKey) {
-        var x = (int) chunkKey;
-        var z = (int) (chunkKey >> 32);
-        return getWorld().getChunkAt(x, z);
-    }
     public void remove() {
         var file = getFile();
         if (file.exists()) {
@@ -111,5 +114,29 @@ public record WorldHandler(World getWorld) {
     @Override
     public World getWorld() {
         return getWorld;
+    }
+    public void setMorning() {
+        setTime(0);
+    }
+    public void setDay() {
+        setTime(1000);
+    }
+    public void setNoon() {
+        setTime(6000);
+    }
+    public void setNight() {
+        setTime(13000);
+    }
+    public void setMidnight() {
+        setTime(18000);
+    }
+    public void setTime(long value) {
+        getWorld().setTime(value);
+    }
+    public void addTime(long value) {
+        setTime(getWorld().getTime() + value);
+    }
+    public void removeTime(long value) {
+        setTime(getWorld().getTime() - value);
     }
 }

@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.InventoryHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,9 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
+    private InventoryHandler getInventoryHandler() {
+        return getInstance().getInventoryHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -30,17 +34,17 @@ public class EnderChestCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                player.openInventory(player.getEnderChest());
+                getInventoryHandler().openEnderchest(player, player);
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.enderchest.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            player.openInventory(target.getEnderChest()).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
+                            getInventoryHandler().openEnderchest(player, target).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.enderchest.exempt")) {
-                            player.openInventory(target.getEnderChest()).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
+                            getInventoryHandler().openEnderchest(player, target).setTitle(getMessage().get("commands.enderchest.title", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.enderchest.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
