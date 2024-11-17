@@ -131,7 +131,6 @@ public class Message {
         config.addDefault("commands.help.sender", "&6You sent help message to&f {0}");
         config.addDefault("commands.help.exempt", "&cYou are not allowed to send help message to&f {0}");
         config.addDefault("commands.home.invalid", "{0}&c does not exists");
-        config.addDefault("commands.home.has-task", "&cYou cannot teleport twice you have to wait");
         config.addDefault("commands.homes.empty", "&cYou do not have any homes yet");
         config.addDefault("commands.homes.title", "&6Homes:");
         config.addDefault("commands.homes.listed", "- {0}");

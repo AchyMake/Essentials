@@ -40,41 +40,48 @@ public class PlayerQuit implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         var player = event.getPlayer();
         var userdata = getUserdata(player);
-        if (userdata.isVanished()) {
+        if (!userdata.isVanished()) {
+            if (getConfig().getBoolean("connection.quit.enable")) {
+                event.setQuitMessage(getQuitMessage(player));
+                playSound();
+            } else if (player.hasPermission("essentials.event.quit.message")) {
+                event.setQuitMessage(getQuitMessage(player));
+                playSound();
+            } else {
+                event.setQuitMessage(null);
+                getMessage().sendAll(getMessage().get("events.quit.notify", player.getName()), "essentials.event.quit.notify");
+            }
+        } else {
             getVanishHandler().getVanished().remove(player);
             event.setQuitMessage(null);
-        } else if (getConfig().getBoolean("connection.quit.enable")) {
-            event.setQuitMessage(getQuitMessage(player));
-            playSound();
-        } else if (player.hasPermission("essentials.event.quit.message")) {
-            event.setQuitMessage(getQuitMessage(player));
-            playSound();
-        } else {
-            event.setQuitMessage(null);
-            getMessage().sendAll(getMessage().get("events.quit.notify", player.getName()), "essentials.event.quit.notify");
         }
         userdata.disableTasks();
         if (userdata.getTpaSent() != null) {
-            getUserdata(userdata.getTpaSent()).setString("tpa.from", null);
+            var sent = userdata.getTpaSent();
+            getUserdata(sent).setString("tpa.from", null);
             userdata.setString("tpa.sent", null);
         } else if (userdata.getTpaFrom() != null) {
-            getUserdata(userdata.getTpaFrom()).setString("tpa.sent", null);
+            var from = userdata.getTpaFrom();
+            getUserdata(from).setString("tpa.sent", null);
             userdata.setString("tpa.from", null);
         } else if (userdata.getTpaHereSent() != null) {
-            getUserdata(userdata.getTpaHereSent()).setString("tpahere.from", null);
+            var sent = userdata.getTpaHereSent();
+            getUserdata(sent).setString("tpahere.from", null);
             userdata.setString("tpahere.sent", null);
         } else if (userdata.getTpaHereFrom() != null) {
-            getUserdata(userdata.getTpaHereFrom()).setString("tpahere.sent", null);
+            var from = userdata.getTpaHereFrom();
+            getUserdata(from).setString("tpahere.sent", null);
             userdata.setString("tpahere.from", null);
         }
         userdata.setLocation(player.getLocation(), "quit");
     }
     private void playSound() {
         if (!getConfig().getBoolean("connection.quit.sound.enable"))return;
-        var soundType = getConfig().getString("connection.quit.sound.type");
-        var volume = (float) getConfig().getDouble("connection.quit.sound.volume");
-        var pitch = (float) getConfig().getDouble("connection.quit.sound.pitch");
-        getInstance().getOnlinePlayers().forEach(players -> players.playSound(players, Sound.valueOf(soundType), volume, pitch));
+        getInstance().getOnlinePlayers().forEach(target
+                -> target.playSound(target,
+                Sound.valueOf(getConfig().getString("connection.quit.sound.type")),
+                (float) getConfig().getDouble("connection.quit.sound.volume"),
+                (float) getConfig().getDouble("connection.quit.sound.pitch")));
     }
     private String getQuitMessage(Player player) {
         return getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName()));

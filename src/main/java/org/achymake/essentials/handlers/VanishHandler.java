@@ -26,6 +26,11 @@ public class VanishHandler {
     public boolean isVanish(OfflinePlayer offlinePlayer) {
         return getUserdata(offlinePlayer).isVanished();
     }
+    public void hideVanished(Player player) {
+        if (!getVanished().isEmpty()) {
+            getVanished().forEach(target -> player.hidePlayer(getInstance(), target));
+        }
+    }
     public void toggleVanish(Player player) {
         setVanish(player, !isVanish(player));
     }

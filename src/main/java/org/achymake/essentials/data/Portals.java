@@ -242,7 +242,7 @@ public class Portals {
                     try {
                         config.load(file);
                     } catch (IOException | InvalidConfigurationException e) {
-                        throw new RuntimeException(e);
+                        getInstance().sendWarning(e.getMessage());
                     }
                 }
             }

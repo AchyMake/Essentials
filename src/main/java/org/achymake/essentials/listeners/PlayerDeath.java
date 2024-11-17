@@ -44,7 +44,7 @@ public class PlayerDeath implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = event.getEntity();
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
-            if (getConfig().getInt("deaths.drop-player-head.chance") > new Random().nextInt(100)) {
+            if (getConfig().getInt("deaths.drop-player-head.chance") >= new Random().nextInt(100) - 100) {
                 event.getDrops().add(getMaterials().getPlayerHead(player, 1));
             }
         }

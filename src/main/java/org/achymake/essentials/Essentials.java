@@ -6,7 +6,6 @@ import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -172,7 +171,9 @@ public final class Essentials extends JavaPlugin {
         new BlockPlace();
         new BlockReceiveGame();
         new BlockRedstone();
+        new BlockShearEntity();
         new BlockSpread();
+        new CrafterCraft();
         new CreatureSpawn();
         new EntityBlockForm();
         new EntityChangeBlock();
@@ -194,6 +195,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerGameModeChange();
         new PlayerHarvestBlock();
         new PlayerInteract();
+        new PlayerInteractAtEntity();
         new PlayerInteractEntity();
         new PlayerJoin();
         new PlayerLeashEntity();
@@ -368,6 +370,6 @@ public final class Essentials extends JavaPlugin {
         return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
-        return Bukkit.getOfflinePlayer(uuid);
+        return getServer().getOfflinePlayer(uuid);
     }
 }

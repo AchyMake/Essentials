@@ -27,16 +27,59 @@ public class BackCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                teleportBack(player);
+                var userdata = getUserdata(player);
+                var recent = userdata.getLocation("recent");
+                var delay = getInstance().getConfig().getInt("teleport.delay");
+                if (player.hasPermission("essentials.command.back.death")) {
+                    var death = userdata.getLocation("death");
+                    if (death != null) {
+                        var worldName = death.getWorld().getName().toLowerCase();
+                        if (player.hasPermission("essentials.command.back.world." + worldName)) {
+                            userdata.teleport(death, "death", delay);
+                        }
+                    } else if (recent != null) {
+                        var worldName = recent.getWorld().getName().toLowerCase();
+                        if (player.hasPermission("essentials.command.back.world." + worldName)) {
+                            userdata.teleport(recent, "recent", delay);
+                        }
+                    }
+                } else if (recent != null) {
+                    var worldName = recent.getWorld().getName().toLowerCase();
+                    if (player.hasPermission("essentials.command.back.world." + worldName)) {
+                        userdata.teleport(recent, "recent", delay);
+                    }
+                }
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.back.other")) {
                     var target = sender.getServer().getPlayerExact(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            teleportBack(target);
+                            var userdataTarget = getUserdata(target);
+                            var recent = userdataTarget.getLocation("recent");
+                            if (target.hasPermission("essentials.command.back.death")) {
+                                var death = userdataTarget.getLocation("death");
+                                if (death != null) {
+                                    userdataTarget.teleport(death, "death");
+                                } else if (recent != null) {
+                                    userdataTarget.teleport(recent, "recent");
+                                }
+                            } else if (recent != null) {
+                                userdataTarget.teleport(recent, "recent");
+                            }
                         } else if (!target.hasPermission("essentials.command.back.exempt")) {
-                            teleportBack(target);
+                            var userdataTarget = getUserdata(target);
+                            var recent = userdataTarget.getLocation("recent");
+                            if (target.hasPermission("essentials.command.back.death")) {
+                                var death = userdataTarget.getLocation("death");
+                                if (death != null) {
+                                    userdataTarget.teleport(death, "death");
+                                } else if (recent != null) {
+                                    userdataTarget.teleport(recent, "recent");
+                                }
+                            } else if (recent != null) {
+                                userdataTarget.teleport(recent, "recent");
+                            }
                         } else player.sendMessage(getMessage().get("commands.back.exempt"), target.getName());
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -46,7 +89,18 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = sender.getServer().getPlayerExact(args[0]);
                 if (target != null) {
-                    teleportBack(target);
+                    var userdataTarget = getUserdata(target);
+                    var recent = userdataTarget.getLocation("recent");
+                    if (target.hasPermission("essentials.command.back.death")) {
+                        var death = userdataTarget.getLocation("death");
+                        if (death != null) {
+                            userdataTarget.teleport(death, "death");
+                        } else if (recent != null) {
+                            userdataTarget.teleport(recent, "recent");
+                        }
+                    } else if (recent != null) {
+                        userdataTarget.teleport(recent, "recent");
+                    }
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -70,29 +124,5 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void teleportBack(Player player) {
-        var userdata = getUserdata(player);
-        var recent = userdata.getLocation("recent");
-        var delay = getInstance().getConfig().getInt("teleport.delay");
-        if (player.hasPermission("essentials.command.back.death")) {
-            var death = userdata.getLocation("death");
-            if (death != null) {
-                var worldName = death.getWorld().getName().toLowerCase();
-                if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                    userdata.teleport(death, "death", delay);
-                }
-            } else if (recent != null) {
-                var worldName = recent.getWorld().getName().toLowerCase();
-                if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                    userdata.teleport(recent, "recent", delay);
-                }
-            }
-        } else if (recent != null) {
-            var worldName = recent.getWorld().getName().toLowerCase();
-            if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                userdata.teleport(recent, "recent", delay);
-            }
-        }
     }
 }

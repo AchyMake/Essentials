@@ -389,6 +389,16 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             } else player.sendMessage(getMessage().get("events.teleport.has-task"));
         }
     }
+    public void teleport(Location location, String name) {
+        var player = getPlayer();
+        if (player != null) {
+            if (!location.getChunk().isLoaded()) {
+                location.getChunk().load();
+            }
+            getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
+            player.teleport(location);
+        }
+    }
     @Override
     public OfflinePlayer getOfflinePlayer() {
         return getOfflinePlayer;

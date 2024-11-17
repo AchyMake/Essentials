@@ -5,16 +5,11 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginManager;
 
 public class BlockPlace implements Listener {
@@ -42,22 +37,19 @@ public class BlockPlace implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         var player = event.getPlayer();
-        if (getUserdata(player).isDisabled()) {
-            event.setCancelled(true);
-        } else {
-            var block = event.getBlockPlaced();
-            if (block.getType().equals(getMaterials().get("spawner"))) {
-                getMaterials().updateSpawner(block, event.getItemInHand());
+        if (!getUserdata(player).isDisabled()) {
+            if (event.getBlockPlaced().getType().equals(getMaterials().get("spawner"))) {
+                getMaterials().updateSpawner(event.getBlockPlaced(), event.getItemInHand());
             }
             if (getConfig().getBoolean("notification.enable")) {
-                if (!getConfig().getStringList("notification.block-place").contains(block.getType().toString()))return;
-                var worldName = block.getWorld().getName();
-                var x = String.valueOf(block.getX());
-                var y = String.valueOf(block.getY());
-                var z = String.valueOf(block.getZ());
+                if (!getConfig().getStringList("notification.block-place").contains(event.getBlockPlaced().getType().toString()))return;
+                var worldName = event.getBlockPlaced().getWorld().getName();
+                var x = String.valueOf(event.getBlockPlaced().getX());
+                var y = String.valueOf(event.getBlockPlaced().getY());
+                var z = String.valueOf(event.getBlockPlaced().getZ());
                 getConfig().getStringList("notification.message").forEach(messages -> {
                     var addPlayer = messages.replaceAll("%player%", player.getName());
-                    var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(block.getType().toString()));
+                    var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(event.getBlockPlaced().getType().toString()));
                     var addWorldName = addMaterial.replaceAll("%world", worldName);
                     var addX = addWorldName.replaceAll("%x%", x);
                     var addY = addX.replaceAll("%y%", y);
@@ -65,6 +57,6 @@ public class BlockPlace implements Listener {
                     getMessage().sendAll(result, "essentials.event.block_place.notify");
                 });
             }
-        }
+        } else event.setCancelled(true);
     }
 }

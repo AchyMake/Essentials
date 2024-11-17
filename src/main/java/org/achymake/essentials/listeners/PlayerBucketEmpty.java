@@ -36,25 +36,22 @@ public class PlayerBucketEmpty implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         var player = event.getPlayer();
-        if (getUserdata(player).isDisabled()) {
-            event.setCancelled(true);
-        } else notifyBucketEmpty(player, event.getBlock(), event.getBucket());
-    }
-    private void notifyBucketEmpty(Player player, Block block, Material material) {
-        if (!getConfig().getBoolean("notification.enable"))return;
-        if (!getConfig().getStringList("notification.bucket-empty").contains(material.toString()))return;
-        var worldName = block.getWorld().getName();
-        var x = String.valueOf(block.getX());
-        var y = String.valueOf(block.getY());
-        var z = String.valueOf(block.getZ());
-        getConfig().getStringList("notification.message").forEach(messages -> {
-            var addPlayer = messages.replaceAll("%player%", player.getName());
-            var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(material.toString()));
-            var addWorldName = addMaterial.replaceAll("%world", worldName);
-            var addX = addWorldName.replaceAll("%x%", x);
-            var addY = addX.replaceAll("%y%", y);
-            var result = addY.replaceAll("%z%", z);
-            getMessage().sendAll(result, "essentials.event.bucket_empty.notify");
-        });
+        if (!getUserdata(player).isDisabled()) {
+            if (!getConfig().getBoolean("notification.enable"))return;
+            if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
+            var worldName = event.getBlock().getWorld().getName();
+            var x = String.valueOf(event.getBlock().getX());
+            var y = String.valueOf(event.getBlock().getY());
+            var z = String.valueOf(event.getBlock().getZ());
+            getConfig().getStringList("notification.message").forEach(messages -> {
+                var addPlayer = messages.replaceAll("%player%", player.getName());
+                var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(event.getBucket().toString()));
+                var addWorldName = addMaterial.replaceAll("%world", worldName);
+                var addX = addWorldName.replaceAll("%x%", x);
+                var addY = addX.replaceAll("%y%", y);
+                var result = addY.replaceAll("%z%", z);
+                getMessage().sendAll(result, "essentials.event.bucket_empty.notify");
+            });
+        } else event.setCancelled(true);
     }
 }
