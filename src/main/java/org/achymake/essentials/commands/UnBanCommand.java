@@ -27,7 +27,7 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                 var userdataOffline = getUserdata(offlinePlayer);
                 if (userdataOffline.exists()) {
                     if (userdataOffline.isBanned()) {
@@ -41,7 +41,7 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                 var userdataOffline = getUserdata(offlinePlayer);
                 if (userdataOffline.exists()) {
                     if (userdataOffline.isBanned()) {

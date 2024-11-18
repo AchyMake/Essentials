@@ -36,7 +36,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
-                    var target = sender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         var mode = args[0].toLowerCase();
                         if (target == player) {
@@ -54,7 +54,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                var target = sender.getServer().getPlayerExact(args[1]);
+                var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var mode = args[0].toLowerCase();
                     if (getUserdata(target).setGameMode(mode)) {

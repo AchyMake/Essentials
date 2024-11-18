@@ -41,7 +41,7 @@ public class HealCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.heal.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             target.setFoodLevel(20);
@@ -60,7 +60,7 @@ public class HealCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
                     target.setHealth(target.getMaxHealth());

@@ -37,7 +37,7 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.cartography.other")) {
-                    var target = player.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openCartographyTable(target) == null) {
@@ -55,7 +55,7 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openCartographyTable(target) == null) {
                         consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));

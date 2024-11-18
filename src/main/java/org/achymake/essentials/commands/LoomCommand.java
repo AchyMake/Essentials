@@ -37,7 +37,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.loom.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openLoom(target) == null) {
@@ -54,7 +54,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openLoom(target) == null) {
                         consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));

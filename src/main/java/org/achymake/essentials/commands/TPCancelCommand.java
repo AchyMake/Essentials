@@ -36,7 +36,7 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
             var userdata = getUserdata(player);
             if (args.length == 0) {
                 if (userdata.getTpaSent() != null) {
-                    var target = sender.getServer().getPlayer(userdata.getTpaSent().getUniqueId());
+                    var target = userdata.getTpaSent().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
                         var tpaTask = userdata.getTaskID("tpa");
@@ -49,7 +49,7 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                 } else if (userdata.getTpaHereSent() != null) {
-                    var target = sender.getServer().getPlayer(userdata.getTpaHereSent().getUniqueId());
+                    var target = userdata.getTpaHereSent().getPlayer();
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
                         var tpaHereTask = userdata.getTaskID("tpahere");

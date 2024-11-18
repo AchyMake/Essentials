@@ -34,65 +34,69 @@ public class TimeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("set")) {
-                    if (args[1].equalsIgnoreCase("morning")) {
+                var options = args[0];
+                var value = args[1];
+                if (options.equalsIgnoreCase("set")) {
+                    if (value.equalsIgnoreCase("morning")) {
                         getWorldHandler(player.getWorld()).setMorning();
                         player.sendMessage(getMessage().get("commands.time.set", player.getWorld().getName(), "Morning"));
-                    } else if (args[1].equalsIgnoreCase("day")) {
+                    } else if (value.equalsIgnoreCase("day")) {
                         getWorldHandler(player.getWorld()).setDay();
                         player.sendMessage(getMessage().get("commands.time.set", player.getWorld().getName(), "Day"));
-                    } else if (args[1].equalsIgnoreCase("noon")) {
+                    } else if (value.equalsIgnoreCase("noon")) {
                         getWorldHandler(player.getWorld()).setNoon();
                         player.sendMessage(getMessage().get("commands.time.set", player.getWorld().getName(), "Noon"));
-                    } else if (args[1].equalsIgnoreCase("night")) {
+                    } else if (value.equalsIgnoreCase("night")) {
                         getWorldHandler(player.getWorld()).setNight();
                         player.sendMessage(getMessage().get("commands.time.set", player.getWorld().getName(), "Night"));
-                    } else if (args[1].equalsIgnoreCase("midnight")) {
+                    } else if (value.equalsIgnoreCase("midnight")) {
                         getWorldHandler(player.getWorld()).setMidnight();
                         player.sendMessage(getMessage().get("commands.time.set", player.getWorld().getName(), "Midnight"));
-                    } else getWorldHandler(player.getWorld()).setTime(Long.parseLong(args[1]));
+                    } else getWorldHandler(player.getWorld()).setTime(Long.parseLong(value));
                     return true;
-                } else if (args[0].equalsIgnoreCase("add")) {
-                    getWorldHandler(player.getWorld()).addTime(Long.parseLong(args[1]));
-                    player.sendMessage(getMessage().get("commands.time.add", player.getWorld().getName(), args[1]));
+                } else if (options.equalsIgnoreCase("add")) {
+                    getWorldHandler(player.getWorld()).addTime(Long.parseLong(value));
+                    player.sendMessage(getMessage().get("commands.time.add", player.getWorld().getName(), value));
                     return true;
-                } else if (args[0].equalsIgnoreCase("remove")) {
-                    getWorldHandler(player.getWorld()).removeTime(Long.parseLong(args[1]));
-                    player.sendMessage(getMessage().get("commands.time.remove", player.getWorld().getName(), args[1]));
+                } else if (options.equalsIgnoreCase("remove")) {
+                    getWorldHandler(player.getWorld()).removeTime(Long.parseLong(value));
+                    player.sendMessage(getMessage().get("commands.time.remove", player.getWorld().getName(), value));
                     return true;
                 }
             } else if (args.length == 3) {
                 var world = getWorlds().get(args[2]);
                 if (world != null) {
                     var worldHandler = getWorldHandler(world);
-                    if (args[0].equalsIgnoreCase("set")) {
-                        if (args[1].equalsIgnoreCase("morning")) {
+                    var options = args[0];
+                    var value = args[1];
+                    if (options.equalsIgnoreCase("set")) {
+                        if (value.equalsIgnoreCase("morning")) {
                             worldHandler.setMorning();
                             player.sendMessage(getMessage().get("commands.time.set", worldHandler.getName(), "Morning"));
-                        } else if (args[1].equalsIgnoreCase("day")) {
+                        } else if (value.equalsIgnoreCase("day")) {
                             worldHandler.setDay();
                             player.sendMessage(getMessage().get("commands.time.set", worldHandler.getName(), "Day"));
-                        } else if (args[1].equalsIgnoreCase("noon")) {
+                        } else if (value.equalsIgnoreCase("noon")) {
                             worldHandler.setNoon();
                             player.sendMessage(getMessage().get("commands.time.set", worldHandler.getName(), "Noon"));
-                        } else if (args[1].equalsIgnoreCase("night")) {
+                        } else if (value.equalsIgnoreCase("night")) {
                             worldHandler.setNight();
                             player.sendMessage(getMessage().get("commands.time.set", worldHandler.getName(), "Night"));
-                        } else if (args[1].equalsIgnoreCase("midnight")) {
+                        } else if (value.equalsIgnoreCase("midnight")) {
                             worldHandler.setMidnight();
                             player.sendMessage(getMessage().get("commands.time.set", worldHandler.getName(), "Midnight"));
-                        } else worldHandler.setTime(Long.parseLong(args[1]));
+                        } else worldHandler.setTime(Long.parseLong(value));
                         return true;
-                    } else if (args[0].equalsIgnoreCase("add")) {
-                        worldHandler.addTime(Long.parseLong(args[1]));
-                        player.sendMessage(getMessage().get("commands.time.add", worldHandler.getName(), args[1]));
+                    } else if (options.equalsIgnoreCase("add")) {
+                        worldHandler.addTime(Long.parseLong(value));
+                        player.sendMessage(getMessage().get("commands.time.add", worldHandler.getName(), value));
                         return true;
-                    } else if (args[0].equalsIgnoreCase("remove")) {
-                        worldHandler.removeTime(Long.parseLong(args[1]));
-                        player.sendMessage(getMessage().get("commands.time.remove", worldHandler.getName(), args[1]));
+                    } else if (options.equalsIgnoreCase("remove")) {
+                        worldHandler.removeTime(Long.parseLong(value));
+                        player.sendMessage(getMessage().get("commands.time.remove", worldHandler.getName(), value));
                         return true;
                     }
-                } else player.sendMessage(getMessage().get("error.world.invalid", args[1]));
+                } else player.sendMessage(getMessage().get("error.world.invalid", args[2]));
             }
         }
         return false;

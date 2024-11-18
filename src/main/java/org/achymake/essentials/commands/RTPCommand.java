@@ -39,7 +39,7 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.rtp.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             getUserdata(target).randomTeleport();
@@ -55,7 +55,7 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     getUserdata(target).randomTeleport();
                     consoleCommandSender.sendMessage(getMessage().get("commands.rtp.sender", target.getName()));

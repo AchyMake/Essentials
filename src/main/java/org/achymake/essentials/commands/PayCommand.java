@@ -34,7 +34,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 2) {
-                var target = player.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (target != player) {
                         var amount = Double.parseDouble(args[1]);
@@ -48,7 +48,7 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("commands.pay.self"));
                 } else {
-                    var offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     if (getUserdata(offlinePlayer).exists()) {
                         var amount = Double.parseDouble(args[1]);
                         if (amount >= getEconomy().getMinimumPayment()) {

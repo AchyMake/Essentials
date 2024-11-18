@@ -33,9 +33,9 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
             if (args.length == 1) {
-                var target = player.getServer().getPlayerExact(args[0]);
+                var userdata = getUserdata(player);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (target != player) {
                         if (userdata.getTpaSent() == null) {

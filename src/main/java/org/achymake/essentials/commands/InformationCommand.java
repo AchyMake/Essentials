@@ -35,7 +35,7 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                 var userdataOffline = getUserdata(offlinePlayer);
                 if (userdataOffline.exists()) {
                     var simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");

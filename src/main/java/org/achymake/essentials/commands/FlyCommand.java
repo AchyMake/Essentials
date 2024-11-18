@@ -34,7 +34,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.fly.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             target.setAllowFlight(!target.getAllowFlight());
@@ -60,7 +60,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
         }
         if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     target.setAllowFlight(!target.getAllowFlight());
                     if (target.getAllowFlight()) {

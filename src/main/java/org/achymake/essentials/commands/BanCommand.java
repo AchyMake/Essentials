@@ -31,7 +31,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 3) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 var value = Integer.parseInt(args[1]);
                 var date = args[2];
                 if (value > 0) {
@@ -64,7 +64,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 target.kickPlayer(userdataTarget.getConfig().getString("settings.ban-reason"));
                             } else player.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                            var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                             var userdataOffline = getUserdata(offlinePlayer);
                             if (userdataOffline.exists()) {
                                 if (!userdataOffline.isBanned()) {
@@ -84,7 +84,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length > 3) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 var value = Integer.parseInt(args[1]);
                 var date = args[2];
                 if (value > 0) {
@@ -120,7 +120,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 } else player.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                             } else player.sendMessage(getMessage().get("commands.ban.exempt", target.getName()));
                         } else {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                            var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                             var userdataOffline = getUserdata(offlinePlayer);
                             if (userdataOffline.exists()) {
                                 if (!userdataOffline.isBanned()) {
@@ -143,7 +143,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 3) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 var value = Integer.parseInt(args[1]);
                 var date = args[2];
                 if (value > 0) {
@@ -163,7 +163,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 target.kickPlayer(userdataTarget.getBanReason());
                             } else consoleCommandSender.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                            var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                             var userdataOffline = getUserdata(offlinePlayer);
                             if (userdataOffline.exists()) {
                                 if (!userdataOffline.isBanned()) {
@@ -183,7 +183,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length > 3) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 var value = Integer.parseInt(args[1]);
                 var date = args[2];
                 if (value > 0) {
@@ -205,7 +205,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                                 target.kickPlayer(userdataTarget.getBanReason());
                             } else consoleCommandSender.sendMessage(getMessage().get("commands.ban.banned", target.getName()));
                         } else {
-                            var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                            var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                             var userdataOffline = getUserdata(offlinePlayer);
                             if (userdataOffline.exists()) {
                                 if (!userdataOffline.isBanned()) {

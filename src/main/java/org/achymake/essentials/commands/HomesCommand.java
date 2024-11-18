@@ -42,7 +42,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 var targetHome = args[2];
                 if (args[0].equalsIgnoreCase("delete")) {
                     if (player.hasPermission("essentials.command.homes.delete")) {
-                        var offlinePlayer = player.getServer().getOfflinePlayer(target);
+                        var offlinePlayer = getInstance().getOfflinePlayer(target);
                         var userdataOffline = getUserdata(offlinePlayer);
                         if (userdataOffline.exists()) {
                             if (userdataOffline.isHome(targetHome)) {
@@ -54,7 +54,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("teleport")) {
                     if (player.hasPermission("essentials.command.homes.teleport")) {
-                        var offlinePlayer = player.getServer().getOfflinePlayer(target);
+                        var offlinePlayer = getInstance().getOfflinePlayer(target);
                         var userdataOffline = getUserdata(offlinePlayer);
                         if (userdataOffline.exists()) {
                             if (targetHome.equalsIgnoreCase("bed")) {
@@ -119,7 +119,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 3) {
                 if (player.hasPermission("essentials.command.homes.teleport")) {
-                    var offlinePlayer = sender.getServer().getOfflinePlayer(args[1]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         commands.addAll(userdataOffline.getHomes());

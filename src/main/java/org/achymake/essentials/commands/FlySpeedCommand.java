@@ -37,7 +37,7 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.flyspeed.other")) {
                     var value = Float.parseFloat(args[0]);
-                    var target = sender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         if (target == player) {
                             getUserdata(player).setFlySpeed(value);

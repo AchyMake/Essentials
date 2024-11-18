@@ -44,9 +44,13 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         return true;
                     }
                 } else if (args[0].equalsIgnoreCase("withdraw")) {
-                    getEconomy().openBankWithdraw(player);
+                    if (player.hasPermission("essentials.command.bank.withdraw")) {
+                        getEconomy().openBankWithdraw(player);
+                    }
                 } else if (args[0].equalsIgnoreCase("deposit")) {
-                    getEconomy().openBankDeposit(player);
+                    if (player.hasPermission("essentials.command.bank.deposit")) {
+                        getEconomy().openBankDeposit(player);
+                    }
                 }
             } else if (args.length == 2) {
                 var userdata = getUserdata(player);
@@ -83,6 +87,15 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                     return true;
                 }
+            } else if (args.length == 2) {
+                var target = getInstance().getPlayer(args[1]);
+                if (target != null) {
+                    if (args[0].equalsIgnoreCase("withdraw")) {
+                        getEconomy().openBankWithdraw(target);
+                    } else if (args[0].equalsIgnoreCase("deposit")) {
+                        getEconomy().openBankDeposit(target);
+                    }
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
             }
         }
         return false;

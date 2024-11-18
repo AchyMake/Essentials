@@ -37,7 +37,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.spawn.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (getSpawn().getLocation() != null) {
                             if (!target.hasPermission("essentials.command.spawn.exempt")) {
@@ -50,7 +50,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getSpawn().getLocation() != null) {
                         getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));

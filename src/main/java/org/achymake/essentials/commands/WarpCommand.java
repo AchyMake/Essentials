@@ -51,15 +51,16 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
-                    var target = player.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         var warpName = args[0].toLowerCase();
                         var warp = getWarps().getLocation(warpName);
                         if (warp != null) {
                             if (target == player) {
-                                getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                                getUserdata(target).teleport(warp, warpName);
                             } else if (!target.hasPermission("essentials.command.warp.exempt")) {
-                                getUserdata(target).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                                getUserdata(target).teleport(warp, warpName);
+                                player.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                             } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
@@ -68,13 +69,14 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                var target = consoleCommandSender.getServer().getPlayerExact(args[1]);
+                var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var userdataTarget = getUserdata(target);
                     var warpName = args[0].toLowerCase();
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
                         userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                        consoleCommandSender.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
                 return true;
@@ -98,7 +100,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.warp.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
+                            if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }
                         }

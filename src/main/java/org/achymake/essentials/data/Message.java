@@ -121,8 +121,8 @@ public class Message {
         config.addDefault("commands.grindstone.exempt", "&cYou are not allowed to open grindstone for&f {0}");
         config.addDefault("commands.hat.success", "&6You are now wearing&f {0}");
         config.addDefault("commands.hat.occupied", "&6You are already wearing&f {0}");
-        config.addDefault("commands.hat.target-success", "{0}&6 is now wearing&f {1}");
-        config.addDefault("commands.hat.target-occupied", "{0}&c is already wearing&f {1}");
+        config.addDefault("commands.hat.target.success", "{0}&6 is now wearing&f {1}");
+        config.addDefault("commands.hat.target.occupied", "{0}&c is already wearing&f {1}");
         config.addDefault("commands.hat.exempt", "&cYou are not allowed to change hat for&f {0}");
         config.addDefault("commands.heal.cooldown", "&cYou have to wait&f {0}&c seconds");
         config.addDefault("commands.heal.success", "&6Your health has been satisfied");
@@ -295,6 +295,7 @@ public class Message {
         config.addDefault("commands.warp.title", "&6Warps:");
         config.addDefault("commands.warp.listed", "- {0}");
         config.addDefault("commands.warp.empty", "&cWarps are currently empty");
+        config.addDefault("commands.warp.sender", "&6You warped&f {0}&6 to&f {1}");
         config.addDefault("commands.warp.invalid", "{0}&c does not exists");
         config.addDefault("commands.warp.exempt", "&cYou are not allowed to warp&f {0}");
         config.addDefault("commands.whisper.target", "&7{0} > You&f: {1}");

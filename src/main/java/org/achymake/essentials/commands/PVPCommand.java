@@ -35,7 +35,7 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.pvp.other")) {
-                    var target = player.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         var userdataTarget = getUserdata(target);
                         if (target == player) {
@@ -58,7 +58,7 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                             }
                         } else player.sendMessage(getMessage().get("commands.pvp.exempt", target.getName()));
                     } else {
-                        var offlinePlayer = player.getServer().getOfflinePlayer(args[0]);
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                         var userdataOffline = getUserdata(offlinePlayer);
                         if (userdataOffline.exists()) {
                             userdataOffline.setBoolean("settings.pvp", !userdataOffline.isPVP());
@@ -72,7 +72,7 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var userTarget = getUserdata(target);
                     userTarget.setBoolean("settings.pvp", !userTarget.isPVP());
@@ -84,7 +84,7 @@ public class PVPCommand implements CommandExecutor, TabCompleter {
                         consoleCommandSender.sendMessage(getMessage().get("commands.pvp.sender", "Disable", target.getName()));
                     }
                 } else {
-                    var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setBoolean("settings.pvp", !userdataOffline.isPVP());

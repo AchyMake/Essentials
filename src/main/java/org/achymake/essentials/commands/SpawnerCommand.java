@@ -112,7 +112,7 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("give")) {
                     if (player.hasPermission("essentials.command.spawner.give")) {
-                        var target = player.getServer().getPlayerExact(args[1]);
+                        var target = getInstance().getPlayer(args[1]);
                         if (target != null) {
                             var entityType = args[2].toUpperCase();
                             int amount = Integer.parseInt(args[3]);
@@ -128,7 +128,7 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("give")) {
-                    var target = consoleCommandSender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         var entityType = args[2].toUpperCase();
                         int amount = Integer.parseInt(args[3]);
@@ -168,9 +168,9 @@ public class SpawnerCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("give")) {
                     if (player.hasPermission("essentials.command.spawner.give")) {
-                        getInstance().getOnlinePlayers().forEach(players -> {
-                            if (players.getName().startsWith(args[1])) {
-                                commands.add(players.getName());
+                        getInstance().getOnlinePlayers().forEach(target -> {
+                            if (target.getName().startsWith(args[1])) {
+                                commands.add(target.getName());
                             }
                         });
                     }

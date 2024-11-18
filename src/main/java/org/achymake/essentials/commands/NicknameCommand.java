@@ -39,7 +39,7 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.nickname.other")) {
-                    var target = sender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         if (!target.hasPermission("essentials.command.nickname.exempt")) {
                             getUserdata(target).setString("display-name", args[0]);

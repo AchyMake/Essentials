@@ -31,7 +31,7 @@ public class GMACommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             getUserdata(target).setGameMode("adventure");
@@ -46,7 +46,7 @@ public class GMACommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     getUserdata(target).setGameMode("adventure");
                     consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Adventure"));

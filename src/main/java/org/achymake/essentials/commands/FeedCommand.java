@@ -45,7 +45,7 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.feed.other")) {
-                    var target = sender.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (!target.hasPermission("essentials.command.feed.exempt")) {
                             target.setFoodLevel(20);
@@ -58,7 +58,7 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     target.setFoodLevel(20);
                     target.sendMessage(getMessage().get("commands.feed.success"));

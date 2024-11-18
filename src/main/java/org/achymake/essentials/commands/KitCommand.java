@@ -76,7 +76,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.kit.other")) {
-                    var target = sender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         if (!target.hasPermission("essentials.command.kit.exempt")) {
                             var kitName = args[0];
@@ -100,7 +100,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.kit.empty"));
                 return true;
             } else if (args.length == 2) {
-                var target = sender.getServer().getPlayerExact(args[1]);
+                var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var kitName = args[0];
                     if (getKits().isListed(kitName)) {

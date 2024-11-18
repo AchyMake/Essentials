@@ -30,7 +30,7 @@ public class TPCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (!target.hasPermission("essentials.command.tp.exempt")) {
                         getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));

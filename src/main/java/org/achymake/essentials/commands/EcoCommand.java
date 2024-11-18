@@ -31,7 +31,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 2) {
-                var offlinePlayer = player.getServer().getOfflinePlayer(args[1]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
@@ -41,7 +41,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else if (args.length == 3) {
-                var offlinePlayer = player.getServer().getOfflinePlayer(args[1]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 var value = Double.parseDouble(args[2]);
                 if (args[0].equalsIgnoreCase("add")) {
                     var userdataOffline = getUserdata(offlinePlayer);
@@ -70,7 +70,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                var offlinePlayer = sender.getServer().getOfflinePlayer(args[1]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
@@ -80,7 +80,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else if (args.length == 3) {
-                var offlinePlayer = sender.getServer().getOfflinePlayer(args[1]);
+                var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 var value = Double.parseDouble(args[2]);
                 if (args[0].equalsIgnoreCase("add")) {
                     var userdataOffline = getUserdata(offlinePlayer);

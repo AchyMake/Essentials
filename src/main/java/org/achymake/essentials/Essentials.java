@@ -369,7 +369,13 @@ public final class Essentials extends JavaPlugin {
     public boolean isBukkit() {
         return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
+    public Player getPlayer(String username) {
+        return getServer().getPlayerExact(username);
+    }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
         return getServer().getOfflinePlayer(uuid);
+    }
+    public OfflinePlayer getOfflinePlayer(String username) {
+        return getServer().getOfflinePlayer(username);
     }
 }

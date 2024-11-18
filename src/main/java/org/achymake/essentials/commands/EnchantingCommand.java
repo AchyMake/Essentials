@@ -35,7 +35,7 @@ public class EnchantingCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.enchanting.other")) {
-                    var target = player.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             getInventoryHandler().openEnchanting(target);
@@ -51,7 +51,7 @@ public class EnchantingCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     getInventoryHandler().openEnchanting(target);
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));

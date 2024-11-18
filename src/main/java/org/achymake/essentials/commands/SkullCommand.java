@@ -37,7 +37,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("player")) {
-                    var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                     getMaterialHandler().giveItemStack(player, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
                     player.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
                     return true;
@@ -50,10 +50,10 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
             } else if (args.length == 3) {
-                var target = getInstance().getServer().getPlayerExact(args[2]);
+                var target = getInstance().getPlayer(args[2]);
                 if (target != null) {
                     if (args[0].equalsIgnoreCase("player")) {
-                        var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         getMaterialHandler().giveItemStack(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
                         target.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
                         player.sendMessage(getMessage().get("commands.skull.sender", offlinePlayer.getName()));
@@ -71,10 +71,10 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 3) {
-                var target = getInstance().getServer().getPlayerExact(args[2]);
+                var target = getInstance().getPlayer(args[2]);
                 if (target != null) {
                     if (args[0].equalsIgnoreCase("player")) {
-                        var offlinePlayer = Bukkit.getOfflinePlayer(args[1]);
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         getMaterialHandler().giveItemStack(target, getMaterialHandler().getPlayerHead(offlinePlayer, 1));
                         target.sendMessage(getMessage().get("commands.skull.received", offlinePlayer.getName()));
                         consoleCommandSender.sendMessage(getMessage().get("commands.skull.sender", offlinePlayer.getName()));

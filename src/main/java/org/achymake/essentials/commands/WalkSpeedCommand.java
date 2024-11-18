@@ -36,7 +36,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.walkspeed.other")) {
-                    var target = sender.getServer().getPlayerExact(args[1]);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         var value = Float.parseFloat(args[0]);
                         if (target == player) {
@@ -52,7 +52,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                var target = sender.getServer().getPlayerExact(args[1]);
+                var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var value = Float.parseFloat(args[0]);
                     getUserdata(target).setWalkSpeed(value);
@@ -75,7 +75,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.walkspeed.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
+                            if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }
                         }

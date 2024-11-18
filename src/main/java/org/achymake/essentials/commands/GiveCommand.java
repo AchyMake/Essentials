@@ -32,7 +32,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 2) {
-                var target = player.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var amount = 1;
                     var itemStack = getMaterials().getItemStack(args[1], amount);
@@ -43,7 +43,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 3) {
-                var target = player.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var amount = Integer.parseInt(args[2]);
                     var itemStack = getMaterials().getItemStack(args[1], amount);
@@ -56,7 +56,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
-                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var amount = 1;
                     var itemStack = getMaterials().getItemStack(args[1], amount);
@@ -67,7 +67,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 3) {
-                var target = consoleCommandSender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var amount = Integer.parseInt(args[2]);
                     var itemStack = getMaterials().getItemStack(args[1], amount);

@@ -35,7 +35,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    var target = player.getServer().getPlayerExact(args[0]);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             getInventoryHandler().openWorkbench(target);
@@ -50,7 +50,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     getInventoryHandler().openWorkbench(target);
                     consoleCommandSender.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));

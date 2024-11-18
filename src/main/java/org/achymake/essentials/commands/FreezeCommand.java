@@ -27,7 +27,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var target = player.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var userdataTarget = getUserdata(target);
                     if (target == player) {
@@ -42,7 +42,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.freeze.exempt", target.getName()));
                 } else {
-                    var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
@@ -55,7 +55,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = sender.getServer().getPlayerExact(args[0]);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var userdataTarget = getUserdata(target);
                     userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
@@ -63,7 +63,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
                         consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                 } else {
-                    var offlinePlayer = sender.getServer().getOfflinePlayer(args[0]);
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     var userdataOffline = getUserdata(offlinePlayer);
                     if (userdataOffline.exists()) {
                         userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
