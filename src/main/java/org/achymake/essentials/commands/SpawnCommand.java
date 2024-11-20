@@ -39,11 +39,12 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.spawn.other")) {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
-                        if (getSpawn().getLocation() != null) {
-                            if (!target.hasPermission("essentials.command.spawn.exempt")) {
-                                getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
-                            } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
+                        var spawn = getSpawn().getLocation();
+                        if (!target.hasPermission("essentials.command.spawn.exempt")) {
+                            if (spawn != null) {
+                                getUserdata(target).teleport(spawn, "spawn");
+                            } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
+                        } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
                 }
