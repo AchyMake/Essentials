@@ -49,8 +49,10 @@ public class PlayerMove implements Listener {
         } else event.setCancelled(true);
     }
     private boolean hasMoved(Location from, Location to) {
-        return from.getX() != to.getX() ||
-                from.getY() != to.getY() ||
-                from.getZ() != to.getZ();
+        if (from.getX() != to.getX()) {
+            return true;
+        } else if (from.getY() != to.getY()) {
+            return true;
+        } else return from.getZ() != to.getZ();
     }
 }
