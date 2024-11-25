@@ -195,7 +195,6 @@ public final class Essentials extends JavaPlugin {
         new PlayerGameModeChange();
         new PlayerHarvestBlock();
         new PlayerInteract();
-        new PlayerInteractAtEntity();
         new PlayerInteractEntity();
         new PlayerJoin();
         new PlayerLeashEntity();
@@ -216,6 +215,7 @@ public final class Essentials extends JavaPlugin {
         new ProjectileLaunch();
         new ServerLoad();
         new SignChange();
+        new VehicleCreate();
         new WorldLoad();
     }
     public void reload() {
