@@ -19,38 +19,40 @@ public class ProjectileHandler {
             @Override
             public void run() {
                 if (projectile != null) {
-                    projectile.remove();
+                    remove(projectile);
                 }
             }
         }, timer * 20L).getTaskId();
         getProjectiles().put(projectile, taskID);
     }
     public void remove(Projectile projectile) {
-        if (getProjectiles().containsKey(projectile)) {
-            var taskID = getProjectiles().get(projectile);
+        if (projectiles.containsKey(projectile)) {
+            var taskID = projectiles.get(projectile);
             if (getScheduler().isQueued(taskID)) {
                 getScheduler().cancel(taskID);
             }
-            getProjectiles().remove(projectile);
+            projectiles.remove(projectile);
             projectile.remove();
         }
     }
     public void cancel(Projectile projectile) {
-        if (getProjectiles().containsKey(projectile)) {
-            var taskID = getProjectiles().get(projectile);
+        if (projectiles.containsKey(projectile)) {
+            var taskID = projectiles.get(projectile);
             if (getScheduler().isQueued(taskID)) {
                 getScheduler().cancel(taskID);
             }
-            getProjectiles().remove(projectile);
+            projectiles.remove(projectile);
         }
     }
     public void disable() {
-        if (!getProjectiles().isEmpty()) {
-            getProjectiles().forEach((projectile, taskID) -> {
+        if (!projectiles.isEmpty()) {
+            projectiles.forEach((projectile, taskID) -> {
+                if (projectile != null) {
+                    projectiles.remove(projectile);
+                }
                 if (getScheduler().isQueued(taskID)) {
                     getScheduler().cancel(taskID);
                 }
-                getProjectiles().remove(projectile);
             });
         }
     }
