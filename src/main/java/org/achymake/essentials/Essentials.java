@@ -99,6 +99,7 @@ public final class Essentials extends JavaPlugin {
         new EnderChestCommand();
         new EntityCommand();
         new EssentialsCommand();
+        new ExpCommand();
         new FeedCommand();
         new FlyCommand();
         new FlySpeedCommand();

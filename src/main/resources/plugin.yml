@@ -95,6 +95,11 @@ commands:
     usage: /help
     aliases:
       - ess
+  exp:
+    description: exp command
+    permission: essentials.command.exp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   feed:
     description: satisfy hunger by command
     permission: essentials.command.feed
@@ -503,6 +508,9 @@ permissions:
     default: op
   essentials.command.essentials:
     description: essentials main command
+    default: op
+  essentials.command.exp:
+    description: exp command
     default: op
   essentials.command.feed:
     description: satisfy hunger by command
