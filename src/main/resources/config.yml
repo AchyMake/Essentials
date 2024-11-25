@@ -117,7 +117,7 @@ levels:
   level-up:
     particle:
       enable: true
-      type: TOTEM
+      type: SOUL
       offsetX: 0.3
       offsetY: 0.7
       offsetZ: 0.3
