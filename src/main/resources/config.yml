@@ -84,11 +84,6 @@ teleport:
   delay: 3
   cancel-on-move: true
   cancel-on-damage: true
-crops:
-  disable-tramping-farmland: true
-eggs:
-  disable-tramping-turtle-egg: true
-  disable-tramping-sniffer-egg: true
 fire:
   disable-fire-spread: true
   disable-lava-fire-spread: true

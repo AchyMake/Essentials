@@ -161,9 +161,12 @@ public final class Essentials extends JavaPlugin {
     }
     private void events() {
         new AsyncPlayerChat();
+        new BellRing();
         new BlockBreak();
+        new BlockDamage();
         new BlockDispense();
         new BlockDispenseArmor();
+        new BlockDispenseLoot();
         new BlockFertilize();
         new BlockIgnite();
         new BlockPistonExtend();
@@ -209,6 +212,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerShearBlock();
         new PlayerShearEntity();
         new PlayerSpawnLocation();
+        new PlayerTakeLecternBook();
         new PlayerTeleport();
         new PlayerToggleFlight();
         new PlayerToggleSneak();

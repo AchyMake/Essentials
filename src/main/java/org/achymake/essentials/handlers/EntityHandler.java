@@ -181,6 +181,7 @@ public class EntityHandler {
         new PIGLIN().reload();
         new PIGLIN_BRUTE().reload();
         new PILLAGER().reload();
+        new PLAYER().reload();
         new POLAR_BEAR().reload();
         new POTION().reload();
         new PUFFERFISH().reload();

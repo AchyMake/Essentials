@@ -120,10 +120,8 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 for (var entityType : EntityType.values()) {
                     var entityName = entityType.name().toLowerCase();
-                    if (!entityName.equalsIgnoreCase("player")) {
-                        if (entityName.startsWith(args[0])) {
-                            commands.add(entityName);
-                        }
+                    if (entityName.startsWith(args[0])) {
+                        commands.add(entityName);
                     }
                 }
             }

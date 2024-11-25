@@ -62,10 +62,12 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case Player player -> {
-                var userdata = getUserdata(player);
-                if (userdata.isDisabled()) {
+                if (getEntityHandler().disableDamage(player.getType(), entity.getType())) {
+                    event.setCancelled(true);
+                } else if (getUserdata(player).isDisabled()) {
                     event.setCancelled(true);
                 } else if (entity instanceof Player target) {
+                    var userdata = getUserdata(player);
                     if (!target.getWorld().getPVP())return;
                     var userdataTarget = getUserdata(target);
                     if (!userdata.isPVP()) {
