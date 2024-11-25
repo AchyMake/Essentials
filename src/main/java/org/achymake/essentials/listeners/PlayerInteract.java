@@ -42,21 +42,25 @@ public class PlayerInteract implements Listener {
         var player = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getHand() != EquipmentSlot.HAND)return;
-            if (getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
-                event.setCancelled(true);
-            } else if (getUserdata(player).isDisabled()) {
-                event.setCancelled(true);
-            } else if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
-                event.setCancelled(true);
-                getPortals().setSecondary(player.getInventory().getItemInMainHand(), event.getClickedBlock());
-                player.sendMessage(getMessage().get("events.portal.secondary"));
-            }
+            if (!getEntityHandler().disableBlockChange(player.getType())) {
+                if (getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
+                    event.setCancelled(true);
+                } else if (getUserdata(player).isDisabled()) {
+                    event.setCancelled(true);
+                } else if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
+                    event.setCancelled(true);
+                    getPortals().setSecondary(player.getInventory().getItemInMainHand(), event.getClickedBlock());
+                    player.sendMessage(getMessage().get("events.portal.secondary"));
+                }
+            } else event.setCancelled(true);
         } else if (event.getAction().equals(Action.PHYSICAL)) {
-            if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
-                event.setCancelled(true);
-            } else if (getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
-                event.setCancelled(true);
-            }
+            if (!getEntityHandler().disableBlockDamage(player.getType())) {
+                if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
+                    event.setCancelled(true);
+                } else if (getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
+                    event.setCancelled(true);
+                }
+            } else event.setCancelled(true);
         }
     }
 }

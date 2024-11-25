@@ -28,10 +28,11 @@ public class BlockDamage implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDamage(BlockDamageEvent event) {
-        if (getEntityHandler().disableBlockDamage(event.getPlayer().getType())) {
-            event.setCancelled(true);
-        } else if (getUserdata(event.getPlayer()).isDisabled()) {
-            event.setCancelled(true);
-        }
+        if (!getEntityHandler().disableBlockDamage(event.getPlayer().getType())) {
+            if (!getEntityHandler().disableBlockChange(event.getPlayer().getType())) {
+                if (!getUserdata(event.getPlayer()).isDisabled())return;
+                event.setCancelled(true);
+            } else event.setCancelled(true);
+        } else event.setCancelled(true);
     }
 }
