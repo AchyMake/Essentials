@@ -209,7 +209,6 @@ public final class Essentials extends JavaPlugin {
         new PlayerPortal();
         new PlayerQuit();
         new PlayerRespawn();
-        new PlayerShearBlock();
         new PlayerShearEntity();
         new PlayerSpawnLocation();
         new PlayerTakeLecternBook();
@@ -223,6 +222,9 @@ public final class Essentials extends JavaPlugin {
         new SignChange();
         new VehicleCreate();
         new WorldLoad();
+        if (!isBukkit()) {
+            new PlayerShearBlock();
+        }
     }
     public void reload() {
         var file = new File(getDataFolder(), "config.yml");
