@@ -20,7 +20,7 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
         return Essentials.getInstance();
     }
     private Entities getEntities() {
-        return getInstance().getEntities();
+        return getInstance().getEntityHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();

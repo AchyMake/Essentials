@@ -21,7 +21,6 @@ import java.util.*;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
-    private Entities entities;
     private Jail jail;
     private Kits kits;
     private Message message;
@@ -34,6 +33,7 @@ public final class Essentials extends JavaPlugin {
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
     private EconomyHandler economyHandler;
+    private EntityHandler entityHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
     private ProjectileHandler projectileHandler;
@@ -45,7 +45,6 @@ public final class Essentials extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        entities = new Entities();
         jail = new Jail();
         kits = new Kits();
         message = new Message();
@@ -58,6 +57,7 @@ public final class Essentials extends JavaPlugin {
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
         economyHandler = new EconomyHandler();
+        entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
         projectileHandler = new ProjectileHandler();
@@ -184,6 +184,9 @@ public final class Essentials extends JavaPlugin {
         new EntityMount();
         new EntityTarget();
         new EntityTargetLivingEntity();
+        new HangingBreak();
+        new HangingBreakByEntity();
+        new HangingPlace();
         new InventoryClick();
         new InventoryClose();
         new NotePlay();
@@ -239,7 +242,7 @@ public final class Essentials extends JavaPlugin {
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
             getServer().setMotd(line1 + "\n" + line2);
         }
-        getEntities().reload();
+        getEntityHandler().reload();
         getJail().reload();
         getKits().reload();
         getMessage().reload();
@@ -342,8 +345,8 @@ public final class Essentials extends JavaPlugin {
     public Jail getJail() {
         return jail;
     }
-    public Entities getEntities() {
-        return entities;
+    public EntityHandler getEntityHandler() {
+        return entityHandler;
     }
     public static Essentials getInstance() {
         return instance;

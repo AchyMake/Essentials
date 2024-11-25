@@ -1,4 +1,4 @@
-package org.achymake.essentials.data;
+package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
@@ -11,7 +11,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import java.io.File;
 import java.io.IOException;
 
-public class Entities {
+public class EntityHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
@@ -76,6 +76,9 @@ public class Entities {
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
         }
+    }
+    public EntityType getType(String entityTypeString) {
+        return EntityType.valueOf(entityTypeString.toUpperCase());
     }
     public void reload() {
         new ACACIA_BOAT().reload();

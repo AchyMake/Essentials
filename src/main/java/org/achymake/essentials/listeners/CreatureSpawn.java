@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,8 +16,8 @@ public class CreatureSpawn implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -28,12 +28,12 @@ public class CreatureSpawn implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof Player)return;
-        if (getEntities().disabledSpawnReason(event.getEntityType(), event.getSpawnReason())) {
+        if (getEntityHandler().disabledSpawnReason(event.getEntityType(), event.getSpawnReason())) {
             event.setCancelled(true);
-        } else if (getEntities().disableSpawn(event.getEntityType())) {
+        } else if (getEntityHandler().disableSpawn(event.getEntityType())) {
             event.setCancelled(true);
         } else {
-            var chunkLimit = getEntities().chunkLimit(event.getEntityType());
+            var chunkLimit = getEntityHandler().chunkLimit(event.getEntityType());
             if (chunkLimit > 0) {
                 var chunk = event.getLocation().getChunk();
                 var listed = new ArrayList<Entity>();

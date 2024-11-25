@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.ProjectileHandler;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -15,8 +15,8 @@ public class ProjectileHit implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private ProjectileHandler getProjectileHandler() {
         return getInstance().getProjectileHandler();
@@ -30,7 +30,7 @@ public class ProjectileHit implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onProjectileHit(ProjectileHitEvent event) {
         if (event.getHitEntity() != null) {
-            if (getEntities().disableDamage(event.getEntityType(), event.getHitEntity().getType())) {
+            if (getEntityHandler().disableDamage(event.getEntityType(), event.getHitEntity().getType())) {
                 event.setCancelled(true);
             } else getProjectileHandler().cancel(event.getEntity());
         } else if (event.getHitBlock() != null) {

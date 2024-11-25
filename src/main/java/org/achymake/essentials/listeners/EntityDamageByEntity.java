@@ -1,9 +1,9 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
@@ -20,11 +20,11 @@ public class EntityDamageByEntity implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
+    }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
-    }
-    private Entities getEntities() {
-        return getInstance().getEntities();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -41,7 +41,7 @@ public class EntityDamageByEntity implements Listener {
         var damager = event.getDamager();
         switch (damager) {
             case Arrow arrow -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (arrow.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -78,7 +78,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case Snowball snowball -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (snowball.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -99,7 +99,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case SpectralArrow spectralArrow -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (spectralArrow.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -120,7 +120,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case ThrownPotion thrownPotion -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (thrownPotion.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -141,7 +141,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case Trident trident -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (trident.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -162,7 +162,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             case WindCharge windCharge -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (windCharge.getShooter() instanceof Player player) {
                     var userdata = getUserdata(player);
@@ -183,7 +183,7 @@ public class EntityDamageByEntity implements Listener {
                 }
             }
             default -> {
-                if (getEntities().disableDamage(damager.getType(), entity.getType())) {
+                if (getEntityHandler().disableDamage(damager.getType(), entity.getType())) {
                     event.setCancelled(true);
                 } else if (entity instanceof Player player) {
                     disableTeleport(player);
