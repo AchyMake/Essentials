@@ -23,7 +23,7 @@ public class ServerLoad implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onServerLoad(ServerLoadEvent event) {
-        if (event.getType().equals(ServerLoadEvent.LoadType.RELOAD))return;
+        if (!event.getType().equals(ServerLoadEvent.LoadType.STARTUP))return;
         getWorlds().setup();
     }
 }
