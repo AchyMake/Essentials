@@ -4,8 +4,9 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.EntityHandler;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,8 +19,11 @@ public class PlayerInteract implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler() {
-        return getInstance().getEntityHandler();
+    private FileConfiguration getConfig() {
+        return getInstance().getConfig();
+    }
+    private Entities getEntities() {
+        return getInstance().getEntities();
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
@@ -42,19 +46,24 @@ public class PlayerInteract implements Listener {
         var player = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getHand() != EquipmentSlot.HAND)return;
-            if (!getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
-                if (!getUserdata(player).isDisabled()) {
-                    if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
-                        event.setCancelled(true);
-                        getPortals().setSecondary(player.getInventory().getItemInMainHand(), event.getClickedBlock());
-                        player.sendMessage(getMessage().get("events.portal.secondary"));
-                    }
-                } else event.setCancelled(true);
+            if (!getUserdata(player).isDisabled()) {
+                if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
+                    event.setCancelled(true);
+                    getPortals().setSecondary(player.getInventory().getItemInMainHand(), event.getClickedBlock());
+                    player.sendMessage(getMessage().get("events.portal.secondary"));
+                }
             } else event.setCancelled(true);
         } else if (event.getAction().equals(Action.PHYSICAL)) {
-            if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
+            if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("farmland")) {
+                if (!getConfig().getBoolean("crops.disable-tramping-farmland"))return;
                 event.setCancelled(true);
-            } else if (getEntityHandler().disableBlockInteract(player.getType(), event.getClickedBlock().getType())) {
+            } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("turtle_egg")) {
+                if (!getConfig().getBoolean("eggs.disable-tramping-turtle-egg"))return;
+                event.setCancelled(true);
+            } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("sniffer_egg")) {
+                if (!getConfig().getBoolean("eggs.disable-tramping-sniffer-egg"))return;
+                event.setCancelled(true);
+            } else if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
                 event.setCancelled(true);
             }
         }

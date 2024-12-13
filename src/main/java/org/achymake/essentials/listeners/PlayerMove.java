@@ -34,25 +34,20 @@ public class PlayerMove implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() != null) {
-            var from = event.getFrom();
-            var to = event.getTo();
-            if (!hasMoved(from, to))return;
-            var player = event.getPlayer();
-            var userdata = getUserdata(player);
+            if (!hasMoved(event.getFrom(), event.getTo()))return;
+            var userdata = getUserdata(event.getPlayer());
             if (userdata.isFrozen()) {
                 event.setCancelled(true);
             } else if (userdata.hasTaskID("teleport")) {
                 if (!getConfig().getBoolean("teleport.cancel-on-move"))return;
-                userdata.disableTask("teleport");
-                player.sendMessage(getMessage().get("events.move"));
+                userdata.removeTask("teleport");
+                event.getPlayer().sendMessage(getMessage().get("events.move"));
             }
         } else event.setCancelled(true);
     }
     private boolean hasMoved(Location from, Location to) {
-        if (from.getX() != to.getX()) {
-            return true;
-        } else if (from.getY() != to.getY()) {
-            return true;
-        } else return from.getZ() != to.getZ();
+        return from.getX() != to.getX() ||
+                from.getY() != to.getY() ||
+                from.getZ() != to.getZ();
     }
 }

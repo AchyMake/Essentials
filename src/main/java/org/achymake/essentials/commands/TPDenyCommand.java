@@ -44,7 +44,7 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
                             getScheduler().cancel(tpaTask);
                             userdata.setString("tpa.from", null);
                             userdataTarget.setString("tpa.sent", null);
-                            userdataTarget.disableTask("tpa");
+                            userdataTarget.removeTask("tpa");
                             target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
                         }
@@ -58,7 +58,7 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
                             getScheduler().cancel(tpaHereTask);
                             userdata.setString("tpahere.from", null);
                             userdataTarget.setString("tpahere.sent", null);
-                            userdataTarget.disableTask("tpahere");
+                            userdataTarget.removeTask("tpahere");
                             target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
                         }

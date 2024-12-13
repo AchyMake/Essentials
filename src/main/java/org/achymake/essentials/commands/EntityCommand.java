@@ -2,7 +2,7 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.handlers.EntityHandler;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,8 +19,8 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler() {
-        return getInstance().getEntityHandler();
+    private Entities getEntityHandler() {
+        return getInstance().getEntities();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -36,77 +36,85 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "hostile", value);
+                    getEntityHandler().setBoolean(entityType, "settings.hostile", value);
                     player.sendMessage(getMessage().get("commands.entity.hostile", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("chunk-limit")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var limit = Integer.parseInt(args[2]);
-                    getEntityHandler().setInt(entityType, "chunk-limit", limit);
+                    getEntityHandler().setInt(entityType, "settings.chunk-limit", limit);
                     player.sendMessage(getMessage().get("commands.entity.chunk-limit", entityName, String.valueOf(limit)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-spawn")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "disable-spawn", value);
+                    getEntityHandler().setBoolean(entityType, "settings.disable-spawn", value);
                     player.sendMessage(getMessage().get("commands.entity.disable-spawn", entityName, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-block-form")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "disable-block-form", value);
+                    getEntityHandler().setBoolean(entityType, "settings.disable-block-form", value);
                     player.sendMessage(getMessage().get("commands.entity.disable-block-form", entityName, String.valueOf(value)));
                     return true;
-                } else if (args[1].equalsIgnoreCase("disable-block-damage")) {
+                } else if (args[1].equalsIgnoreCase("disable-explode")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "disable-block-damage", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-block-damage", entityName, String.valueOf(value)));
+                    getEntityHandler().setBoolean(entityType, "settings.disable-explode", value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-explode", entityName, String.valueOf(value)));
                     return true;
-                } else if (args[1].equalsIgnoreCase("disable-block-change")) {
+                } else if (args[1].equalsIgnoreCase("disable-change-block")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "disable-block-change", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-block-change", entityName, String.valueOf(value)));
+                    getEntityHandler().setBoolean(entityType, "settings.disable-change-block", value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-change-block", entityName, String.valueOf(value)));
                     return true;
                 }
             } else if (args.length == 4) {
-                if (args[1].equalsIgnoreCase("disable-block-interact")) {
+                if (args[1].equalsIgnoreCase("disable-interact")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var blockType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "disable-block-interact." + blockType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-block-interact", entityName, blockType, String.valueOf(value)));
+                    getEntityHandler().setBoolean(entityType, "settings.disable-interact." + blockType, value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-interact", entityName, blockType, String.valueOf(value)));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-target")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "disable-target." + targetType, value);
+                    getEntityHandler().setBoolean(entityType, "settings.disable-target." + targetType, value);
                     player.sendMessage(getMessage().get("commands.entity.disable-target", entityName, targetType, String.valueOf(value)));
                     return true;
-                } else if (args[1].equalsIgnoreCase("disable-damage")) {
+                } else if (args[1].equalsIgnoreCase("disable-entity-damage")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "disable-damage." + targetType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-damage", entityName, targetType, String.valueOf(value)));
+                    getEntityHandler().setBoolean(entityType, "settings.disable-entity-damage." + targetType, value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-entity-damage", entityName, targetType, String.valueOf(value)));
                     return true;
-                } else if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
+                } else if (args[1].equalsIgnoreCase("disable-hanging-break")) {
+                    var entityType = getEntityHandler().getType(args[0]);
+                    var entityName = getMessage().toTitleCase(entityType.toString());
+                    var targetType = args[2].toUpperCase();
+                    var value = Boolean.parseBoolean(args[3]);
+                    getEntityHandler().setBoolean(entityType, "settings.disable-hanging-break." + targetType, value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-hanging-break", entityName, targetType, String.valueOf(value)));
+                    return true;
+                } else if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var spawnReason = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "disabled-spawn-reason." + spawnReason, value);
-                    player.sendMessage(getMessage().get("commands.entity.disabled-spawn-reason", entityName, spawnReason, String.valueOf(value)));
+                    getEntityHandler().setBoolean(entityType, "settings.disable-spawn-reason." + spawnReason, value);
+                    player.sendMessage(getMessage().get("commands.entity.disable-spawn-reason", entityName, spawnReason, String.valueOf(value)));
                     return true;
                 }
             }
@@ -116,68 +124,51 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         var commands = new ArrayList<String>();
-        if (sender instanceof Player) {
+        if (sender instanceof Player player) {
             if (args.length == 1) {
                 for (var entityType : EntityType.values()) {
-                    var entityName = entityType.name().toLowerCase();
-                    if (entityName.startsWith(args[0])) {
-                        commands.add(entityName);
+                    if (entityType != player.getType()) {
+                        var entityName = entityType.name().toLowerCase();
+                        if (entityName.startsWith(args[0])) {
+                            commands.add(entityName);
+                        }
                     }
                 }
-            }
-            if (args.length == 2) {
+            } else if (args.length == 2) {
                 var entityType = getEntityHandler().getType(args[0]);
                 if (getEntityHandler().exists(entityType)) {
-                    commands.add("hostile");
-                    commands.add("chunk-limit");
-                    commands.add("disable-spawn");
-                    commands.add("disable-block-form");
-                    commands.add("disable-block-damage");
-                    commands.add("disable-block-change");
-                    commands.add("disable-block-interact");
-                    commands.add("disable-target");
-                    commands.add("disable-damage");
-                    commands.add("disabled-spawn-reason");
+                    commands.addAll(getEntityHandler().getConfig(entityType).getConfigurationSection("settings").getKeys(false));
                 }
-            }
-            if (args.length == 3) {
+            } else if (args.length == 3) {
                 var entityType = getEntityHandler().getType(args[0]);
                 if (getEntityHandler().exists(entityType)) {
                     if (args[1].equalsIgnoreCase("hostile")) {
                         commands.add(String.valueOf(getEntityHandler().isHostile(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("chunk-limit")) {
+                    } else if (args[1].equalsIgnoreCase("chunk-limit")) {
                         commands.add(String.valueOf(getEntityHandler().chunkLimit(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-spawn")) {
-                        commands.add(String.valueOf(getEntityHandler().disableSpawn(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-block-form")) {
-                        commands.add(String.valueOf(getEntityHandler().disableBlockForm(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-block-damage")) {
-                        commands.add(String.valueOf(getEntityHandler().disableBlockDamage(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-block-change")) {
-                        commands.add(String.valueOf(getEntityHandler().disableBlockChange(entityType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-block-interact")) {
+                    } else if (args[1].equalsIgnoreCase("disable-spawn")) {
+                        commands.add(String.valueOf(getEntityHandler().disableCreatureSpawn(entityType)));
+                    } else if (args[1].equalsIgnoreCase("disable-block-form")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityBlockForm(entityType)));
+                    } else if (args[1].equalsIgnoreCase("disable-change-block")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityChangeBlock(entityType)));
+                    } else if (args[1].equalsIgnoreCase("disable-explode")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityExplode(entityType)));
+                    } else if (args[1].equalsIgnoreCase("disable-interact")) {
                         for (var material : Material.values()) {
                             var materialName = material.name().toLowerCase();
                             if (materialName.startsWith(args[2])) {
                                 commands.add(materialName);
                             }
                         }
-                    }
-                    if (args[1].equalsIgnoreCase("disable-target") || args[1].equalsIgnoreCase("disable-damage")) {
+                    } else if (args[1].equalsIgnoreCase("disable-target") || args[1].equalsIgnoreCase("disable-hanging-break") || args[1].equalsIgnoreCase("disable-entity-damage")) {
                         for (var entityTypes : EntityType.values()) {
                             var entityName = entityTypes.name().toLowerCase();
                             if (entityName.startsWith(args[2])) {
                                 commands.add(entityName);
                             }
                         }
-                    }
-                    if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
+                    } else if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                         for (var spawnReasons : CreatureSpawnEvent.SpawnReason.values()) {
                             var reasons = spawnReasons.name().toLowerCase();
                             if (reasons.startsWith(args[2])) {
@@ -186,25 +177,24 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                 }
-            }
-            if (args.length == 4) {
+            } else if (args.length == 4) {
                 var entityType = getEntityHandler().getType(args[0]);
                 if (getEntityHandler().exists(entityType)) {
-                    if (args[1].equalsIgnoreCase("disable-block-interact")) {
+                    if (args[1].equalsIgnoreCase("disable-interact")) {
                         var blockType = getInstance().getMaterialHandler().get(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableBlockInteract(entityType, blockType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-target")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityInteract(entityType, blockType)));
+                    } else if (args[1].equalsIgnoreCase("disable-target")) {
                         var targetType = getEntityHandler().getType(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableTarget(entityType, targetType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disable-damage")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityTarget(entityType, targetType)));
+                    } else if (args[1].equalsIgnoreCase("disable-entity-damage")) {
                         var targetType = getEntityHandler().getType(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableDamage(entityType, targetType)));
-                    }
-                    if (args[1].equalsIgnoreCase("disabled-spawn-reason")) {
+                        commands.add(String.valueOf(getEntityHandler().disableEntityDamageByEntity(entityType, targetType)));
+                    } else if (args[1].equalsIgnoreCase("disable-hanging-break")) {
+                        var targetType = getEntityHandler().getType(args[2]);
+                        commands.add(String.valueOf(getEntityHandler().disableHangingBreakByEntity(entityType, targetType)));
+                    } else if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                         var spawnReason = CreatureSpawnEvent.SpawnReason.valueOf(args[2].toUpperCase());
-                        commands.add(String.valueOf(getEntityHandler().disabledSpawnReason(entityType, spawnReason)));
+                        commands.add(String.valueOf(getEntityHandler().disableSpawnReason(entityType, spawnReason)));
                     }
                 }
             }

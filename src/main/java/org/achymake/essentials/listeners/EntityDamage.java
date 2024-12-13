@@ -33,7 +33,7 @@ public class EntityDamage implements Listener {
             var userdata = getUserdata(player);
             if (!userdata.hasTaskID("teleport"))return;
             if (!getInstance().getConfig().getBoolean("teleport.cancel-on-damage"))return;
-            userdata.disableTask("teleport");
+            userdata.removeTask("teleport");
             player.sendMessage(getMessage().get("events.damage"));
         }
     }

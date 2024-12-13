@@ -127,17 +127,13 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     public List<String> getBankMembers() {
         return getConfig().getStringList("bank.members");
     }
-    public boolean isAutoPick() {
-        return getConfig().getBoolean("settings.auto-pick");
-    }
     public boolean isBanned() {
         return getConfig().getBoolean("settings.banned");
     }
     public String getBanReason() {
-        var reason = getConfig().getString("settings.ban-reason");
-        if (reason == null || reason.equalsIgnoreCase("")) {
-            return "None";
-        } else return getConfig().getString("settings.ban-reason");
+        if (getConfig().isString("settings.ban-reason")) {
+            return getConfig().getString("settings.ban-reason");
+        } else return "None";
     }
     public long getBanExpire() {
         return getConfig().getLong("settings.ban-expire");
@@ -250,11 +246,11 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             if (player.isOp()) {
                 maxHomes = 9999;
             } else {
-                for (String rank : getMain().getConfigurationSection("homes").getKeys(false)) {
+                getMain().getConfigurationSection("homes").getKeys(false).forEach(rank -> {
                     if (player.hasPermission("essentials.command.sethome.multiple." + rank)) {
                         maxHomes = getMain().getInt("homes." + rank);
                     }
-                }
+                });
             }
         }
         return maxHomes;
@@ -302,12 +298,14 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     public int getTaskID(String task) {
         return getConfig().getInt("tasks." + task);
     }
-    public void disableTask(String task) {
-        getScheduler().cancel(getTaskID(task));
+    public void removeTask(String task) {
+        if (getScheduler().isQueued(getTaskID(task))) {
+            getScheduler().cancel(getTaskID(task));
+        }
         setString("tasks." + task, null);
     }
     public void disableTasks() {
-        getConfig().getConfigurationSection("tasks").getKeys(false).forEach(this::disableTask);
+        getConfig().getConfigurationSection("tasks").getKeys(false).forEach(this::removeTask);
     }
     public boolean hasJoined() {
         if (exists()) {
@@ -322,9 +320,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
         config.set("account", getMain().getDouble("economy.starting-balance"));
         config.set("bank.account", getMain().getDouble("economy.bank.starting-balance"));
         config.createSection("bank.members");
-        config.set("settings.auto-pick", false);
         config.set("settings.banned", false);
-        config.set("settings.ban-reason", "");
         config.set("settings.ban-expire", 0);
         config.set("settings.frozen", false);
         config.set("settings.jailed", false);
@@ -376,27 +372,20 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
                 }
                 if (timer > 0) {
                     getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(timer)));
+                    var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
+                            player.teleport(location);
+                            removeTask("teleport");
+                        }
+                    }, timer * 20L).getTaskId();
+                    addTaskID("teleport", taskID);
+                } else {
+                    getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
+                    player.teleport(location);
                 }
-                var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        setString("tasks.teleport", null);
-                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
-                        player.teleport(location);
-                    }
-                }, timer * 20L).getTaskId();
-                addTaskID("teleport", taskID);
             } else player.sendMessage(getMessage().get("events.teleport.has-task"));
-        }
-    }
-    public void teleport(Location location, String name) {
-        var player = getPlayer();
-        if (player != null) {
-            if (!location.getChunk().isLoaded()) {
-                location.getChunk().load();
-            }
-            getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
-            player.teleport(location);
         }
     }
     @Override

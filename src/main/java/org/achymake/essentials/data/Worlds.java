@@ -35,7 +35,7 @@ public class Worlds {
                 if (get(worldName) == null) {
                     if (getFolder(worldName).exists()) {
                         var info = add(worldName);
-                        getInstance().sendInfo(info.getName() + " has been created with the following:");
+                        getInstance().sendInfo(info.getName() + " has been added with the following:");
                         getInstance().sendInfo("environment: " + info.getEnvironment().name());
                         getInstance().sendInfo("seed: " + info.getSeed());
                     } else {

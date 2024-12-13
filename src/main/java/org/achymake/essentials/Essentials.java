@@ -33,10 +33,11 @@ public final class Essentials extends JavaPlugin {
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
     private EconomyHandler economyHandler;
-    private EntityHandler entityHandler;
+    private Entities entities;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
     private ProjectileHandler projectileHandler;
+    private RandomHandler randomHandler;
     private ScheduleHandler scheduleHandler;
     private VanishHandler vanishHandler;
     private UpdateChecker updateChecker;
@@ -45,6 +46,7 @@ public final class Essentials extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        entities = new Entities();
         jail = new Jail();
         kits = new Kits();
         message = new Message();
@@ -57,10 +59,10 @@ public final class Essentials extends JavaPlugin {
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
         economyHandler = new EconomyHandler();
-        entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
         projectileHandler = new ProjectileHandler();
+        randomHandler = new RandomHandler();
         scheduleHandler = new ScheduleHandler();
         vanishHandler = new VanishHandler();
         updateChecker = new UpdateChecker();
@@ -121,6 +123,7 @@ public final class Essentials extends JavaPlugin {
         new JailCommand();
         new KitCommand();
         new LoomCommand();
+        new LvlCommand();
         new MOTDCommand();
         new MuteCommand();
         new NicknameCommand();
@@ -248,7 +251,7 @@ public final class Essentials extends JavaPlugin {
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
             getServer().setMotd(line1 + "\n" + line2);
         }
-        getEntityHandler().reload();
+        getEntities().reload();
         getJail().reload();
         getKits().reload();
         getMessage().reload();
@@ -303,6 +306,9 @@ public final class Essentials extends JavaPlugin {
     public ScheduleHandler getScheduleHandler() {
         return scheduleHandler;
     }
+    public RandomHandler getRandomHandler() {
+        return randomHandler;
+    }
     public ProjectileHandler getProjectileHandler() {
         return projectileHandler;
     }
@@ -351,8 +357,8 @@ public final class Essentials extends JavaPlugin {
     public Jail getJail() {
         return jail;
     }
-    public EntityHandler getEntityHandler() {
-        return entityHandler;
+    public Entities getEntities() {
+        return entities;
     }
     public static Essentials getInstance() {
         return instance;

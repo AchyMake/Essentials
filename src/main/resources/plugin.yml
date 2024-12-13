@@ -205,6 +205,11 @@ commands:
     permission: essentials.command.loom
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  lvl:
+    description: lvl command
+    permission: essentials.command.lvl
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   motd:
     description: check motd
     permission: essentials.command.motd
@@ -655,6 +660,9 @@ permissions:
     default: op
   essentials.command.loom.exempt:
     description: open loom by command
+    default: op
+  essentials.command.lvl:
+    description: lvl command
     default: op
   essentials.command.motd:
     description: check motd

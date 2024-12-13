@@ -5,6 +5,7 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.achymake.essentials.handlers.RandomHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -31,6 +32,9 @@ public class PlayerDeath implements Listener {
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
+    private RandomHandler getRandomHandler() {
+        return getInstance().getRandomHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -44,7 +48,7 @@ public class PlayerDeath implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = event.getEntity();
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
-            if (getConfig().getInt("deaths.drop-player-head.chance") >= 100 - new Random().nextInt(100)) {
+            if (getRandomHandler().isTrue(getConfig().getDouble("deaths.drop-player-head.chance"))) {
                 event.getDrops().add(getMaterials().getPlayerHead(player, 1));
             }
         }

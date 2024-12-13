@@ -34,16 +34,18 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
+                var itemName = args[0];
                 if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(args[0]), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
-                } else player.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(args[0])));
+                    player.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(itemName), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                } else player.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(itemName)));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(args[0]), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
-                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(args[0])));
+                var itemName = args[0];
+                if (getWorth().isListed(getMaterials().get(itemName))) {
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(itemName), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(itemName)));
                 return true;
             }
         }
@@ -54,9 +56,10 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
+                var itemName = args[0];
                 getWorth().getListed().forEach(listed -> {
                     var lowered = listed.toLowerCase();
-                    if (lowered.startsWith(args[0])) {
+                    if (lowered.startsWith(itemName)) {
                         commands.add(lowered);
                     }
                 });

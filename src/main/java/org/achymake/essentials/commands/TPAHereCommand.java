@@ -45,7 +45,7 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
                                 public void run() {
                                     userdataTarget.setString("tpahere.from", null);
                                     userdata.setString("tpahere.sent", null);
-                                    userdata.disableTask("tpahere");
+                                    userdata.removeTask("tpahere");
                                     target.sendMessage(getMessage().get("commands.tpahere.expired"));
                                     player.sendMessage(getMessage().get("commands.tpahere.expired"));
                                 }

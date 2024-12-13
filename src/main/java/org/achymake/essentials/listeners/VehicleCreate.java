@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.handlers.EntityHandler;
+import org.achymake.essentials.data.Entities;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,8 +15,8 @@ public class VehicleCreate implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler() {
-        return getInstance().getEntityHandler();
+    private Entities getEntities() {
+        return getInstance().getEntities();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -26,10 +26,8 @@ public class VehicleCreate implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleCreate(VehicleCreateEvent event) {
-        if (getEntityHandler().disableSpawn(event.getVehicle().getType())) {
-            event.setCancelled(true);
-        } else {
-            var chunkLimit = getEntityHandler().chunkLimit(event.getVehicle().getType());
+        if (!getEntities().disableCreatureSpawn(event.getVehicle().getType())) {
+            var chunkLimit = getEntities().chunkLimit(event.getVehicle().getType());
             if (chunkLimit > 0) {
                 var chunk = event.getVehicle().getLocation().getChunk();
                 var listed = new ArrayList<Entity>();
@@ -43,6 +41,6 @@ public class VehicleCreate implements Listener {
                 }
                 listed.clear();
             }
-        }
+        } else event.setCancelled(true);
     }
 }

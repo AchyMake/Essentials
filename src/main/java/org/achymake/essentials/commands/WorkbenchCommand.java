@@ -35,7 +35,8 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    var target = getInstance().getPlayer(args[0]);
+                    var username = args[0];
+                    var target = getInstance().getPlayer(username);
                     if (target != null) {
                         if (target == player) {
                             getInventoryHandler().openWorkbench(target);
@@ -44,17 +45,18 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                             getInventoryHandler().openWorkbench(target);
                             player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.workbench.exempt", target.getName()));
-                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                    } else player.sendMessage(getMessage().get("error.target.offline", username));
                     return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var target = getInstance().getPlayer(args[0]);
+                var username = args[0];
+                var target = getInstance().getPlayer(username);
                 if (target != null) {
                     getInventoryHandler().openWorkbench(target);
                     consoleCommandSender.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
-                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", username));
                 return true;
             }
         }
@@ -66,9 +68,10 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
+                    var username = args[0];
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(args[0])) {
+                            if (target.getName().startsWith(username)) {
                                 commands.add(target.getName());
                             }
                         }

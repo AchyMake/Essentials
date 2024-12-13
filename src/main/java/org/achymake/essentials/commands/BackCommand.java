@@ -60,12 +60,12 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                             if (target.hasPermission("essentials.command.back.death")) {
                                 var death = userdataTarget.getLocation("death");
                                 if (death != null) {
-                                    userdataTarget.teleport(death, "death");
+                                    userdataTarget.teleport(death, "death", 0);
                                 } else if (recent != null) {
-                                    userdataTarget.teleport(recent, "recent");
+                                    userdataTarget.teleport(recent, "recent", 0);
                                 }
                             } else if (recent != null) {
-                                userdataTarget.teleport(recent, "recent");
+                                userdataTarget.teleport(recent, "recent", 0);
                             }
                         } else if (!target.hasPermission("essentials.command.back.exempt")) {
                             var userdataTarget = getUserdata(target);
@@ -73,12 +73,12 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                             if (target.hasPermission("essentials.command.back.death")) {
                                 var death = userdataTarget.getLocation("death");
                                 if (death != null) {
-                                    userdataTarget.teleport(death, "death");
+                                    userdataTarget.teleport(death, "death", 0);
                                 } else if (recent != null) {
-                                    userdataTarget.teleport(recent, "recent");
+                                    userdataTarget.teleport(recent, "recent", 0);
                                 }
                             } else if (recent != null) {
-                                userdataTarget.teleport(recent, "recent");
+                                userdataTarget.teleport(recent, "recent", 0);
                             }
                         } else player.sendMessage(getMessage().get("commands.back.exempt"), target.getName());
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -94,12 +94,12 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                     if (target.hasPermission("essentials.command.back.death")) {
                         var death = userdataTarget.getLocation("death");
                         if (death != null) {
-                            userdataTarget.teleport(death, "death");
+                            userdataTarget.teleport(death, "death", getInstance().getConfig().getInt("teleport.delay"));
                         } else if (recent != null) {
-                            userdataTarget.teleport(recent, "recent");
+                            userdataTarget.teleport(recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
                         }
                     } else if (recent != null) {
-                        userdataTarget.teleport(recent, "recent");
+                        userdataTarget.teleport(recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
                     }
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

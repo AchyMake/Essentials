@@ -47,7 +47,7 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                             target.teleport(player);
                             userdataTarget.setString("tpa.sent", null);
                             userdata.setString("tpa.from", null);
-                            userdataTarget.disableTask("tpa");
+                            userdataTarget.removeTask("tpa");
                         }
                     }
                 } else if (userdata.getTpaHereFrom() != null) {
@@ -62,7 +62,7 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                             player.teleport(target);
                             userdataTarget.setString("tpahere.sent", null);
                             userdata.setString("tpahere.from", null);
-                            userdataTarget.disableTask("tpahere");
+                            userdataTarget.removeTask("tpahere");
                         }
                     }
                 } else player.sendMessage(getMessage().get("commands.tpaccept.non-requests"));

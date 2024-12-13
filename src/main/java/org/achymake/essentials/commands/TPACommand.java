@@ -45,7 +45,7 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                                 public void run() {
                                     userdataTarget.setString("tpa.from", null);
                                     userdata.setString("tpa.sent", null);
-                                    userdata.disableTask("tpa");
+                                    userdata.removeTask("tpa");
                                     target.sendMessage(getMessage().get("commands.tpa.expired"));
                                     player.sendMessage(getMessage().get("commands.tpa.expired"));
                                 }

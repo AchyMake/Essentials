@@ -68,7 +68,7 @@ public class VanishHandler {
             player.setSilent(false);
             player.setCanPickupItems(true);
             userdata.setBoolean("settings.vanished", false);
-            userdata.disableTask("vanish");
+            userdata.removeTask("vanish");
             getVanished().remove(player);
             getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
             if (!getVanished().isEmpty()) {
@@ -89,7 +89,7 @@ public class VanishHandler {
     }
     public void disable() {
         if (!getVanished().isEmpty()) {
-            getVanished().forEach(player -> getUserdata(player).disableTask("vanish"));
+            getVanished().forEach(player -> getUserdata(player).removeTask("vanish"));
             getVanished().clear();
         }
     }

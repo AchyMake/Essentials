@@ -3,12 +3,8 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.EntityHandler;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -21,9 +17,6 @@ public class PlayerBucketEmpty implements Listener {
     }
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
-    }
-    private EntityHandler getEntityHandler() {
-        return getInstance().getEntityHandler();
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
@@ -40,24 +33,22 @@ public class PlayerBucketEmpty implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         var player = event.getPlayer();
-        if (!getEntityHandler().disableBlockChange(player.getType())) {
-            if (!getUserdata(player).isDisabled()) {
-                if (!getConfig().getBoolean("notification.enable"))return;
-                if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
-                var worldName = event.getBlock().getWorld().getName();
-                var x = String.valueOf(event.getBlock().getX());
-                var y = String.valueOf(event.getBlock().getY());
-                var z = String.valueOf(event.getBlock().getZ());
-                getConfig().getStringList("notification.message").forEach(messages -> {
-                    var addPlayer = messages.replaceAll("%player%", player.getName());
-                    var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(event.getBucket().toString()));
-                    var addWorldName = addMaterial.replaceAll("%world", worldName);
-                    var addX = addWorldName.replaceAll("%x%", x);
-                    var addY = addX.replaceAll("%y%", y);
-                    var result = addY.replaceAll("%z%", z);
-                    getMessage().sendAll(result, "essentials.event.bucket_empty.notify");
-                });
-            } else event.setCancelled(true);
+        if (!getUserdata(player).isDisabled()) {
+            if (!getConfig().getBoolean("notification.enable"))return;
+            if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
+            var worldName = event.getBlock().getWorld().getName();
+            var x = String.valueOf(event.getBlock().getX());
+            var y = String.valueOf(event.getBlock().getY());
+            var z = String.valueOf(event.getBlock().getZ());
+            getConfig().getStringList("notification.message").forEach(messages -> {
+                var addPlayer = messages.replaceAll("%player%", player.getName());
+                var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(event.getBucket().toString()));
+                var addWorldName = addMaterial.replaceAll("%world", worldName);
+                var addX = addWorldName.replaceAll("%x%", x);
+                var addY = addX.replaceAll("%y%", y);
+                var result = addY.replaceAll("%z%", z);
+                getMessage().sendAll(result, "essentials.event.bucket_empty.notify");
+            });
         } else event.setCancelled(true);
     }
 }

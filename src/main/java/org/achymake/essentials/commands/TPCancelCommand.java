@@ -43,7 +43,7 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
                         if (getScheduler().isQueued(tpaTask)) {
                             userdataTarget.setString("tpa.from", null);
                             userdata.setString("tpa.sent", null);
-                            userdata.disableTask("tpa");
+                            userdata.removeTask("tpa");
                             target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
@@ -56,7 +56,7 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
                         if (getScheduler().isQueued(tpaHereTask)) {
                             userdataTarget.setString("tpahere.from", null);
                             userdata.setString("tpahere.sent", null);
-                            userdata.disableTask("tpahere");
+                            userdata.removeTask("tpahere");
                             target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
