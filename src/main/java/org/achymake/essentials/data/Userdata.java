@@ -243,15 +243,13 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     public int getMaxHomes() {
         var player = getPlayer();
         if (player != null) {
-            if (player.isOp()) {
-                maxHomes = 9999;
-            } else {
+            if (!player.isOp()) {
                 getMain().getConfigurationSection("homes").getKeys(false).forEach(rank -> {
                     if (player.hasPermission("essentials.command.sethome.multiple." + rank)) {
                         maxHomes = getMain().getInt("homes." + rank);
                     }
                 });
-            }
+            } else maxHomes = 9999;
         }
         return maxHomes;
     }
@@ -473,5 +471,18 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
                 return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
             } else return "";
         } else return "";
+    }
+    public void sendDeathLocation() {
+        var player = getPlayer();
+        if (player != null) {
+            var location = getLocation("death");
+            if (location == null)return;
+            var world = getInstance().getWorldHandler(location.getWorld()).getDisplayName();
+            var x = String.valueOf(location.getBlockX());
+            var y = String.valueOf(location.getBlockY());
+            var z = String.valueOf(location.getBlockZ());
+            player.sendMessage(getMessage().get("events.respawn.title"));
+            player.sendMessage(getMessage().get("events.respawn.location", world, x, y, z));
+        }
     }
 }

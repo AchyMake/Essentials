@@ -50,10 +50,9 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                var username = args[0];
                 getInstance().getOnlinePlayers().forEach(target -> {
                     if (!getUserdata(target).isVanished()) {
-                        if (target.getName().startsWith(username)) {
+                        if (target.getName().startsWith(args[0])) {
                             commands.add(target.getName());
                         }
                     }

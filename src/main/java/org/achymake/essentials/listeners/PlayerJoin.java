@@ -51,10 +51,10 @@ public class PlayerJoin implements Listener {
             getVanishHandler().hideVanished(player);
             if (getConfig().getBoolean("connection.join.enable")) {
                 sendJoinSound();
-                event.setJoinMessage(getJoinMessage(player));
+                event.setJoinMessage(getMessage().addColor(getConfig().getString("connection.join.message").replaceAll("%player%", player.getName())));
             } else if (player.hasPermission("essentials.event.join.message")) {
                 sendJoinSound();
-                event.setJoinMessage(getJoinMessage(player));
+                event.setJoinMessage(getMessage().addColor(getConfig().getString("connection.join.message").replaceAll("%player%", player.getName())));
             } else {
                 event.setJoinMessage(null);
                 getMessage().sendAll(getMessage().get("events.join.notify", player.getName()), "essentials.event.join.notify");
@@ -80,8 +80,5 @@ public class PlayerJoin implements Listener {
         var volume = (float) getConfig().getDouble("connection.join.sound.volume");
         var pitch = (float) getConfig().getDouble("connection.join.sound.pitch");
         getInstance().getOnlinePlayers().forEach(target -> target.playSound(target, Sound.valueOf(soundType), volume, pitch));
-    }
-    private String getJoinMessage(Player player) {
-        return getMessage().addColor(getConfig().getString("connection.join.message").replaceAll("%player%", player.getName()));
     }
 }

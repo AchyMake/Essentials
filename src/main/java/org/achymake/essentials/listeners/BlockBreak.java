@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.data.Entities;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,9 +19,6 @@ public class BlockBreak implements Listener {
     }
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
-    }
-    private Entities getEntities() {
-        return getInstance().getEntities();
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
@@ -47,9 +43,10 @@ public class BlockBreak implements Listener {
         var player = event.getPlayer();
         var block = event.getBlock();
         if (!getUserdata(player).isDisabled()) {
-            if (!getPortals().hasWand(player.getInventory().getItemInMainHand())) {
+            var heldItem = player.getInventory().getItemInMainHand();
+            if (!getPortals().hasWand(heldItem)) {
                 if (block.getType().equals(getMaterials().get("spawner"))) {
-                    if (getMaterials().hasEnchantment(player.getInventory().getItemInMainHand(), "silk_touch")) {
+                    if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {
                         if (player.hasPermission("essentials.event.block_break.spawner")) {
                             getMaterials().dropSpawner(block);
                             event.setExpToDrop(0);
@@ -74,7 +71,7 @@ public class BlockBreak implements Listener {
                 }
             } else {
                 event.setCancelled(true);
-                getPortals().setPrimary(player.getInventory().getItemInMainHand(), block);
+                getPortals().setPrimary(heldItem, block);
                 player.sendMessage(getMessage().get("events.portal.primary"));
             }
         } else event.setCancelled(true);

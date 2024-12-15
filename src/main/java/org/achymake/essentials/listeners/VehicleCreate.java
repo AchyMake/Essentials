@@ -26,13 +26,14 @@ public class VehicleCreate implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleCreate(VehicleCreateEvent event) {
-        if (!getEntities().disableCreatureSpawn(event.getVehicle().getType())) {
-            var chunkLimit = getEntities().chunkLimit(event.getVehicle().getType());
+        var type = event.getVehicle().getType();
+        if (!getEntities().disableCreatureSpawn(type)) {
+            var chunkLimit = getEntities().chunkLimit(type);
             if (chunkLimit > 0) {
                 var chunk = event.getVehicle().getLocation().getChunk();
                 var listed = new ArrayList<Entity>();
                 for (var entities : chunk.getEntities()) {
-                    if (entities.getType().equals(event.getVehicle().getType())) {
+                    if (entities.getType().equals(type)) {
                         listed.add(event.getVehicle());
                     }
                 }

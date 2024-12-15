@@ -34,18 +34,18 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var itemName = args[0];
+                var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(itemName), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
-                } else player.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(itemName)));
+                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                } else player.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var itemName = args[0];
+                var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(itemName))) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", getMessage().toTitleCase(itemName), getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
-                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", getMessage().toTitleCase(itemName)));
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
         }

@@ -7,7 +7,6 @@ import org.achymake.essentials.handlers.VanishHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,10 +41,10 @@ public class PlayerQuit implements Listener {
         var userdata = getUserdata(player);
         if (!userdata.isVanished()) {
             if (getConfig().getBoolean("connection.quit.enable")) {
-                event.setQuitMessage(getQuitMessage(player));
+                event.setQuitMessage(getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName())));
                 playSound();
             } else if (player.hasPermission("essentials.event.quit.message")) {
-                event.setQuitMessage(getQuitMessage(player));
+                event.setQuitMessage(getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName())));
                 playSound();
             } else {
                 event.setQuitMessage(null);
@@ -77,13 +76,9 @@ public class PlayerQuit implements Listener {
     }
     private void playSound() {
         if (!getConfig().getBoolean("connection.quit.sound.enable"))return;
-        getInstance().getOnlinePlayers().forEach(target
-                -> target.playSound(target,
-                Sound.valueOf(getConfig().getString("connection.quit.sound.type")),
-                (float) getConfig().getDouble("connection.quit.sound.volume"),
-                (float) getConfig().getDouble("connection.quit.sound.pitch")));
-    }
-    private String getQuitMessage(Player player) {
-        return getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName()));
+        var soundType = getConfig().getString("connection.quit.sound.type");
+        var volume = (float) getConfig().getDouble("connection.quit.sound.volume");
+        var pitch = (float) getConfig().getDouble("connection.quit.sound.pitch");
+        getInstance().getOnlinePlayers().forEach(target -> target.playSound(target, Sound.valueOf(soundType), volume, pitch));
     }
 }

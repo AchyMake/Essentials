@@ -28,9 +28,8 @@ public class SignChange implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onSignChange(SignChangeEvent event) {
-        var player = event.getPlayer();
-        if (!getUserdata(player).isDisabled()) {
-            if (player.hasPermission("essentials.event.sign.color")) {
+        if (!getUserdata(event.getPlayer()).isDisabled()) {
+            if (event.getPlayer().hasPermission("essentials.event.sign.color")) {
                 for (int i = 0; i < event.getLines().length; i++) {
                     var message = event.getLine(i);
                     if (message == null)return;

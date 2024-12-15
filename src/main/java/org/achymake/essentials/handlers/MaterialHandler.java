@@ -33,11 +33,9 @@ public class MaterialHandler {
     public Enchantment getEnchantment(String enchantmentName) {
         return Enchantment.getByName(enchantmentName.toUpperCase());
     }
-    public void setEnchantment(ItemStack itemStack, String enchantmentName, int amount) {
-        var meta = itemStack.getItemMeta();
-        if (amount > 0) {
-            meta.addEnchant(getEnchantment(enchantmentName), amount, true);
-            itemStack.setItemMeta(meta);
+    public void setEnchantment(ItemStack itemStack, String enchantmentName, int level) {
+        if (level > 0) {
+            itemStack.addUnsafeEnchantment(getEnchantment(enchantmentName), level);
         } else itemStack.removeEnchantment(getEnchantment(enchantmentName));
     }
     public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {

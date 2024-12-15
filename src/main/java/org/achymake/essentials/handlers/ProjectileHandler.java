@@ -47,13 +47,14 @@ public class ProjectileHandler {
     public void disable() {
         if (!projectiles.isEmpty()) {
             projectiles.forEach((projectile, taskID) -> {
-                if (projectile != null) {
-                    projectiles.remove(projectile);
-                }
                 if (getScheduler().isQueued(taskID)) {
                     getScheduler().cancel(taskID);
                 }
+                if (projectile != null) {
+                    projectiles.remove(projectile);
+                }
             });
+            projectiles.clear();
         }
     }
     public Map<Projectile, Integer> getProjectiles() {

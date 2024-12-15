@@ -185,35 +185,33 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                         args[0].equalsIgnoreCase("teleport") |
                         args[0].equalsIgnoreCase("difficulty") |
                         args[0].equalsIgnoreCase("info")) {
-                    for (var worlds : getWorlds().getListed()) {
-                        commands.add(worlds.getName());
-                    }
+                    getWorlds().getListed().forEach(world -> {
+                        if (args[1].startsWith(world.getName())) {
+                            commands.add(world.getName());
+                        }
+                    });
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("create")) {
                     commands.add("normal");
                     commands.add("nether");
                     commands.add("the_end");
-                }
-                if (args[0].equalsIgnoreCase("difficulty")) {
+                } else if (args[0].equalsIgnoreCase("difficulty")) {
                     if (getWorlds().get(args[1]) != null) {
                         commands.add("peaceful");
                         commands.add("easy");
                         commands.add("normal");
                         commands.add("hard");
                     }
-                }
-                if (args[0].equalsIgnoreCase("pvp")) {
+                } else if (args[0].equalsIgnoreCase("pvp")) {
                     commands.add(String.valueOf(getWorlds().get(args[1]).getPVP()));
-                }
-                if (args[0].equalsIgnoreCase("gamerule")) {
+                } else if (args[0].equalsIgnoreCase("gamerule")) {
                     Collections.addAll(commands, getWorlds().get(args[1]).getGameRules());
                 }
             } else if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("gamerule")) {
                     commands.add(getWorlds().get(args[1]).getGameRuleValue(args[2]));
-                }
-                if (args[0].equalsIgnoreCase("create")) {
+                } else if (args[0].equalsIgnoreCase("create")) {
                     commands.add("random");
                 }
             }

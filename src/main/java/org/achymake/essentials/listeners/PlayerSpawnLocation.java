@@ -29,8 +29,7 @@ public class PlayerSpawnLocation implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
         if (getUserdata(event.getPlayer()).hasJoined())return;
-        var spawn = getSpawn().getLocation();
-        if (spawn == null)return;
-        event.setSpawnLocation(spawn);
+        if (getSpawn().getLocation() == null)return;
+        event.setSpawnLocation(getSpawn().getLocation());
     }
 }

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.data.Entities;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -21,9 +20,6 @@ public class PlayerInteract implements Listener {
     }
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
-    }
-    private Entities getEntities() {
-        return getInstance().getEntities();
     }
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);

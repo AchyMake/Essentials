@@ -91,20 +91,18 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var warpName = args[0];
                 getWarps().getListed().forEach(warps -> {
                     if (player.hasPermission("essentials.command.warp." + warps)) {
-                        if (warps.startsWith(warpName)) {
+                        if (warps.startsWith(args[0])) {
                             commands.add(warps);
                         }
                     }
                 });
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
-                    var username = args[1];
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata(target).isVanished()) {
-                            if (target.getName().startsWith(username)) {
+                            if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }
                         }
