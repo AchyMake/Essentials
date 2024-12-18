@@ -179,11 +179,11 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                 commands.add("setspawn");
                 commands.add("teleport");
             } else if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("gamerule") |
-                        args[0].equalsIgnoreCase("pvp") |
-                        args[0].equalsIgnoreCase("remove") |
-                        args[0].equalsIgnoreCase("teleport") |
-                        args[0].equalsIgnoreCase("difficulty") |
+                if (args[0].equalsIgnoreCase("gamerule") ||
+                        args[0].equalsIgnoreCase("pvp") ||
+                        args[0].equalsIgnoreCase("remove") ||
+                        args[0].equalsIgnoreCase("teleport") ||
+                        args[0].equalsIgnoreCase("difficulty") ||
                         args[0].equalsIgnoreCase("info")) {
                     getWorlds().getListed().forEach(world -> {
                         if (args[1].startsWith(world.getName())) {
