@@ -230,11 +230,6 @@ commands:
     permission: essentials.command.pay
     permission-message: You do not have the permissions to execute the command
     usage: /help
-  portal:
-    description: create portals
-    permission: essentials.command.portal
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
   pvp:
     description: toggle pvp
     permission: essentials.command.pvp
@@ -390,11 +385,6 @@ commands:
   workbench:
     description: workbench
     permission: essentials.command.workbench
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
-  world:
-    description: world settings
-    permission: essentials.command.world
     permission-message: You do not have the permissions to execute the command
     usage: /help
   worth:
@@ -691,9 +681,6 @@ permissions:
   essentials.command.pay:
     description: pay others
     default: op
-  essentials.command.portal:
-    description: create portals
-    default: op
   essentials.command.pvp:
     description: toggle pvp
     default: op
@@ -861,9 +848,6 @@ permissions:
     default: op
   essentials.command.workbench.exempt:
     description: workbench
-    default: op
-  essentials.command.world:
-    description: world settings
     default: op
   essentials.command.worth:
     description: worth

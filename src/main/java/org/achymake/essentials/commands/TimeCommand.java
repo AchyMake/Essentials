@@ -123,9 +123,7 @@ public class TimeCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("set") | args[0].equalsIgnoreCase("add")) {
-                    for (var worlds : getWorlds().getListed()) {
-                        commands.add(worlds.getName());
-                    }
+                    commands.addAll(getWorlds().getListed());
                 }
             }
         }

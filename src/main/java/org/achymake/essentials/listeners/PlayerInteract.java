@@ -2,10 +2,10 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,9 +24,6 @@ public class PlayerInteract implements Listener {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
-    private Portals getPortals() {
-        return getInstance().getPortals();
-    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -42,25 +39,26 @@ public class PlayerInteract implements Listener {
         var player = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getHand() != EquipmentSlot.HAND)return;
-            if (!getUserdata(player).isDisabled()) {
-                if (getPortals().hasWand(player.getInventory().getItemInMainHand())) {
-                    event.setCancelled(true);
-                    getPortals().setSecondary(player.getInventory().getItemInMainHand(), event.getClickedBlock());
-                    player.sendMessage(getMessage().get("events.portal.secondary"));
-                }
-            } else event.setCancelled(true);
+            if (!getUserdata(player).isDisabled())return;
+            event.setCancelled(true);
+            event.setUseItemInHand(Event.Result.DENY);
+            event.setUseInteractedBlock(Event.Result.DENY);
         } else if (event.getAction().equals(Action.PHYSICAL)) {
             if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("farmland")) {
                 if (!getConfig().getBoolean("crops.disable-tramping-farmland"))return;
                 event.setCancelled(true);
+                event.setUseInteractedBlock(Event.Result.DENY);
             } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("turtle_egg")) {
                 if (!getConfig().getBoolean("eggs.disable-tramping-turtle-egg"))return;
                 event.setCancelled(true);
+                event.setUseInteractedBlock(Event.Result.DENY);
             } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("sniffer_egg")) {
                 if (!getConfig().getBoolean("eggs.disable-tramping-sniffer-egg"))return;
                 event.setCancelled(true);
+                event.setUseInteractedBlock(Event.Result.DENY);
             } else if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
                 event.setCancelled(true);
+                event.setUseInteractedBlock(Event.Result.DENY);
             }
         }
     }

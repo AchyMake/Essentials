@@ -70,9 +70,6 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "world_name" -> {
                     return player.getWorld().getName();
                 }
-                case "world_display_name" -> {
-                    return instance.getWorldHandler(player.getWorld()).getDisplayName();
-                }
                 case "world_pvp" -> {
                     return String.valueOf(player.getWorld().getPVP());
                 }

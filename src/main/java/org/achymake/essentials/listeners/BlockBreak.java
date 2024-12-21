@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.data.Portals;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.OfflinePlayer;
@@ -23,9 +22,6 @@ public class BlockBreak implements Listener {
     private Userdata getUserdata(OfflinePlayer offlinePlayer) {
         return getInstance().getUserdata(offlinePlayer);
     }
-    private Portals getPortals() {
-        return getInstance().getPortals();
-    }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
@@ -44,35 +40,29 @@ public class BlockBreak implements Listener {
         var block = event.getBlock();
         if (!getUserdata(player).isDisabled()) {
             var heldItem = player.getInventory().getItemInMainHand();
-            if (!getPortals().hasWand(heldItem)) {
-                if (block.getType().equals(getMaterials().get("spawner"))) {
-                    if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {
-                        if (player.hasPermission("essentials.event.block_break.spawner")) {
-                            getMaterials().dropSpawner(block);
-                            event.setExpToDrop(0);
-                        }
+            if (block.getType().equals(getMaterials().get("spawner"))) {
+                if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {
+                    if (player.hasPermission("essentials.event.block_break.spawner")) {
+                        getMaterials().dropSpawner(block);
+                        event.setExpToDrop(0);
                     }
                 }
-                if (getConfig().getBoolean("notification.enable")) {
-                    if (!getConfig().getStringList("notification.block-break").contains(block.getType().toString()))return;
-                    var worldName = block.getWorld().getName();
-                    var x = String.valueOf(block.getX());
-                    var y = String.valueOf(block.getY());
-                    var z = String.valueOf(block.getZ());
-                    getConfig().getStringList("notification.message").forEach(messages -> {
-                        var addPlayer = messages.replaceAll("%player%", player.getName());
-                        var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(block.getType().toString()));
-                        var addWorldName = addMaterial.replaceAll("%world", worldName);
-                        var addX = addWorldName.replaceAll("%x%", x);
-                        var addY = addX.replaceAll("%y%", y);
-                        var result = addY.replaceAll("%z%", z);
-                        getMessage().sendAll(result, "essentials.event.block_break.notify");
-                    });
-                }
-            } else {
-                event.setCancelled(true);
-                getPortals().setPrimary(heldItem, block);
-                player.sendMessage(getMessage().get("events.portal.primary"));
+            }
+            if (getConfig().getBoolean("notification.enable")) {
+                if (!getConfig().getStringList("notification.block-break").contains(block.getType().toString()))return;
+                var worldName = block.getWorld().getName();
+                var x = String.valueOf(block.getX());
+                var y = String.valueOf(block.getY());
+                var z = String.valueOf(block.getZ());
+                getConfig().getStringList("notification.message").forEach(messages -> {
+                    var addPlayer = messages.replaceAll("%player%", player.getName());
+                    var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(block.getType().toString()));
+                    var addWorldName = addMaterial.replaceAll("%world", worldName);
+                    var addX = addWorldName.replaceAll("%x%", x);
+                    var addY = addX.replaceAll("%y%", y);
+                    var result = addY.replaceAll("%z%", z);
+                    getMessage().sendAll(result, "essentials.event.block_break.notify");
+                });
             }
         } else event.setCancelled(true);
     }

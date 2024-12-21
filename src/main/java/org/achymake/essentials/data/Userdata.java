@@ -477,7 +477,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
         if (player != null) {
             var location = getLocation("death");
             if (location == null)return;
-            var world = getInstance().getWorldHandler(location.getWorld()).getDisplayName();
+            var world = location.getWorld().getName();
             var x = String.valueOf(location.getBlockX());
             var y = String.valueOf(location.getBlockY());
             var z = String.valueOf(location.getBlockZ());
