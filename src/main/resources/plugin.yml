@@ -43,6 +43,11 @@ commands:
     permission: essentials.command.bank
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  board:
+    description: board command
+    permission: essentials.command.board
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   cartography:
     description: open cartography by command
     permission: essentials.command.cartography
@@ -449,6 +454,15 @@ permissions:
     default: op
   essentials.command.bank.deposit:
     description: check bank/top or withdraw/deposit
+    default: op
+  essentials.command.board:
+    description: toggle board
+    default: op
+  essentials.command.board.other:
+    description: toggle board for others
+    default: op
+  essentials.command.board.exempt:
+    description: exempts toggle board from others
     default: op
   essentials.command.cartography:
     description: open cartography by command

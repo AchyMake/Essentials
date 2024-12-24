@@ -11,6 +11,9 @@ public class ScheduleHandler {
     private BukkitScheduler getScheduler() {
         return getInstance().getBukkitScheduler();
     }
+    public BukkitTask runTimer(Runnable runnable, long timer, long period) {
+        return getScheduler().runTaskTimer(getInstance(), runnable, timer, period);
+    }
     public BukkitTask runLater(Runnable runnable, long timer) {
         return getScheduler().runTaskLater(getInstance(), runnable, timer);
     }

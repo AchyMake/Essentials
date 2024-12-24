@@ -1,9 +1,11 @@
 package org.achymake.essentials.data;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.achymake.essentials.Essentials;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -345,6 +347,9 @@ public class Message {
             }
         });
     }
+    public String addPlaceholder(Player player, String message) {
+        return PlaceholderAPI.setPlaceholders(player, message);
+    }
     public String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
@@ -356,6 +361,14 @@ public class Message {
         for(var i = value; i < args.length; i++) {
             builder.append(args[i]);
             builder.append(" ");
+        }
+        return builder.toString().strip();
+    }
+    public String toString(List<String> lines) {
+        var builder = getBuilder();
+        for (var line : lines) {
+            builder.append(line);
+            builder.append("\n");
         }
         return builder.toString().strip();
     }

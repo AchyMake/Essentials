@@ -1,0 +1,25 @@
+enable: false
+tick: 20
+below-name: 'Health: %player_health_rounded%'
+title: '&6&lStats'
+lines:
+  - '&ename&f: %essentials_display_name%'
+  - '&erank&f: %vault_prefix%%vault_rank%%vault_suffix%'
+  - '&ecoins&f:&a €%vault_eco_balance_formatted%'
+worlds:
+  world:
+    tick: 20
+    below-name: 'Health: %player_health_rounded%'
+    title: '&6&lStats'
+    lines:
+      - '&ename&f: %essentials_display_name%'
+      - '&erank&f: %vault_prefix%%vault_rank%%vault_suffix%'
+      - '&ecoins&f:&a €%vault_eco_balance_formatted%'
+  test:
+    tick: 20
+    below-name: 'Health: %player_health_rounded%'
+    title: '&6&lStats'
+    lines:
+      - '&ename&f: %essentials_display_name%'
+      - '&erank&f: %vault_prefix%%vault_rank%%vault_suffix%'
+      - '&ecoins&f:&a €%vault_eco_balance_formatted%'

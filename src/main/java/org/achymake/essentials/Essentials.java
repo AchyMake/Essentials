@@ -14,6 +14,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +39,8 @@ public final class Essentials extends JavaPlugin {
     private ProjectileHandler projectileHandler;
     private RandomHandler randomHandler;
     private ScheduleHandler scheduleHandler;
+    private ScoreboardHandler scoreboardHandler;
+    private TablistHandler tablistHandler;
     private VanishHandler vanishHandler;
     private UpdateChecker updateChecker;
     private PluginManager manager;
@@ -62,6 +65,8 @@ public final class Essentials extends JavaPlugin {
         projectileHandler = new ProjectileHandler();
         randomHandler = new RandomHandler();
         scheduleHandler = new ScheduleHandler();
+        scoreboardHandler = new ScoreboardHandler();
+        tablistHandler = new TablistHandler();
         vanishHandler = new VanishHandler();
         updateChecker = new UpdateChecker();
         manager = getServer().getPluginManager();
@@ -89,6 +94,7 @@ public final class Essentials extends JavaPlugin {
         new BalanceCommand();
         new BanCommand();
         new BankCommand();
+        new BoardCommand();
         new CartographyCommand();
         new ColorCommand();
         new DelHomeCommand();
@@ -224,6 +230,8 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reload() {
+        getOnlinePlayers().forEach(this::disableTab);
+        getOnlinePlayers().forEach(this::disableBoard);
         var file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
             try {
@@ -252,6 +260,10 @@ public final class Essentials extends JavaPlugin {
         getSpawn().reload();
         getWarps().reload();
         getWorth().reload();
+        getScoreboardHandler().reload();
+        getTablistHandler().reload();
+        getOnlinePlayers().forEach(this::applyTab);
+        getOnlinePlayers().forEach(this::applyBoard);
     }
     public void reloadUserdata() {
         if (!getOfflinePlayers().isEmpty()) {
@@ -294,6 +306,12 @@ public final class Essentials extends JavaPlugin {
     }
     public VanishHandler getVanishHandler() {
         return vanishHandler;
+    }
+    public TablistHandler getTablistHandler() {
+        return tablistHandler;
+    }
+    public ScoreboardHandler getScoreboardHandler() {
+        return scoreboardHandler;
     }
     public ScheduleHandler getScheduleHandler() {
         return scheduleHandler;
@@ -381,5 +399,17 @@ public final class Essentials extends JavaPlugin {
     }
     public OfflinePlayer getOfflinePlayer(String username) {
         return getServer().getOfflinePlayer(username);
+    }
+    public void applyTab(Player player) {
+        getTablistHandler().apply(player);
+    }
+    public void disableTab(Player player) {
+        getTablistHandler().disable(player);
+    }
+    public void applyBoard(Player player) {
+        getScoreboardHandler().apply(player);
+    }
+    public void disableBoard(Player player) {
+        getScoreboardHandler().disable(player);
     }
 }

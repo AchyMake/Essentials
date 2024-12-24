@@ -5,11 +5,11 @@ import org.achymake.essentials.UpdateChecker;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.ScheduleHandler;
+import org.achymake.essentials.handlers.TablistHandler;
 import org.achymake.essentials.handlers.VanishHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -35,6 +35,9 @@ public class PlayerJoin implements Listener {
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
+    private TablistHandler getTablistHandler() {
+        return getInstance().getTablistHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -47,6 +50,8 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
+        getTablistHandler().apply(player);
+        getInstance().getScoreboardHandler().apply(player);
         if (!getUserdata(player).isVanished()) {
             getVanishHandler().hideVanished(player);
             if (getConfig().getBoolean("connection.join.enable")) {
