@@ -23,6 +23,15 @@ public record Tab(Player getPlayer, FileConfiguration getConfig) implements Runn
     private boolean isEnable() {
         return getConfig().getBoolean("enable");
     }
+    private String getDisplayName() {
+        return getInstance().getUserdata(getPlayer()).getDisplayName();
+    }
+    private String getPrefix() {
+        return getInstance().getUserdata(getPlayer()).getPrefix();
+    }
+    private String getSuffix() {
+        return getInstance().getUserdata(getPlayer()).getSuffix();
+    }
     @Override
     public void run() {
         if (isEnable()) {
@@ -36,6 +45,7 @@ public record Tab(Player getPlayer, FileConfiguration getConfig) implements Runn
                 var header = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), text));
                 getPlayer().setPlayerListHeader(header);
             }
+            getPlayer().setPlayerListName(getPrefix() + getDisplayName() + getSuffix());
             if (isList("worlds." + world + ".footer.lines")) {
                 var text = getMessage().toString(getList("worlds." + world + ".footer.lines"));
                 var footer = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), text));

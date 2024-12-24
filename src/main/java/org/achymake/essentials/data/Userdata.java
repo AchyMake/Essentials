@@ -456,7 +456,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             }, 0);
         }
     }
-    public String prefix() {
+    public String getPrefix() {
         var player = getPlayer();
         if (player != null) {
             if (PlaceholderAPI.isRegistered("vault")) {
@@ -464,7 +464,7 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             } else return "";
         } else return "";
     }
-    public String suffix() {
+    public String getSuffix() {
         var player = getPlayer();
         if (player != null) {
             if (PlaceholderAPI.isRegistered("vault")) {

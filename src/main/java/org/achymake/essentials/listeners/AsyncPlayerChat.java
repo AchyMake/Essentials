@@ -42,9 +42,9 @@ public class AsyncPlayerChat implements Listener {
             var message = censor(event.getMessage());
             if (getVanishHandler().isVanish(player)) {
                 var formatString = getMessage().addColor(getConfig().getString("chat.format.vanished"));
-                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
                 var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.suffix());
+                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
                 event.setCancelled(true);
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
@@ -53,15 +53,15 @@ public class AsyncPlayerChat implements Listener {
                 });
             } else if (player.isOp()) {
                 var formatString = getMessage().addColor(getConfig().getString("chat.format.op"));
-                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
                 var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.suffix());
+                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
                 event.setFormat(result + getMessage().addColor(message));
             } else {
                 var formatString = getMessage().addColor(getConfig().getString("chat.format.default"));
-                var addPrefix = formatString.replace("%prefix%", userdata.prefix());
+                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
                 var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.suffix());
+                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
                 if (player.hasPermission("essentials.event.chat.color")) {
                     event.setFormat(result + getMessage().addColor(message));
                 } else event.setFormat(result + message);
