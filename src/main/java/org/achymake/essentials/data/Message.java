@@ -285,8 +285,7 @@ public class Message {
         config.set("commands.tphere.exempt", "&cYou are not allowed to teleport&f {0}");
         config.set("commands.unban.banned", "{0}&6 is no longer banned");
         config.set("commands.unban.unbanned", "{0}&c is not banned");
-        config.set("commands.vanish.enable", "{0}&6 is now vanished");
-        config.set("commands.vanish.disable", "{0}&6 is no longer vanished");
+        config.set("commands.vanish.sender", "{0}&6 vanish is now {1}");
         config.set("commands.vanish.exempt", "&cYou are not allowed to toggle vanish for&f {0}");
         config.set("commands.walkspeed.changed", "&6You changed your walkspeed to&f {0}");
         config.set("commands.walkspeed.sender", "&6You changed&f {0}&6 walkspeed to&f {1}");
