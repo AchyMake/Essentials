@@ -34,6 +34,8 @@ public class Message {
     }
     private void setup() {
         config.options().copyDefaults(true);
+        config.set("enable", "&aEnable");
+        config.set("disable", "&cDisable");
         config.set("error.target.offline", "{0}&c is currently offline");
         config.set("error.target.invalid", "{0}&c has never joined");
         config.set("error.world.invalid", "{0}&c does not exists");
@@ -60,6 +62,9 @@ public class Message {
         config.set("commands.bank.deposit.left", "&6You now have&a {0}&6 left in the bank");
         config.set("commands.bank.deposit.insufficient-funds", "&cYou do not have&a {0}&c to deposit");
         config.set("commands.bank.deposit.minimum", "&cYou have to deposit at least&a {0}");
+        config.set("commands.board.self", "&6Board is now {0}");
+        config.set("commands.board.other", "{0}&6 board is now {1}");
+        config.set("commands.board.exempt", "&cYou are not allowed to toggle board for&f {0}");
         config.set("commands.cartography.sender", "&6You opened cartography table for&f {0}");
         config.set("commands.cartography.exempt", "&cYou are not allowed to open cartography table for&f {0}");
         config.set("commands.color.title", "&6Minecraft colors:");
@@ -99,10 +104,8 @@ public class Message {
         config.set("commands.feed.success", "&6Your starvation has been satisfied");
         config.set("commands.feed.sender", "&6You satisfied&f {0}&6 starvation");
         config.set("commands.feed.exempt", "&cYou are not allowed to satisfy&f {0}&6 starvation");
-        config.set("commands.fly.enable", "&6&lFly: &aEnabled");
-        config.set("commands.fly.disable", "&6&lFly: &cDisabled");
-        config.set("commands.fly.target", "{0}&6 {1} fly for you");
-        config.set("commands.fly.sender", "&6You {0} fly for&f {1}");
+        config.set("commands.fly.self", "&6&lFly: {0}");
+        config.set("commands.fly.sender", "&6You {1} fly for&f {0}");
         config.set("commands.fly.exempt", "&cYou are not allowed to toggle fly for&f {0}");
         config.set("commands.flyspeed.self", "&6Your fly speed has changed to&f {0}");
         config.set("commands.flyspeed.target", "{0}&6 changed your flyspeed to&f {1}");
@@ -192,9 +195,8 @@ public class Message {
         config.set("commands.pay.insufficient-funds", "&cYou do not have&a {0}&c to pay&f {1}");
         config.set("commands.pay.minimum-payment", "&cYou have to at least pay&a {0}");
         config.set("commands.pay.self", "&cYou can not pay your self");
-        config.set("commands.pvp.enable", "&6&lPVP:&a Enable");
-        config.set("commands.pvp.disable", "&6&lPVP:&c Disable");
-        config.set("commands.pvp.sender", "&6You {0} pvp for&f {1}");
+        config.set("commands.pvp.self", "&6&lPVP: {0}");
+        config.set("commands.pvp.sender", "&6You {1} pvp for&f {0}");
         config.set("commands.pvp.exempt", "&cYou are not allowed to toggle pvp for&f {0}");
         config.set("commands.repair.damaged", "&6You repaired&f {0}");
         config.set("commands.repair.non-damaged", "{0}&c is already fully repaired");
@@ -302,8 +304,7 @@ public class Message {
         config.set("commands.workbench.exempt", "&cYou are not allowed to open workbench for&f {0}");
         config.set("commands.worth.listed", "{0}&6 is worth&a {1}");
         config.set("commands.worth.unlisted", "{0}&c is not sellable");
-        config.set("events.vanish.enable", "&6&lVanish&f:&a Enable");
-        config.set("events.vanish.disable", "&6&lVanish&f:&c Disable");
+        config.set("events.vanish", "&6&lVanish&f: {0}");
         config.set("events.teleport.post", "&6Teleporting in&f {0}&6 seconds");
         config.set("events.teleport.success", "&6Teleporting to&f {0}");
         config.set("events.teleport.has-task", "&cYou can not teleport twice you have to wait");

@@ -29,8 +29,8 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 player.setAllowFlight(!player.getAllowFlight());
                 if (player.getAllowFlight()) {
-                    getMessage().sendActionBar(player, getMessage().get("commands.fly.enable"));
-                } else getMessage().sendActionBar(player, getMessage().get("commands.fly.disable"));
+                    getMessage().sendActionBar(player, getMessage().get("commands.fly.self", getMessage().get("enable")));
+                } else getMessage().sendActionBar(player, getMessage().get("commands.fly.self", getMessage().get("disable")));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.fly.other")) {
@@ -39,18 +39,16 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                         if (target == player) {
                             target.setAllowFlight(!target.getAllowFlight());
                             if (target.getAllowFlight()) {
-                                getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
-                            } else getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("enable")));
+                            } else getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("disable")));
                         } else if (!target.hasPermission("essentials.command.fly.exempt")) {
                             target.setAllowFlight(!target.getAllowFlight());
                             if (target.getAllowFlight()) {
-                                getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
-                                target.sendMessage(getMessage().get("commands.fly.target", player.getName(), "enabled"));
-                                player.sendMessage(getMessage().get("commands.fly.sender", "enabled", target.getName()));
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("enable")));
+                                player.sendMessage(getMessage().get("commands.fly.sender", target.getName(), getMessage().get("enable")));
                             } else {
                                 getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
-                                target.sendMessage(getMessage().get("commands.fly.target", player.getName(), "disabled"));
-                                player.sendMessage(getMessage().get("commands.fly.sender", "disabled", target.getName()));
+                                player.sendMessage(getMessage().get("commands.fly.sender", target.getName(), getMessage().get("disable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.fly.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));

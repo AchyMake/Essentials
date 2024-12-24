@@ -3,6 +3,7 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.runnable.Vanish;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -78,13 +79,7 @@ public class VanishHandler {
         }
     }
     private void addVanishTask(Player player) {
-        int taskID = getScheduler().runLater(new Runnable() {
-            @Override
-            public void run() {
-                getMessage().sendActionBar(player, getMessage().get("events.vanish.enable"));
-                addVanishTask(player);
-            }
-        }, 50).getTaskId();
+        var taskID = getScheduler().runTimer(new Vanish(player), 50, 50).getTaskId();
         getUserdata(player).addTaskID("vanish", taskID);
     }
     public void disable() {
