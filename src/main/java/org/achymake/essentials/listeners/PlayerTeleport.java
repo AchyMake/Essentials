@@ -26,9 +26,10 @@ public class PlayerTeleport implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         var userdata = getUserdata(event.getPlayer());
         if (!userdata.isDisabled()) {
-            if (!event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND))return;
-            if (userdata.getLocation("death") != null && userdata.getLocation("death") == event.getTo()) {
-                userdata.setString("locations.death", null);
+            if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+                if (userdata.getLocation("death") != null && userdata.getLocation("death") == event.getTo()) {
+                    userdata.setString("locations.death", null);
+                }
             }
             userdata.setLocation(event.getFrom(), "recent");
         } else event.setCancelled(true);
