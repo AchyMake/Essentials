@@ -58,7 +58,7 @@ public class VanishHandler {
             userdata.setBoolean("settings.vanished", true);
             getVanished().add(player);
             addVanishTask(player);
-            getMessage().sendActionBar(player, getMessage().get("events.vanish.enable"));
+            getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("enable")));
         } else {
             if (!player.hasPermission("essentials.command.fly")) {
                 player.setAllowFlight(false);
@@ -75,7 +75,7 @@ public class VanishHandler {
             if (!getVanished().isEmpty()) {
                 getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
             }
-            getMessage().sendActionBar(player, getMessage().get("events.vanish.disable"));
+            getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("disable")));
         }
     }
     private void addVanishTask(Player player) {
