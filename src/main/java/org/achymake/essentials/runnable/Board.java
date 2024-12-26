@@ -9,8 +9,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import java.util.List;
-
 public record Board(Player getPlayer, FileConfiguration getConfig) implements Runnable {
     private Essentials getInstance() {
         return Essentials.getInstance();
@@ -22,7 +20,7 @@ public record Board(Player getPlayer, FileConfiguration getConfig) implements Ru
         return getScoreboardManager().getMainScoreboard();
     }
     private Objective getObjective(String objective) {
-        return getScoreboardManager().getMainScoreboard().getObjective(objective);
+        return getScoreboard().getObjective(objective);
     }
     private Scoreboard getNewScoreboard() {
         return getScoreboardManager().getNewScoreboard();
@@ -30,35 +28,17 @@ public record Board(Player getPlayer, FileConfiguration getConfig) implements Ru
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private String getString(String path) {
-        return getConfig().getString(path);
-    }
-    private int getInt(String path) {
-        return getConfig().getInt(path);
-    }
-    private boolean isList(String path) {
-        return getConfig().isList(path);
-    }
-    private List<String> getList(String path) {
-        return getConfig().getStringList(path);
-    }
-    private boolean isSection(String section) {
-        return getConfig().isConfigurationSection(section);
-    }
-    private boolean isEnable() {
-        return getConfig().getBoolean("enable");
-    }
     @Override
     public void run() {
-        if (isEnable()) {
+        if (getConfig().getBoolean("enable")) {
             var world = getPlayer().getWorld().getName();
-            if (isSection("worlds." + world)) {
-                if (isList("worlds." + world + ".lines")) {
-                    var title = getString("worlds." + world + ".title");
+            if (getConfig().isConfigurationSection("worlds." + world)) {
+                if (getConfig().isList("worlds." + world + ".lines")) {
+                    var title = getConfig().getString("worlds." + world + ".title");
                     if (title != null) {
-                        var scoreboardTick = getInt("worlds." + world + ".tick");
+                        var scoreboardTick = getConfig().getInt("worlds." + world + ".tick");
                         if (scoreboardTick >= 3) {
-                            var lines = getList("worlds." + world + ".lines").reversed();
+                            var lines = getConfig().getStringList("worlds." + world + ".lines").reversed();
                             if (!lines.isEmpty()) {
                                 var scoreboard = getScoreboard();
                                 var objective = getObjective("board");
@@ -102,12 +82,12 @@ public record Board(Player getPlayer, FileConfiguration getConfig) implements Ru
                         }
                     }
                 }
-            } else if (isList("lines")) {
-                var title = getString("title");
+            } else if (getConfig().isList("lines")) {
+                var title = getConfig().getString("title");
                 if (title != null) {
-                    var scoreboardTick = getInt("tick");
+                    var scoreboardTick = getConfig().getInt("tick");
                     if (scoreboardTick >= 3) {
-                        var lines = getList("lines").reversed();
+                        var lines = getConfig().getStringList("lines").reversed();
                         if (!lines.isEmpty()) {
                             var scoreboard = getScoreboard();
                             var objective = getObjective("board");

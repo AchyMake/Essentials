@@ -1,9 +1,18 @@
 package org.achymake.essentials.handlers;
 
+import org.achymake.essentials.Essentials;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateHandler {
+    private Essentials getInstance() {
+        return Essentials.getInstance();
+    }
+    private FileConfiguration getConfig() {
+        return getInstance().getConfig();
+    }
     public Date getDate() {
         return new Date();
     }
@@ -48,6 +57,6 @@ public class DateHandler {
         return getDate().getTime() == getDate(date).getTime() || getDate().after(getDate(date));
     }
     public String getFormatted(long date) {
-        return new SimpleDateFormat("MM-dd-yyyy").format(getDate(date));
+        return new SimpleDateFormat(getConfig().getString("date.format")).format(getDate(date));
     }
 }

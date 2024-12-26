@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,8 +17,8 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -89,7 +88,7 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.motd.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }

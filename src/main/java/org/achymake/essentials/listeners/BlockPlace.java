@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +18,8 @@ public class BlockPlace implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -37,7 +36,7 @@ public class BlockPlace implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         var player = event.getPlayer();
-        if (!getUserdata(player).isDisabled()) {
+        if (!getUserdata().isDisabled(player)) {
             if (event.getBlockPlaced().getType().equals(getMaterials().get("spawner"))) {
                 getMaterials().updateSpawner(event.getBlockPlaced(), event.getItemInHand());
             }

@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Spawn;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -14,8 +13,8 @@ public class PlayerSpawnLocation implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Spawn getSpawn() {
         return getInstance().getSpawn();
@@ -28,7 +27,7 @@ public class PlayerSpawnLocation implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerSpawnLocation(PlayerSpawnLocationEvent event) {
-        if (getUserdata(event.getPlayer()).hasJoined())return;
+        if (getUserdata().hasJoined(event.getPlayer()))return;
         if (getSpawn().getLocation() == null)return;
         event.setSpawnLocation(getSpawn().getLocation());
     }

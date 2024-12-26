@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +18,8 @@ public class AsyncPlayerChat implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private VanishHandler getVanishHandler() {
         return getInstance().getVanishHandler();
@@ -37,43 +36,27 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        if (!userdata.isMuted()) {
-            var message = censor(event.getMessage());
-            if (getVanishHandler().isVanish(player)) {
-                var formatString = getMessage().addColor(getConfig().getString("chat.format.vanished"));
-                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
-                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
+        if (!getUserdata().isMuted(player)) {
+            var message = getMessage().censor(event.getMessage());
+            if (!getUserdata().isVanished(player)) {
+                if (!player.isOp()) {
+                    String formatString;
+                    if (!getUserdata().getRank(player).isEmpty()) {
+                        formatString = getMessage().addPlaceholder(player, getConfig().getString("chat.format." + getUserdata().getRank(player)));
+                    } else formatString = getMessage().addPlaceholder(player, getConfig().getString("chat.format.default"));
+                    if (player.hasPermission("essentials.event.chat.color")) {
+                        event.setFormat(formatString + getMessage().addColor(message));
+                    } else event.setFormat(formatString + message);
+                } else event.setFormat(getMessage().addPlaceholder(player, getConfig().getString("chat.format.op")) + getMessage().addColor(message));
+            } else {
+                var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
                 event.setCancelled(true);
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(result + getMessage().addColor(message));
-                    } else vanished.sendMessage(result + message);
+                        vanished.sendMessage(formatString + getMessage().addColor(message));
+                    } else vanished.sendMessage(formatString + message);
                 });
-            } else if (player.isOp()) {
-                var formatString = getMessage().addColor(getConfig().getString("chat.format.op"));
-                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
-                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
-                event.setFormat(result + getMessage().addColor(message));
-            } else {
-                var formatString = getMessage().addColor(getConfig().getString("chat.format.default"));
-                var addPrefix = formatString.replace("%prefix%", userdata.getPrefix());
-                var addPlayer = addPrefix.replace("%player%", userdata.getDisplayName());
-                var result = addPlayer.replace("%suffix%", userdata.getSuffix());
-                if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(result + getMessage().addColor(message));
-                } else event.setFormat(result + message);
             }
         } else event.setCancelled(true);
-    }
-    private String censor(String message) {
-        for (var censored : getConfig().getStringList("chat.censor")) {
-            if (message.toLowerCase().contains(censored.toLowerCase())) {
-                return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
-            }
-        }
-        return message;
     }
 }

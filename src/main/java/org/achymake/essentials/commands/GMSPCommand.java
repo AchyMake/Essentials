@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +13,8 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -27,18 +26,18 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getUserdata(player).setGameMode("spectator");
+                getUserdata().setGameMode(player, "spectator");
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getUserdata(target).setGameMode("spectator");
-                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Spectator"));
+                            getUserdata().setGameMode(target, "spectator");
+                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.spectator")));
                         } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
-                            getUserdata(target).setGameMode("spectator");
-                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Spectator"));
+                            getUserdata().setGameMode(target, "spectator");
+                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.spectator")));
                         } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -48,8 +47,8 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    getUserdata(target).setGameMode("spectator");
-                    consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Spectator"));
+                    getUserdata().setGameMode(target, "spectator");
+                    consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.spectator")));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -63,7 +62,7 @@ public class GMSPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }

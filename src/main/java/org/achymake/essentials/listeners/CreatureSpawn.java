@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.RandomHandler;
 import org.bukkit.attribute.Attribute;
@@ -19,8 +19,8 @@ public class CreatureSpawn implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private RandomHandler getRandomHandler() {
         return getInstance().getRandomHandler();
@@ -38,10 +38,10 @@ public class CreatureSpawn implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         var entity = event.getEntity();
         if (entity instanceof Player)return;
-        if (!getEntities().disableSpawnReason(event.getEntityType(), event.getSpawnReason())) {
-            if (!getEntities().disableCreatureSpawn(event.getEntityType())) {
-                var equipment = getEntities().getEquipment(entity);
-                var config = getEntities().getConfig(event.getEntityType());
+        if (!getEntityHandler().disableSpawnReason(event.getEntityType(), event.getSpawnReason())) {
+            if (!getEntityHandler().disableCreatureSpawn(event.getEntityType())) {
+                var equipment = getEntityHandler().getEquipment(entity);
+                var config = getEntityHandler().getConfig(event.getEntityType());
                 if (config.isConfigurationSection("levels")) {
                     config.getConfigurationSection("levels").getKeys(false).forEach(level -> {
                         var section = "levels." + level;
@@ -155,7 +155,7 @@ public class CreatureSpawn implements Listener {
                         }
                     });
                 }
-                var chunkLimit = getEntities().chunkLimit(event.getEntityType());
+                var chunkLimit = getEntityHandler().chunkLimit(event.getEntityType());
                 if (chunkLimit > 0) {
                     var chunk = event.getLocation().getChunk();
                     var listed = new ArrayList<Entity>();

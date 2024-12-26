@@ -19,8 +19,8 @@ public class EconomyHandler {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
@@ -32,7 +32,7 @@ public class EconomyHandler {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
             if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
-                if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
+                if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
                     accounts.put(offlinePlayer, get(offlinePlayer));
                 }
             }
@@ -43,7 +43,7 @@ public class EconomyHandler {
         var bankAccounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
             if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
-                if (!getUserdata(offlinePlayer).isBanned() || !getUserdata(offlinePlayer).isDisabled()) {
+                if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
                     bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
                 }
             }
@@ -67,23 +67,22 @@ public class EconomyHandler {
         return getConfig().getString("economy.format");
     }
     public double get(OfflinePlayer offlinePlayer) {
-        return getUserdata(offlinePlayer).getAccount();
+        return getUserdata().getAccount(offlinePlayer);
     }
     public boolean has(OfflinePlayer offlinePlayer, double amount) {
         return get(offlinePlayer) >= amount;
     }
     public void add(OfflinePlayer offlinePlayer, double amount) {
-        getUserdata(offlinePlayer).setDouble("account", amount + get(offlinePlayer));
+        getUserdata().setDouble(offlinePlayer, "account", amount + get(offlinePlayer));
     }
     public void remove(OfflinePlayer offlinePlayer, double amount) {
-        getUserdata(offlinePlayer).setDouble("account", get(offlinePlayer) - amount);
+        getUserdata().setDouble(offlinePlayer, "account", get(offlinePlayer) - amount);
     }
     public void reset(OfflinePlayer offlinePlayer) {
-        getUserdata(offlinePlayer).setDouble("account", getConfig().getDouble("economy.starting-balance"));
+        getUserdata().setDouble(offlinePlayer, "account", getConfig().getDouble("economy.starting-balance"));
     }
     public void set(OfflinePlayer offlinePlayer, double amount) {
-        var userdata = getUserdata(offlinePlayer);
-        userdata.setDouble("account", amount);
+        getUserdata().setDouble(offlinePlayer, "account", amount);
     }
     public String currency() {
         return getConfig().getString("economy.currency");
@@ -92,16 +91,16 @@ public class EconomyHandler {
         return new DecimalFormat(getFormat()).format(value);
     }
     public double getBank(OfflinePlayer offlinePlayer) {
-        return getUserdata(offlinePlayer).getBankAccount();
+        return getUserdata().getBankAccount(offlinePlayer);
     }
     public boolean hasBank(OfflinePlayer offlinePlayer, double amount) {
         return getBank(offlinePlayer) >= amount;
     }
     public void removeBank(OfflinePlayer offlinePlayer, double amount) {
-        getUserdata(offlinePlayer).setDouble("bank.account", getBank(offlinePlayer) - amount);
+        getUserdata().setDouble(offlinePlayer, "bank.account", getBank(offlinePlayer) - amount);
     }
     public void addBank(OfflinePlayer offlinePlayer, double amount) {
-        getUserdata(offlinePlayer).setDouble("bank.account", amount + getBank(offlinePlayer));
+        getUserdata().setDouble(offlinePlayer, "bank.account", amount + getBank(offlinePlayer));
     }
     public boolean hasBankOpened(Player player) {
         return banks.containsKey(player);

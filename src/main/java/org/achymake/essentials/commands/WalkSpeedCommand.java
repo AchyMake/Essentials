@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +13,8 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -27,11 +26,11 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getUserdata(player).setWalkSpeed(0);
+                getUserdata().setWalkSpeed(player, 0);
                 player.sendMessage(getMessage().get("commands.walkspeed.changed", "Default"));
             } else if (args.length == 1) {
                 var value = Float.parseFloat(args[0]);
-                getUserdata(player).setWalkSpeed(value);
+                getUserdata().setWalkSpeed(player, value);
                 player.sendMessage(getMessage().get("commands.walkspeed.changed", String.valueOf(value)));
                 return true;
             } else if (args.length == 2) {
@@ -40,10 +39,10 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         var value = Float.parseFloat(args[0]);
                         if (target == player) {
-                            getUserdata(target).setWalkSpeed(value);
+                            getUserdata().setWalkSpeed(target, value);
                             player.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
                         } else if (!target.hasPermission("essentials.command.walkspeed.exempt")) {
-                            getUserdata(target).setWalkSpeed(value);
+                            getUserdata().setWalkSpeed(target, value);
                             player.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
                         } else player.sendMessage(getMessage().get("commands.walkspeed.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
@@ -55,7 +54,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var value = Float.parseFloat(args[0]);
-                    getUserdata(target).setWalkSpeed(value);
+                    getUserdata().setWalkSpeed(target, value);
                     consoleCommandSender.sendMessage(getMessage().get("commands.walkspeed.sender", target.getName(), String.valueOf(value)));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
                 return true;
@@ -74,7 +73,7 @@ public class WalkSpeedCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.walkspeed.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }

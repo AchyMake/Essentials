@@ -4,7 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Spawn;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,14 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Spawn getSpawn() {
         return getInstance().getSpawn();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -32,7 +35,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getSpawn().getLocation() != null) {
-                    getUserdata(player).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                    getWorldHandler().teleport(player, getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
                 } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                 return true;
             } else if (args.length == 1) {
@@ -42,9 +45,9 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                         var spawn = getSpawn().getLocation();
                         if (spawn != null) {
                             if (target == player) {
-                                getUserdata(target).teleport(spawn, "spawn", 0);
+                                getWorldHandler().teleport(target, spawn, "spawn", 0);
                             } else if (!target.hasPermission("essentials.command.spawn.exempt")) {
-                                getUserdata(target).teleport(spawn, "spawn", 0);
+                                getWorldHandler().teleport(target, spawn, "spawn", 0);
                             } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -56,7 +59,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getSpawn().getLocation() != null) {
-                        getUserdata(target).teleport(getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.spawn.invalid"));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
@@ -71,7 +74,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.spawn.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.ScheduleHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,8 +17,8 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -33,39 +32,36 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
-            var userdata = getUserdata(player);
             if (args.length == 0) {
-                if (userdata.getTpaFrom() != null) {
-                    var target = userdata.getTpaFrom().getPlayer();
+                if (getUserdata().getTpaFrom(player) != null) {
+                    var target = getUserdata().getTpaFrom(player).getPlayer();
                     if (target != null) {
-                        var userdataTarget = getUserdata(target);
-                        var tpaTask = userdataTarget.getTaskID("tpa");
+                        var tpaTask = getUserdata().getTaskID(target, "tpa");
                         if (getScheduler().isQueued(tpaTask)) {
                             target.sendMessage(getMessage().get("commands.tpaccept.tpa.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpaccept.tpa.sender", target.getName()));
                             getMessage().sendActionBar(target, getMessage().get("events.teleport.success", player.getName()));
                             target.teleport(player);
-                            userdataTarget.setString("tpa.sent", null);
-                            userdata.setString("tpa.from", null);
-                            userdataTarget.removeTask("tpa");
+                            getUserdata().setString(target, "tpa.sent", null);
+                            getUserdata().setString(player, "tpa.from", null);
+                            getUserdata().removeTask(target, "tpa");
                         }
                     }
-                } else if (userdata.getTpaHereFrom() != null) {
-                    var target = userdata.getTpaHereFrom().getPlayer();
+                } else if (getUserdata().getTpaHereFrom(player) != null) {
+                    var target = getUserdata().getTpaHereFrom(player).getPlayer();
                     if (target != null) {
-                        var userdataTarget = getUserdata(target);
-                        var tpaHereTask = userdataTarget.getTaskID("tpahere");
+                        var tpaHereTask = getUserdata().getTaskID(target, "tpahere");
                         if (getScheduler().isQueued(tpaHereTask)) {
                             target.sendMessage(getMessage().get("commands.tpaccept.tpahere.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpaccept.tpahere.sender", target.getName()));
                             getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));
                             player.teleport(target);
-                            userdataTarget.setString("tpahere.sent", null);
-                            userdata.setString("tpahere.from", null);
-                            userdataTarget.removeTask("tpahere");
+                            getUserdata().setString(target, "tpahere.sent", null);
+                            getUserdata().setString(player, "tpahere.from", null);
+                            getUserdata().removeTask(target, "tpahere");
                         }
                     }
-                } else player.sendMessage(getMessage().get("commands.tpaccept.non-requests"));
+                } else player.sendMessage(getMessage().get("commands.tpaccept.invalid"));
                 return true;
             }
         }

@@ -1,6 +1,7 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +14,9 @@ public class Warps {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private final File file = new File(getInstance().getDataFolder(), "warps.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     public Set<String> getListed() {
@@ -24,7 +28,7 @@ public class Warps {
     public Location getLocation(String warpName) {
         if (config.isConfigurationSection(warpName)) {
             if (config.isString(warpName + ".world")) {
-                var world = getInstance().getWorlds().get(config.getString(warpName + ".world"));
+                var world = getWorldHandler().get(config.getString(warpName + ".world"));
                 if (world != null) {
                     var x = config.getDouble(warpName + ".x");
                     var y = config.getDouble(warpName + ".y");

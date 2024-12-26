@@ -5,8 +5,6 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Skulls;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -17,8 +15,8 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
@@ -105,7 +103,7 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("player")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }

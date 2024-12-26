@@ -7,18 +7,19 @@ import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
@@ -27,13 +28,13 @@ public final class Essentials extends JavaPlugin {
     private Message message;
     private Skulls skulls;
     private Spawn spawn;
+    private Userdata userdata;
     private Warps warps;
-    private Worlds worlds;
     private Worth worth;
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
     private EconomyHandler economyHandler;
-    private Entities entities;
+    private EntityHandler entityHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
     private ProjectileHandler projectileHandler;
@@ -42,24 +43,25 @@ public final class Essentials extends JavaPlugin {
     private ScoreboardHandler scoreboardHandler;
     private TablistHandler tablistHandler;
     private VanishHandler vanishHandler;
+    private WorldHandler worldHandler;
     private UpdateChecker updateChecker;
     private PluginManager manager;
     private BukkitScheduler bukkitScheduler;
     @Override
     public void onEnable() {
         instance = this;
-        entities = new Entities();
         jail = new Jail();
         kits = new Kits();
         message = new Message();
         skulls = new Skulls();
         spawn = new Spawn();
+        userdata = new Userdata();
         warps = new Warps();
-        worlds = new Worlds();
         worth = new Worth();
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
         economyHandler = new EconomyHandler();
+        entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
         projectileHandler = new ProjectileHandler();
@@ -68,6 +70,7 @@ public final class Essentials extends JavaPlugin {
         scoreboardHandler = new ScoreboardHandler();
         tablistHandler = new TablistHandler();
         vanishHandler = new VanishHandler();
+        worldHandler = new WorldHandler();
         updateChecker = new UpdateChecker();
         manager = getServer().getPluginManager();
         bukkitScheduler = getServer().getScheduler();
@@ -252,7 +255,7 @@ public final class Essentials extends JavaPlugin {
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
             getServer().setMotd(line1 + "\n" + line2);
         }
-        getEntities().reload();
+        getEntityHandler().reload();
         getJail().reload();
         getKits().reload();
         getMessage().reload();
@@ -267,8 +270,11 @@ public final class Essentials extends JavaPlugin {
     }
     public void reloadUserdata() {
         if (!getOfflinePlayers().isEmpty()) {
-            getOfflinePlayers().forEach(offlinePlayer -> getUserdata(offlinePlayer).reload());
+            getOfflinePlayers().forEach(offlinePlayer -> getUserdata().reload(offlinePlayer));
         }
+    }
+    public Collection<? extends Player> getOnlinePlayers() {
+        return getServer().getOnlinePlayers();
     }
     public List<OfflinePlayer> getOfflinePlayers() {
         var listed = new ArrayList<OfflinePlayer>();
@@ -289,9 +295,6 @@ public final class Essentials extends JavaPlugin {
         }
         return listed;
     }
-    public Collection<? extends Player> getOnlinePlayers() {
-        return getServer().getOnlinePlayers();
-    }
     public BukkitScheduler getBukkitScheduler() {
         return bukkitScheduler;
     }
@@ -301,8 +304,8 @@ public final class Essentials extends JavaPlugin {
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
     }
-    public WorldHandler getWorldHandler(World getWorld) {
-        return new WorldHandler(getWorld);
+    public WorldHandler getWorldHandler() {
+        return worldHandler;
     }
     public VanishHandler getVanishHandler() {
         return vanishHandler;
@@ -328,6 +331,9 @@ public final class Essentials extends JavaPlugin {
     public InventoryHandler getInventoryHandler() {
         return inventoryHandler;
     }
+    public EntityHandler getEntityHandler() {
+        return entityHandler;
+    }
     public EconomyHandler getEconomyHandler() {
         return economyHandler;
     }
@@ -340,14 +346,11 @@ public final class Essentials extends JavaPlugin {
     public Worth getWorth() {
         return worth;
     }
-    public Worlds getWorlds() {
-        return worlds;
-    }
     public Warps getWarps() {
         return warps;
     }
-    public Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return new Userdata(offlinePlayer);
+    public Userdata getUserdata() {
+        return userdata;
     }
     public Spawn getSpawn() {
         return spawn;
@@ -363,9 +366,6 @@ public final class Essentials extends JavaPlugin {
     }
     public Jail getJail() {
         return jail;
-    }
-    public Entities getEntities() {
-        return entities;
     }
     public static Essentials getInstance() {
         return instance;

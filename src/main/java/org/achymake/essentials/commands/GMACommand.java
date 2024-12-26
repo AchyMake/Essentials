@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +13,8 @@ public class GMACommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -27,18 +26,18 @@ public class GMACommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getUserdata(player).setGameMode("adventure");
+                getUserdata().setGameMode(player, "adventure");
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getUserdata(target).setGameMode("adventure");
-                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Adventure"));
+                            getUserdata().setGameMode(target, "adventure");
+                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.adventure")));
                         } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
-                            getUserdata(target).setGameMode("adventure");
-                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Adventure"));
+                            getUserdata().setGameMode(target, "adventure");
+                            player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.adventure")));
                         } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -48,8 +47,8 @@ public class GMACommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    getUserdata(target).setGameMode("adventure");
-                    consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), "Adventure"));
+                    getUserdata().setGameMode(target, "adventure");
+                    consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode.adventure")));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -63,7 +62,7 @@ public class GMACommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.gamemode.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }

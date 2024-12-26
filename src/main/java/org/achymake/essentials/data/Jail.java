@@ -1,6 +1,7 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,11 +13,14 @@ public class Jail {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private final File file = new File(getInstance().getDataFolder(), "jail.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     public Location getLocation() {
         if (config.isString("world")) {
-            var world = getInstance().getWorlds().get(config.getString("world"));
+            var world = getWorldHandler().get(config.getString("world"));
             if (world != null) {
                 var x = config.getDouble("x");
                 var y = config.getDouble("y");

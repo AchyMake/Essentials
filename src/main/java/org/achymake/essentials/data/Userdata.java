@@ -1,8 +1,8 @@
 package org.achymake.essentials.data;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.ScheduleHandler;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public record Userdata(OfflinePlayer getOfflinePlayer) {
+public class Userdata {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
     private FileConfiguration getMain() {
         return getInstance().getConfig();
     }
-    private Worlds getWorlds() {
-        return getInstance().getWorlds();
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -33,17 +33,17 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
-    private File getFile() {
-        return new File(getInstance().getDataFolder(), "userdata/" + getUUID() + ".yml");
+    public File getFile(OfflinePlayer offlinePlayer) {
+        return new File(getInstance().getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
     }
-    public boolean exists() {
-        return getFile().exists();
+    public boolean exists(OfflinePlayer offlinePlayer) {
+        return getFile(offlinePlayer).exists();
     }
-    public FileConfiguration getConfig() {
-        return YamlConfiguration.loadConfiguration(getFile());
+    public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
+        return YamlConfiguration.loadConfiguration(getFile(offlinePlayer));
     }
-    public void setString(String path, String value) {
-        var file = getFile();
+    public void setString(OfflinePlayer offlinePlayer, String path, String value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -52,8 +52,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setStringList(String path, List<String> value) {
-        var file = getFile();
+    public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -62,8 +62,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setDouble(String path, double value) {
-        var file = getFile();
+    public void setDouble(OfflinePlayer offlinePlayer, String path, double value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -72,8 +72,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setInt(String path, int value) {
-        var file = getFile();
+    public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -82,8 +82,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setFloat(String path, float value) {
-        var file = getFile();
+    public void setFloat(OfflinePlayer offlinePlayer, String path, float value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -92,8 +92,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setLong(String path, long value) {
-        var file = getFile();
+    public void setLong(OfflinePlayer offlinePlayer, String path, long value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -102,8 +102,8 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void setBoolean(String path, boolean value) {
-        var file = getFile();
+    public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
@@ -112,155 +112,165 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public String getName() {
-        return getOfflinePlayer().getName();
+    public boolean hasJoined(OfflinePlayer offlinePlayer) {
+        if (exists(offlinePlayer)) {
+            return isLocation(offlinePlayer, "quit");
+        } else return false;
     }
-    public String getDisplayName() {
-        return getConfig().getString("display-name");
+    public String getDisplayName(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getString("display-name");
     }
-    public double getAccount() {
-        return getConfig().getDouble("account");
+    public double getAccount(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getDouble("account");
     }
-    public double getBankAccount() {
-        return getConfig().getDouble("bank.account");
+    public double getBankAccount(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getDouble("bank.account");
     }
-    public List<String> getBankMembers() {
-        return getConfig().getStringList("bank.members");
+    public List<String> getBankMembers(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getStringList("bank.members");
     }
-    public boolean isBanned() {
-        return getConfig().getBoolean("settings.banned");
+    public boolean isDisabled(OfflinePlayer offlinePlayer) {
+        return isFrozen(offlinePlayer) || isJailed(offlinePlayer);
     }
-    public String getBanReason() {
-        if (getConfig().isString("settings.ban-reason")) {
-            return getConfig().getString("settings.ban-reason");
+    public boolean isPVP(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.pvp");
+    }
+    public boolean isFrozen(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.frozen");
+    }
+    public boolean isJailed(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.jailed");
+    }
+    public boolean isMuted(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.muted");
+    }
+    public boolean isBanned(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.banned");
+    }
+    public String getBanReason(OfflinePlayer offlinePlayer) {
+        if (getConfig(offlinePlayer).isString("settings.ban-reason")) {
+            return getConfig(offlinePlayer).getString("settings.ban-reason");
         } else return "None";
     }
-    public long getBanExpire() {
-        return getConfig().getLong("settings.ban-expire");
+    public long getBanExpire(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getLong("settings.ban-expire");
     }
-    public boolean isFrozen() {
-        return getConfig().getBoolean("settings.frozen");
+    public boolean isVanished(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
-    public boolean isJailed() {
-        return getConfig().getBoolean("settings.jailed");
-    }
-    public boolean isDisabled() {
-        return isFrozen() || isJailed();
-    }
-    public boolean isMuted() {
-        return getConfig().getBoolean("settings.muted");
-    }
-    public boolean isPVP() {
-        return getConfig().getBoolean("settings.pvp");
-    }
-    public boolean isVanished() {
-        return getConfig().getBoolean("settings.vanished");
-    }
-    public OfflinePlayer getLastWhisper() {
-        if (getConfig().isString("last-whisper")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(getConfig().getString("last-whisper")));
+    public OfflinePlayer getLastWhisper(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("last-whisper")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("last-whisper")));
         } else return null;
     }
-    public OfflinePlayer getTpaSent() {
-        if (getConfig().isString("tpa.sent")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(getConfig().getString("tpa.sent")));
+    public OfflinePlayer getTpaSent(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("tpa.sent")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpa.sent")));
         } else return null;
     }
-    public OfflinePlayer getTpaFrom() {
-        if (getConfig().isString("tpa.from")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(getConfig().getString("tpa.from")));
+    public OfflinePlayer getTpaFrom(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("tpa.from")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpa.from")));
         } else return null;
     }
-    public OfflinePlayer getTpaHereSent() {
-        if (getConfig().isString("tpahere.sent")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(getConfig().getString("tpahere.sent")));
+    public OfflinePlayer getTpaHereSent(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("tpahere.sent")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpahere.sent")));
         } else return null;
     }
-    public OfflinePlayer getTpaHereFrom() {
-        if (getConfig().isString("tpahere.from")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(getConfig().getString("tpahere.from")));
+    public OfflinePlayer getTpaHereFrom(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("tpahere.from")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpahere.from")));
         } else return null;
     }
-    public Set<String> getHomes() {
-        return getConfig().getConfigurationSection("homes").getKeys(false);
+    public boolean isHome(OfflinePlayer offlinePlayer, String homeName) {
+        return getHomes(offlinePlayer).contains(homeName);
     }
-    public boolean isHome(String homeName) {
-        return getHomes().contains(homeName);
+    public Set<String> getHomes(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getConfigurationSection("homes").getKeys(false);
     }
-    public Location getHome(String homeName) {
-        if (isHome(homeName)) {
-            var world = getWorlds().get(getConfig().getString("homes." + homeName + ".world"));
+    public int getMaxHomes(Player player) {
+        if (!player.isOp()) {
+            return getMain().getInt("homes." + getRank(player));
+        } else return  9999;
+    }
+    public Location getHome(OfflinePlayer offlinePlayer, String homeName) {
+        if (isHome(offlinePlayer, homeName)) {
+            var config = getConfig(offlinePlayer);
+            var world = getWorldHandler().get(config.getString("homes." + homeName + ".world"));
             if (world != null) {
-                var x = getConfig().getDouble("homes." + homeName + ".x");
-                var y = getConfig().getDouble("homes." + homeName + ".y");
-                var z = getConfig().getDouble("homes." + homeName + ".z");
-                var yaw = getConfig().getLong("homes." + homeName + ".yaw");
-                var pitch = getConfig().getLong("homes." + homeName + ".pitch");
+                var x = config.getDouble("homes." + homeName + ".x");
+                var y = config.getDouble("homes." + homeName + ".y");
+                var z = config.getDouble("homes." + homeName + ".z");
+                var yaw = config.getLong("homes." + homeName + ".yaw");
+                var pitch = config.getLong("homes." + homeName + ".pitch");
                 return new Location(world, x, y, z, yaw, pitch);
             } else return null;
         } else return null;
     }
-    public boolean setHome(String homeName) {
-        var player = getPlayer();
-        if (player != null) {
-            var location = player.getLocation();
-            if (isHome(homeName)) {
-                var file = getFile();
-                var config = YamlConfiguration.loadConfiguration(file);
-                config.set("homes." + homeName + ".world", location.getWorld().getName());
-                config.set("homes." + homeName + ".x", location.getX());
-                config.set("homes." + homeName + ".y", location.getY());
-                config.set("homes." + homeName + ".z", location.getZ());
-                config.set("homes." + homeName + ".yaw", location.getYaw());
-                config.set("homes." + homeName + ".pitch", location.getPitch());
-                try {
-                    config.save(file);
-                    return true;
-                } catch (IOException e) {
-                    getInstance().sendWarning(e.getMessage());
-                    return false;
-                }
-            } else if (getMaxHomes() > getHomes().size()) {
-                var file = getFile();
-                var config = YamlConfiguration.loadConfiguration(file);
-                config.set("homes." + homeName + ".world", location.getWorld().getName());
-                config.set("homes." + homeName + ".x", location.getX());
-                config.set("homes." + homeName + ".y", location.getY());
-                config.set("homes." + homeName + ".z", location.getZ());
-                config.set("homes." + homeName + ".yaw", location.getYaw());
-                config.set("homes." + homeName + ".pitch", location.getPitch());
-                try {
-                    config.save(file);
-                    return true;
-                } catch (IOException e) {
-                    getInstance().sendWarning(e.getMessage());
-                    return false;
-                }
-            } else return false;
+    public boolean setHome(Player player, String homeName) {
+        var location = player.getLocation();
+        if (isHome(player, homeName)) {
+            var file = getFile(player);
+            var config = YamlConfiguration.loadConfiguration(file);
+            config.set("homes." + homeName + ".world", location.getWorld().getName());
+            config.set("homes." + homeName + ".x", location.getX());
+            config.set("homes." + homeName + ".y", location.getY());
+            config.set("homes." + homeName + ".z", location.getZ());
+            config.set("homes." + homeName + ".yaw", location.getYaw());
+            config.set("homes." + homeName + ".pitch", location.getPitch());
+            try {
+                config.save(file);
+                return true;
+            } catch (IOException e) {
+                getInstance().sendWarning(e.getMessage());
+                return false;
+            }
+        } else if (getMaxHomes(player) > getHomes(player).size()) {
+            var file = getFile(player);
+            var config = YamlConfiguration.loadConfiguration(file);
+            config.set("homes." + homeName + ".world", location.getWorld().getName());
+            config.set("homes." + homeName + ".x", location.getX());
+            config.set("homes." + homeName + ".y", location.getY());
+            config.set("homes." + homeName + ".z", location.getZ());
+            config.set("homes." + homeName + ".yaw", location.getYaw());
+            config.set("homes." + homeName + ".pitch", location.getPitch());
+            try {
+                config.save(file);
+                return true;
+            } catch (IOException e) {
+                getInstance().sendWarning(e.getMessage());
+                return false;
+            }
         } else return false;
     }
-    private static int maxHomes;
-    public int getMaxHomes() {
-        var player = getPlayer();
-        if (player != null) {
-            if (!player.isOp()) {
-                getMain().getConfigurationSection("homes").getKeys(false).forEach(rank -> {
-                    if (player.hasPermission("essentials.command.sethome.multiple." + rank)) {
-                        maxHomes = getMain().getInt("homes." + rank);
-                    }
-                });
-            } else maxHomes = 9999;
-        }
-        return maxHomes;
+    public boolean isLocation(OfflinePlayer offlinePlayer, String locationName) {
+        return getLocations(offlinePlayer).contains(locationName);
     }
-    public Set<String> getLocations() {
-        return getConfig().getConfigurationSection("locations").getKeys(false);
+    public Set<String> getLocations(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getConfigurationSection("locations").getKeys(false);
     }
-    public boolean isLocation(String locationName) {
-        return getLocations().contains(locationName);
+    public Location getLocation(OfflinePlayer offlinePlayer, String locationName) {
+        if (isLocation(offlinePlayer, locationName)) {
+            var config = getConfig(offlinePlayer);
+            var world = getWorldHandler().get(config.getString("locations." + locationName + ".world"));
+            if (world != null) {
+                var x = config.getDouble("locations." + locationName + ".x");
+                var y = config.getDouble("locations." + locationName + ".y");
+                var z = config.getDouble("locations." + locationName + ".z");
+                var yaw = config.getLong("locations." + locationName + ".yaw");
+                var pitch = config.getLong("locations." + locationName + ".pitch");
+                return new Location(world, x, y, z, yaw, pitch);
+            } else return null;
+        } else return null;
     }
-    public void setLocation(Location location, String locationName) {
-        var file = getFile();
+    public void setLocation(OfflinePlayer offlinePlayer, Location location, String locationName) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set("locations." + locationName + ".world", location.getWorld().getName());
         config.set("locations." + locationName + ".x", location.getX());
@@ -274,56 +284,38 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public Location getLocation(String locationName) {
-        if (isLocation(locationName)) {
-            var world = getWorlds().get(getConfig().getString("locations." + locationName + ".world"));
-            if (world != null) {
-                var x = getConfig().getDouble("locations." + locationName + ".x");
-                var y = getConfig().getDouble("locations." + locationName + ".y");
-                var z = getConfig().getDouble("locations." + locationName + ".z");
-                var yaw = getConfig().getLong("locations." + locationName + ".yaw");
-                var pitch = getConfig().getLong("locations." + locationName + ".pitch");
-                return new Location(world, x, y, z, yaw, pitch);
-            } else return null;
-        } else return null;
+    public void addTaskID(OfflinePlayer offlinePlayer, String task, int value) {
+        setInt(offlinePlayer, "tasks." + task, value);
     }
-    public void addTaskID(String task, int value) {
-        setInt("tasks." + task, value);
+    public boolean hasTaskID(OfflinePlayer offlinePlayer, String task) {
+        return getConfig(offlinePlayer).isInt("tasks." + task);
     }
-    public boolean hasTaskID(String task) {
-        return getConfig().isInt("tasks." + task);
+    public int getTaskID(OfflinePlayer offlinePlayer, String task) {
+        return getConfig(offlinePlayer).getInt("tasks." + task);
     }
-    public int getTaskID(String task) {
-        return getConfig().getInt("tasks." + task);
-    }
-    public void removeTask(String task) {
-        if (getScheduler().isQueued(getTaskID(task))) {
-            getScheduler().cancel(getTaskID(task));
+    public void removeTask(OfflinePlayer offlinePlayer, String task) {
+        if (getScheduler().isQueued(getTaskID(offlinePlayer, task))) {
+            getScheduler().cancel(getTaskID(offlinePlayer, task));
         }
-        setString("tasks." + task, null);
+        setString(offlinePlayer, "tasks." + task, null);
     }
-    public void disableTasks() {
-        getConfig().getConfigurationSection("tasks").getKeys(false).forEach(this::removeTask);
+    public void disableTasks(OfflinePlayer offlinePlayer) {
+        getConfig(offlinePlayer).getConfigurationSection("tasks").getKeys(false).forEach(s -> removeTask(offlinePlayer, s));
     }
-    public boolean hasJoined() {
-        if (exists()) {
-            return isLocation("quit");
-        } else return false;
-    }
-    private void setup() {
-        var file = getFile();
+    private void setup(OfflinePlayer offlinePlayer) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
-        config.set("name", getName());
-        config.set("display-name", getName());
+        config.set("name", offlinePlayer.getName());
+        config.set("display-name", offlinePlayer.getName());
         config.set("account", getMain().getDouble("economy.starting-balance"));
         config.set("bank.account", getMain().getDouble("economy.bank.starting-balance"));
         config.createSection("bank.members");
-        config.set("settings.banned", false);
-        config.set("settings.ban-expire", 0);
+        config.set("settings.pvp", true);
         config.set("settings.frozen", false);
         config.set("settings.jailed", false);
         config.set("settings.muted", false);
-        config.set("settings.pvp", true);
+        config.set("settings.banned", false);
+        config.set("settings.ban-expire", 0);
         config.set("settings.vanished", false);
         config.createSection("tpa");
         config.createSection("tpahere");
@@ -336,153 +328,79 @@ public record Userdata(OfflinePlayer getOfflinePlayer) {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void reload() {
-        if (exists()) {
-            var file = getFile();
+    public void reload(OfflinePlayer offlinePlayer) {
+        if (exists(offlinePlayer)) {
+            var file = getFile(offlinePlayer);
             var config = YamlConfiguration.loadConfiguration(file);
             try {
                 config.load(file);
             } catch (IOException | InvalidConfigurationException e) {
                 getInstance().sendWarning(e.getMessage());
             }
-            if (!getName().equals(config.getString("name"))) {
-                config.set("name", getName());
+            if (!offlinePlayer.getName().equals(config.getString("name"))) {
+                config.set("name", offlinePlayer.getName());
                 try {
                     config.save(file);
                 } catch (IOException e) {
                     getInstance().sendWarning(e.getMessage());
                 }
             }
-        } else setup();
+        } else setup(offlinePlayer);
     }
-    public UUID getUUID() {
-        return getOfflinePlayer().getUniqueId();
-    }
-    public Player getPlayer() {
-        return getOfflinePlayer().getPlayer();
-    }
-    public void teleport(Location location, String name, int timer) {
-        var player = getPlayer();
-        if (player != null) {
-            if (!hasTaskID("teleport")) {
-                if (!location.getChunk().isLoaded()) {
-                    location.getChunk().load();
+    private String rank;
+    public String getRank(Player player) {
+        if (!player.isOp()) {
+            getInstance().getConfig().getConfigurationSection("homes").getKeys(false).forEach(ranks -> {
+                if (player.hasPermission("essentials.command.sethome.multiple." + ranks)) {
+                    rank = ranks;
                 }
-                if (timer > 0) {
-                    getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(timer)));
-                    var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
-                            player.teleport(location);
-                            removeTask("teleport");
-                        }
-                    }, timer * 20L).getTaskId();
-                    addTaskID("teleport", taskID);
-                } else {
-                    getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
-                    player.teleport(location);
-                }
-            } else player.sendMessage(getMessage().get("events.teleport.has-task"));
-        }
+            });
+        } else rank = "op";
+        return rank;
     }
-    @Override
-    public OfflinePlayer getOfflinePlayer() {
-        return getOfflinePlayer;
+    public String getPrefix(Player player) {
+        if (getMessage().isRegistered("vault")) {
+            return getMessage().addPlaceholder(player, "%vault_prefix%");
+        } else return "";
+    }
+    public String getSuffix(Player player) {
+        if (getMessage().isRegistered("vault")) {
+            return getMessage().addPlaceholder(player, "%vault_suffix%");
+        } else return "";
     }
     public float getDefaultFlySpeed() {
         return 0.1F;
     }
-    public void setFlySpeed(float amount) {
-        var player = getPlayer();
-        if (player != null) {
-            if (amount > 0) {
-                player.setFlySpeed(getDefaultFlySpeed() * amount);
-            } else player.setFlySpeed(getDefaultFlySpeed());
-        }
-    }
     public float getDefaultWalkSpeed() {
         return 0.2F;
     }
-    public void setWalkSpeed(float amount) {
-        var player = getPlayer();
-        if (player != null) {
-            if (amount > 0) {
-                player.setWalkSpeed(getDefaultWalkSpeed() * amount);
-            } else player.setWalkSpeed(getDefaultWalkSpeed());
-        }
+    public void setFlySpeed(Player player, float amount) {
+        if (amount > 0) {
+            player.setFlySpeed(getDefaultFlySpeed() * amount);
+        } else player.setFlySpeed(getDefaultFlySpeed());
     }
-    public boolean setGameMode(String mode) {
-        var player = getPlayer();
-        if (player != null) {
-            if (mode.equalsIgnoreCase("adventure")) {
-                player.setGameMode(GameMode.ADVENTURE);
-                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.adventure"));
-                return true;
-            } else if (mode.equalsIgnoreCase("creative")) {
-                player.setGameMode(GameMode.CREATIVE);
-                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.creative"));
-                return true;
-            } else if (mode.equalsIgnoreCase("spectator")) {
-                player.setGameMode(GameMode.SPECTATOR);
-                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.spectator"));
-                return true;
-            } else if (mode.equalsIgnoreCase("survival")) {
-                player.setGameMode(GameMode.SURVIVAL);
-                getMessage().sendActionBar(player, getMessage().get("commands.gamemode.survival"));
-                return true;
-            } else return false;
+    public void setWalkSpeed(Player player, float amount) {
+        if (amount > 0) {
+            player.setWalkSpeed(getDefaultWalkSpeed() * amount);
+        } else player.setWalkSpeed(getDefaultWalkSpeed());
+    }
+    public boolean setGameMode(Player player, String mode) {
+        if (mode.equalsIgnoreCase("adventure")) {
+            player.setGameMode(GameMode.ADVENTURE);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.adventure")));
+            return true;
+        } else if (mode.equalsIgnoreCase("creative")) {
+            player.setGameMode(GameMode.CREATIVE);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.creative")));
+            return true;
+        } else if (mode.equalsIgnoreCase("spectator")) {
+            player.setGameMode(GameMode.SPECTATOR);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.spectator")));
+            return true;
+        } else if (mode.equalsIgnoreCase("survival")) {
+            player.setGameMode(GameMode.SURVIVAL);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
+            return true;
         } else return false;
-    }
-    public void randomTeleport() {
-        var player = getPlayer();
-        if (player != null) {
-            getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
-            getScheduler().runLater(new Runnable() {
-                @Override
-                public void run() {
-                    var block = getWorlds().highestRandomBlock(getMain().getString("commands.rtp.world"), getMain().getInt("commands.rtp.spread"));
-                    if (block.isLiquid()) {
-                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
-                        randomTeleport();
-                    } else {
-                        if (!block.getChunk().isLoaded()) {
-                            block.getChunk().load();
-                        }
-                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
-                        player.teleport(block.getLocation().add(0.5,1,0.5));
-                    }
-                }
-            }, 0);
-        }
-    }
-    public String getPrefix() {
-        var player = getPlayer();
-        if (player != null) {
-            if (PlaceholderAPI.isRegistered("vault")) {
-                return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_prefix%"));
-            } else return "";
-        } else return "";
-    }
-    public String getSuffix() {
-        var player = getPlayer();
-        if (player != null) {
-            if (PlaceholderAPI.isRegistered("vault")) {
-                return getMessage().addColor(PlaceholderAPI.setPlaceholders(player, "%vault_suffix%"));
-            } else return "";
-        } else return "";
-    }
-    public void sendDeathLocation() {
-        var player = getPlayer();
-        if (player != null) {
-            var location = getLocation("death");
-            if (location == null)return;
-            var world = location.getWorld().getName();
-            var x = String.valueOf(location.getBlockX());
-            var y = String.valueOf(location.getBlockY());
-            var z = String.valueOf(location.getBlockZ());
-            player.sendMessage(getMessage().get("events.respawn.title"));
-            player.sendMessage(getMessage().get("events.respawn.location", world, x, y, z));
-        }
     }
 }

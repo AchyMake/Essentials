@@ -5,9 +5,9 @@ import org.achymake.essentials.UpdateChecker;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.ScheduleHandler;
+import org.achymake.essentials.handlers.ScoreboardHandler;
 import org.achymake.essentials.handlers.TablistHandler;
 import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -23,11 +23,8 @@ public class PlayerJoin implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
-    }
-    private VanishHandler getVanishHandler() {
-        return getInstance().getVanishHandler();
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private UpdateChecker getUpdateChecker() {
         return getInstance().getUpdateChecker();
@@ -35,8 +32,14 @@ public class PlayerJoin implements Listener {
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
+    private ScoreboardHandler getScoreboardHandler() {
+        return getInstance().getScoreboardHandler();
+    }
     private TablistHandler getTablistHandler() {
         return getInstance().getTablistHandler();
+    }
+    private VanishHandler getVanishHandler() {
+        return getInstance().getVanishHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -50,16 +53,16 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
+        getScoreboardHandler().apply(player);
         getTablistHandler().apply(player);
-        getInstance().getScoreboardHandler().apply(player);
-        if (!getUserdata(player).isVanished()) {
+        if (!getUserdata().isVanished(player)) {
             getVanishHandler().hideVanished(player);
             if (getConfig().getBoolean("connection.join.enable")) {
                 sendJoinSound();
-                event.setJoinMessage(getMessage().addColor(getConfig().getString("connection.join.message").replaceAll("%player%", player.getName())));
+                event.setJoinMessage(getMessage().addPlaceholder(player, getConfig().getString("connection.join.message")));
             } else if (player.hasPermission("essentials.event.join.message")) {
                 sendJoinSound();
-                event.setJoinMessage(getMessage().addColor(getConfig().getString("connection.join.message").replaceAll("%player%", player.getName())));
+                event.setJoinMessage(getMessage().addPlaceholder(player, getConfig().getString("connection.join.message")));
             } else {
                 event.setJoinMessage(null);
                 getMessage().sendAll(getMessage().get("events.join.notify", player.getName()), "essentials.event.join.notify");
@@ -67,7 +70,7 @@ public class PlayerJoin implements Listener {
             getScheduler().runLater(new Runnable() {
                 @Override
                 public void run() {
-                    if (getUserdata(player).hasJoined()) {
+                    if (getUserdata().hasJoined(player)) {
                         getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome-back"));
                     } else getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
                 }

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -33,9 +32,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
             if (args.length == 2) {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        userdataOffline.setDouble("account", getInstance().getConfig().getDouble("economy.starting-balance"));
+                    if (getUserdata().exists(offlinePlayer)) {
+                        getUserdata().setDouble(offlinePlayer, "account", getInstance().getConfig().getDouble("economy.starting-balance"));
                         player.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
@@ -44,15 +42,13 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 var value = Double.parseDouble(args[2]);
                 if (args[0].equalsIgnoreCase("add")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         getEconomy().add(offlinePlayer, value);
                         player.sendMessage(getMessage().get("commands.eco.add", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("remove")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         if (getEconomy().has(offlinePlayer, value)) {
                             getEconomy().remove(offlinePlayer, value);
                             player.sendMessage(getMessage().get("commands.eco.remove.success", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
@@ -60,9 +56,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("set")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        userdataOffline.setDouble("account", value);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        getUserdata().setDouble(offlinePlayer, "account", value);
                         player.sendMessage(getMessage().get("commands.eco.set", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
@@ -72,9 +67,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
             if (args.length == 2) {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        userdataOffline.setDouble("account", getInstance().getConfig().getDouble("economy.starting-balance"));
+                    if (getUserdata().exists(offlinePlayer)) {
+                        getUserdata().setDouble(offlinePlayer, "account", getInstance().getConfig().getDouble("economy.starting-balance"));
                         consoleCommandSender.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
@@ -83,15 +77,13 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 var value = Double.parseDouble(args[2]);
                 if (args[0].equalsIgnoreCase("add")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         getEconomy().add(offlinePlayer, value);
                         consoleCommandSender.sendMessage(getMessage().get("commands.eco.add", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("remove")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         if (getEconomy().has(offlinePlayer, value)) {
                             getEconomy().remove(offlinePlayer, value);
                             consoleCommandSender.sendMessage(getMessage().get("commands.eco.remove.success", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
@@ -99,8 +91,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 } else if (args[0].equalsIgnoreCase("set")) {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         getEconomy().set(offlinePlayer, value);
                         consoleCommandSender.sendMessage(getMessage().get("commands.eco.set", getEconomy().currency() + getEconomy().format(value), offlinePlayer.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -121,7 +112,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 commands.add("set");
             } else if (args.length == 2) {
                 getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
+                    if (!getUserdata().isVanished(target)) {
                         if (target.getName().startsWith(args[1])) {
                             commands.add(target.getName());
                         }

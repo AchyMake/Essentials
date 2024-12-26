@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,8 +16,8 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -31,7 +30,7 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var value = Float.parseFloat(args[0]);
-                getUserdata(player).setFlySpeed(value);
+                getUserdata().setFlySpeed(player, value);
                 player.sendMessage(getMessage().get("commands.flyspeed.self", String.valueOf(value)));
                 return true;
             } else if (args.length == 2) {
@@ -40,11 +39,11 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         if (target == player) {
-                            getUserdata(player).setFlySpeed(value);
+                            getUserdata().setFlySpeed(player, value);
                             target.sendMessage(getMessage().get("commands.flyspeed.target", player.getName(), String.valueOf(value)));
                             player.sendMessage(getMessage().get("commands.flyspeed.sender", target.getName(), String.valueOf(value)));
                         } else if (!target.hasPermission("essentials.command.flyspeed.exempt")) {
-                            getUserdata(target).setFlySpeed(value);
+                            getUserdata().setFlySpeed(target, value);
                             target.sendMessage(getMessage().get("commands.flyspeed.target", player.getName(), String.valueOf(value)));
                             player.sendMessage(getMessage().get("commands.flyspeed.sender", target.getName(), String.valueOf(value)));
                         } else player.sendMessage(getMessage().get("commands.flyspeed.exempt", target.getName()));
@@ -66,7 +65,7 @@ public class FlySpeedCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.flyspeed.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }

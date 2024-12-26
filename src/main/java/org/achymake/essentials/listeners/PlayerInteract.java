@@ -1,9 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -21,11 +19,8 @@ public class PlayerInteract implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
-    }
-    private Message getMessage() {
-        return getInstance().getMessage();
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -39,7 +34,7 @@ public class PlayerInteract implements Listener {
         var player = event.getPlayer();
         if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             if (event.getHand() != EquipmentSlot.HAND)return;
-            if (!getUserdata(player).isDisabled())return;
+            if (!getUserdata().isDisabled(player))return;
             event.setCancelled(true);
             event.setUseItemInHand(Event.Result.DENY);
             event.setUseInteractedBlock(Event.Result.DENY);
@@ -56,7 +51,7 @@ public class PlayerInteract implements Listener {
                 if (!getConfig().getBoolean("eggs.disable-tramping-sniffer-egg"))return;
                 event.setCancelled(true);
                 event.setUseInteractedBlock(Event.Result.DENY);
-            } else if (getUserdata(player).isDisabled() || getUserdata(player).isVanished()) {
+            } else if (getUserdata().isDisabled(player) || getUserdata().isVanished(player)) {
                 event.setCancelled(true);
                 event.setUseInteractedBlock(Event.Result.DENY);
             }

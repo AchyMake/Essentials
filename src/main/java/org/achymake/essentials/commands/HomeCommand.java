@@ -3,7 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,8 +17,11 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -31,9 +34,9 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 var delay = getInstance().getConfig().getInt("teleport.delay");
-                var home = getUserdata(player).getHome("home");
+                var home = getUserdata().getHome(player, "home");
                 if (home != null) {
-                    getUserdata(player).teleport(home, "home", delay);
+                    getWorldHandler().teleport(player, home, "home", delay);
                 } else player.sendMessage(getMessage().get("commands.home.invalid", "home"));
                 return true;
             } else if (args.length == 1) {
@@ -43,14 +46,14 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("essentials.command.home.bed")) {
                         var bed = player.getBedSpawnLocation();
                         if (bed != null) {
-                            getUserdata(player).teleport(bed, homeName, delay);
+                            getWorldHandler().teleport(player, bed, homeName, delay);
                         } else player.sendMessage(getMessage().get("commands.home.invalid", "bed"));
                         return true;
                     }
                 } else {
-                    var home = getUserdata(player).getHome(homeName);
+                    var home = getUserdata().getHome(player, homeName);
                     if (home != null) {
-                        getUserdata(player).teleport(home, homeName, delay);
+                        getWorldHandler().teleport(player, home, homeName, delay);
                     } else player.sendMessage(getMessage().get("commands.home.invalid", homeName));
                     return true;
                 }
@@ -66,7 +69,7 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.home.bed")) {
                     commands.add("bed");
                 }
-                commands.addAll(getUserdata(player).getHomes());
+                commands.addAll(getUserdata().getHomes(player));
             }
         }
         return commands;

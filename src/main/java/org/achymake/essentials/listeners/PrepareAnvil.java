@@ -13,11 +13,11 @@ public class PrepareAnvil implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Message getMessage() {
-        return getInstance().getMessage();
-    }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
     }
     private PluginManager getManager() {
         return getInstance().getManager();

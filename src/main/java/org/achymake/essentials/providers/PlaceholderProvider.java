@@ -38,13 +38,12 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return "";
         } else {
             var instance = Essentials.getInstance();
-            var userdata = instance.getUserdata(player);
             switch (params) {
                 case "name" -> {
                     return player.getName();
                 }
                 case "display_name" -> {
-                    return userdata.getDisplayName();
+                    return instance.getUserdata().getDisplayName(player);
                 }
                 case "vanished" -> {
                     return String.valueOf(instance.getVanishHandler().getVanished().contains(player));
@@ -53,28 +52,19 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
                 }
                 case "account" -> {
-                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(userdata.getAccount());
+                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getUserdata().getAccount(player));
                 }
                 case "bank" -> {
-                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(userdata.getBankAccount());
+                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getUserdata().getBankAccount(player));
                 }
                 case "pvp" -> {
-                    return String.valueOf(userdata.isPVP());
+                    return String.valueOf(instance.getUserdata().isPVP(player));
                 }
                 case "max_homes" -> {
-                    return String.valueOf(userdata.getMaxHomes());
+                    return String.valueOf(instance.getUserdata().getMaxHomes(player));
                 }
                 case "homes_left" -> {
-                    return String.valueOf(userdata.getMaxHomes() - userdata.getHomes().size());
-                }
-                case "world_name" -> {
-                    return player.getWorld().getName();
-                }
-                case "world_pvp" -> {
-                    return String.valueOf(player.getWorld().getPVP());
-                }
-                case "world_difficulty" -> {
-                    return instance.getMessage().toTitleCase(player.getWorld().getDifficulty().toString());
+                    return String.valueOf(instance.getUserdata().getMaxHomes(player) - instance.getUserdata().getHomes(player).size());
                 }
             }
         }

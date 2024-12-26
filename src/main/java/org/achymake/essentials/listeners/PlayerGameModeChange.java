@@ -2,6 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,7 +24,23 @@ public class PlayerGameModeChange implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
-        event.getPlayer().sendMessage(getMessage().get("events.gamemode.change", getMessage().toTitleCase(event.getNewGameMode().name())));
-        getMessage().sendAll(getMessage().get("events.gamemode.notify", event.getPlayer().getName(), getMessage().toTitleCase(event.getNewGameMode().name())), "essentials.command.gamemode.notify");
+        var player = event.getPlayer();
+        if (event.getNewGameMode().equals(GameMode.ADVENTURE)) {
+            var mode = getMessage().get("gamemode.adventure");
+            player.sendMessage(getMessage().get("events.gamemode.change", mode));
+            getMessage().sendAll(getMessage().get("events.gamemode.notify", player.getName(), mode), "essentials.command.gamemode.notify");
+        } else if (event.getNewGameMode().equals(GameMode.CREATIVE)) {
+            var mode = getMessage().get("gamemode.creative");
+            player.sendMessage(getMessage().get("events.gamemode.change", mode));
+            getMessage().sendAll(getMessage().get("events.gamemode.notify", player.getName(), mode), "essentials.command.gamemode.notify");
+        } else if (event.getNewGameMode().equals(GameMode.SPECTATOR)) {
+            var mode = getMessage().get("gamemode.spectator");
+            player.sendMessage(getMessage().get("events.gamemode.change", mode));
+            getMessage().sendAll(getMessage().get("events.gamemode.notify", player.getName(), mode), "essentials.command.gamemode.notify");
+        } else if (event.getNewGameMode().equals(GameMode.SURVIVAL)) {
+            var mode = getMessage().get("gamemode.survival");
+            player.sendMessage(getMessage().get("events.gamemode.change", mode));
+            getMessage().sendAll(getMessage().get("events.gamemode.notify", player.getName(), mode), "essentials.command.gamemode.notify");
+        }
     }
 }

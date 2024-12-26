@@ -15,8 +15,8 @@ public class VanishHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
@@ -25,7 +25,7 @@ public class VanishHandler {
         return getInstance().getMessage();
     }
     public boolean isVanish(OfflinePlayer offlinePlayer) {
-        return getUserdata(offlinePlayer).isVanished();
+        return getUserdata().isVanished(offlinePlayer);
     }
     public void hideVanished(Player player) {
         if (!getVanished().isEmpty()) {
@@ -39,10 +39,10 @@ public class VanishHandler {
         setVanish(offlinePlayer, !isVanish(offlinePlayer));
     }
     public void setVanish(OfflinePlayer offlinePlayer, boolean value) {
-        getUserdata(offlinePlayer).setBoolean("settings.vanished", value);
+        getUserdata().setBoolean(offlinePlayer, "settings.vanished", value);
     }
     public void setVanish(Player player, boolean value) {
-        var userdata = getUserdata(player);
+        var userdata = getUserdata();
         if (value) {
             player.setAllowFlight(true);
             player.setInvulnerable(true);
@@ -55,7 +55,7 @@ public class VanishHandler {
                     players.hidePlayer(getInstance(), player);
                 }
             });
-            userdata.setBoolean("settings.vanished", true);
+            userdata.setBoolean(player, "settings.vanished", true);
             getVanished().add(player);
             addVanishTask(player);
             getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("enable")));
@@ -68,8 +68,8 @@ public class VanishHandler {
             player.setCollidable(true);
             player.setSilent(false);
             player.setCanPickupItems(true);
-            userdata.setBoolean("settings.vanished", false);
-            userdata.removeTask("vanish");
+            userdata.setBoolean(player, "settings.vanished", false);
+            userdata.removeTask(player, "vanish");
             getVanished().remove(player);
             getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
             if (!getVanished().isEmpty()) {
@@ -80,11 +80,11 @@ public class VanishHandler {
     }
     private void addVanishTask(Player player) {
         var taskID = getScheduler().runTimer(new Vanish(player), 50, 50).getTaskId();
-        getUserdata(player).addTaskID("vanish", taskID);
+        getUserdata().addTaskID(player, "vanish", taskID);
     }
     public void disable() {
         if (!getVanished().isEmpty()) {
-            getVanished().forEach(player -> getUserdata(player).removeTask("vanish"));
+            getVanished().forEach(player -> getUserdata().removeTask(player, "vanish"));
             getVanished().clear();
         }
     }

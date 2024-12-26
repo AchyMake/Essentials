@@ -6,7 +6,6 @@ import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.RandomHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,8 +22,8 @@ public class PlayerDeath implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -68,7 +67,7 @@ public class PlayerDeath implements Listener {
         }
         var location = player.getLocation();
         if (!location.getBlock().getType().equals(getMaterials().get("lava"))) {
-            getUserdata(player).setLocation(player.getLocation(), "death");
+            getUserdata().setLocation(player, player.getLocation(), "death");
         }
     }
 }

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,8 +17,8 @@ public class InventoryClick implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -41,7 +40,6 @@ public class InventoryClick implements Listener {
         if (!getEconomy().hasBankOpened(player))return;
         if (getEconomy().getBanks().get(player) != event.getView())return;
         if (inventory instanceof AnvilInventory anvilInventory) {
-            var userdata = getUserdata(player);
             var anvilView = (AnvilView) event.getView();
             event.setCancelled(true);
             var title = anvilView.getTitle().toLowerCase();
@@ -55,7 +53,7 @@ public class InventoryClick implements Listener {
                             getEconomy().removeBank(player, amount);
                             getEconomy().add(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
+                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
                             getEconomy().closeBank(player);
                             event.getInventory().close();
                         } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
@@ -66,7 +64,7 @@ public class InventoryClick implements Listener {
                             getEconomy().remove(player, amount);
                             getEconomy().addBank(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
+                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
                             getEconomy().closeBank(player);
                             event.getInventory().close();
                         } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));

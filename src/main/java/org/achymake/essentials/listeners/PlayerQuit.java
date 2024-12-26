@@ -3,8 +3,9 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.ScoreboardHandler;
+import org.achymake.essentials.handlers.TablistHandler;
 import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -20,8 +21,14 @@ public class PlayerQuit implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
+    private ScoreboardHandler getScoreboardHandler() {
+        return getInstance().getScoreboardHandler();
+    }
+    private TablistHandler getTablistHandler() {
+        return getInstance().getTablistHandler();
     }
     private VanishHandler getVanishHandler() {
         return getInstance().getVanishHandler();
@@ -38,15 +45,14 @@ public class PlayerQuit implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
-        getInstance().getTablistHandler().disable(player);
-        getInstance().getScoreboardHandler().disable(player);
-        if (!userdata.isVanished()) {
+        getScoreboardHandler().disable(player);
+        getTablistHandler().disable(player);
+        if (!getUserdata().isVanished(player)) {
             if (getConfig().getBoolean("connection.quit.enable")) {
-                event.setQuitMessage(getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName())));
+                event.setQuitMessage(getMessage().addPlaceholder(player, getConfig().getString("connection.quit.message")));
                 playSound();
             } else if (player.hasPermission("essentials.event.quit.message")) {
-                event.setQuitMessage(getMessage().addColor(getConfig().getString("connection.quit.message").replaceAll("%player%", player.getName())));
+                event.setQuitMessage(getMessage().addPlaceholder(player, getConfig().getString("connection.quit.message")));
                 playSound();
             } else {
                 event.setQuitMessage(null);
@@ -56,25 +62,25 @@ public class PlayerQuit implements Listener {
             getVanishHandler().getVanished().remove(player);
             event.setQuitMessage(null);
         }
-        userdata.disableTasks();
-        if (userdata.getTpaSent() != null) {
-            var sent = userdata.getTpaSent();
-            getUserdata(sent).setString("tpa.from", null);
-            userdata.setString("tpa.sent", null);
-        } else if (userdata.getTpaFrom() != null) {
-            var from = userdata.getTpaFrom();
-            getUserdata(from).setString("tpa.sent", null);
-            userdata.setString("tpa.from", null);
-        } else if (userdata.getTpaHereSent() != null) {
-            var sent = userdata.getTpaHereSent();
-            getUserdata(sent).setString("tpahere.from", null);
-            userdata.setString("tpahere.sent", null);
-        } else if (userdata.getTpaHereFrom() != null) {
-            var from = userdata.getTpaHereFrom();
-            getUserdata(from).setString("tpahere.sent", null);
-            userdata.setString("tpahere.from", null);
+        getUserdata().disableTasks(player);
+        if (getUserdata().getTpaSent(player) != null) {
+            var sent = getUserdata().getTpaSent(player);
+            getUserdata().setString(sent, "tpa.from", null);
+            getUserdata().setString(player, "tpa.sent", null);
+        } else if (getUserdata().getTpaFrom(player) != null) {
+            var from = getUserdata().getTpaFrom(player);
+            getUserdata().setString(from, "tpa.sent", null);
+            getUserdata().setString(player, "tpa.from", null);
+        } else if (getUserdata().getTpaHereSent(player) != null) {
+            var sent = getUserdata().getTpaHereSent(player);
+            getUserdata().setString(sent, "tpahere.from", null);
+            getUserdata().setString(player, "tpahere.sent", null);
+        } else if (getUserdata().getTpaHereFrom(player) != null) {
+            var from = getUserdata().getTpaHereFrom(player);
+            getUserdata().setString(from, "tpahere.sent", null);
+            getUserdata().setString(player, "tpahere.from", null);
         }
-        userdata.setLocation(player.getLocation(), "quit");
+        getUserdata().setLocation(player, player.getLocation(), "quit");
     }
     private void playSound() {
         if (!getConfig().getBoolean("connection.quit.sound.enable"))return;

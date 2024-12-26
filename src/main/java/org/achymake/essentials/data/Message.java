@@ -5,7 +5,6 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.achymake.essentials.Essentials;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,6 +35,12 @@ public class Message {
         config.options().copyDefaults(true);
         config.set("enable", "&aEnable");
         config.set("disable", "&cDisable");
+        config.set("gamemode.adventure", "Adventure");
+        config.set("gamemode.creative", "Creative");
+        config.set("gamemode.spectator", "Spectator");
+        config.set("gamemode.survival", "Survival");
+        config.set("gamemode.change", "&6Gamemode&f: {0}");
+        config.set("gamemode.invalid", "{0}&c is not a gamemode");
         config.set("error.target.offline", "{0}&c is currently offline");
         config.set("error.target.invalid", "{0}&c has never joined");
         config.set("error.world.invalid", "{0}&c does not exists");
@@ -114,10 +119,6 @@ public class Message {
         config.set("commands.freeze.enable", "&6You froze&f {0}");
         config.set("commands.freeze.disable", "&6You unfroze&f {0}");
         config.set("commands.freeze.exempt", "&cYou are not allowed to freeze&f {0}");
-        config.set("commands.gamemode.adventure", "&6&lGamemode:&f Adventure");
-        config.set("commands.gamemode.creative", "&6&lGamemode:&f Creative");
-        config.set("commands.gamemode.survival", "&6&lGamemode:&f Survival");
-        config.set("commands.gamemode.spectator", "&6&lGamemode:&f Spectator");
         config.set("commands.gamemode.sender", "&6You changed&f {0}&6 gamemode to&f {1}");
         config.set("commands.gamemode.invalid", "{0}&c is not a gamemode");
         config.set("commands.gamemode.exempt", "&cYou are not allowed to change gamemode for&f {0}");
@@ -162,8 +163,7 @@ public class Message {
         config.set("commands.inventory.self", "&cYou can not open an inventory of your own");
         config.set("commands.inventory.exempt", "&cYou are not allowed to open&f {0}&6 inventory");
         config.set("commands.inventory.title", "{0} inventory");
-        config.set("commands.jail.enable", "&6You jailed&f {0}");
-        config.set("commands.jail.disable", "&6You freed&f {0}&6 from jail");
+        config.set("commands.jail.toggle", "{0}&6 jailed if now {1}");
         config.set("commands.jail.invalid", "&cJail has not been set");
         config.set("commands.jail.exempt", "&cYou are not allowed to jail&f {0}");
         config.set("commands.kit.title", "&6Kits:");
@@ -259,7 +259,7 @@ public class Message {
         config.set("commands.tpaccept.tpa.sender", "&6You accepted tpa request from&f {0}");
         config.set("commands.tpaccept.tpahere.target", "{0}&6 accepted tpahere request");
         config.set("commands.tpaccept.tpahere.sender", "&6You accepted tpahere request from&f {0}");
-        config.set("commands.tpaccept.non-requests", "&cYou do not have any tpa requests");
+        config.set("commands.tpaccept.invalid", "&cYou do not have any tpa requests");
         config.set("commands.tpa.expired", "&cTeleport request has been expired");
         config.set("commands.tpa.target.notify", "{0}&6 has sent you a tpa request");
         config.set("commands.tpa.target.decide", "&6You can type&a /tpaccept&6 or&c /tpdeny");
@@ -276,7 +276,7 @@ public class Message {
         config.set("commands.tpahere.request-self", "&cYou can not send tpahere request to your self");
         config.set("commands.tpcancel.target", "{0}&6 cancelled teleport request");
         config.set("commands.tpcancel.sender", "&6You cancelled teleport request");
-        config.set("commands.tpcancel.non-requested", "&cYou have not sent any teleport request");
+        config.set("commands.tpcancel.invalid", "&cYou have not sent any teleport request");
         config.set("commands.tp.exempt", "&cYou are not allowed to teleport to&f {0}");
         config.set("commands.tpdeny.target", "{0}&6 denied teleport request");
         config.set("commands.tpdeny.sender", "&6You denied teleport request from&f {0}");
@@ -332,7 +332,7 @@ public class Message {
         } else setup();
     }
     public void sendStringList(Player player, List<String> strings) {
-        strings.forEach(string -> player.sendMessage(addColor(string.replaceAll("%player%", player.getName()))));
+        strings.forEach(string -> player.sendMessage(addPlaceholder(player, string)));
     }
     public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
@@ -347,14 +347,17 @@ public class Message {
             }
         });
     }
+    public boolean isRegistered(String identifier) {
+        return PlaceholderAPI.isRegistered(identifier);
+    }
     public String addPlaceholder(Player player, String message) {
-        return PlaceholderAPI.setPlaceholders(player, message);
+        return addColor(PlaceholderAPI.setPlaceholders(player, message));
     }
     public String addColor(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
     public void sendStringList(ConsoleCommandSender sender, List<String> strings) {
-        strings.forEach(string -> sender.sendMessage(string.replaceAll("%player%", sender.getName())));
+        strings.forEach(sender::sendMessage);
     }
     public String getBuilder(String[] args, int value) {
         var builder = getBuilder();
@@ -391,5 +394,13 @@ public class Message {
     }
     public StringBuilder getBuilder() {
         return new StringBuilder();
+    }
+    public String censor(String message) {
+        for (var censored : getInstance().getConfig().getStringList("chat.censor")) {
+            if (message.toLowerCase().contains(censored.toLowerCase())) {
+                return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
+            }
+        }
+        return message;
     }
 }

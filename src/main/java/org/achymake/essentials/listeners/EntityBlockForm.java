@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,8 +12,8 @@ public class EntityBlockForm implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -23,7 +23,7 @@ public class EntityBlockForm implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (!getEntities().disableEntityBlockForm(event.getEntity().getType()))return;
+        if (!getEntityHandler().disableEntityBlockForm(event.getEntity().getType()))return;
         event.setCancelled(true);
     }
 }

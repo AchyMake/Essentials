@@ -4,7 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.CooldownHandler;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,14 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private CooldownHandler getCooldown() {
         return getInstance().getCooldownHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -34,7 +37,7 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.rtp");
                 if (!getCooldown().has(player, "rtp", timer)) {
                     getCooldown().add(player, "rtp", timer);
-                    getUserdata(player).randomTeleport();
+                    getWorldHandler().randomTeleport(player);
                 } else player.sendMessage(getMessage().get("commands.rtp.cooldown", getCooldown().get(player, "rtp", timer)));
                 return true;
             } else if (args.length == 1) {
@@ -42,11 +45,11 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            getUserdata(target).randomTeleport();
+                            getWorldHandler().randomTeleport(target);
                             player.sendMessage(getMessage().get("commands.rtp.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.rtp.exempt")) {
-                            getUserdata(target).randomTeleport();
+                            getWorldHandler().randomTeleport(target);
                             player.sendMessage(getMessage().get("commands.rtp.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.rtp.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -57,7 +60,7 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    getUserdata(target).randomTeleport();
+                    getWorldHandler().randomTeleport(target);
                     consoleCommandSender.sendMessage(getMessage().get("commands.rtp.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
@@ -72,7 +75,7 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.rtp.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }

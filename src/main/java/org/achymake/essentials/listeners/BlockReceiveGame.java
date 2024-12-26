@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,8 +17,8 @@ public class BlockReceiveGame implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -37,6 +36,6 @@ public class BlockReceiveGame implements Listener {
         } else event.setCancelled(true);
     }
     private boolean isDisabled(Player player) {
-        return getUserdata(player).isDisabled() || getUserdata(player).isVanished();
+        return getUserdata().isDisabled(player) || getUserdata().isVanished(player);
     }
 }

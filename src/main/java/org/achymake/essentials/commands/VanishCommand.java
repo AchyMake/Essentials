@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private VanishHandler getVanish() {
         return getInstance().getVanishHandler();
@@ -50,8 +49,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("commands.vanish.exempt", target.getName()));
                     } else {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                        var userdataOffline = getUserdata(offlinePlayer);
-                        if (userdataOffline.exists()) {
+                        if (getUserdata().exists(offlinePlayer)) {
                             getVanish().toggleVanish(offlinePlayer);
                             if (getVanish().isVanish(offlinePlayer)) {
                                 player.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("enable")));
@@ -75,8 +73,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             } else player.sendMessage(getMessage().get("commands.vanish.exempt", target.getName()));
                         } else {
                             var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                            var userdataOffline = getUserdata(offlinePlayer);
-                            if (userdataOffline.exists()) {
+                            if (getUserdata().exists(offlinePlayer)) {
                                 getVanish().setVanish(offlinePlayer, true);
                                 player.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("enable")));
                             } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -92,8 +89,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                             } else player.sendMessage(getMessage().get("commands.vanish.exempt", target.getName()));
                         } else {
                             var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                            var userdataOffline = getUserdata(offlinePlayer);
-                            if (userdataOffline.exists()) {
+                            if (getUserdata().exists(offlinePlayer)) {
                                 getVanish().setVanish(offlinePlayer, false);
                                 player.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("disable")));
                             } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -112,8 +108,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", target.getName(), getMessage().get("disable")));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
+                    if (getUserdata().exists(offlinePlayer)) {
                         getVanish().toggleVanish(offlinePlayer);
                         if (getVanish().isVanish(offlinePlayer)) {
                             consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("enable")));
@@ -130,8 +125,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                         consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", target.getName(), getMessage().get("enable")));
                     } else {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                        var userdataOffline = getUserdata(offlinePlayer);
-                        if (userdataOffline.exists()) {
+                        if (getUserdata().exists(offlinePlayer)) {
                             getVanish().setVanish(offlinePlayer, true);
                             consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("enable")));
                         } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -142,8 +136,7 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                         consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", target.getName(), getMessage().get("disable")));
                     } else {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                        var userdataOffline = getUserdata(offlinePlayer);
-                        if (userdataOffline.exists()) {
+                        if (getUserdata().exists(offlinePlayer)) {
                             getVanish().setVanish(offlinePlayer, false);
                             consoleCommandSender.sendMessage(getMessage().get("commands.vanish.sender", offlinePlayer.getName(), getMessage().get("disable")));
                         } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -168,9 +161,9 @@ public class VanishCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.vanish.others")) {
-                    var userdata = getUserdata(getInstance().getOfflinePlayer(args[0]));
-                    if (userdata.exists()) {
-                        commands.add(String.valueOf(userdata.isVanished()));
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        commands.add(String.valueOf(getUserdata().isVanished(offlinePlayer)));
                     }
                 }
             }

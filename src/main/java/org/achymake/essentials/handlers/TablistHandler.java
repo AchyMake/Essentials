@@ -35,7 +35,7 @@ public class TablistHandler {
         return config.getBoolean("enable");
     }
     public boolean hasTab(Player player) {
-        return getInstance().getUserdata(player).hasTaskID("tab");
+        return getInstance().getUserdata().hasTaskID(player, "tab");
     }
     public void apply(Player player) {
         if (isEnable()) {
@@ -44,18 +44,18 @@ public class TablistHandler {
                 if (isList("worlds." + world + ".header.lines") && isList("worlds." + world + ".footer.lines")) {
                     var tick = getInt("worlds." + world + ".tick");
                     var taskID = getScheduler().runTimer(new Tab(player, config), tick, 3).getTaskId();
-                    getInstance().getUserdata(player).addTaskID("tab", taskID);
+                    getInstance().getUserdata().addTaskID(player, "tab", taskID);
                 }
             } else if (isList("header.lines") && isList("footer.lines")) {
                 var tick = getInt("tick");
                 var taskID = getScheduler().runTimer(new Tab(player, config), tick, 3).getTaskId();
-                getInstance().getUserdata(player).addTaskID("tab", taskID);
+                getInstance().getUserdata().addTaskID(player, "tab", taskID);
             }
         }
     }
     public void disable(Player player) {
-        if (getInstance().getUserdata(player).hasTaskID("tab")) {
-            getInstance().getUserdata(player).removeTask("tab");
+        if (getInstance().getUserdata().hasTaskID(player, "tab")) {
+            getInstance().getUserdata().removeTask(player, "tab");
             player.setPlayerListHeader(null);
             player.setPlayerListFooter(null);
         }

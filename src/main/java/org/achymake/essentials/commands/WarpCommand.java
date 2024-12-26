@@ -4,7 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.data.Warps;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,11 +15,14 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Warps getWarps() {
         return getInstance().getWarps();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -45,7 +48,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.warp." + warpName)) {
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
-                        getUserdata(player).teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(player, warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
                     } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                     return true;
                 }
@@ -58,9 +61,9 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                         var warp = getWarps().getLocation(warpName);
                         if (warp != null) {
                             if (target == player) {
-                                getUserdata(target).teleport(warp, warpName, 0);
+                                getWorldHandler().teleport(target, warp, warpName, 0);
                             } else if (!target.hasPermission("essentials.command.warp.exempt")) {
-                                getUserdata(target).teleport(warp, warpName, 0);
+                                getWorldHandler().teleport(target, warp, warpName, 0);
                                 player.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                             } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
@@ -74,10 +77,9 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 var username = args[1];
                 var target = getInstance().getPlayer(username);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
-                        userdataTarget.teleport(warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
                         consoleCommandSender.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", username));
@@ -101,7 +103,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[1])) {
                                 commands.add(target.getName());
                             }

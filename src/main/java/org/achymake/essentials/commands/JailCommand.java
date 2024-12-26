@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Jail;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class JailCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Jail getJail() {
         return getInstance().getJail();
@@ -35,42 +34,41 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     var jail = getJail().getLocation();
                     if (jail != null) {
-                        var userdataTarget = getUserdata(target);
                         if (target == player) {
-                            if (userdataTarget.isJailed()) {
-                                var recent = userdataTarget.getLocation("recent");
+                            if (getUserdata().isJailed(target)) {
+                                var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
                                     if (!recent.getChunk().isLoaded()) {
                                         recent.getChunk().load();
                                     }
                                     target.teleport(recent);
                                 }
-                                userdataTarget.setBoolean("settings.jailed", !userdataTarget.isJailed());
-                                player.sendMessage(getMessage().get("commands.jail.disable", target.getName()));
+                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                             } else {
                                 if (!jail.getChunk().isLoaded()) {
                                     jail.getChunk().load();
                                 }
                                 target.teleport(jail);
-                                player.sendMessage(getMessage().get("commands.jail.enable", target.getName()));
+                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else if (!target.hasPermission("essentials.command.jail.exempt")) {
-                            if (userdataTarget.isJailed()) {
-                                var recent = userdataTarget.getLocation("recent");
+                            if (getUserdata().isJailed(target)) {
+                                var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
                                     if (!recent.getChunk().isLoaded()) {
                                         recent.getChunk().load();
                                     }
                                     target.teleport(recent);
                                 }
-                                userdataTarget.setBoolean("settings.jailed", !userdataTarget.isJailed());
-                                player.sendMessage(getMessage().get("commands.jail.disable", target.getName()));
+                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                             } else {
                                 if (!jail.getChunk().isLoaded()) {
                                     jail.getChunk().load();
                                 }
                                 target.teleport(jail);
-                                player.sendMessage(getMessage().get("commands.jail.enable", target.getName()));
+                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.jail.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.jail.invalid"));
@@ -83,23 +81,22 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     var jail = getJail().getLocation();
                     if (jail != null) {
-                        var userdataTarget = getUserdata(target);
-                        if (userdataTarget.isJailed()) {
-                            var recent = userdataTarget.getLocation("recent");
+                        if (getUserdata().isJailed(target)) {
+                            var recent = getUserdata().getLocation(target, "recent");
                             if (recent != null) {
                                 if (!recent.getChunk().isLoaded()) {
                                     recent.getChunk().load();
                                 }
                                 target.teleport(recent);
                             }
-                            userdataTarget.setBoolean("settings.jailed", !userdataTarget.isJailed());
-                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.disable", target.getName()));
+                            getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                         } else {
                             if (!jail.getChunk().isLoaded()) {
                                 jail.getChunk().load();
                             }
                             target.teleport(jail);
-                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.enable", target.getName()));
+                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                         }
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.jail.invalid"));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -114,7 +111,7 @@ public class JailCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
+                    if (!getUserdata().isVanished(target)) {
                         if (target.getName().startsWith(args[0])) {
                             commands.add(target.getName());
                         }

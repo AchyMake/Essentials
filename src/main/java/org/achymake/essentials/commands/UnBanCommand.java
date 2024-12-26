@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +13,8 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -28,12 +27,11 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                var userdataOffline = getUserdata(offlinePlayer);
-                if (userdataOffline.exists()) {
-                    if (userdataOffline.isBanned()) {
-                        userdataOffline.setBoolean("settings.banned", false);
-                        userdataOffline.setString("settings.ban-reason", null);
-                        userdataOffline.setInt("settings.ban-expire", 0);
+                if (getUserdata().exists(offlinePlayer)) {
+                    if (getUserdata().isBanned(offlinePlayer)) {
+                        getUserdata().setBoolean(offlinePlayer, "settings.banned", false);
+                        getUserdata().setString(offlinePlayer, "settings.ban-reason", null);
+                        getUserdata().setInt(offlinePlayer, "settings.ban-expire", 0);
                         player.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
                     } else player.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                 }
@@ -42,12 +40,11 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                var userdataOffline = getUserdata(offlinePlayer);
-                if (userdataOffline.exists()) {
-                    if (userdataOffline.isBanned()) {
-                        userdataOffline.setBoolean("settings.banned", false);
-                        userdataOffline.setString("settings.ban-reason", null);
-                        userdataOffline.setInt("settings.ban-expire", 0);
+                if (getUserdata().exists(offlinePlayer)) {
+                    if (getUserdata().isBanned(offlinePlayer)) {
+                        getUserdata().setBoolean(offlinePlayer, "settings.banned", false);
+                        getUserdata().setString(offlinePlayer, "settings.ban-reason", null);
+                        getUserdata().setInt(offlinePlayer, "settings.ban-expire", 0);
                         consoleCommandSender.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                     return true;
@@ -62,10 +59,9 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 getInstance().getOfflinePlayers().forEach(offlinePlayer -> {
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.isBanned()) {
-                        if (userdataOffline.getName().startsWith(args[0])) {
-                            commands.add(userdataOffline.getName());
+                    if (getUserdata().isBanned(offlinePlayer)) {
+                        if (offlinePlayer.getName().startsWith(args[0])) {
+                            commands.add(offlinePlayer.getName());
                         }
                     }
                 });

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -31,7 +30,7 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                player.sendMessage(getMessage().get("commands.balance.self", getEconomy().currency() + getEconomy().format(getUserdata(player).getAccount())));
+                player.sendMessage(getMessage().get("commands.balance.self", getEconomy().currency() + getEconomy().format(getUserdata().getAccount(player))));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("top")) {

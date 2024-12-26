@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,8 +16,8 @@ public class PlayerCommandPreprocess implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -29,11 +28,11 @@ public class PlayerCommandPreprocess implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         var player = event.getPlayer();
-        if (!getUserdata(player).isDisabled()) {
+        if (!getUserdata().isDisabled(player)) {
             if (!player.hasPermission("essentials.event.command.exempt")) {
                 var message = event.getMessage().toLowerCase();
                 getConfig().getStringList("commands.disable").forEach(disabled -> {
-                    if (message.startsWith("/" + disabled)) {
+                    if (message.startsWith("/" + disabled.toLowerCase())) {
                         event.setCancelled(true);
                     }
                 });

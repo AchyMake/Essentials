@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +13,8 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -29,24 +28,22 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
                     if (target == player) {
-                        userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
-                        if (userdataTarget.isFrozen()) {
+                        getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
+                        if (getUserdata().isFrozen(target)) {
                             player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                     } else if (!target.hasPermission("essentials.command.freeze.exempt")) {
-                        userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
-                        if (userdataTarget.isFrozen()) {
+                        getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
+                        if (getUserdata().isFrozen(target)) {
                             player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.freeze.exempt", target.getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
-                        if (userdataOffline.isFrozen()) {
+                    if (getUserdata().exists(offlinePlayer)) {
+                        getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer));
+                        if (getUserdata().isFrozen(offlinePlayer)) {
                             player.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
                         } else player.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -57,17 +54,15 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
-                    userdataTarget.setBoolean("settings.frozen", !userdataTarget.isFrozen());
-                    if (userdataTarget.isFrozen()) {
+                    getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
+                    if (getUserdata().isFrozen(target)) {
                         consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        userdataOffline.setBoolean("settings.frozen", !userdataOffline.isFrozen());
-                        if (getUserdata(offlinePlayer).isFrozen()) {
+                    if (getUserdata().exists(offlinePlayer)) {
+                        getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer));
+                        if (getUserdata().isFrozen(offlinePlayer)) {
                             consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
                         } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
@@ -83,7 +78,7 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
+                    if (!getUserdata().isVanished(target)) {
                         if (target.getName().startsWith(args[0])) {
                             commands.add(target.getName());
                         }

@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.DateHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,8 +19,8 @@ public class PlayerLogin implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private DateHandler getDateHandler() {
         return getInstance().getDateHandler();
@@ -38,24 +37,23 @@ public class PlayerLogin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLogin(PlayerLoginEvent event) {
         var player = event.getPlayer();
-        var userdata = getUserdata(player);
         var server = getInstance().getServer();
         if (server.hasWhitelist()) {
             if (server.getWhitelistedPlayers().contains(player)) {
                 if (server.getOnlinePlayers().size() >= server.getMaxPlayers()) {
                     if (player.hasPermission("essentials.event.login.full_server")) {
-                        if (userdata.exists()) {
-                            if (userdata.isBanned()) {
-                                if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", userdata.getBanReason(), getDateHandler().getFormatted(userdata.getBanExpire()))));
+                        if (getUserdata().exists(player)) {
+                            if (getUserdata().isBanned(player)) {
+                                if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                                 } else allow(event, player);
                             } else allow(event, player);
                         } else allow(event, player);
                     } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
-                } else if (userdata.exists()) {
-                    if (userdata.isBanned()) {
-                        if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", userdata.getBanReason(), getDateHandler().getFormatted(userdata.getBanExpire()))));
+                } else if (getUserdata().exists(player)) {
+                    if (getUserdata().isBanned(player)) {
+                        if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                         } else allow(event, player);
                     } else allow(event, player);
                 } else allow(event, player);
@@ -63,18 +61,18 @@ public class PlayerLogin implements Listener {
         } else {
             if (server.getOnlinePlayers().size() >= server.getMaxPlayers()) {
                 if (player.hasPermission("essentials.event.login.full_server")) {
-                    if (userdata.exists()) {
-                        if (userdata.isBanned()) {
-                            if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", userdata.getBanReason(), getDateHandler().getFormatted(userdata.getBanExpire()))));
+                    if (getUserdata().exists(player)) {
+                        if (getUserdata().isBanned(player)) {
+                            if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                             } else allow(event, player);
                         } else allow(event, player);
                     } else allow(event, player);
                 } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
-            } else if (userdata.exists()) {
-                if (userdata.isBanned()) {
-                    if (!getInstance().getDateHandler().expired(userdata.getBanExpire())) {
-                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", userdata.getBanReason(), getDateHandler().getFormatted(userdata.getBanExpire()))));
+            } else if (getUserdata().exists(player)) {
+                if (getUserdata().isBanned(player)) {
+                    if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                     } else allow(event, player);
                 } else allow(event, player);
             } else allow(event, player);
@@ -82,6 +80,6 @@ public class PlayerLogin implements Listener {
     }
     private void allow(PlayerLoginEvent event, Player player) {
         event.allow();
-        getUserdata(player).reload();
+        getUserdata().reload(player);
     }
 }

@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,8 +16,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -30,9 +29,9 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (!getUserdata(player).getHomes().isEmpty()) {
+                if (!getUserdata().getHomes(player).isEmpty()) {
                     player.sendMessage(getMessage().get("commands.homes.title"));
-                    for (String listedHomes : getUserdata(player).getHomes()) {
+                    for (String listedHomes : getUserdata().getHomes(player)) {
                         player.sendMessage(getMessage().get("commands.homes.listed", listedHomes));
                     }
                 } else player.sendMessage(getMessage().get("commands.homes.empty"));
@@ -43,10 +42,9 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("delete")) {
                     if (player.hasPermission("essentials.command.homes.delete")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(target);
-                        var userdataOffline = getUserdata(offlinePlayer);
-                        if (userdataOffline.exists()) {
-                            if (userdataOffline.isHome(targetHome)) {
-                                userdataOffline.setString("homes." + targetHome, null);
+                        if (getUserdata().exists(offlinePlayer)) {
+                            if (getUserdata().isHome(offlinePlayer, targetHome)) {
+                                getUserdata().setString(offlinePlayer, "homes." + targetHome, null);
                                 player.sendMessage(getMessage().get("commands.homes.delete", targetHome, offlinePlayer.getName()));
                             } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), targetHome));
                             return true;
@@ -55,8 +53,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 } else if (args[0].equalsIgnoreCase("teleport")) {
                     if (player.hasPermission("essentials.command.homes.teleport")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(target);
-                        var userdataOffline = getUserdata(offlinePlayer);
-                        if (userdataOffline.exists()) {
+                        if (getUserdata().exists(offlinePlayer)) {
                             if (targetHome.equalsIgnoreCase("bed")) {
                                 var location = offlinePlayer.getBedSpawnLocation();
                                 if (location != null) {
@@ -66,8 +63,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                                     player.sendMessage(getMessage().get("commands.homes.teleport", targetHome, offlinePlayer.getName()));
                                     player.teleport(location);
                                 } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), "bed"));
-                            } else if (userdataOffline.isHome(targetHome)) {
-                                var location = userdataOffline.getHome(targetHome);
+                            } else if (getUserdata().isHome(offlinePlayer, targetHome)) {
+                                var location = getUserdata().getHome(offlinePlayer, targetHome);
                                 if (location != null) {
                                     if (!location.getChunk().isLoaded()) {
                                         location.getChunk().load();
@@ -99,7 +96,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("teleport")) {
                     if (player.hasPermission("essentials.command.homes.teleport")) {
                         getInstance().getOnlinePlayers().forEach(target -> {
-                            if (!getUserdata(target).isVanished()) {
+                            if (!getUserdata().isVanished(target)) {
                                 if (target.getName().startsWith(args[1])) {
                                     commands.add(target.getName());
                                 }
@@ -109,7 +106,7 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 } else if (args[0].equalsIgnoreCase("delete")) {
                     if (player.hasPermission("essentials.command.homes.delete")) {
                         getInstance().getOnlinePlayers().forEach(target -> {
-                            if (!getUserdata(target).isVanished()) {
+                            if (!getUserdata().isVanished(target)) {
                                 if (target.getName().startsWith(args[1])) {
                                     commands.add(target.getName());
                                 }
@@ -120,9 +117,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 if (player.hasPermission("essentials.command.homes.teleport")) {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
-                    var userdataOffline = getUserdata(offlinePlayer);
-                    if (userdataOffline.exists()) {
-                        commands.addAll(userdataOffline.getHomes());
+                    if (getUserdata().exists(offlinePlayer)) {
+                        commands.addAll(getUserdata().getHomes(offlinePlayer));
                     }
                 }
             }

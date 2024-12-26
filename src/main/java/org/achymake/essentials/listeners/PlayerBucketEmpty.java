@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,8 +17,8 @@ public class PlayerBucketEmpty implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -33,7 +32,7 @@ public class PlayerBucketEmpty implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
         var player = event.getPlayer();
-        if (!getUserdata(player).isDisabled()) {
+        if (!getUserdata().isDisabled(player)) {
             if (!getConfig().getBoolean("notification.enable"))return;
             if (!getConfig().getStringList("notification.bucket-empty").contains(event.getBucket().toString()))return;
             var worldName = event.getBlock().getWorld().getName();

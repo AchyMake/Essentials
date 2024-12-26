@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +18,8 @@ public class BlockBreak implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -38,7 +37,7 @@ public class BlockBreak implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         var player = event.getPlayer();
         var block = event.getBlock();
-        if (!getUserdata(player).isDisabled()) {
+        if (!getUserdata().isDisabled(player)) {
             var heldItem = player.getInventory().getItemInMainHand();
             if (block.getType().equals(getMaterials().get("spawner"))) {
                 if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {

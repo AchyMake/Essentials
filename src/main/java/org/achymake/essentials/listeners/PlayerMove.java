@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,8 +18,8 @@ public class PlayerMove implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -35,13 +34,13 @@ public class PlayerMove implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (event.getTo() != null) {
             if (!hasMoved(event.getFrom(), event.getTo()))return;
-            var userdata = getUserdata(event.getPlayer());
-            if (userdata.isFrozen()) {
+            var player = event.getPlayer();
+            if (getUserdata().isFrozen(player)) {
                 event.setCancelled(true);
-            } else if (userdata.hasTaskID("teleport")) {
+            } else if (getUserdata().hasTaskID(player, "teleport")) {
                 if (!getConfig().getBoolean("teleport.cancel-on-move"))return;
-                userdata.removeTask("teleport");
-                event.getPlayer().sendMessage(getMessage().get("events.move"));
+                getUserdata().removeTask(player, "teleport");
+                player.sendMessage(getMessage().get("events.move"));
             }
         } else event.setCancelled(true);
     }

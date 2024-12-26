@@ -3,7 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -14,8 +14,11 @@ public class BackCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -27,26 +30,25 @@ public class BackCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                var userdata = getUserdata(player);
-                var recent = userdata.getLocation("recent");
+                var recent = getUserdata().getLocation(player, "recent");
                 var delay = getInstance().getConfig().getInt("teleport.delay");
                 if (player.hasPermission("essentials.command.back.death")) {
-                    var death = userdata.getLocation("death");
+                    var death = getUserdata().getLocation(player, "death");
                     if (death != null) {
                         var worldName = death.getWorld().getName().toLowerCase();
                         if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                            userdata.teleport(death, "death", delay);
+                            getWorldHandler().teleport(player, death, "death", delay);
                         }
                     } else if (recent != null) {
                         var worldName = recent.getWorld().getName().toLowerCase();
                         if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                            userdata.teleport(recent, "recent", delay);
+                            getWorldHandler().teleport(player, recent, "recent", delay);
                         }
                     }
                 } else if (recent != null) {
                     var worldName = recent.getWorld().getName().toLowerCase();
                     if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                        userdata.teleport(recent, "recent", delay);
+                        getWorldHandler().teleport(player, recent, "recent", delay);
                     }
                 }
                 return true;
@@ -55,30 +57,28 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            var userdataTarget = getUserdata(target);
-                            var recent = userdataTarget.getLocation("recent");
+                            var recent = getUserdata().getLocation(target, "recent");
                             if (target.hasPermission("essentials.command.back.death")) {
-                                var death = userdataTarget.getLocation("death");
+                                var death = getUserdata().getLocation(target, "death");
                                 if (death != null) {
-                                    userdataTarget.teleport(death, "death", 0);
+                                    getWorldHandler().teleport(player, death, "death", 0);
                                 } else if (recent != null) {
-                                    userdataTarget.teleport(recent, "recent", 0);
+                                    getWorldHandler().teleport(player, recent, "recent", 0);
                                 }
                             } else if (recent != null) {
-                                userdataTarget.teleport(recent, "recent", 0);
+                                getWorldHandler().teleport(player, recent, "recent", 0);
                             }
                         } else if (!target.hasPermission("essentials.command.back.exempt")) {
-                            var userdataTarget = getUserdata(target);
-                            var recent = userdataTarget.getLocation("recent");
+                            var recent = getUserdata().getLocation(target, "recent");
                             if (target.hasPermission("essentials.command.back.death")) {
-                                var death = userdataTarget.getLocation("death");
+                                var death = getUserdata().getLocation(target, "death");
                                 if (death != null) {
-                                    userdataTarget.teleport(death, "death", 0);
+                                    getWorldHandler().teleport(target, death, "death", 0);
                                 } else if (recent != null) {
-                                    userdataTarget.teleport(recent, "recent", 0);
+                                    getWorldHandler().teleport(target, recent, "recent", 0);
                                 }
                             } else if (recent != null) {
-                                userdataTarget.teleport(recent, "recent", 0);
+                                getWorldHandler().teleport(target, recent, "recent", 0);
                             }
                         } else player.sendMessage(getMessage().get("commands.back.exempt"), target.getName());
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -89,17 +89,16 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var userdataTarget = getUserdata(target);
-                    var recent = userdataTarget.getLocation("recent");
+                    var recent = getUserdata().getLocation(target, "recent");
                     if (target.hasPermission("essentials.command.back.death")) {
-                        var death = userdataTarget.getLocation("death");
+                        var death = getUserdata().getLocation(target, "death");
                         if (death != null) {
-                            userdataTarget.teleport(death, "death", getInstance().getConfig().getInt("teleport.delay"));
+                            getWorldHandler().teleport(target, death, "death", getInstance().getConfig().getInt("teleport.delay"));
                         } else if (recent != null) {
-                            userdataTarget.teleport(recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
+                            getWorldHandler().teleport(target, recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
                         }
                     } else if (recent != null) {
-                        userdataTarget.teleport(recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
                     }
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
@@ -114,7 +113,7 @@ public class BackCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.back.other")) {
                     getInstance().getOnlinePlayers().forEach(target -> {
-                        if (!getUserdata(target).isVanished()) {
+                        if (!getUserdata().isVanished(target)) {
                             if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }

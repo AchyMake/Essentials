@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -15,8 +14,8 @@ public class BankCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -31,7 +30,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                player.sendMessage(getMessage().get("commands.bank.self", getEconomy().currency() + getEconomy().format(getUserdata(player).getBankAccount())));
+                player.sendMessage(getMessage().get("commands.bank.self", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("top")) {
@@ -55,7 +54,6 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 2) {
-                var userdata = getUserdata(player);
                 var amount = Double.parseDouble(args[1]);
                 if (args[0].equalsIgnoreCase("withdraw")) {
                     if (amount >= getEconomy().getMinimumBankWithdraw()) {
@@ -63,7 +61,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().removeBank(player, amount);
                             getEconomy().add(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
+                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
                         } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                     return true;
@@ -73,7 +71,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             getEconomy().remove(player, amount);
                             getEconomy().addBank(player, amount);
                             player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(userdata.getBankAccount())));
+                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
                         } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                     } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                     return true;

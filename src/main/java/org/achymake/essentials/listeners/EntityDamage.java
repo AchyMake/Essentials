@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,8 +14,8 @@ public class EntityDamage implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -30,10 +29,9 @@ public class EntityDamage implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            var userdata = getUserdata(player);
-            if (!userdata.hasTaskID("teleport"))return;
+            if (!getUserdata().hasTaskID(player, "teleport"))return;
             if (!getInstance().getConfig().getBoolean("teleport.cancel-on-damage"))return;
-            userdata.removeTask("teleport");
+            getUserdata().removeTask(player, "teleport");
             player.sendMessage(getMessage().get("events.damage"));
         }
     }

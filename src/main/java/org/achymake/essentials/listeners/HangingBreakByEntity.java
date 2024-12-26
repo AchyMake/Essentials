@@ -2,8 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.data.Entities;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,11 +14,11 @@ public class HangingBreakByEntity implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntities() {
+        return getInstance().getEntityHandler();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -31,7 +30,7 @@ public class HangingBreakByEntity implements Listener {
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
         if (!getEntities().disableHangingBreakByEntity(event.getRemover().getType(), event.getEntity().getType())) {
             if (event.getRemover() instanceof Player player) {
-                if (!getUserdata(player).isDisabled())return;
+                if (!getUserdata().isDisabled(player))return;
                 event.setCancelled(true);
             }
         } else event.setCancelled(true);

@@ -36,7 +36,7 @@ public class ScoreboardHandler {
         return config.getBoolean("enable");
     }
     public boolean hasBoard(Player player) {
-        return getInstance().getUserdata(player).hasTaskID("board");
+        return getInstance().getUserdata().hasTaskID(player, "board");
     }
     public void apply(Player player) {
         if (isEnable()) {
@@ -45,18 +45,18 @@ public class ScoreboardHandler {
                 if (isList("worlds." + world + ".lines")) {
                     var tick = getInt("worlds." + world + ".tick");
                     var taskID = getScheduler().runTimer(new Board(player, config), tick, 3).getTaskId();
-                    getInstance().getUserdata(player).addTaskID("board", taskID);
+                    getInstance().getUserdata().addTaskID(player, "board", taskID);
                 }
             } else if (isList("lines")) {
                 var tick = getInt("tick");
                 var taskID = getScheduler().runTimer(new Board(player, config), tick, 3).getTaskId();
-                getInstance().getUserdata(player).addTaskID("board", taskID);
+                getInstance().getUserdata().addTaskID(player, "board", taskID);
             }
         }
     }
     public void disable(Player player) {
-        if (getInstance().getUserdata(player).hasTaskID("board")) {
-            getInstance().getUserdata(player).removeTask("board");
+        if (getInstance().getUserdata().hasTaskID(player, "board")) {
+            getInstance().getUserdata().removeTask(player, "board");
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
     }

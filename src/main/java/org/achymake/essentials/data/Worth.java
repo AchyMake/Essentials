@@ -29,22 +29,23 @@ public class Worth {
         if (value > 0) {
             config.set(itemStack.getType().toString(), value);
         } else config.set(itemStack.getType().toString(), null);
-        save();
-    }
-    private void setup() {
-        config.options().copyDefaults(true);
-        save();
-    }
-    public void reload() {
-        if (file.exists()) {
-            config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
-    }
-    private void save() {
         try {
             config.save(file);
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
         }
+    }
+    private void setup() {
+        config.options().copyDefaults(true);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+        }
+    }
+    public void reload() {
+        if (file.exists()) {
+            config = YamlConfiguration.loadConfiguration(file);
+        } else setup();
     }
 }

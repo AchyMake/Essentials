@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,8 +16,8 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -34,8 +33,8 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(username);
                 if (target != null) {
                     var message = getMessage().getBuilder(args, 1);
-                    getUserdata(target).setString("last-whisper", player.getUniqueId().toString());
-                    getUserdata(player).setString("last-whisper", target.getUniqueId().toString());
+                    getUserdata().setString(target, "last-whisper", player.getUniqueId().toString());
+                    getUserdata().setString(player, "last-whisper", target.getUniqueId().toString());
                     target.sendMessage(getMessage().get("commands.whisper.target", player.getName(), message));
                     player.sendMessage(getMessage().get("commands.whisper.sender", target.getName(), message));
                     getMessage().sendAll(getMessage().get("commands.whisper.notify", player.getName(), target.getName(), message), "essentials.command.whisper.notify");
@@ -51,7 +50,7 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
+                    if (!getUserdata().isVanished(target)) {
                         if (target.getName().startsWith(args[0])) {
                             commands.add(target.getName());
                         }

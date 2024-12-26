@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,8 +12,8 @@ public class BlockFertilize implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -25,7 +24,7 @@ public class BlockFertilize implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockFertilize(BlockFertilizeEvent event) {
         if (event.getPlayer() == null)return;
-        if (!getUserdata(event.getPlayer()).isDisabled())return;
+        if (!getUserdata().isDisabled(event.getPlayer()))return;
         event.setCancelled(true);
     }
 }

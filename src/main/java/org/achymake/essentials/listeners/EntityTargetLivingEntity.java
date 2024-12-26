@@ -2,8 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.data.Entities;
-import org.bukkit.OfflinePlayer;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,11 +14,11 @@ public class EntityTargetLivingEntity implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
-    private Entities getEntities() {
-        return getInstance().getEntities();
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -31,9 +30,9 @@ public class EntityTargetLivingEntity implements Listener {
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
         if (event.getTarget() == null)return;
         if (event.getEntity() instanceof Player)return;
-        if (!getEntities().disableEntityTarget(event.getEntityType(), event.getTarget().getType())) {
+        if (!getEntityHandler().disableEntityTarget(event.getEntityType(), event.getTarget().getType())) {
             if (event.getTarget() instanceof Player player) {
-                if (!getUserdata(player).isVanished())return;
+                if (!getUserdata().isVanished(player))return;
                 event.setCancelled(true);
             }
         } else event.setCancelled(true);

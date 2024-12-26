@@ -1,7 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Entities;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.ProjectileHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,11 +14,11 @@ public class ProjectileLaunch implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
+    }
     private ProjectileHandler getProjectileHandler() {
         return getInstance().getProjectileHandler();
-    }
-    private Entities getEntities() {
-        return getInstance().getEntities();
     }
     private PluginManager getManager() {
         return getInstance().getManager();
@@ -28,7 +28,7 @@ public class ProjectileLaunch implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if (!getEntities().disableCreatureSpawn(event.getEntityType())) {
+        if (!getEntityHandler().disableCreatureSpawn(event.getEntityType())) {
             if (event.getEntity().getShooter() instanceof Player) {
                 getProjectileHandler().addRemovalTask(event.getEntity(), 10);
             } else getProjectileHandler().addRemovalTask(event.getEntity(), 3);

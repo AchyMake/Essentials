@@ -5,18 +5,14 @@ bank:
   account: 0.0
   members: {not yet coded}
 settings:
-  auto-pick: false
+  pvp: true
   banned: false
-  ban-reason: ''
-  ban-expire: 0
+  muted: false
   frozen: false
   jailed: false
-  muted: false
-  pvp: true
+  ban-reason: ''
+  ban-expire: 0
   vanished: false
-homes: {}
-locations: {}
-tasks: {}
 last-whisper: uuid
 tpa:
   sent: uuid
@@ -24,3 +20,6 @@ tpa:
 tpahere:
   sent: uuid
   from: uuid
+homes: {}
+locations: {}
+tasks: {}

@@ -1,4 +1,4 @@
-package org.achymake.essentials.data;
+package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.EntityEquipment;
 import java.io.File;
 import java.io.IOException;
 
-public class Entities {
+public class EntityHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }

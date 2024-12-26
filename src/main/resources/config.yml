@@ -1,24 +1,23 @@
 notify-update: true
-economy:
-  enable: true
-  currency: "€"
-  format: "#,##0"
-  starter-balance: 0.0
-  minimum-payment: 1.00
-  bank:
-    starting-balance: 0.0
-    minimum-withdraw: 1.00
-    minimum-deposit: 1.00
-homes:
-  # if player has permission: 'essentials.command.sethome.multiple.default'
-  default: 3
-  vip: 6
-  staff: 12
+server:
+  motd:
+    enable: false
+    line-1: "Minecraft Server"
+    line-2: ""
+spawner:
+  display: "&dSpawner:&f %entity_type%"
+  lore:
+    - "&9Obtained by:"
+    - "&fSilk Touch"
+tablist:
+  format: "%vault_prefix%%essentials_display_name%%vault_suffix%"
 chat:
   format:
-    vanished: "&d%player%&f: "
-    op: "%prefix%&c%player%%suffix%&f: "
-    default: "%prefix%%player%%suffix%&f: "
+    default: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
+    vip: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
+    staff: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
+    vanished: "&d%essentials_display_name%&f: "
+    op: "%vault_prefix%&c%essentials_display_name%%vault_suffix%&f: "
   censor:
     - nigga
     - fuck
@@ -53,7 +52,7 @@ connection:
   join:
     # if false permission: 'essentials.event.join.message'
     enable: true
-    message: "%player%&e has joined the server [&a+&e]"
+    message: "%essentials_display_name%&e has joined the server [&a+&e]"
     sound:
       enable: true
       type: ENTITY_FOX_AMBIENT
@@ -62,12 +61,14 @@ connection:
   quit:
     # if false permission: 'essentials.event.quit.message'
     enable: true
-    message: "%player%&e has left the server [&c-&e]"
+    message: "%essentials_display_name%&e has left the server [&c-&e]"
     sound:
       enable: true
       type: ENTITY_FOX_AMBIENT
       volume: 0.75
       pitch: 1.0
+date:
+  format: "MM-dd-yyyy"
 deaths:
   # if false permission: 'essentials.event.death.location'
   send-location: true
@@ -80,42 +81,22 @@ deaths:
     enable: false
     # chance of the drop
     chance: 0.025
-teleport:
-  delay: 3
-  cancel-on-move: true
-  cancel-on-damage: true
-crops:
-  disable-tramping-farmland: true
-eggs:
-  disable-tramping-turtle-egg: true
-  disable-tramping-sniffer-egg: true
-fire:
-  disable-fire-spread: true
-  disable-lava-fire-spread: true
-physics:
-  disable-redstone: false
-server:
-  motd:
-    enable: false
-    line-1: "Minecraft Server"
-    line-2: ""
-message-of-the-day:
-  welcome:
-    - "&6Welcome&f %player%&6 to the server!"
-  welcome-back:
-    - "&6Welcome back&f %player%&6!"
-    - "&6We missed you!"
-  store:
-    - "&6Store:"
-    -  "- https://store.your-server.org"
-  rules:
-    - "&6Rules:"
-    - "&61.&f No server crashing"
-    - "&62.&f No griefing"
-    - "&63.&f No Monkieng around! uhh?"
-  help:
-    - "&6Help:"
-    - "- https://store.your-server.org/help"
+economy:
+  enable: true
+  currency: "€"
+  format: "#,##0"
+  starter-balance: 0.0
+  minimum-payment: 1.00
+  bank:
+    starting-balance: 0.0
+    minimum-withdraw: 1.00
+    minimum-deposit: 1.00
+homes:
+  # if player has permission: 'essentials.command.sethome.multiple.default'
+  default: 3
+  vip: 6
+  staff: 12
+  op: 9999
 levels:
   # if player has the permission 'essentials.event.level_change'
   # the player will receive particle and sound effects
@@ -145,11 +126,37 @@ levels:
       type: ENTITY_VEX_AMBIENT
       volume: 2.5
       pitch: 1.0
-spawner:
-  display: "&dSpawner:&f %entity_type%"
-  lore:
-    - "&9Obtained by:"
-    - "&fSilk Touch"
+message-of-the-day:
+  welcome:
+    - "&6Welcome&f %essentials_display_name%&6 to the server!"
+  welcome-back:
+    - "&6Welcome back&f %essentials_display_name%&6!"
+    - "&6We missed you!"
+  store:
+    - "&6Store:"
+    -  "- https://store.your-server.org"
+  rules:
+    - "&6Rules:"
+    - "&61.&f No server crashing"
+    - "&62.&f No griefing"
+    - "&63.&f No Monkieng around! uhh?"
+  help:
+    - "&6Help:"
+    - "- https://store.your-server.org/help"
+teleport:
+  delay: 3
+  cancel-on-move: true
+  cancel-on-damage: true
+crops:
+  disable-tramping-farmland: true
+eggs:
+  disable-tramping-turtle-egg: true
+  disable-tramping-sniffer-egg: true
+fire:
+  disable-fire-spread: true
+  disable-lava-fire-spread: true
+physics:
+  disable-redstone: false
 notification:
   # Permissions
   # essentials.event.block_break.notify

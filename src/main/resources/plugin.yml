@@ -863,6 +863,12 @@ permissions:
   essentials.command.workbench.exempt:
     description: workbench
     default: op
+  essentials.group.default:
+    description: default group
+    default: op
+  essentials.group.groupName:
+    description: groupName group
+    default: op
   essentials.command.worth:
     description: worth
     default: op

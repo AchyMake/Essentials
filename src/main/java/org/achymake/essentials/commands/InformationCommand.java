@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,8 +18,8 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return getInstance().getUserdata(offlinePlayer);
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -36,31 +35,30 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
-                var userdataOffline = getUserdata(offlinePlayer);
-                if (userdataOffline.exists()) {
+                if (getUserdata().exists(offlinePlayer)) {
                     var simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                     player.sendMessage(getMessage().get("commands.information.title"));
-                    player.sendMessage(getMessage().get("commands.information.name", userdataOffline.getName()));
-                    player.sendMessage(getMessage().get("commands.information.account", getEconomy().currency()) + getEconomy().format(userdataOffline.getAccount()));
-                    player.sendMessage(getMessage().get("commands.information.bank", getEconomy().currency()) + getEconomy().format(userdataOffline.getBankAccount()));
-                    player.sendMessage(getMessage().get("commands.information.homes", String.valueOf(userdataOffline.getHomes().size())));
-                    if (!userdataOffline.getHomes().isEmpty()) {
-                        userdataOffline.getHomes().forEach(home -> player.sendMessage(getMessage().get("commands.information.listed", home)));
+                    player.sendMessage(getMessage().get("commands.information.name", offlinePlayer.getName()));
+                    player.sendMessage(getMessage().get("commands.information.account", getEconomy().currency()) + getEconomy().format(getUserdata().getAccount(offlinePlayer)));
+                    player.sendMessage(getMessage().get("commands.information.bank", getEconomy().currency()) + getEconomy().format(getUserdata().getBankAccount(offlinePlayer)));
+                    player.sendMessage(getMessage().get("commands.information.homes", String.valueOf(getUserdata().getHomes(offlinePlayer).size())));
+                    if (!getUserdata().getHomes(offlinePlayer).isEmpty()) {
+                        getUserdata().getHomes(offlinePlayer).forEach(home -> player.sendMessage(getMessage().get("commands.information.listed", home)));
                     }
-                    player.sendMessage(getMessage().get("commands.information.muted", String.valueOf(userdataOffline.isMuted())));
-                    player.sendMessage(getMessage().get("commands.information.frozen", String.valueOf(userdataOffline.isFrozen())));
-                    player.sendMessage(getMessage().get("commands.information.jailed", String.valueOf(userdataOffline.isJailed())));
-                    player.sendMessage(getMessage().get("commands.information.pvp", String.valueOf(userdataOffline.isPVP())));
-                    player.sendMessage(getMessage().get("commands.information.banned", String.valueOf(userdataOffline.isBanned())));
-                    player.sendMessage(getMessage().get("commands.information.ban-reason", userdataOffline.getBanReason()));
-                    player.sendMessage(getMessage().get("commands.information.ban-expire", simpleDateFormat.format(userdataOffline.getBanExpire())));
-                    player.sendMessage(getMessage().get("commands.information.vanished", String.valueOf(userdataOffline.isVanished())));
-                    player.sendMessage(getMessage().get("commands.information.last-online", simpleDateFormat.format(offlinePlayer.getLastPlayed())));
-                    var quit = userdataOffline.getLocation("quit");
+                    player.sendMessage(getMessage().get("commands.information.muted", String.valueOf(getUserdata().isMuted(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.frozen", String.valueOf(getUserdata().isFrozen(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.jailed", String.valueOf(getUserdata().isJailed(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.pvp", String.valueOf(getUserdata().isPVP(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.banned", String.valueOf(getUserdata().isBanned(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.ban-reason", getUserdata().getBanReason(offlinePlayer)));
+                    player.sendMessage(getMessage().get("commands.information.ban-expire", simpleDateFormat.format(getUserdata().getBanExpire(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.vanished", String.valueOf(getUserdata().isVanished(offlinePlayer))));
+                    player.sendMessage(getMessage().get("commands.information.last-online", getInstance().getDateHandler().getFormatted(offlinePlayer.getLastPlayed())));
+                    var quit = getUserdata().getLocation(offlinePlayer, "quit");
                     if (quit != null) {
                         player.sendMessage(getMessage().get("commands.information.quit-location", quit.getWorld().getName(), String.valueOf(quit.getBlockX()), String.valueOf(quit.getBlockY()), String.valueOf(quit.getBlockZ())));
                     }
-                    player.sendMessage(getMessage().get("commands.information.uuid", String.valueOf(userdataOffline.getUUID())));
+                    player.sendMessage(getMessage().get("commands.information.uuid", String.valueOf(offlinePlayer.getUniqueId())));
                 } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 return true;
             }
@@ -73,7 +71,7 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player) {
             if (args.length == 1) {
                 getInstance().getOnlinePlayers().forEach(target -> {
-                    if (!getUserdata(target).isVanished()) {
+                    if (!getUserdata().isVanished(target)) {
                         if (target.getName().startsWith(args[0])) {
                             commands.add(target.getName());
                         }
