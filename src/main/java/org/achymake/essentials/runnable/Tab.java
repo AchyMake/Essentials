@@ -29,7 +29,7 @@ public record Tab(Player getPlayer) implements Runnable {
                 getPlayer().setPlayerListHeader(getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("header.lines"))));
             }
             if (getConfig().isString("worlds." + world + ".name")) {
-                getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getConfig().getString(world + ".name")));
+                getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getConfig().getString("worlds." + world + ".name")));
             } else if (getConfig().isString("name")) {
                 getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getConfig().getString("name")));
             }
