@@ -43,12 +43,12 @@ public class TablistHandler {
             if (isSection("worlds." + world + ".header")) {
                 if (isList("worlds." + world + ".header.lines") && isList("worlds." + world + ".footer.lines")) {
                     var tick = getInt("worlds." + world + ".tick");
-                    var taskID = getScheduler().runTimer(new Tab(player, config), tick, 3).getTaskId();
+                    var taskID = getScheduler().runTimer(new Tab(player), tick, 3).getTaskId();
                     getInstance().getUserdata().addTaskID(player, "tab", taskID);
                 }
             } else if (isList("header.lines") && isList("footer.lines")) {
                 var tick = getInt("tick");
-                var taskID = getScheduler().runTimer(new Tab(player, config), tick, 3).getTaskId();
+                var taskID = getScheduler().runTimer(new Tab(player), tick, 3).getTaskId();
                 getInstance().getUserdata().addTaskID(player, "tab", taskID);
             }
         }
@@ -68,9 +68,11 @@ public class TablistHandler {
         footer.add("&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------");
         config.set("tick", 20);
         config.set("header.lines", header);
+        config.set("name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
         config.set("footer.lines", footer);
         config.set("worlds.world.tick", 20);
         config.set("worlds.world.header.lines", header);
+        config.set("worlds.world.name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
         config.set("worlds.world.footer.lines", footer);
         var testHeader = new ArrayList<String>();
         testHeader.add("&6--------&l[&e&lplay.yourserver.org&6&l]&6--------");
@@ -83,6 +85,7 @@ public class TablistHandler {
         testFooter.add("&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------");
         config.set("worlds.test.tick", 20);
         config.set("worlds.test.header.lines", testHeader);
+        config.set("worlds.test.name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
         config.set("worlds.test.footer.lines", testFooter);
         try {
             config.save(file);

@@ -379,14 +379,14 @@ public class Message {
         if (string.contains(" ")) {
             var builder = getBuilder();
             for (var strings : string.split(" ")) {
-                builder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
+                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
                 builder.append(" ");
             }
             return builder.toString().strip();
         } else if (string.contains("_")) {
             var builder = getBuilder();
             for (var strings : string.split("_")) {
-                builder.append(strings.toUpperCase().charAt(0) + strings.substring(1).toLowerCase());
+                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
                 builder.append(" ");
             }
             return builder.toString().strip();

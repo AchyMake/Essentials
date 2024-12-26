@@ -9,8 +9,6 @@ spawner:
   lore:
     - "&9Obtained by:"
     - "&fSilk Touch"
-tablist:
-  format: "%vault_prefix%%essentials_display_name%%vault_suffix%"
 chat:
   format:
     default: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "

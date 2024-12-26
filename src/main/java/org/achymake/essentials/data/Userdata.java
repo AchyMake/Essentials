@@ -311,9 +311,9 @@ public class Userdata {
         config.set("bank.account", getMain().getDouble("economy.bank.starting-balance"));
         config.createSection("bank.members");
         config.set("settings.pvp", true);
+        config.set("settings.muted", false);
         config.set("settings.frozen", false);
         config.set("settings.jailed", false);
-        config.set("settings.muted", false);
         config.set("settings.banned", false);
         config.set("settings.ban-expire", 0);
         config.set("settings.vanished", false);
@@ -357,16 +357,6 @@ public class Userdata {
             });
         } else rank = "op";
         return rank;
-    }
-    public String getPrefix(Player player) {
-        if (getMessage().isRegistered("vault")) {
-            return getMessage().addPlaceholder(player, "%vault_prefix%");
-        } else return "";
-    }
-    public String getSuffix(Player player) {
-        if (getMessage().isRegistered("vault")) {
-            return getMessage().addPlaceholder(player, "%vault_suffix%");
-        } else return "";
     }
     public float getDefaultFlySpeed() {
         return 0.1F;

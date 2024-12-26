@@ -2,12 +2,19 @@ package org.achymake.essentials.runnable;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
+import org.achymake.essentials.handlers.TablistHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-public record Tab(Player getPlayer, FileConfiguration getConfig) implements Runnable {
+public record Tab(Player getPlayer) implements Runnable {
     private Essentials getInstance() {
         return Essentials.getInstance();
+    }
+    private TablistHandler getTablistHandler() {
+        return getInstance().getTablistHandler();
+    }
+    private FileConfiguration getConfig() {
+        return getTablistHandler().getConfig();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -21,17 +28,17 @@ public record Tab(Player getPlayer, FileConfiguration getConfig) implements Runn
             } else if (getConfig().isList("header.lines")) {
                 getPlayer().setPlayerListHeader(getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("header.lines"))));
             }
-            getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getInstance().getConfig().getString("tablist.format")));
+            if (getConfig().isString("worlds." + world + ".name")) {
+                getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getConfig().getString(world + ".name")));
+            } else if (getConfig().isString("name")) {
+                getPlayer().setPlayerListName(getMessage().addPlaceholder(getPlayer(), getConfig().getString("name")));
+            }
             if (getConfig().isList("worlds." + world + ".footer.lines")) {
                 getPlayer().setPlayerListFooter(getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("worlds." + world + ".footer.lines"))));
             } else if (getConfig().isList("footer.lines")) {
                 getPlayer().setPlayerListFooter(getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("footer.lines"))));
             }
         }
-    }
-    @Override
-    public FileConfiguration getConfig() {
-        return getConfig;
     }
     @Override
     public Player getPlayer() {

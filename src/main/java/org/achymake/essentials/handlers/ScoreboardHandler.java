@@ -44,12 +44,12 @@ public class ScoreboardHandler {
             if (isSection("worlds." + world)) {
                 if (isList("worlds." + world + ".lines")) {
                     var tick = getInt("worlds." + world + ".tick");
-                    var taskID = getScheduler().runTimer(new Board(player, config), tick, 3).getTaskId();
+                    var taskID = getScheduler().runTimer(new Board(player), tick, 3).getTaskId();
                     getInstance().getUserdata().addTaskID(player, "board", taskID);
                 }
             } else if (isList("lines")) {
                 var tick = getInt("tick");
-                var taskID = getScheduler().runTimer(new Board(player, config), tick, 3).getTaskId();
+                var taskID = getScheduler().runTimer(new Board(player), tick, 3).getTaskId();
                 getInstance().getUserdata().addTaskID(player, "board", taskID);
             }
         }

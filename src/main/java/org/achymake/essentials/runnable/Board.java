@@ -2,6 +2,7 @@ package org.achymake.essentials.runnable;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
+import org.achymake.essentials.handlers.ScoreboardHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -9,12 +10,21 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-public record Board(Player getPlayer, FileConfiguration getConfig) implements Runnable {
+public record Board(Player getPlayer) implements Runnable {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private ScoreboardHandler getScoreboardHandler() {
+        return getInstance().getScoreboardHandler();
+    }
+    private FileConfiguration getConfig() {
+        return getScoreboardHandler().getConfig();
+    }
     private ScoreboardManager getScoreboardManager() {
         return getInstance().getServer().getScoreboardManager();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
     }
     private Scoreboard getScoreboard() {
         return getScoreboardManager().getMainScoreboard();
@@ -24,9 +34,6 @@ public record Board(Player getPlayer, FileConfiguration getConfig) implements Ru
     }
     private Scoreboard getNewScoreboard() {
         return getScoreboardManager().getNewScoreboard();
-    }
-    private Message getMessage() {
-        return getInstance().getMessage();
     }
     @Override
     public void run() {
@@ -132,10 +139,6 @@ public record Board(Player getPlayer, FileConfiguration getConfig) implements Ru
                 }
             }
         } else getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-    }
-    @Override
-    public FileConfiguration getConfig() {
-        return getConfig;
     }
     @Override
     public Player getPlayer() {

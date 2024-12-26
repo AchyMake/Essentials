@@ -3,6 +3,7 @@ tick: 20
 header:
   lines:
     - '&6--------&l[&e&lplay.yourserver.org&6&l]&6--------'
+name: '%vault_prefix%%essentials_display_name%%vault_suffix%'
 footer:
   lines:
     - '&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------'
@@ -12,6 +13,7 @@ worlds:
     header:
       lines:
         - '&6--------&l[&e&lplay.yourserver.org&6&l]&6--------'
+    name: '%vault_prefix%%essentials_display_name%%vault_suffix%'
     footer:
       lines:
         - '&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------'
@@ -22,6 +24,7 @@ worlds:
         - '&6--------&l[&e&lplay.yourserver.org&6&l]&6--------'
         - '&etime&f: %server_time_hh mm ss%&e, date&f: %server_time_dd MM yyyy%'
         - '&etps&f: %server_tps%&f'
+    name: '%vault_prefix%%essentials_display_name%%vault_suffix%'
     footer:
       lines:
         - '&echunks&f: %server_total_chunks%&e, entities&f: %server_total_living_entities%&e/&f%server_total_entities%'
