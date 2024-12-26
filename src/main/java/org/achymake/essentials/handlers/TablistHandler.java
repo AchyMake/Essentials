@@ -43,12 +43,12 @@ public class TablistHandler {
             if (isSection("worlds." + world + ".header")) {
                 if (isList("worlds." + world + ".header.lines") && isList("worlds." + world + ".footer.lines")) {
                     var tick = getInt("worlds." + world + ".tick");
-                    var taskID = getScheduler().runTimer(new Tab(player), tick, 3).getTaskId();
+                    var taskID = getScheduler().runTimer(new Tab(player), tick, tick).getTaskId();
                     getInstance().getUserdata().addTaskID(player, "tab", taskID);
                 }
             } else if (isList("header.lines") && isList("footer.lines")) {
                 var tick = getInt("tick");
-                var taskID = getScheduler().runTimer(new Tab(player), tick, 3).getTaskId();
+                var taskID = getScheduler().runTimer(new Tab(player), tick, tick).getTaskId();
                 getInstance().getUserdata().addTaskID(player, "tab", taskID);
             }
         }
