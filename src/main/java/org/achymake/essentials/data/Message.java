@@ -370,7 +370,7 @@ public class Message {
     public String toString(List<String> lines) {
         var builder = getBuilder();
         for (var line : lines) {
-            builder.append(line);
+            builder.append(line).append("&r");
             builder.append("\n");
         }
         return builder.toString().strip();
