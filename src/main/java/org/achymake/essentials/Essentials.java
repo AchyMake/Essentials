@@ -194,6 +194,7 @@ public final class Essentials extends JavaPlugin {
         new EntityExplode();
         new EntityInteract();
         new EntityMount();
+        new EntityPlace();
         new EntityTarget();
         new EntityTargetLivingEntity();
         new HangingBreakByEntity();
