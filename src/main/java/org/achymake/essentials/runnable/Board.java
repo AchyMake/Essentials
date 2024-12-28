@@ -4,12 +4,12 @@ import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.ScoreboardHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +21,17 @@ public record Board(Player getPlayer) implements Runnable {
     private ScoreboardHandler getScoreboardHandler() {
         return getInstance().getScoreboardHandler();
     }
+    private ScoreboardManager getScoreboardManager() {
+        return getInstance().getScoreboardManager();
+    }
     private Scoreboard getScoreboard() {
         return getPlayer.getScoreboard();
     }
     private Objective getObjective(String objective) {
-        return Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
+        return getScoreboardManager().getMainScoreboard().getObjective(objective);
     }
     private Scoreboard getNewScoreboard() {
-        return Bukkit.getScoreboardManager().getNewScoreboard();
+        return getScoreboardManager().getNewScoreboard();
     }
     private FileConfiguration getConfig() {
         return getScoreboardHandler().getConfig();
@@ -86,7 +89,6 @@ public record Board(Player getPlayer) implements Runnable {
                         }
                     }
                 }
-                getPlayer.setScoreboard(scoreboard);
             } else if (getTitle() != null) {
                 if (!sidebar.getDisplayName().equals(getTitle())) {
                     sidebar.setDisplayName(getTitle());
@@ -101,7 +103,6 @@ public record Board(Player getPlayer) implements Runnable {
                         }
                     }
                 }
-                getPlayer.setScoreboard(scoreboard);
             }
         } else create();
     }
