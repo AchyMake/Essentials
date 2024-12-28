@@ -52,10 +52,10 @@ public class ScoreboardHandler {
         if (isEnable()) {
             var world = player.getWorld().getName();
             if (getTitle(world) != null && isList(world)) {
-                var taskID = getScheduler().runTimer(new Board(player), getTick(world), getTick(world)).getTaskId();
+                var taskID = getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
             } else if (getTitle() != null && isList()) {
-                var taskID = getScheduler().runTimer(new Board(player), getTick(), getTick()).getTaskId();
+                var taskID = getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
             }
         }

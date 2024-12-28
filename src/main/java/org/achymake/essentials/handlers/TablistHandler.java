@@ -57,10 +57,10 @@ public class TablistHandler {
         if (isEnable()) {
             var world = player.getWorld().getName();
             if (hasName(world) && hasHeaderLines(world) && hasFooterLines(world)) {
-                var taskID = getScheduler().runTimer(new Tab(player), getTick(world), getTick(world)).getTaskId();
+                var taskID = getScheduler().runTimer(new Tab(player), 0, getTick(world)).getTaskId();
                 getUserdata().addTaskID(player, "tab", taskID);
             } else if (hasName() && hasHeaderLines() && hasFooterLines()) {
-                var taskID = getScheduler().runTimer(new Tab(player), getTick(), getTick()).getTaskId();
+                var taskID = getScheduler().runTimer(new Tab(player), 0, getTick()).getTaskId();
                 getUserdata().addTaskID(player, "tab", taskID);
             }
         }

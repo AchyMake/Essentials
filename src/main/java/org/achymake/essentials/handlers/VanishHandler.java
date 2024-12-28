@@ -79,7 +79,7 @@ public class VanishHandler {
         }
     }
     private void addVanishTask(Player player) {
-        var taskID = getScheduler().runTimer(new Vanish(player), 50, 50).getTaskId();
+        var taskID = getScheduler().runTimer(new Vanish(player), 0, 50).getTaskId();
         getUserdata().addTaskID(player, "vanish", taskID);
     }
     public void disable() {
