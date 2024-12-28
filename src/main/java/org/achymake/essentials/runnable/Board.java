@@ -25,7 +25,7 @@ public record Board(Player getPlayer) implements Runnable {
         return getInstance().getScoreboardManager();
     }
     private Scoreboard getScoreboard() {
-        return getPlayer.getScoreboard();
+        return getScoreboardManager().getMainScoreboard();
     }
     private Objective getObjective(String objective) {
         return getScoreboardManager().getMainScoreboard().getObjective(objective);
