@@ -1,6 +1,7 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Tab;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,6 +15,9 @@ public class TablistHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
@@ -22,41 +26,50 @@ public class TablistHandler {
     public FileConfiguration getConfig() {
         return config;
     }
-    public int getInt(String path) {
-        return config.getInt(path);
-    }
-    public boolean isList(String path) {
-        return config.isList(path);
-    }
-    public boolean isSection(String section) {
-        return config.isConfigurationSection(section);
-    }
     public boolean isEnable() {
         return config.getBoolean("enable");
     }
-    public boolean hasTab(Player player) {
-        return getInstance().getUserdata().hasTaskID(player, "tab");
+    public long getTick() {
+        return config.getLong("tick");
+    }
+    public long getTick(String worldName) {
+        return config.getLong("worlds." + worldName + ".tick");
+    }
+    private boolean hasName() {
+        return config.isString("name");
+    }
+    private boolean hasName(String worldName) {
+        return config.isString("worlds." + worldName + ".name");
+    }
+    private boolean hasHeaderLines() {
+        return config.isList("header.lines");
+    }
+    private boolean hasHeaderLines(String worldName) {
+        return config.isList("worlds." + worldName + ".header.lines");
+    }
+    private boolean hasFooterLines() {
+        return config.isList("footer.lines");
+    }
+    private boolean hasFooterLines(String worldName) {
+        return config.isList("worlds." + worldName + ".footer.lines");
     }
     public void apply(Player player) {
         if (isEnable()) {
             var world = player.getWorld().getName();
-            if (isSection("worlds." + world + ".header")) {
-                if (isList("worlds." + world + ".header.lines") && isList("worlds." + world + ".footer.lines")) {
-                    var tick = getInt("worlds." + world + ".tick");
-                    var taskID = getScheduler().runTimer(new Tab(player), tick, tick).getTaskId();
-                    getInstance().getUserdata().addTaskID(player, "tab", taskID);
-                }
-            } else if (isList("header.lines") && isList("footer.lines")) {
-                var tick = getInt("tick");
-                var taskID = getScheduler().runTimer(new Tab(player), tick, tick).getTaskId();
-                getInstance().getUserdata().addTaskID(player, "tab", taskID);
+            if (hasName(world) && hasHeaderLines(world) && hasFooterLines(world)) {
+                var taskID = getScheduler().runTimer(new Tab(player), getTick(world), getTick(world)).getTaskId();
+                getUserdata().addTaskID(player, "tab", taskID);
+            } else if (hasName() && hasHeaderLines() && hasFooterLines()) {
+                var taskID = getScheduler().runTimer(new Tab(player), getTick(), getTick()).getTaskId();
+                getUserdata().addTaskID(player, "tab", taskID);
             }
         }
     }
     public void disable(Player player) {
-        if (getInstance().getUserdata().hasTaskID(player, "tab")) {
-            getInstance().getUserdata().removeTask(player, "tab");
+        if (getUserdata().hasTaskID(player, "tab")) {
+            getUserdata().removeTask(player, "tab");
             player.setPlayerListHeader(null);
+            player.setPlayerListName(player.getName());
             player.setPlayerListFooter(null);
         }
     }
@@ -67,12 +80,12 @@ public class TablistHandler {
         var footer = new ArrayList<String>();
         footer.add("&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------");
         config.set("tick", 20);
-        config.set("header.lines", header);
         config.set("name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
+        config.set("header.lines", header);
         config.set("footer.lines", footer);
         config.set("worlds.world.tick", 20);
-        config.set("worlds.world.header.lines", header);
         config.set("worlds.world.name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
+        config.set("worlds.world.header.lines", header);
         config.set("worlds.world.footer.lines", footer);
         var testHeader = new ArrayList<String>();
         testHeader.add("&6--------&l[&e&lplay.yourserver.org&6&l]&6--------");
@@ -84,8 +97,8 @@ public class TablistHandler {
         testFooter.add("&euptime&f: %server_uptime%");
         testFooter.add("&6--------&l[&f%essentials_online_players%&e/&f%server_max_players%&6&l]&6--------");
         config.set("worlds.test.tick", 20);
-        config.set("worlds.test.header.lines", testHeader);
         config.set("worlds.test.name", "%vault_prefix%%essentials_display_name%%vault_suffix%");
+        config.set("worlds.test.header.lines", testHeader);
         config.set("worlds.test.footer.lines", testFooter);
         try {
             config.save(file);

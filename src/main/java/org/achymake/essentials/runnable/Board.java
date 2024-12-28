@@ -1,14 +1,15 @@
 package org.achymake.essentials.runnable;
 
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.ScoreboardHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public record Board(Player getPlayer) implements Runnable {
     private Essentials getInstance() {
@@ -17,14 +18,8 @@ public record Board(Player getPlayer) implements Runnable {
     private ScoreboardHandler getScoreboardHandler() {
         return getInstance().getScoreboardHandler();
     }
-    private FileConfiguration getConfig() {
-        return getScoreboardHandler().getConfig();
-    }
     private ScoreboardManager getScoreboardManager() {
         return getInstance().getServer().getScoreboardManager();
-    }
-    private Message getMessage() {
-        return getInstance().getMessage();
     }
     private Scoreboard getScoreboard() {
         return getScoreboardManager().getMainScoreboard();
@@ -35,110 +30,129 @@ public record Board(Player getPlayer) implements Runnable {
     private Scoreboard getNewScoreboard() {
         return getScoreboardManager().getNewScoreboard();
     }
-    @Override
-    public void run() {
-        if (getConfig().getBoolean("enable")) {
-            var world = getPlayer().getWorld().getName();
-            if (getConfig().isConfigurationSection("worlds." + world)) {
-                if (getConfig().isList("worlds." + world + ".lines")) {
-                    var title = getConfig().getString("worlds." + world + ".title");
-                    if (title != null) {
-                        var scoreboardTick = getConfig().getInt("worlds." + world + ".tick");
-                        if (scoreboardTick >= 3) {
-                            var lines = getConfig().getStringList("worlds." + world + ".lines").reversed();
-                            if (!lines.isEmpty()) {
-                                var scoreboard = getScoreboard();
-                                var objective = getObjective("board");
-                                if (objective != null) {
-                                    var displayName = objective.getDisplayName();
-                                    var test = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), title));
-                                    if (!displayName.equals(test)) {
-                                        objective.setDisplayName(test);
-                                    }
-                                    for (int i = 0; i < lines.size(); i++) {
-                                        var team = scoreboard.getTeam(String.valueOf(i));
-                                        if (team != null) {
-                                            var prefix = team.getPrefix();
-                                            var test2 = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), lines.get(i)));
-                                            if (!prefix.equals(test2)) {
-                                                team.setPrefix(test2);
-                                            }
-                                        }
-                                    }
-                                    getPlayer().setScoreboard(scoreboard);
-                                } else {
-                                    var board = getNewScoreboard();
-                                    var object = board.registerNewObjective("board", "yummy", getMessage().addColor(getMessage().addPlaceholder(getPlayer(), title)));
-                                    object.setDisplaySlot(DisplaySlot.SIDEBAR);
-                                    for (int i = 0; i < lines.size(); i++) {
-                                        var message = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), lines.get(i)));
-                                        var team = board.getTeam(String.valueOf(i));
-                                        if (team != null) {
-                                            team.addEntry(String.valueOf(i));
-                                            team.setPrefix(message);
-                                        } else {
-                                            var newTeam = board.registerNewTeam(String.valueOf(i));
-                                            newTeam.addEntry(String.valueOf(i));
-                                            newTeam.setPrefix(message);
-                                        }
-                                        object.getScore(message).setScore(i);
-                                    }
-                                    getPlayer().setScoreboard(board);
-                                }
+    private FileConfiguration getConfig() {
+        return getScoreboardHandler().getConfig();
+    }
+    private boolean isEnable() {
+        return getConfig().getBoolean("enable");
+    }
+    private String getTitle() {
+        return getMessage().addPlaceholder(getPlayer, getConfig().getString("title"));
+    }
+    private String getTitle(String worldName) {
+        return getMessage().addPlaceholder(getPlayer, getConfig().getString("worlds." + worldName + ".title"));
+    }
+    private List<String> getLines() {
+        var listed = new ArrayList<String>();
+        var lines = getConfig().getStringList("lines").reversed();
+        if (!lines.isEmpty()) {
+            for (var line : lines) {
+                listed.add(getMessage().addPlaceholder(getPlayer, line));
+            }
+        }
+        return listed;
+    }
+    private List<String> getLines(String worldName) {
+        var listed = new ArrayList<String>();
+        var lines = getConfig().getStringList("worlds." + worldName + ".lines").reversed();
+        if (!lines.isEmpty()) {
+            for (var line : lines) {
+                listed.add(getMessage().addPlaceholder(getPlayer, line));
+            }
+        }
+        return listed;
+    }
+    private String getWorldName() {
+        return getPlayer.getWorld().getName();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
+    }
+    private void update() {
+        var scoreboard = getScoreboard();
+        var sidebar = getObjective("board");
+        if (sidebar != null) {
+            if (getTitle(getWorldName()) != null) {
+                if (!sidebar.getDisplayName().equals(getTitle(getWorldName()))) {
+                    sidebar.setDisplayName(getTitle(getWorldName()));
+                }
+                if (!getLines(getWorldName()).isEmpty()) {
+                    for (int i = 0; i < getLines(getWorldName()).size(); i++) {
+                        var team = scoreboard.getTeam(String.valueOf(i));
+                        if (team != null) {
+                            if (!team.getPrefix().equals(getLines(getWorldName()).get(i))) {
+                                team.setPrefix(getLines(getWorldName()).get(i));
                             }
                         }
                     }
                 }
-            } else if (getConfig().isList("lines")) {
-                var title = getConfig().getString("title");
-                if (title != null) {
-                    var scoreboardTick = getConfig().getInt("tick");
-                    if (scoreboardTick >= 3) {
-                        var lines = getConfig().getStringList("lines").reversed();
-                        if (!lines.isEmpty()) {
-                            var scoreboard = getScoreboard();
-                            var objective = getObjective("board");
-                            if (objective != null) {
-                                var displayName = objective.getDisplayName();
-                                var test = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), title));
-                                if (!displayName.equals(test)) {
-                                    objective.setDisplayName(test);
-                                }
-                                for (int i = 0; i < lines.size(); i++) {
-                                    var team = scoreboard.getTeam(String.valueOf(i));
-                                    if (team != null) {
-                                        var prefix = team.getPrefix();
-                                        var test2 = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), lines.get(i)));
-                                        if (!prefix.equals(test2)) {
-                                            team.setPrefix(test2);
-                                        }
-                                    }
-                                }
-                                getPlayer().setScoreboard(scoreboard);
-                            } else {
-                                var board = getNewScoreboard();
-                                var object = board.registerNewObjective("board", "yummy", getMessage().addColor(getMessage().addPlaceholder(getPlayer(), title)));
-                                object.setDisplaySlot(DisplaySlot.SIDEBAR);
-                                for (int i = 0; i < lines.size(); i++) {
-                                    var message = getMessage().addColor(getMessage().addPlaceholder(getPlayer(), lines.get(i)));
-                                    var team = board.getTeam(String.valueOf(i));
-                                    if (team != null) {
-                                        team.addEntry(String.valueOf(i));
-                                        team.setPrefix(message);
-                                    } else {
-                                        var newTeam = board.registerNewTeam(String.valueOf(i));
-                                        newTeam.addEntry(String.valueOf(i));
-                                        newTeam.setPrefix(message);
-                                    }
-                                    object.getScore(message).setScore(i);
-                                }
-                                getPlayer().setScoreboard(board);
+                getPlayer.setScoreboard(scoreboard);
+            } else if (getTitle() != null) {
+                if (!sidebar.getDisplayName().equals(getTitle())) {
+                    sidebar.setDisplayName(getTitle());
+                }
+                if (!getLines().isEmpty()) {
+                    for (int i = 0; i < getLines().size(); i++) {
+                        var team = scoreboard.getTeam(String.valueOf(i));
+                        if (team != null) {
+                            if (!team.getPrefix().equals(getLines().get(i))) {
+                                team.setPrefix(getLines().get(i));
                             }
                         }
                     }
+                }
+                getPlayer.setScoreboard(scoreboard);
+            }
+        } else create();
+    }
+    private void create() {
+        if (getTitle(getWorldName()) != null) {
+            var scoreboard = getNewScoreboard();
+            var sidebar = scoreboard.registerNewObjective("board", "yummy", getTitle(getWorldName()));
+            sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+            sidebar.numberFormat(NumberFormat.blank());
+            if (!getLines(getWorldName()).isEmpty()) {
+                for (int i = 0; i < getLines(getWorldName()).size(); i++) {
+                    var team = scoreboard.getTeam(String.valueOf(i));
+                    if (team != null) {
+                        team.addEntry(String.valueOf(i));
+                        team.setPrefix(getLines(getWorldName()).get(i));
+                    } else {
+                        var newTeam = scoreboard.registerNewTeam(String.valueOf(i));
+                        newTeam.addEntry(String.valueOf(i));
+                        newTeam.setPrefix(getLines(getWorldName()).get(i));
+                    }
+                    sidebar.getScore(getLines(getWorldName()).get(i)).setScore(i);
                 }
             }
-        } else getPlayer().getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+            getPlayer.setScoreboard(scoreboard);
+        } else if (getTitle() != null) {
+            var scoreboard = getNewScoreboard();
+            var sidebar = scoreboard.registerNewObjective("board", "yummy", getTitle());
+            sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+            sidebar.numberFormat(NumberFormat.blank());
+            if (!getLines().isEmpty()) {
+                for (int i = 0; i < getLines().size(); i++) {
+                    var team = scoreboard.getTeam(String.valueOf(i));
+                    if (team != null) {
+                        team.addEntry(String.valueOf(i));
+                        team.setPrefix(getLines().get(i));
+                    } else {
+                        var newTeam = scoreboard.registerNewTeam(String.valueOf(i));
+                        newTeam.addEntry(String.valueOf(i));
+                        newTeam.setPrefix(getLines().get(i));
+                    }
+                    sidebar.getScore(getLines().get(i)).setScore(i);
+                }
+            }
+            getPlayer.setScoreboard(scoreboard);
+        }
+    }
+    @Override
+    public void run() {
+        if (isEnable()) {
+            update();
+        } else getPlayer.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
     }
     @Override
     public Player getPlayer() {

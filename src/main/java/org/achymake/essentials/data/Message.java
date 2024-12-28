@@ -331,11 +331,11 @@ public class Message {
             config = YamlConfiguration.loadConfiguration(file);
         } else setup();
     }
-    public void sendStringList(Player player, List<String> strings) {
-        strings.forEach(string -> player.sendMessage(addPlaceholder(player, string)));
-    }
     public void sendActionBar(Player player, String message) {
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
+    }
+    public void sendStringList(Player player, List<String> strings) {
+        strings.forEach(string -> player.sendMessage(addPlaceholder(player, string)));
     }
     public void sendAll(String message) {
         getInstance().getOnlinePlayers().forEach(player -> player.sendMessage(addColor(message)));
@@ -346,9 +346,6 @@ public class Message {
                 player.sendMessage(addColor(message));
             }
         });
-    }
-    public boolean isRegistered(String identifier) {
-        return PlaceholderAPI.isRegistered(identifier);
     }
     public String addPlaceholder(Player player, String message) {
         return addColor(PlaceholderAPI.setPlaceholders(player, message));

@@ -33,8 +33,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setDouble(offlinePlayer, "account", getInstance().getConfig().getDouble("economy.starting-balance"));
-                        player.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
+                        getUserdata().setDouble(offlinePlayer, "account", getEconomy().getStartingBalance());
+                        player.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getEconomy().getStartingBalance())));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }
@@ -68,8 +68,8 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setDouble(offlinePlayer, "account", getInstance().getConfig().getDouble("economy.starting-balance"));
-                        consoleCommandSender.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getInstance().getConfig().getDouble("economy.starting-balance"))));
+                        getUserdata().setDouble(offlinePlayer, "account", getEconomy().getStartingBalance());
+                        consoleCommandSender.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getEconomy().getStartingBalance())));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
                 }

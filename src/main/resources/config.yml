@@ -83,7 +83,7 @@ economy:
   enable: true
   currency: "€"
   format: "#,##0"
-  starter-balance: 0.0
+  starting-balance: 0.0
   minimum-payment: 1.00
   bank:
     starting-balance: 0.0

@@ -93,12 +93,12 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                     if (target.hasPermission("essentials.command.back.death")) {
                         var death = getUserdata().getLocation(target, "death");
                         if (death != null) {
-                            getWorldHandler().teleport(target, death, "death", getInstance().getConfig().getInt("teleport.delay"));
+                            getWorldHandler().teleport(target, death, "death", 0);
                         } else if (recent != null) {
-                            getWorldHandler().teleport(target, recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
+                            getWorldHandler().teleport(target, recent, "recent", 0);
                         }
                     } else if (recent != null) {
-                        getWorldHandler().teleport(target, recent, "recent", getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, recent, "recent", 0);
                     }
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

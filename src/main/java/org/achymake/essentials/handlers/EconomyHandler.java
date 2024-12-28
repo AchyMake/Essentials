@@ -142,6 +142,12 @@ public class EconomyHandler {
     public Map<Player, InventoryView> getBanks() {
         return banks;
     }
+    public double getStartingBalance() {
+        return getConfig().getDouble("economy.starting-balance");
+    }
+    public double getStartingBank() {
+        return getConfig().getDouble("economy.bank.starting-balance");
+    }
     public double getMinimumPayment() {
         return getInstance().getConfig().getDouble("economy.minimum-payment");
     }

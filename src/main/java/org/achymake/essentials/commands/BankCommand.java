@@ -56,24 +56,28 @@ public class BankCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 var amount = Double.parseDouble(args[1]);
                 if (args[0].equalsIgnoreCase("withdraw")) {
-                    if (amount >= getEconomy().getMinimumBankWithdraw()) {
-                        if (getEconomy().hasBank(player, amount)) {
-                            getEconomy().removeBank(player, amount);
-                            getEconomy().add(player, amount);
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
-                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
-                    } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
+                    if (player.hasPermission("essentials.command.bank.withdraw")) {
+                        if (amount >= getEconomy().getMinimumBankWithdraw()) {
+                            if (getEconomy().hasBank(player, amount)) {
+                                getEconomy().removeBank(player, amount);
+                                getEconomy().add(player, amount);
+                                player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
+                                player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
+                            } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
+                    }
                     return true;
                 } else if (args[0].equalsIgnoreCase("deposit")) {
-                    if (amount >= getEconomy().getMinimumBankDeposit()) {
-                        if (getEconomy().has(player, amount)) {
-                            getEconomy().remove(player, amount);
-                            getEconomy().addBank(player, amount);
-                            player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
-                        } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
-                    } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
+                    if (player.hasPermission("essentials.command.bank.deposit")) {
+                        if (amount >= getEconomy().getMinimumBankDeposit()) {
+                            if (getEconomy().has(player, amount)) {
+                                getEconomy().remove(player, amount);
+                                getEconomy().addBank(player, amount);
+                                player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
+                                player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getUserdata().getBankAccount(player))));
+                            } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                        } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
+                    }
                     return true;
                 }
             }

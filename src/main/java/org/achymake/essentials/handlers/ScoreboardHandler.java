@@ -1,6 +1,7 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Board;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,6 +16,9 @@ public class ScoreboardHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
@@ -23,42 +27,48 @@ public class ScoreboardHandler {
     public FileConfiguration getConfig() {
         return config;
     }
-    public int getInt(String path) {
-        return config.getInt(path);
-    }
-    public boolean isList(String path) {
-        return config.isList(path);
-    }
-    public boolean isSection(String section) {
-        return config.isConfigurationSection(section);
-    }
-    public boolean isEnable() {
+    private boolean isEnable() {
         return config.getBoolean("enable");
     }
-    public boolean hasBoard(Player player) {
-        return getInstance().getUserdata().hasTaskID(player, "board");
+    private long getTick() {
+        return config.getLong("tick");
+    }
+    private long getTick(String worldName) {
+        return config.getLong("worlds." + worldName + ".tick");
+    }
+    private String getTitle() {
+        return config.getString("title");
+    }
+    private String getTitle(String worldName) {
+        return config.getString("worlds." + worldName + ".title");
+    }
+    private boolean isList() {
+        return config.isList("lines");
+    }
+    private boolean isList(String worldName) {
+        return config.isList("worlds." + worldName + ".lines");
     }
     public void apply(Player player) {
         if (isEnable()) {
             var world = player.getWorld().getName();
-            if (isSection("worlds." + world)) {
-                if (isList("worlds." + world + ".lines")) {
-                    var tick = getInt("worlds." + world + ".tick");
-                    var taskID = getScheduler().runTimer(new Board(player), tick, tick).getTaskId();
-                    getInstance().getUserdata().addTaskID(player, "board", taskID);
-                }
-            } else if (isList("lines")) {
-                var tick = getInt("tick");
+            if (getTitle(world) != null && isList(world)) {
+                var taskID = getScheduler().runTimer(new Board(player), getTick(world), getTick(world)).getTaskId();
+                getUserdata().addTaskID(player, "board", taskID);
+            } else if (getTitle() != null && isList()) {
+                var tick = getTick();
                 var taskID = getScheduler().runTimer(new Board(player), tick, tick).getTaskId();
-                getInstance().getUserdata().addTaskID(player, "board", taskID);
+                getUserdata().addTaskID(player, "board", taskID);
             }
         }
     }
     public void disable(Player player) {
-        if (getInstance().getUserdata().hasTaskID(player, "board")) {
-            getInstance().getUserdata().removeTask(player, "board");
+        if (getUserdata().hasTaskID(player, "board")) {
+            getUserdata().removeTask(player, "board");
             player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
         }
+    }
+    public boolean hasBoard(Player player) {
+        return getUserdata().hasTaskID(player, "board");
     }
     private void setup() {
         var lines = new ArrayList<String>();

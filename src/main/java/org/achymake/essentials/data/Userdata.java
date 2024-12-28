@@ -1,6 +1,7 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.GameMode;
@@ -24,14 +25,17 @@ public class Userdata {
     private FileConfiguration getMain() {
         return getInstance().getConfig();
     }
+    private EconomyHandler getEconomyHandler() {
+        return getInstance().getEconomyHandler();
+    }
+    private ScheduleHandler getScheduler() {
+        return getInstance().getScheduleHandler();
+    }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
-    }
-    private ScheduleHandler getScheduler() {
-        return getInstance().getScheduleHandler();
     }
     public File getFile(OfflinePlayer offlinePlayer) {
         return new File(getInstance().getDataFolder(), "userdata/" + offlinePlayer.getUniqueId() + ".yml");
@@ -307,8 +311,8 @@ public class Userdata {
         var config = YamlConfiguration.loadConfiguration(file);
         config.set("name", offlinePlayer.getName());
         config.set("display-name", offlinePlayer.getName());
-        config.set("account", getMain().getDouble("economy.starting-balance"));
-        config.set("bank.account", getMain().getDouble("economy.bank.starting-balance"));
+        config.set("account", getEconomyHandler().getStartingBalance());
+        config.set("bank.account", getEconomyHandler().getStartingBank());
         config.createSection("bank.members");
         config.set("settings.pvp", true);
         config.set("settings.muted", false);
