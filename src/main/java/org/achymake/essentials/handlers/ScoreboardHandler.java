@@ -55,8 +55,7 @@ public class ScoreboardHandler {
                 var taskID = getScheduler().runTimer(new Board(player), getTick(world), getTick(world)).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
             } else if (getTitle() != null && isList()) {
-                var tick = getTick();
-                var taskID = getScheduler().runTimer(new Board(player), tick, tick).getTaskId();
+                var taskID = getScheduler().runTimer(new Board(player), getTick(), getTick()).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
             }
         }

@@ -4,9 +4,12 @@ import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.ScoreboardHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +21,14 @@ public record Board(Player getPlayer) implements Runnable {
     private ScoreboardHandler getScoreboardHandler() {
         return getInstance().getScoreboardHandler();
     }
-    private ScoreboardManager getScoreboardManager() {
-        return getInstance().getServer().getScoreboardManager();
-    }
     private Scoreboard getScoreboard() {
-        return getScoreboardManager().getMainScoreboard();
+        return getPlayer.getScoreboard();
     }
     private Objective getObjective(String objective) {
-        return getScoreboard().getObjective(objective);
+        return Bukkit.getScoreboardManager().getMainScoreboard().getObjective(objective);
     }
     private Scoreboard getNewScoreboard() {
-        return getScoreboardManager().getNewScoreboard();
+        return Bukkit.getScoreboardManager().getNewScoreboard();
     }
     private FileConfiguration getConfig() {
         return getScoreboardHandler().getConfig();
