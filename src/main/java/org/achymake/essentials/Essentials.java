@@ -13,7 +13,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +46,6 @@ public final class Essentials extends JavaPlugin {
     private WorldHandler worldHandler;
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
-    private ScoreboardManager scoreboardManager;
     private PluginManager manager;
     @Override
     public void onEnable() {
@@ -75,7 +73,6 @@ public final class Essentials extends JavaPlugin {
         worldHandler = new WorldHandler();
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
-        scoreboardManager = getServer().getScoreboardManager();
         manager = getServer().getPluginManager();
         commands();
         events();
@@ -300,9 +297,6 @@ public final class Essentials extends JavaPlugin {
     }
     public PluginManager getManager() {
         return manager;
-    }
-    public ScoreboardManager getScoreboardManager() {
-        return scoreboardManager;
     }
     public BukkitScheduler getBukkitScheduler() {
         return bukkitScheduler;

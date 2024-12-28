@@ -4,6 +4,7 @@ import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.ScoreboardHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -22,7 +23,7 @@ public record Board(Player getPlayer) implements Runnable {
         return getInstance().getScoreboardHandler();
     }
     private ScoreboardManager getScoreboardManager() {
-        return getInstance().getScoreboardManager();
+        return Bukkit.getScoreboardManager();
     }
     private Scoreboard getScoreboard() {
         return getPlayer.getScoreboard();
