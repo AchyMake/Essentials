@@ -34,8 +34,8 @@ public final class YourPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
     }
-    public Userdata getUserdata(OfflinePlayer offlinePlayer) {
-        return Essentials.getInstance().getUserdata(offlinePlayer);
+    public boolean isVanished(OfflinePlayer offlinePlayer) {
+        return Essentials.getInstance().getUserdata().isVanished(offlinePlayer);
     }
     public static YourPlugin getInstance() {
         return instance;
