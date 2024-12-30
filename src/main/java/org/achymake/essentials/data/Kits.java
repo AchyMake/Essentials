@@ -5,6 +5,7 @@ import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -39,6 +40,16 @@ public class Kits {
     }
     public double getPrice(String kitName) {
         return config.getDouble(kitName + ".price");
+    }
+    public void sendKits(Player player) {
+        if (!getListed().isEmpty()) {
+            player.sendMessage(getMessage().get("commands.kit.title"));
+            getListed().forEach(kits -> {
+                if (player.hasPermission("essentials.command.kit." + kits)) {
+                    player.sendMessage(getMessage().get("commands.kit.listed", kits));
+                }
+            });
+        } else player.sendMessage(getMessage().get("commands.kit.empty"));
     }
     public List<ItemStack> get(String kitName) {
         var itemStacks = new ArrayList<ItemStack>();

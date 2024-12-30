@@ -45,8 +45,10 @@ public class PlayerQuit implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         var player = event.getPlayer();
-        getScoreboardHandler().disable(player);
         getTablistHandler().disable(player);
+        if (getUserdata().hasBoard(player)) {
+            getScoreboardHandler().disable(player);
+        }
         if (!getUserdata().isVanished(player)) {
             if (getConfig().getBoolean("connection.quit.enable")) {
                 event.setQuitMessage(getMessage().addPlaceholder(player, getConfig().getString("connection.quit.message")));

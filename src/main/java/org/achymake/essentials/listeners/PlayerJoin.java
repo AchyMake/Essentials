@@ -53,7 +53,9 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        getScoreboardHandler().apply(player);
+        if (getUserdata().hasBoard(player)) {
+            getScoreboardHandler().apply(player);
+        }
         getTablistHandler().apply(player);
         if (!getUserdata().isVanished(player)) {
             getVanishHandler().hideVanished(player);

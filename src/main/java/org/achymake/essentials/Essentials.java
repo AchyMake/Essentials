@@ -6,6 +6,7 @@ import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -164,6 +165,7 @@ public final class Essentials extends JavaPlugin {
         new VanishCommand();
         new WalkSpeedCommand();
         new WarpCommand();
+        new WeatherCommand();
         new WhisperCommand();
         new WorkbenchCommand();
         new WorthCommand();
@@ -195,6 +197,7 @@ public final class Essentials extends JavaPlugin {
         new EntityInteract();
         new EntityMount();
         new EntityPlace();
+        new EntityShootBow();
         new EntityTarget();
         new EntityTargetLivingEntity();
         new HangingBreakByEntity();
@@ -234,8 +237,14 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reload() {
-        getOnlinePlayers().forEach(this::disableTab);
-        getOnlinePlayers().forEach(this::disableBoard);
+        if (!getOnlinePlayers().isEmpty()) {
+            for (var player : getOnlinePlayers()) {
+                getTablistHandler().disable(player);
+                if (getUserdata().hasBoard(player)) {
+                    getScoreboardHandler().disable(player);
+                }
+            }
+        }
         var file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
             try {
@@ -266,8 +275,14 @@ public final class Essentials extends JavaPlugin {
         getWorth().reload();
         getScoreboardHandler().reload();
         getTablistHandler().reload();
-        getOnlinePlayers().forEach(this::applyTab);
-        getOnlinePlayers().forEach(this::applyBoard);
+        if (!getOnlinePlayers().isEmpty()) {
+            for (var player : getOnlinePlayers()) {
+                getTablistHandler().apply(player);
+                if (getUserdata().hasBoard(player)) {
+                    getScoreboardHandler().apply(player);
+                }
+            }
+        }
     }
     public void reloadUserdata() {
         if (!getOfflinePlayers().isEmpty()) {
@@ -279,8 +294,9 @@ public final class Essentials extends JavaPlugin {
     }
     public List<OfflinePlayer> getOfflinePlayers() {
         var listed = new ArrayList<OfflinePlayer>();
-        if (!getUUIDS().isEmpty()) {
-            getUUIDS().forEach(uuid -> listed.add(getOfflinePlayer(uuid)));
+        var uuids = getUUIDS();
+        if (!uuids.isEmpty()) {
+            uuids.forEach(uuid -> listed.add(getOfflinePlayer(uuid)));
         }
         return listed;
     }
@@ -393,24 +409,12 @@ public final class Essentials extends JavaPlugin {
         return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
     public Player getPlayer(String username) {
-        return getServer().getPlayerExact(username);
+        return Bukkit.getPlayerExact(username);
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
-        return getServer().getOfflinePlayer(uuid);
+        return Bukkit.getOfflinePlayer(uuid);
     }
     public OfflinePlayer getOfflinePlayer(String username) {
-        return getServer().getOfflinePlayer(username);
-    }
-    public void applyTab(Player player) {
-        getTablistHandler().apply(player);
-    }
-    public void disableTab(Player player) {
-        getTablistHandler().disable(player);
-    }
-    public void applyBoard(Player player) {
-        getScoreboardHandler().apply(player);
-    }
-    public void disableBoard(Player player) {
-        getScoreboardHandler().disable(player);
+        return Bukkit.getOfflinePlayer(username);
     }
 }

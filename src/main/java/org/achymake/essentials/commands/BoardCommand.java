@@ -32,9 +32,11 @@ public class BoardCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (getScoreboard().hasBoard(player)) {
                     getScoreboard().disable(player);
+                    getUserdata().setBoolean(player, "settings.board", false);
                     player.sendMessage(getMessage().get("commands.board.self", getMessage().get("disable")));
                 } else {
                     getScoreboard().apply(player);
+                    getUserdata().setBoolean(player, "settings.board", true);
                     player.sendMessage(getMessage().get("commands.board.self", getMessage().get("enable")));
                 }
                 return true;
@@ -45,17 +47,21 @@ public class BoardCommand implements CommandExecutor, TabCompleter {
                         if (target == player) {
                             if (getScoreboard().hasBoard(target)) {
                                 getScoreboard().disable(target);
+                                getUserdata().setBoolean(target, "settings.board", false);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
                             } else {
                                 getScoreboard().apply(target);
+                                getUserdata().setBoolean(target, "settings.board", true);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("enable")));
                             }
                         } else if (!target.hasPermission("essentials.command.board.exempt")) {
                             if (getScoreboard().hasBoard(target)) {
                                 getScoreboard().disable(target);
+                                getUserdata().setBoolean(target, "settings.board", false);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
                             } else {
                                 getScoreboard().apply(target);
+                                getUserdata().setBoolean(target, "settings.board", true);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("enable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.board.exempt", target.getName()));

@@ -31,7 +31,7 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getInventoryHandler().openStonecutter(player) == null) {
-                    player.sendMessage(getMessage().get("error.not-provided"));
+                    player.sendMessage(getMessage().get("error.invalid"));
                 }
                 return true;
             } else if (args.length == 1) {
@@ -40,12 +40,12 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openStonecutter(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.stonecutter.exempt")) {
                             if (getInventoryHandler().openStonecutter(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.stonecutter.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", args[0]));
@@ -57,7 +57,7 @@ public class StonecutterCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openStonecutter(target) == null) {
-                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.stonecutter.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", args[0]));
                 return true;

@@ -31,10 +31,8 @@ public class EconomyHandler {
     public HashMap<OfflinePlayer, Double> getAccounts() {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
-                if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
-                    accounts.put(offlinePlayer, get(offlinePlayer));
-                }
+            if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
+                accounts.put(offlinePlayer, get(offlinePlayer));
             }
         }
         return accounts;
@@ -42,10 +40,8 @@ public class EconomyHandler {
     public HashMap<OfflinePlayer, Double> getBankAccounts() {
         var bankAccounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
-            if (offlinePlayer.hasPlayedBefore() || offlinePlayer.isOnline()) {
-                if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
-                    bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
-                }
+            if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
+                bankAccounts.put(offlinePlayer, getBank(offlinePlayer));
             }
         }
         return bankAccounts;
@@ -62,6 +58,9 @@ public class EconomyHandler {
             result.put(entry.getKey(), entry.getValue());
         }
         return result.entrySet();
+    }
+    public String currency() {
+        return getConfig().getString("economy.currency");
     }
     public String getFormat() {
         return getConfig().getString("economy.format");
@@ -83,9 +82,6 @@ public class EconomyHandler {
     }
     public void set(OfflinePlayer offlinePlayer, double amount) {
         getUserdata().setDouble(offlinePlayer, "account", amount);
-    }
-    public String currency() {
-        return getConfig().getString("economy.currency");
     }
     public String format(double value) {
         return new DecimalFormat(getFormat()).format(value);
@@ -110,7 +106,7 @@ public class EconomyHandler {
         if (anvil != null) {
             var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(String.valueOf(getMinimumBankWithdraw()));
+            itemMeta.setDisplayName("0.0");
             itemStack.setItemMeta(itemMeta);
             anvil.setTitle("Bank: Withdraw");
             anvil.setItem(0, itemStack);
@@ -123,7 +119,7 @@ public class EconomyHandler {
         if (anvil != null) {
             var itemStack = getMaterialHandler().getItemStack("paper", 1);
             var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName(String.valueOf(getMinimumBankDeposit()));
+            itemMeta.setDisplayName("0.0");
             itemStack.setItemMeta(itemMeta);
             anvil.setTitle("Bank: Deposit");
             anvil.setItem(0, itemStack);
@@ -139,9 +135,6 @@ public class EconomyHandler {
         });
         banks.remove(player);
     }
-    public Map<Player, InventoryView> getBanks() {
-        return banks;
-    }
     public double getStartingBalance() {
         return getConfig().getDouble("economy.starting-balance");
     }
@@ -156,5 +149,8 @@ public class EconomyHandler {
     }
     public double getMinimumBankDeposit() {
         return getInstance().getConfig().getDouble("economy.bank.minimum-withdraw");
+    }
+    public Map<Player, InventoryView> getBanks() {
+        return banks;
     }
 }

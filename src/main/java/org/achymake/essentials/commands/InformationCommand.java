@@ -53,7 +53,11 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(getMessage().get("commands.information.ban-reason", getUserdata().getBanReason(offlinePlayer)));
                     player.sendMessage(getMessage().get("commands.information.ban-expire", simpleDateFormat.format(getUserdata().getBanExpire(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.vanished", String.valueOf(getUserdata().isVanished(offlinePlayer))));
-                    player.sendMessage(getMessage().get("commands.information.last-online", getInstance().getDateHandler().getFormatted(offlinePlayer.getLastPlayed())));
+                    player.sendMessage(getMessage().get("commands.information.last-online", getInstance().getDateHandler().getFormatted(offlinePlayer.getLastSeen())));
+                    var join = getUserdata().getLocation(offlinePlayer, "join");
+                    if (join != null) {
+                        player.sendMessage(getMessage().get("commands.information.join-location", join.getWorld().getName(), String.valueOf(join.getBlockX()), String.valueOf(join.getBlockY()), String.valueOf(join.getBlockZ())));
+                    }
                     var quit = getUserdata().getLocation(offlinePlayer, "quit");
                     if (quit != null) {
                         player.sendMessage(getMessage().get("commands.information.quit-location", quit.getWorld().getName(), String.valueOf(quit.getBlockX()), String.valueOf(quit.getBlockY()), String.valueOf(quit.getBlockZ())));

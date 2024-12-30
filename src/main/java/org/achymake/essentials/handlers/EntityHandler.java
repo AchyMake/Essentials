@@ -492,4 +492,90 @@ public class EntityHandler {
             }
         }
     }
+    public boolean isTamed(Entity tamed) {
+        switch (tamed) {
+            case TraderLlama entity -> {
+                return entity.isTamed();
+            }
+            case Camel entity -> {
+                return entity.isTamed();
+            }
+            case Donkey entity -> {
+                return entity.isTamed();
+            }
+            case Llama entity -> {
+                return entity.isTamed();
+            }
+            case Mule entity -> {
+                return entity.isTamed();
+            }
+            case ChestedHorse entity -> {
+                return entity.isTamed();
+            }
+            case Horse entity -> {
+                return entity.isTamed();
+            }
+            case ZombieHorse entity -> {
+                return entity.isTamed();
+            }
+            case AbstractHorse entity -> {
+                return entity.isTamed();
+            }
+            case Cat entity -> {
+                return entity.isTamed();
+            }
+            case Parrot entity -> {
+                return entity.isTamed();
+            }
+            case Wolf entity -> {
+                return entity.isTamed();
+            }
+            case null, default -> {
+                return false;
+            }
+        }
+    }
+    public AnimalTamer getOwner(Entity tamed) {
+        switch (tamed) {
+            case TraderLlama entity -> {
+                return entity.getOwner();
+            }
+            case Camel entity -> {
+                return entity.getOwner();
+            }
+            case Donkey entity -> {
+                return entity.getOwner();
+            }
+            case Llama entity -> {
+                return entity.getOwner();
+            }
+            case Mule entity -> {
+                return entity.getOwner();
+            }
+            case ChestedHorse entity -> {
+                return entity.getOwner();
+            }
+            case Horse entity -> {
+                return entity.getOwner();
+            }
+            case ZombieHorse entity -> {
+                return entity.getOwner();
+            }
+            case AbstractHorse entity -> {
+                return entity.getOwner();
+            }
+            case Cat entity -> {
+                return entity.getOwner();
+            }
+            case Parrot entity -> {
+                return entity.getOwner();
+            }
+            case Wolf entity -> {
+                return entity.getOwner();
+            }
+            case null, default -> {
+                return null;
+            }
+        }
+    }
 }

@@ -31,7 +31,7 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getInventoryHandler().openAnvil(player) == null) {
-                    player.sendMessage(getMessage().get("error.not-provided"));
+                    player.sendMessage(getMessage().get("error.invalid"));
                 }
                 return true;
             } else if (args.length == 1) {
@@ -40,12 +40,12 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openAnvil(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.anvil.exempt")) {
                             if (getInventoryHandler().openAnvil(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.anvil.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -57,7 +57,7 @@ public class AnvilCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openAnvil(target) == null) {
-                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.anvil.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

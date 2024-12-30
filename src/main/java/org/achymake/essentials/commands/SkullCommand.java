@@ -111,7 +111,11 @@ public class SkullCommand implements CommandExecutor, TabCompleter {
                     });
                 } else if (args[0].equalsIgnoreCase("custom")) {
                     if (!getInstance().isBukkit()) {
-                        commands.addAll(getSkulls().getListed());
+                        for (var skullName : getSkulls().getListed()) {
+                            if (skullName.startsWith(args[1])) {
+                                commands.add(skullName);
+                            }
+                        }
                     }
                 }
             }

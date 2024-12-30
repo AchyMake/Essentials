@@ -31,7 +31,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getInventoryHandler().openLoom(player) == null) {
-                    player.sendMessage(getMessage().get("error.not-provided"));
+                    player.sendMessage(getMessage().get("error.invalid"));
                 }
                 return true;
             } else if (args.length == 1) {
@@ -40,11 +40,11 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openLoom(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.loom.exempt")) {
                             if (getInventoryHandler().openLoom(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.loom.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -56,7 +56,7 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openLoom(target) == null) {
-                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

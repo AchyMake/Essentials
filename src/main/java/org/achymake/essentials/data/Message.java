@@ -33,6 +33,11 @@ public class Message {
     }
     private void setup() {
         config.options().copyDefaults(true);
+        config.set("error.target.offline", "{0}&c is currently offline");
+        config.set("error.target.invalid", "{0}&c has never joined");
+        config.set("error.world.invalid", "{0}&c does not exists");
+        config.set("error.item.invalid", "&cYou have to hold an item");
+        config.set("error.invalid", "&cServer does not provide this function");
         config.set("enable", "&aEnable");
         config.set("disable", "&cDisable");
         config.set("gamemode.adventure", "Adventure");
@@ -41,11 +46,14 @@ public class Message {
         config.set("gamemode.survival", "Survival");
         config.set("gamemode.change", "&6Gamemode&f: {0}");
         config.set("gamemode.invalid", "{0}&c is not a gamemode");
-        config.set("error.target.offline", "{0}&c is currently offline");
-        config.set("error.target.invalid", "{0}&c has never joined");
-        config.set("error.world.invalid", "{0}&c does not exists");
-        config.set("error.item.invalid", "&cYou have to hold an item");
-        config.set("error.not-provided", "&cServer does not provide this function");
+        config.set("time.morning", "Morning");
+        config.set("time.day", "Day");
+        config.set("time.noon", "Noon");
+        config.set("time.night", "Night");
+        config.set("time.midnight", "Midnight");
+        config.set("weather.clear", "Clear");
+        config.set("weather.rain", "Rain");
+        config.set("weather.reset", "Default");
         config.set("commands.announcement", "&6Server&f: {0}");
         config.set("commands.anvil.sender", "&6You opened anvil for&f {0}");
         config.set("commands.anvil.exempt", "&cYou are not allowed to open anvil for&f {0}");
@@ -158,6 +166,7 @@ public class Message {
         config.set("commands.information.ban-expire", "&6ban-expire:&f {0}");
         config.set("commands.information.vanished", "&6vanished:&f {0}");
         config.set("commands.information.last-online", "&6last-online:&f {0}");
+        config.set("commands.information.join-location", "&6join-location:&7 World:&f{0}&7 X:&f{1}&7 Y:&f{2}&7 Z:&f{3}");
         config.set("commands.information.quit-location", "&6quit-location:&7 World:&f{0}&7 X:&f{1}&7 Y:&f{2}&7 Z:&f{3}");
         config.set("commands.information.uuid", "&6uuid:&f {0}");
         config.set("commands.inventory.self", "&cYou can not open an inventory of your own");
@@ -252,9 +261,15 @@ public class Message {
         config.set("commands.stonecutter.exempt", "&cYou are not allowed to open stonecutter for&f {0}");
         config.set("commands.store.sender", "&6You sent store message to&f {0}");
         config.set("commands.store.exempt", "&cYou are not allowed to send store to&f {0}");
-        config.set("commands.time.set", "{0}&6 set time to&f {1}");
-        config.set("commands.time.add", "{0}&6 added&f {1}&6 time");
-        config.set("commands.time.remove", "{0}&6 removed&f {1}&6 time");
+        config.set("commands.time.set", "&6Your time is set to&f {0}");
+        config.set("commands.time.add", "&6Your time has added&f {0}");
+        config.set("commands.time.remove", "&6Your time has removed&f {0}");
+        config.set("commands.time.reset", "&6Your time has been reset");
+        config.set("commands.time.other.set", "{0}&6 set time to&f {1}");
+        config.set("commands.time.other.add", "{0}&6 added&f {1} time");
+        config.set("commands.time.other.remove", "{0}&6 removed&f {1}&6 time");
+        config.set("commands.time.other.reset", "{0}&6 time has been reset");
+        config.set("commands.time.exempt", "&cYou are not allowed to change time for&f {0}");
         config.set("commands.tpaccept.tpa.target", "{0}&6 accepted tpa request");
         config.set("commands.tpaccept.tpa.sender", "&6You accepted tpa request from&f {0}");
         config.set("commands.tpaccept.tpahere.target", "{0}&6 accepted tpahere request");
@@ -280,7 +295,7 @@ public class Message {
         config.set("commands.tp.exempt", "&cYou are not allowed to teleport to&f {0}");
         config.set("commands.tpdeny.target", "{0}&6 denied teleport request");
         config.set("commands.tpdeny.sender", "&6You denied teleport request from&f {0}");
-        config.set("commands.tpdeny.non-requested", "&cYou do not have any teleport request");
+        config.set("commands.tpdeny.invalid", "&cYou do not have any teleport request");
         config.set("commands.tphere.sender", "&6Teleporting&f {0}&6 to you");
         config.set("commands.tphere.exempt", "&cYou are not allowed to teleport&f {0}");
         config.set("commands.unban.banned", "{0}&6 is no longer banned");
@@ -296,6 +311,9 @@ public class Message {
         config.set("commands.warp.sender", "&6You warped&f {0}&6 to&f {1}");
         config.set("commands.warp.invalid", "{0}&c does not exists");
         config.set("commands.warp.exempt", "&cYou are not allowed to warp&f {0}");
+        config.set("commands.weather.self", "&6Your weather is set to&f {0}");
+        config.set("commands.weather.other", "{0}&6 weather is set to&f {1}");
+        config.set("commands.weather.exempt", "&cYou are not allowed to change weather for&f {0}");
         config.set("commands.whisper.target", "&7{0} > You&f: {1}");
         config.set("commands.whisper.sender", "&7You > {0}&f: {1}");
         config.set("commands.whisper.notify", "&7{0} > {1}&f: {2}");

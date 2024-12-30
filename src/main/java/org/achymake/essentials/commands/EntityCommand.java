@@ -137,7 +137,11 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 var entityType = getEntityHandler().getType(args[0]);
                 if (getEntityHandler().exists(entityType)) {
-                    commands.addAll(getEntityHandler().getConfig(entityType).getConfigurationSection("settings").getKeys(false));
+                    for (var settings : getEntityHandler().getConfig(entityType).getConfigurationSection("settings").getKeys(false)) {
+                        if (settings.startsWith(args[1])) {
+                            commands.add(settings);
+                        }
+                    }
                 }
             } else if (args.length == 3) {
                 var entityType = getEntityHandler().getType(args[0]);

@@ -42,14 +42,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (!getKits().getListed().isEmpty()) {
-                    player.sendMessage(getMessage().get("commands.kit.title"));
-                    getKits().getListed().forEach(kits -> {
-                        if (player.hasPermission("essentials.command.kit." + kits)) {
-                            player.sendMessage(getMessage().get("commands.kit.listed", kits));
-                        }
-                    });
-                } else player.sendMessage(getMessage().get("commands.kit.empty"));
+                getKits().sendKits(player);
                 return true;
             } else if (args.length == 1) {
                 var kitName = args[0];

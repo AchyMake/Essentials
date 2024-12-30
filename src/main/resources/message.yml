@@ -4,17 +4,28 @@ error:
     invalid: '{0}&c has never joined'
   world:
     invalid: '{0}&c does not exists'
-    exists: '{0}&c already exists'
-    folder-exists: '{0}&c folder already exists'
-    folder-invalid: '{0}&c folder does not exists'
   item:
     invalid: '&cYou have to hold an item'
-  not-provided: '&cServer does not provide this function'
-creator:
-  post: '{0}&6 is about to be created'
-  title: '{0}&6 has been created with the following:'
-  environment: '&6environment&f: {0}'
-  seed: '&6seed&f: {0}'
+  invalid: '&cServer does not provide this function'
+enable: '&aEnable'
+disable: '&cDisable'
+gamemode:
+  adventure: Adventure
+  creative: Creative
+  spectator: Spectator
+  survival: Survival
+  change: '&6Gamemode&f: {0}'
+  invalid: '{0}&c is not a gamemode'
+time:
+  morning: Morning
+  day: Day
+  noon: Noon
+  night: Night
+  midnight: Midnight
+weather:
+  clear: Clear
+  rain: Rain
+  reset: Default
 commands:
   announcement: '&6Server&f: {0}'
   anvil:
@@ -46,6 +57,10 @@ commands:
       left: '&6You now have&a {0}&6 left in the bank'
       insufficient-funds: '&cYou do not have&a {0}&c to deposit'
       minimum: '&cYou have to deposit at least&a {0}'
+  board:
+    self: '&6Board is now {0}'
+    other: '{0}&6 board is now {1}'
+    exempt: '&cYou are not allowed to toggle board for&f {0}'
   cartography:
     sender: '&6You opened cartography table for&f {0}'
     exempt: '&cYou are not allowed to open cartography table for&f {0}'
@@ -79,22 +94,27 @@ commands:
     chunk-limit: '{0}&6 chunk-limit is now&f {1}'
     disable-spawn: '{0}&6 disable-spawn is now&f {1}'
     disable-block-form: '{0}&6 disable-block-form is now&f {1}'
-    disable-block-damage: '{0}&6 disable-block-damage is now&f {1}'
-    disable-block-change: '{0}&6 disable-block-change is now&f {1}'
-    disable-block-interact: '{0}&6 disable-block-interact&f {1}&6 is now&f {2}'
+    disable-explode: '{0}&6 disable-explode is now&f {1}'
+    disable-change-block: '{0}&6 disable-change-block is now&f {1}'
+    disable-interact: '{0}&6 disable-interact&f {1}&6 is now&f {2}'
     disable-target: '{0}&6 disable-target&f {1}&6 is now&f {2}'
-    disable-damage: '{0}&6 disable-damage&f {1}&6 is now&f {2}'
-    disabled-spawn-reason: '{0}&6 disabled-spawn-reason&f {1}&6 is now&f {2}'
+    disable-entity-damage: '{0}&6 disable-damage&f {1}&6 is now&f {2}'
+    disable-hanging-break: '{0}&6 disable-hanging-break&f {1}&6 is now&f {2}'
+    disable-spawn-reason: '{0}&6 disable-spawn-reason&f {1}&6 is now&f {2}'
+  exp:
+    self: '&6Your exp is&f {0}'
+    other: '{0}&6 exp is&f {1}'
+    add: '&6You added&f {0}&6 exp to&f {1}'
+    remove: '&6You removed&f {0}&6 exp to&f {1}'
+    set: '&6You set&f {0}&6 exp to&f {1}'
   feed:
     cooldown: '&cYou have to wait&f {0}&c seconds'
     success: '&6Your starvation has been satisfied'
     sender: '&6You satisfied&f {0}&6 starvation'
     exempt: '&cYou are not allowed to satisfy&f {0}&6 starvation'
   fly:
-    enable: '&6&lFly: &aEnabled'
-    disable: '&6&lFly: &cDisabled'
-    target: '{0}&6 {1} fly for you'
-    sender: '&6You {0} fly for&f {1}'
+    self: '&6&lFly: {0}'
+    sender: '&6You {1} fly for&f {0}'
     exempt: '&cYou are not allowed to toggle fly for&f {0}'
   flyspeed:
     self: '&6Your fly speed has changed to&f {0}'
@@ -106,10 +126,6 @@ commands:
     disable: '&6You unfroze&f {0}'
     exempt: '&cYou are not allowed to freeze&f {0}'
   gamemode:
-    adventure: '&6&lGamemode:&f Adventure'
-    creative: '&6&lGamemode:&f Creative'
-    survival: '&6&lGamemode:&f Survival'
-    spectator: '&6&lGamemode:&f Spectator'
     sender: '&6You changed&f {0}&6 gamemode to&f {1}'
     invalid: '{0}&c is not a gamemode'
     exempt: '&cYou are not allowed to change gamemode for&f {0}'
@@ -120,8 +136,9 @@ commands:
   hat:
     success: '&6You are now wearing&f {0}'
     occupied: '&6You are already wearing&f {0}'
-    target-success: '{0}&6 is now wearing&f {1}'
-    target-occupied: '{0}&c is already wearing&f {1}'
+    target:
+      success: '{0}&6 is now wearing&f {1}'
+      occupied: '{0}&c is already wearing&f {1}'
     exempt: '&cYou are not allowed to change hat for&f {0}'
   heal:
     cooldown: '&cYou have to wait&f {0}&c seconds'
@@ -133,7 +150,6 @@ commands:
     exempt: '&cYou are not allowed to send help message to&f {0}'
   home:
     invalid: '{0}&c does not exists'
-    has-task: '&cYou cannot teleport twice you have to wait'
   homes:
     empty: '&cYou do not have any homes yet'
     title: '&6Homes:'
@@ -157,6 +173,7 @@ commands:
     ban-expire: '&6ban-expire:&f {0}'
     vanished: '&6vanished:&f {0}'
     last-online: '&6last-online:&f {0}'
+    join-location: '&6join-location:&7 World:&f{0}&7 X:&f{1}&7 Y:&f{2}&7 Z:&f{3}'
     quit-location: '&6quit-location:&7 World:&f{0}&7 X:&f{1}&7 Y:&f{2}&7 Z:&f{3}'
     uuid: '&6uuid:&f {0}'
   inventory:
@@ -164,8 +181,7 @@ commands:
     exempt: '&cYou are not allowed to open&f {0}&6 inventory'
     title: '{0} inventory'
   jail:
-    enable: '&6You jailed&f {0}'
-    disable: '&6You freed&f {0}&6 from jail'
+    toggle: '{0}&6 jailed if now {1}'
     invalid: '&cJail has not been set'
     exempt: '&cYou are not allowed to jail&f {0}'
   kit:
@@ -173,7 +189,7 @@ commands:
     listed: '- {0}'
     empty: '&cKits are currently empty'
     received: '&6You received&f {0}&6 kit'
-    non-sufficient-funds: '&cYou do not have&a {0}&c to receive the&f {1}&c kit'
+    insufficient-funds: '&cYou do not have&a {0}&c to receive the&f {1}&c kit'
     cooldown: '&cYou have to wait&f {0}&c seconds'
     invalid: '{0}&c does not exists'
     sender: '&6You gave&f {0}&6 kit to&f {1}'
@@ -181,6 +197,12 @@ commands:
   loom:
     sender: '&6You opened loom for&f {0}'
     exempt: '&cYou are not allowed to open loom for&f {0}'
+  lvl:
+    self: '&6Your lvl is&f {0}'
+    other: '{0}&6 lvl is&f {1}'
+    add: '&6You added&f {0}&6 lvl to&f {1}'
+    remove: '&6You removed&f {0}&6 lvl to&f {1}'
+    set: '&6You set&f {0}&6 lvl to&f {1}'
   motd:
     invalid: '{0}&c does not exist'
     exempt: '&cYou are not allowed to send motd to&f {0}'
@@ -198,26 +220,9 @@ commands:
     insufficient-funds: '&cYou do not have&a {0}&c to pay&f {1}'
     minimum-payment: '&cYou have to at least pay&a {0}'
     self: '&cYou can not pay your self'
-  portal:
-    wand: '&6You received portal wand'
-    remove:
-      success: '{0}&6 has been removed'
-    invalid: '{0}&c does not exist'
-    exists: '{0}&c already exist'
-    primary:
-      invalid: '&cYou have to add primary location'
-    secondary:
-      invalid: '&cYou have to add secondary location'
-    set:
-      primary: '&6You resized primary location for&f {0}&6 portal'
-      secondary: '&6You resized secondary location for&f {0}&6 portal'
-      portal-type: '&6You changed portal-type to&f {0}&6for portal&f {1}'
-    create:
-      success: '&6You created a portal named&f {0}'
   pvp:
-    enable: '&6&lPVP:&a Enable'
-    disable: '&6&lPVP:&c Disable'
-    sender: '&6You {0} pvp for&f {1}'
+    self: '&6&lPVP: {0}'
+    sender: '&6You {1} pvp for&f {0}'
     exempt: '&cYou are not allowed to toggle pvp for&f {0}'
   repair:
     damaged: '&6You repaired&f {0}'
@@ -267,12 +272,41 @@ commands:
   spawn:
     invalid: '&cSpawn has not been set'
     exempt: '&cYou are not allowed to tp&f {0}&c to spawn'
+  spawner:
+    info:
+      title: '&6Spawner info:'
+      entity-type: '&6entity-type&f: {0}'
+      spawn-count: '&6spawn-count&f: {0}'
+      delay: '&6delay&f: {0}'
+      max-spawn-delay: '&6max-spawn-delay&f: {0}'
+      min-spawn-delay: '&6min-spawn-delay&f: {0}'
+      spawn-range: '&6spawn-range&f: {0}'
+      non-spawner: '&cYou have to look at a&f Spawner'
+      invalid: '&cYou have to look at a block at least 1 block away'
+    set:
+      entity-type: '&6Spawner entity type is now set to&f {0}'
+      spawn-count: '&6Spawner spawn count is now set to&f {0}'
+      max-spawn-delay: '&6Spawner max spawn delay is now set to&f {0}'
+      min-spawn-delay: '&6Spawner min spawn delay is now set to&f {0}'
+      spawn-range: '&6Spawner spawn range is now set to&f {0}'
+    give: '&6You gave&f {0} {1} {2}&6 spawner'
   stonecutter:
     sender: '&6You opened stonecutter for&f {0}'
     exempt: '&cYou are not allowed to open stonecutter for&f {0}'
   store:
     sender: '&6You sent store message to&f {0}'
     exempt: '&cYou are not allowed to send store to&f {0}'
+  time:
+    set: '&6Your time is set to&f {0}'
+    add: '&6Your time has added&f {0}'
+    remove: '&6Your time has removed&f {0}'
+    reset: '&6Your time has been reset'
+    other:
+      set: '{0}&6 set time to&f {1}'
+      add: '{0}&6 added&f {1} time'
+      remove: '{0}&6 removed&f {1}&6 time'
+      reset: '{0}&6 time has been reset'
+    exempt: '&cYou are not allowed to change time for&f {0}'
   tpaccept:
     tpa:
       target: '{0}&6 accepted tpa request'
@@ -280,11 +314,11 @@ commands:
     tpahere:
       target: '{0}&6 accepted tpahere request'
       sender: '&6You accepted tpahere request from&f {0}'
-    non-requests: '&cYou do not have any tpa requests'
+    invalid: '&cYou do not have any tpa requests'
   tpa:
     expired: '&cTeleport request has been expired'
     target:
-      notify: '{0} has sent you a tpa request'
+      notify: '{0}&6 has sent you a tpa request'
       decide: '&6You can type&a /tpaccept&6 or&c /tpdeny'
     sender:
       notify: '&6You sent a tpa request to&f {0}'
@@ -297,20 +331,20 @@ commands:
       notify: '{0}&6 has sent you a tpahere request'
       decide: '&6You can type&a /tpaccept&6 or&c /tpdeny'
     sender:
-      notify: '&6You have sent a tpa request to&f {0}'
+      notify: '&6You have sent a tpahere request to&f {0}'
       decide: '&6You can type&c /tpcancel&6 to cancel the request'
     occupied: '&cYou already sent a tpahere request'
     request-self: '&cYou can not send tpahere request to your self'
   tpcancel:
     target: '{0}&6 cancelled teleport request'
     sender: '&6You cancelled teleport request'
-    non-requested: '&cYou have not sent any teleport request'
+    invalid: '&cYou have not sent any teleport request'
   tp:
     exempt: '&cYou are not allowed to teleport to&f {0}'
   tpdeny:
     target: '{0}&6 denied teleport request'
     sender: '&6You denied teleport request from&f {0}'
-    non-requested: '&cYou do not have any teleport request'
+    invalid: '&cYou do not have any teleport request'
   tphere:
     sender: '&6Teleporting&f {0}&6 to you'
     exempt: '&cYou are not allowed to teleport&f {0}'
@@ -318,8 +352,7 @@ commands:
     banned: '{0}&6 is no longer banned'
     unbanned: '{0}&c is not banned'
   vanish:
-    enable: '{0}&6 is now vanished'
-    disable: '{0}&6 is no longer vanished'
+    sender: '{0}&6 vanish is now {1}'
     exempt: '&cYou are not allowed to toggle vanish for&f {0}'
   walkspeed:
     changed: '&6You changed your walkspeed to&f {0}'
@@ -329,8 +362,13 @@ commands:
     title: '&6Warps:'
     listed: '- {0}'
     empty: '&cWarps are currently empty'
+    sender: '&6You warped&f {0}&6 to&f {1}'
     invalid: '{0}&c does not exists'
     exempt: '&cYou are not allowed to warp&f {0}'
+  weather:
+    self: '&6Your weather is set to&f {0}'
+    other: '{0}&6 weather is set to&f {1}'
+    exempt: '&cYou are not allowed to change weather for&f {0}'
   whisper:
     target: '&7{0} > You&f: {1}'
     sender: '&7You > {0}&f: {1}'
@@ -338,24 +376,11 @@ commands:
   workbench:
     sender: '&6You opened workbench for&f {0}'
     exempt: '&cYou are not allowed to open workbench for&f {0}'
-  world:
-    setspawn: '{0}&6 changed spawn point'
-    pvp:
-      enable: '{0}&6 is now pvp mode'
-      disable: '{0}&6 is no longer pvp mode'
-    remove: '{0}&6 is saved and removed'
-    gamerule:
-      changed: '{0}&6 changed&f {1}&6 to&f {2}'
   worth:
     listed: '{0}&6 is worth&a {1}'
     unlisted: '{0}&c is not sellable'
 events:
-  vanish:
-    enable: '&6&lVanish&f:&a Enable'
-    disable: '&6&lVanish&f:&c Disable'
-  portal:
-    secondary: '&6Secondary location saved'
-    primary: '&6Primary location saved'
+  vanish: '&6&lVanish&f: {0}'
   teleport:
     post: '&6Teleporting in&f {0}&6 seconds'
     success: '&6Teleporting to&f {0}'

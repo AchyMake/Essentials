@@ -39,23 +39,18 @@ public class AsyncPlayerChat implements Listener {
         if (!getUserdata().isMuted(player)) {
             var message = getMessage().censor(event.getMessage());
             if (!getUserdata().isVanished(player)) {
-                if (!player.isOp()) {
-                    String formatString;
-                    if (!getUserdata().getRank(player).isEmpty()) {
-                        formatString = getMessage().addPlaceholder(player, getConfig().getString("chat.format." + getUserdata().getRank(player)));
-                    } else formatString = getMessage().addPlaceholder(player, getConfig().getString("chat.format.default"));
-                    if (player.hasPermission("essentials.event.chat.color")) {
-                        event.setFormat(formatString + getMessage().addColor(message));
-                    } else event.setFormat(formatString + message);
-                } else event.setFormat(getMessage().addPlaceholder(player, getConfig().getString("chat.format.op")) + getMessage().addColor(message));
+                String formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
+                if (player.hasPermission("essentials.event.chat.color")) {
+                    event.setFormat(formatString + getMessage().addColor(message));
+                } else event.setFormat(formatString + message);
             } else {
-                var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
                 event.setCancelled(true);
-                getVanishHandler().getVanished().forEach(vanished -> {
+                var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
+                for (var vanished : getVanishHandler().getVanished()) {
                     if (player.hasPermission("essentials.event.chat.color")) {
                         vanished.sendMessage(formatString + getMessage().addColor(message));
                     } else vanished.sendMessage(formatString + message);
-                });
+                }
             }
         } else event.setCancelled(true);
     }

@@ -31,7 +31,7 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getInventoryHandler().openGrindstone(player) == null) {
-                    player.sendMessage(getMessage().get("error.not-provided"));
+                    player.sendMessage(getMessage().get("error.invalid"));
                 }
                 return true;
             } else if (args.length == 1) {
@@ -40,11 +40,11 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             if (getInventoryHandler().openGrindstone(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
                         } else if (!target.hasPermission("essentials.command.grindstone.exempt")) {
                             if (getInventoryHandler().openGrindstone(target) == null) {
-                                player.sendMessage(getMessage().get("error.not-provided"));
+                                player.sendMessage(getMessage().get("error.invalid"));
                             } else player.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.grindstone.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -56,7 +56,7 @@ public class GrindstoneCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getInventoryHandler().openGrindstone(target) == null) {
-                        consoleCommandSender.sendMessage(getMessage().get("error.not-provided"));
+                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.grindstone.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

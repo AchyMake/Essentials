@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.Location;
-import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -113,24 +112,23 @@ public class WorldHandler {
         } else player.sendMessage(getMessage().get("events.teleport.has-task"));
     }
     public void randomTeleport(Player player) {
-        if (player != null) {
-            getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
-            getScheduler().runLater(new Runnable() {
-                @Override
-                public void run() {
-                    var block = highestRandomBlock(get(getConfig().getString("commands.rtp.world")), getConfig().getInt("commands.rtp.spread"));
-                    if (block.isLiquid()) {
-                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
-                        randomTeleport(player);
-                    } else {
-                        if (!block.getChunk().isLoaded()) {
-                            block.getChunk().load();
-                        }
-                        getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
-                        player.teleport(block.getLocation().add(0.5,1,0.5));
+        getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
+        var block = highestRandomBlock(get(getConfig().getString("commands.rtp.world")), getConfig().getInt("commands.rtp.spread"));
+        var taskID = getScheduler().runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (block.isLiquid()) {
+                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
+                    randomTeleport(player);
+                } else {
+                    if (!block.getChunk().isLoaded()) {
+                        block.getChunk().load();
                     }
+                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
+                    player.teleport(block.getLocation().add(0.5,1,0.5));
                 }
-            }, 0);
-        }
+            }
+        }, 3).getTaskId();
+        getUserdata().addTaskID(player, "rtp", taskID);
     }
 }

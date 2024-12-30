@@ -34,14 +34,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (!getWarps().getListed().isEmpty()) {
-                    player.sendMessage(getMessage().get("commands.warp.title"));
-                    getWarps().getListed().forEach(warps -> {
-                        if (player.hasPermission("essentials.command.warp." + warps)) {
-                            player.sendMessage(getMessage().get("commands.warp.listed", warps));
-                        }
-                    });
-                } else player.sendMessage(getMessage().get("commands.warp.empty"));
+                getWarps().sendWarps(player);
                 return true;
             } else if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
@@ -79,7 +72,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
-                        getWorldHandler().teleport(target, warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, warp, warpName, 0);
                         consoleCommandSender.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", username));

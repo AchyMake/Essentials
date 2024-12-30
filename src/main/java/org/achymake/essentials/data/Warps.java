@@ -5,6 +5,7 @@ import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +18,9 @@ public class Warps {
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
     }
+    private Message getMessage() {
+        return getInstance().getMessage();
+    }
     private final File file = new File(getInstance().getDataFolder(), "warps.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     public Set<String> getListed() {
@@ -24,6 +28,16 @@ public class Warps {
     }
     public boolean isListed(String warpName) {
         return getListed().contains(warpName);
+    }
+    public void sendWarps(Player player) {
+        if (!getListed().isEmpty()) {
+            player.sendMessage(getMessage().get("commands.warp.title"));
+            getListed().forEach(warps -> {
+                if (player.hasPermission("essentials.command.warp." + warps)) {
+                    player.sendMessage(getMessage().get("commands.warp.listed", warps));
+                }
+            });
+        } else player.sendMessage(getMessage().get("commands.warp.empty"));
     }
     public Location getLocation(String warpName) {
         if (config.isConfigurationSection(warpName)) {

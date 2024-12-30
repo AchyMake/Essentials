@@ -323,7 +323,7 @@ commands:
     permission-message: You do not have the permissions to execute the command
     usage: /help
   time:
-    description: time command
+    description: player time command
     permission: essentials.command.time
     permission-message: You do not have the permissions to execute the command
     usage: /help
@@ -380,6 +380,11 @@ commands:
   warp:
     description: warp
     permission: essentials.command.warp
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  weather:
+    description: player weather command
+    permission: essentials.command.weather
     permission-message: You do not have the permissions to execute the command
     usage: /help
   whisper:
@@ -735,7 +740,10 @@ permissions:
     description: sets home
     default: op
   essentials.command.sethome.multiple.default:
-    description: sets home
+    description: max homes
+    default: op
+  essentials.command.sethome.multiple.op:
+    description: op max homes
     default: op
   essentials.command.setjail:
     description: sets jail
@@ -801,7 +809,13 @@ permissions:
     description: opens stonecutter by command
     default: op
   essentials.command.time:
-    description: time command
+    description: player time command
+    default: op
+  essentials.command.time.other:
+    description: change time for others
+    default: op
+  essentials.command.time.exempt:
+    description: exempts time change from others
     default: op
   essentials.command.tpaccept:
     description: tpaccept
@@ -834,43 +848,73 @@ permissions:
     description: unban
     default: op
   essentials.command.vanish:
-    description: vanish
+    description: vanish command
+    default: op
+  essentials.command.vanish.other:
+    description: vanish others
+    default: op
+  essentials.command.vanish.exempt:
+    description: exempts vanish from others
     default: op
   essentials.command.walkspeed:
-    description: walkspeed
+    description: walkspeed command
+    default: op
+  essentials.command.walkspeed.other:
+    description: change others walkspeed
+    default: op
+  essentials.command.walkspeed.exempt:
+    description: exempts walkspeed from others
     default: op
   essentials.command.warp:
-    description: warp
+    description: warp command
     default: op
   essentials.command.warp.warpName:
-    description: warp
+    description: warp to warpName
     default: op
   essentials.command.warp.other:
-    description: warp
+    description: warp others
     default: op
   essentials.command.warp.exempt:
-    description: warp
+    description: exempts warps from others
+    default: op
+  essentials.command.weather:
+    description: player weather command
+    default: op
+  essentials.command.weather.other:
+    description: change weather for others
+    default: op
+  essentials.command.weather.exempt:
+    description: exempts weather changes from others
     default: op
   essentials.command.whisper:
-    description: whisper
+    description: whisper to players
     default: op
   essentials.command.workbench:
-    description: workbench
+    description: open workbench by command
     default: op
   essentials.command.workbench.other:
-    description: workbench
+    description: open workbench for others
     default: op
   essentials.command.workbench.exempt:
-    description: workbench
-    default: op
-  essentials.group.default:
-    description: default group
-    default: op
-  essentials.group.groupName:
-    description: groupName group
+    description: exempts open workbench from others
     default: op
   essentials.command.worth:
     description: worth
+    default: op
+  essentials.event.login.full_sever:
+    description: allows to join on full server
+    default: op
+  essentials.event.join.message:
+    description: sends join message
+    default: op
+  essentials.event.join.notify:
+    description: notifies join event
+    default: op
+  essentials.event.chat.default:
+    description: chat format default
+    default: op
+  essentials.event.chat.op:
+    description: chat format op
     default: op
   essentials.event.chat.color:
     description: chat color
@@ -893,26 +937,11 @@ permissions:
   essentials.event.death.keep_exp:
     description: keeps exp on death
     default: op
-  essentials.event.join.message:
-    description: sends join message
-    default: op
-  essentials.event.join.notify:
-    description: notifies join event
+  essentials.event.death.location:
+    description: sends death location after respawn
     default: op
   essentials.event.level_change:
     description: allows to use particles and sound on level change
-    default: op
-  essentials.event.login.full_sever:
-    description: allows to join on full server
-    default: op
-  essentials.event.quit.message:
-    description: sends quit message
-    default: op
-  essentials.event.quit.notify:
-    description: notifies quit event
-    default: op
-  essentials.event.death.location:
-    description: sends death location after respawn
     default: op
   essentials.event.anvil.color:
     description: allows to use color code on anvil
@@ -928,4 +957,10 @@ permissions:
     default: op
   essentials.event.block_break.spawner:
     description: allows to obtain spawner by silk touch
+    default: op
+  essentials.event.quit.message:
+    description: sends quit message
+    default: op
+  essentials.event.quit.notify:
+    description: notifies quit event
     default: op

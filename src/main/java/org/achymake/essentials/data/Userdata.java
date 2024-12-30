@@ -7,6 +7,7 @@ import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.WeatherType;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -159,6 +160,9 @@ public class Userdata {
     public long getBanExpire(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getLong("settings.ban-expire");
     }
+    public boolean hasBoard(OfflinePlayer offlinePlayer) {
+        return getConfig(offlinePlayer).getBoolean("settings.board");
+    }
     public boolean isVanished(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
@@ -200,8 +204,13 @@ public class Userdata {
     }
     public int getMaxHomes(Player player) {
         if (!player.isOp()) {
-            return getMain().getInt("homes." + getRank(player));
-        } else return  9999;
+            for (var value : getMain().getConfigurationSection("homes").getKeys(false)) {
+                if (player.hasPermission("essentials.command.sethome.multiple." + value)) {
+                    return getMain().getInt("homes." + value);
+                }
+            }
+            return getMain().getInt("homes.default");
+        } else return getMain().getInt("homes.op");
     }
     public Location getHome(OfflinePlayer offlinePlayer, String homeName) {
         if (isHome(offlinePlayer, homeName)) {
@@ -314,13 +323,14 @@ public class Userdata {
         config.set("account", getEconomyHandler().getStartingBalance());
         config.set("bank.account", getEconomyHandler().getStartingBank());
         config.createSection("bank.members");
-        config.set("settings.pvp", true);
-        config.set("settings.muted", false);
-        config.set("settings.frozen", false);
-        config.set("settings.jailed", false);
-        config.set("settings.banned", false);
+        config.set("settings.pvp", !isPVP(offlinePlayer));
+        config.set("settings.muted", isMuted(offlinePlayer));
+        config.set("settings.frozen", isFrozen(offlinePlayer));
+        config.set("settings.jailed", isJailed(offlinePlayer));
+        config.set("settings.banned", isBanned(offlinePlayer));
         config.set("settings.ban-expire", 0);
-        config.set("settings.vanished", false);
+        config.set("settings.board", !hasBoard(offlinePlayer));
+        config.set("settings.vanished", isVanished(offlinePlayer));
         config.createSection("tpa");
         config.createSection("tpahere");
         config.createSection("homes");
@@ -351,16 +361,15 @@ public class Userdata {
             }
         } else setup(offlinePlayer);
     }
-    private String rank;
-    public String getRank(Player player) {
+    public String getChat(Player player) {
         if (!player.isOp()) {
-            getInstance().getConfig().getConfigurationSection("homes").getKeys(false).forEach(ranks -> {
-                if (player.hasPermission("essentials.command.sethome.multiple." + ranks)) {
-                    rank = ranks;
+            for (var value : getMain().getConfigurationSection("chat.format").getKeys(false)) {
+                if (player.hasPermission("essentials.event.chat." + value)) {
+                    return getMain().getString("chat.format." + value);
                 }
-            });
-        } else rank = "op";
-        return rank;
+            }
+            return getMain().getString("chat.format.default");
+        } else return getMain().getString("chat.format.op");
     }
     public float getDefaultFlySpeed() {
         return 0.1F;
@@ -396,5 +405,41 @@ public class Userdata {
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
             return true;
         } else return false;
+    }
+    public void setMorning(Player player) {
+        setTime(player, 0);
+    }
+    public void setDay(Player player) {
+        setTime(player, 1000);
+    }
+    public void setNoon(Player player) {
+        setTime(player, 6000);
+    }
+    public void setNight(Player player) {
+        setTime(player, 13000);
+    }
+    public void setMidnight(Player player) {
+        setTime(player, 18000);
+    }
+    public void setTime(Player player, long value) {
+        player.setPlayerTime(value, false);
+    }
+    public void addTime(Player player, long value) {
+        setTime(player, player.getPlayerTime() + value);
+    }
+    public void removeTime(Player player, long value) {
+        setTime(player, player.getPlayerTime() - value);
+    }
+    public void resetTime(Player player) {
+        player.resetPlayerTime();
+    }
+    public void setWeather(Player player, String weatherType) {
+        if (weatherType.equalsIgnoreCase("clear")) {
+            player.setPlayerWeather(WeatherType.CLEAR);
+        } else if (weatherType.equalsIgnoreCase("rain")) {
+            player.setPlayerWeather(WeatherType.DOWNFALL);
+        } else if (weatherType.equalsIgnoreCase("reset")) {
+            player.resetPlayerWeather();
+        }
     }
 }

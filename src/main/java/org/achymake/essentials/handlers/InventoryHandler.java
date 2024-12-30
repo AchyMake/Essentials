@@ -37,14 +37,14 @@ public class InventoryHandler {
             return player.openLoom(null, true);
         } else return null;
     }
-    public InventoryView openStonecutter(Player player) {
-        if (!isBukkit()) {
-            return player.openStonecutter(null, true);
-        } else return null;
-    }
     public InventoryView openSmithingTable(Player player) {
         if (!isBukkit()) {
             return player.openSmithingTable(null, true);
+        } else return null;
+    }
+    public InventoryView openStonecutter(Player player) {
+        if (!isBukkit()) {
+            return player.openStonecutter(null, true);
         } else return null;
     }
     public InventoryView openWorkbench(Player player) {

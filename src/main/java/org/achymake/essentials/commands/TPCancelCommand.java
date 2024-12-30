@@ -57,7 +57,7 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
                     }
-                } else player.sendMessage(getMessage().get("commands.tpcancel.non-requested"));
+                } else player.sendMessage(getMessage().get("commands.tpcancel.invalid"));
                 return true;
             }
         }
