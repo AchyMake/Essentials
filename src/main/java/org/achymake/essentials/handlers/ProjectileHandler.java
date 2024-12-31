@@ -33,7 +33,7 @@ public class ProjectileHandler {
             }
             projectiles.remove(projectile);
             projectile.remove();
-        }
+        } else projectile.remove();
     }
     public void cancel(Projectile projectile) {
         if (projectiles.containsKey(projectile)) {
@@ -45,17 +45,16 @@ public class ProjectileHandler {
         }
     }
     public void disable() {
-        if (!projectiles.isEmpty()) {
-            projectiles.forEach((projectile, taskID) -> {
-                if (getScheduler().isQueued(taskID)) {
-                    getScheduler().cancel(taskID);
-                }
-                if (projectile != null) {
-                    projectiles.remove(projectile);
-                }
-            });
-            projectiles.clear();
-        }
+        if (projectiles.isEmpty())return;
+        projectiles.forEach((projectile, taskID) -> {
+            if (getScheduler().isQueued(taskID)) {
+                getScheduler().cancel(taskID);
+            }
+            if (projectile != null) {
+                projectiles.remove(projectile);
+            }
+        });
+        projectiles.clear();
     }
     public Map<Projectile, Integer> getProjectiles() {
         return projectiles;

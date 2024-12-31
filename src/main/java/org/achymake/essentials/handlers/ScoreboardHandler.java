@@ -3,10 +3,12 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Board;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,9 @@ public class ScoreboardHandler {
     }
     private final File file = new File(getInstance().getDataFolder(), "scoreboard.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public ScoreboardManager getScoreboardManager() {
+        return Bukkit.getScoreboardManager();
+    }
     public FileConfiguration getConfig() {
         return config;
     }
