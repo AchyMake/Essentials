@@ -6,7 +6,6 @@ import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -17,13 +16,11 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
+    private Bank bank;
     private Jail jail;
     private Kits kits;
     private Message message;
@@ -51,6 +48,7 @@ public final class Essentials extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        bank = new Bank();
         jail = new Jail();
         kits = new Kits();
         message = new Message();
@@ -265,7 +263,7 @@ public final class Essentials extends JavaPlugin {
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
             getServer().setMotd(line1 + "\n" + line2);
         }
-        getEntityHandler().reload();
+        getBank().reload();
         getJail().reload();
         getKits().reload();
         getMessage().reload();
@@ -273,6 +271,7 @@ public final class Essentials extends JavaPlugin {
         getSpawn().reload();
         getWarps().reload();
         getWorth().reload();
+        getEntityHandler().reload();
         getScoreboardHandler().reload();
         getTablistHandler().reload();
         if (!getOnlinePlayers().isEmpty()) {
@@ -285,32 +284,13 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reloadUserdata() {
-        if (!getOfflinePlayers().isEmpty()) {
-            getOfflinePlayers().forEach(offlinePlayer -> getUserdata().reload(offlinePlayer));
-        }
+        getUserdata().reload();
     }
     public Collection<? extends Player> getOnlinePlayers() {
         return getServer().getOnlinePlayers();
     }
     public List<OfflinePlayer> getOfflinePlayers() {
-        var listed = new ArrayList<OfflinePlayer>();
-        var uuids = getUUIDS();
-        if (!uuids.isEmpty()) {
-            uuids.forEach(uuid -> listed.add(getOfflinePlayer(uuid)));
-        }
-        return listed;
-    }
-    public List<UUID> getUUIDS() {
-        var listed = new ArrayList<UUID>();
-        var folder = new File(getDataFolder(), "userdata");
-        if (folder.exists() && folder.isDirectory()) {
-            for (var file : folder.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    listed.add(UUID.fromString(file.getName().replace(".yml", "")));
-                }
-            }
-        }
-        return listed;
+        return getUserdata().getOfflinePlayers();
     }
     public PluginManager getManager() {
         return manager;
@@ -384,6 +364,9 @@ public final class Essentials extends JavaPlugin {
     public Jail getJail() {
         return jail;
     }
+    public Bank getBank() {
+        return bank;
+    }
     public static Essentials getInstance() {
         return instance;
     }
@@ -409,12 +392,12 @@ public final class Essentials extends JavaPlugin {
         return getMinecraftProvider().equals("Bukkit") || getMinecraftProvider().equals("CraftBukkit");
     }
     public Player getPlayer(String username) {
-        return Bukkit.getPlayerExact(username);
+        return getServer().getPlayerExact(username);
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
-        return Bukkit.getOfflinePlayer(uuid);
+        return getServer().getOfflinePlayer(uuid);
     }
     public OfflinePlayer getOfflinePlayer(String username) {
-        return Bukkit.getOfflinePlayer(username);
+        return getServer().getOfflinePlayer(username);
     }
 }

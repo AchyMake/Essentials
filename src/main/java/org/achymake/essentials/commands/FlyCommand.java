@@ -46,7 +46,7 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                                 getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("enable")));
                                 player.sendMessage(getMessage().get("commands.fly.sender", target.getName(), getMessage().get("enable")));
                             } else {
-                                getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                                getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("disable")));
                                 player.sendMessage(getMessage().get("commands.fly.sender", target.getName(), getMessage().get("disable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.fly.exempt", target.getName()));
@@ -61,8 +61,8 @@ public class FlyCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     target.setAllowFlight(!target.getAllowFlight());
                     if (target.getAllowFlight()) {
-                        getMessage().sendActionBar(target, getMessage().get("commands.fly.enable"));
-                    } else getMessage().sendActionBar(target, getMessage().get("commands.fly.disable"));
+                        getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("enable")));
+                    } else getMessage().sendActionBar(target, getMessage().get("commands.fly.self", getMessage().get("disable")));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }

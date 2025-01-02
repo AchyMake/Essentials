@@ -69,18 +69,40 @@ public class PlayerQuit implements Listener {
             var sent = getUserdata().getTpaSent(player);
             getUserdata().setString(sent, "tpa.from", null);
             getUserdata().setString(player, "tpa.sent", null);
+            getUserdata().removeTask(sent, "tpa");
+            getUserdata().removeTask(player, "tpa");
         } else if (getUserdata().getTpaFrom(player) != null) {
             var from = getUserdata().getTpaFrom(player);
             getUserdata().setString(from, "tpa.sent", null);
             getUserdata().setString(player, "tpa.from", null);
-        } else if (getUserdata().getTpaHereSent(player) != null) {
+            getUserdata().removeTask(from, "tpa");
+            getUserdata().removeTask(player, "tpa");
+        }
+        if (getUserdata().getTpaHereSent(player) != null) {
             var sent = getUserdata().getTpaHereSent(player);
             getUserdata().setString(sent, "tpahere.from", null);
             getUserdata().setString(player, "tpahere.sent", null);
+            getUserdata().removeTask(sent, "tpahere");
+            getUserdata().removeTask(player, "tpahere");
         } else if (getUserdata().getTpaHereFrom(player) != null) {
             var from = getUserdata().getTpaHereFrom(player);
             getUserdata().setString(from, "tpahere.sent", null);
             getUserdata().setString(player, "tpahere.from", null);
+            getUserdata().removeTask(from, "tpahere");
+            getUserdata().removeTask(player, "tpahere");
+        }
+        if (getUserdata().getBankSent(player) != null) {
+            var sent = getUserdata().getBankSent(player);
+            getUserdata().setString(sent, "bank-invite.from", null);
+            getUserdata().setString(player, "bank-invite.sent", null);
+            getUserdata().removeTask(sent, "bank-invite");
+            getUserdata().removeTask(player, "bank-invite");
+        } else if (getUserdata().getBankFrom(player) != null) {
+            var from = getUserdata().getBankFrom(player);
+            getUserdata().setString(from, "bank-invite.sent", null);
+            getUserdata().setString(player, "bank-invite.from", null);
+            getUserdata().removeTask(from, "bank-invite");
+            getUserdata().removeTask(player, "bank-invite");
         }
         getUserdata().setLocation(player, player.getLocation(), "quit");
     }

@@ -33,15 +33,16 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var target = getInstance().getPlayer(args[0]);
-                if (target != null) {
-                    if (target != player) {
-                        if (getUserdata().getTpaHereSent(player) == null) {
+                if (!getUserdata().hasTaskID(player, "tpahere")) {
+                    var target = getInstance().getPlayer(args[0]);
+                    if (target != null) {
+                        if (target != player) {
                             int taskID = getScheduler().runLater( new Runnable() {
                                 @Override
                                 public void run() {
                                     getUserdata().setString(target, "tpahere.from", null);
                                     getUserdata().setString(player, "tpahere.sent", null);
+                                    getUserdata().removeTask(target, "tpahere");
                                     getUserdata().removeTask(player, "tpahere");
                                     target.sendMessage(getMessage().get("commands.tpahere.expired"));
                                     player.sendMessage(getMessage().get("commands.tpahere.expired"));
@@ -49,19 +50,19 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
                             }, 300).getTaskId();
                             getUserdata().setString(target, "tpahere.from", player.getUniqueId().toString());
                             getUserdata().setString(player, "tpahere.sent", target.getUniqueId().toString());
+                            getUserdata().addTaskID(target, "tpahere", taskID);
                             getUserdata().addTaskID(player, "tpahere", taskID);
                             target.sendMessage(getMessage().get("commands.tpahere.target.notify", player.getName()));
                             target.sendMessage(getMessage().get("commands.tpahere.target.decide"));
                             player.sendMessage(getMessage().get("commands.tpahere.sender.notify", target.getName()));
                             player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
-                        } else {
-                            player.sendMessage(getMessage().get("commands.tpahere.occupied"));
-                            player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
-                        }
-                        return true;
-                    } else player.sendMessage(getMessage().get("commands.tpahere.request-self"));
-                    return true;
+                        } else player.sendMessage(getMessage().get("commands.tpahere.request-self"));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                } else {
+                    player.sendMessage(getMessage().get("commands.tpahere.occupied"));
+                    player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
                 }
+                return true;
             }
         }
         return false;

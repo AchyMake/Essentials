@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -128,11 +129,18 @@ public class Userdata {
     public double getAccount(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getDouble("account");
     }
-    public double getBankAccount(OfflinePlayer offlinePlayer) {
-        return getConfig(offlinePlayer).getDouble("bank.account");
+    public boolean hasBank(OfflinePlayer offlinePlayer) {
+        return !getBank(offlinePlayer).isEmpty();
     }
-    public List<String> getBankMembers(OfflinePlayer offlinePlayer) {
-        return getConfig(offlinePlayer).getStringList("bank.members");
+    public String getBank(OfflinePlayer offlinePlayer) {
+        if (getConfig(offlinePlayer).isString("bank")) {
+            return getConfig(offlinePlayer).getString("bank");
+        } else return "";
+    }
+    public String getBankRank(OfflinePlayer offlinePlayer) {
+        if (getConfig(offlinePlayer).isString("bank-rank")) {
+            return getConfig(offlinePlayer).getString("bank-rank");
+        } else return "default";
     }
     public boolean isDisabled(OfflinePlayer offlinePlayer) {
         return isFrozen(offlinePlayer) || isJailed(offlinePlayer);
@@ -170,6 +178,18 @@ public class Userdata {
         var config = getConfig(offlinePlayer);
         if (config.isString("last-whisper")) {
             return getInstance().getOfflinePlayer(UUID.fromString(config.getString("last-whisper")));
+        } else return null;
+    }
+    public OfflinePlayer getBankSent(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("bank-invite.sent")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("bank-invite.sent")));
+        } else return null;
+    }
+    public OfflinePlayer getBankFrom(OfflinePlayer offlinePlayer) {
+        var config = getConfig(offlinePlayer);
+        if (config.isString("bank-invite.from")) {
+            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("bank-invite.from")));
         } else return null;
     }
     public OfflinePlayer getTpaSent(OfflinePlayer offlinePlayer) {
@@ -321,8 +341,7 @@ public class Userdata {
         config.set("name", offlinePlayer.getName());
         config.set("display-name", offlinePlayer.getName());
         config.set("account", getEconomyHandler().getStartingBalance());
-        config.set("bank.account", getEconomyHandler().getStartingBank());
-        config.createSection("bank.members");
+        config.set("bank", "");
         config.set("settings.pvp", !isPVP(offlinePlayer));
         config.set("settings.muted", isMuted(offlinePlayer));
         config.set("settings.frozen", isFrozen(offlinePlayer));
@@ -353,6 +372,16 @@ public class Userdata {
             }
             if (!offlinePlayer.getName().equals(config.getString("name"))) {
                 config.set("name", offlinePlayer.getName());
+                try {
+                    config.save(file);
+                } catch (IOException e) {
+                    getInstance().sendWarning(e.getMessage());
+                }
+            }
+            if (isBanned(offlinePlayer)) {
+                config.set("settings.banned", false);
+                config.set("settings.ban-expire", 0);
+                config.set("settings.ban-reason", null);
                 try {
                     config.save(file);
                 } catch (IOException e) {
@@ -441,5 +470,41 @@ public class Userdata {
         } else if (weatherType.equalsIgnoreCase("reset")) {
             player.resetPlayerWeather();
         }
+    }
+    public void reload() {
+        var folder = new File(getInstance().getDataFolder(), "userdata");
+        if (folder.exists() && folder.isDirectory()) {
+            for (var file : folder.listFiles()) {
+                if (file.exists() && file.isFile()) {
+                    var config = YamlConfiguration.loadConfiguration(file);
+                    try {
+                        config.load(file);
+                    } catch (IOException | InvalidConfigurationException e) {
+                        getInstance().sendWarning(e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+    public List<UUID> getUUIDs() {
+        var listed = new ArrayList<UUID>();
+        var folder = new File(getInstance().getDataFolder(), "userdata");
+        if (folder.exists() && folder.isDirectory()) {
+            for (var file : folder.listFiles()) {
+                if (file.exists() && file.isFile()) {
+                    listed.add(UUID.fromString(file.getName().replace(".yml", "")));
+                }
+            }
+        }
+        return listed;
+    }
+    public List<OfflinePlayer> getOfflinePlayers() {
+        var listed = new ArrayList<OfflinePlayer>();
+        if (!getUUIDs().isEmpty()) {
+            for (var uuid : getUUIDs()) {
+                listed.add(getInstance().getOfflinePlayer(uuid));
+            }
+        }
+        return listed;
     }
 }

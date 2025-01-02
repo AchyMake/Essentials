@@ -33,15 +33,16 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                var target = getInstance().getPlayer(args[0]);
-                if (target != null) {
-                    if (target != player) {
-                        if (getUserdata().getTpaSent(player) == null) {
+                if (!getUserdata().hasTaskID(player, "tpa")) {
+                    var target = getInstance().getPlayer(args[0]);
+                    if (target != null) {
+                        if (target != player) {
                             var taskID = getScheduler().runLater(new Runnable() {
                                 @Override
                                 public void run() {
                                     getUserdata().setString(target, "tpa.from", null);
                                     getUserdata().setString(player, "tpa.sent", null);
+                                    getUserdata().removeTask(target, "tpa");
                                     getUserdata().removeTask(player, "tpa");
                                     target.sendMessage(getMessage().get("commands.tpa.expired"));
                                     player.sendMessage(getMessage().get("commands.tpa.expired"));
@@ -49,17 +50,18 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                             }, 300).getTaskId();
                             getUserdata().setString(player, "tpa.sent", target.getUniqueId().toString());
                             getUserdata().setString(target, "tpa.from", player.getUniqueId().toString());
+                            getUserdata().addTaskID(target, "tpa", taskID);
                             getUserdata().addTaskID(player, "tpa", taskID);
                             target.sendMessage(getMessage().get("commands.tpa.target.notify", player.getName()));
                             target.sendMessage(getMessage().get("commands.tpa.target.decide"));
                             player.sendMessage(getMessage().get("commands.tpa.sender.notify", target.getName()));
                             player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
-                        } else {
-                            player.sendMessage(getMessage().get("commands.tpa.occupied"));
-                            player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
-                        }
-                    } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
-                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                        } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
+                } else {
+                    player.sendMessage(getMessage().get("commands.tpa.occupied"));
+                    player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
+                }
                 return true;
             }
         }

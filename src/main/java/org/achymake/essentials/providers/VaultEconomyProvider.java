@@ -3,7 +3,9 @@ package org.achymake.essentials.providers;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Bank;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.bukkit.OfflinePlayer;
 
 import java.util.List;
@@ -15,8 +17,14 @@ public class VaultEconomyProvider implements Economy {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private EconomyHandler getEconomyHandler() {
+        return getInstance().getEconomyHandler();
+    }
     private OfflinePlayer getOfflinePlayer(String playerName) {
         return getInstance().getOfflinePlayer(playerName);
+    }
+    private Bank getBank() {
+        return getInstance().getBank();
     }
     @Override
     public boolean isEnabled() {
@@ -28,7 +36,7 @@ public class VaultEconomyProvider implements Economy {
     }
     @Override
     public boolean hasBankSupport() {
-        return false;
+        return true;
     }
     @Override
     public int fractionalDigits() {
@@ -36,11 +44,11 @@ public class VaultEconomyProvider implements Economy {
     }
     @Override
     public String format(double amount) {
-        return getInstance().getEconomyHandler().format(amount);
+        return getEconomyHandler().format(amount);
     }
     @Override
     public String currencyNamePlural() {
-        return getInstance().getEconomyHandler().currency();
+        return getEconomyHandler().currency();
     }
     @Override
     public String currencyNameSingular() {
@@ -99,7 +107,7 @@ public class VaultEconomyProvider implements Economy {
         if (playerName == null) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Player name cannot be null!");
         } else if (amount > 0.0) {
-            getInstance().getEconomyHandler().remove(getOfflinePlayer(playerName), amount);
+            getEconomyHandler().remove(getOfflinePlayer(playerName), amount);
             return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, null);
         } else return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot withdraw negative funds!");
     }
@@ -108,7 +116,7 @@ public class VaultEconomyProvider implements Economy {
         if (player == null) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Player cannot be null!");
         } else if (amount > 0.0) {
-            getInstance().getEconomyHandler().remove(player, amount);
+            getEconomyHandler().remove(player, amount);
             return new EconomyResponse(amount, getBalance(player), EconomyResponse.ResponseType.SUCCESS, null);
         } else return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot withdraw negative funds!");
     }
@@ -125,7 +133,7 @@ public class VaultEconomyProvider implements Economy {
         if (playerName == null) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Player name can not be null.");
         } else if (amount > 0.0) {
-            getInstance().getEconomyHandler().add(getOfflinePlayer(playerName), amount);
+            getEconomyHandler().add(getOfflinePlayer(playerName), amount);
             return new EconomyResponse(amount, getBalance(playerName), EconomyResponse.ResponseType.SUCCESS, null);
         } else return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Cannot deposit negative funds");
     }
@@ -134,7 +142,7 @@ public class VaultEconomyProvider implements Economy {
         if (player == null) {
             return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "OfflinePlayer can not be null");
         } else if (amount > 0.0) {
-            getInstance().getEconomyHandler().add(player, amount);
+            getEconomyHandler().add(player, amount);
             return new EconomyResponse(amount, getBalance(player), EconomyResponse.ResponseType.SUCCESS, null);
         } else return new EconomyResponse(0.0, 0.0, EconomyResponse.ResponseType.FAILURE, "Can not deposit negative funds");
     }
@@ -145,54 +153,6 @@ public class VaultEconomyProvider implements Economy {
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
         return depositPlayer(player, amount);
-    }
-    @Override
-    public EconomyResponse createBank(String name, String player) {
-        return null;
-    }
-    @Override
-    public EconomyResponse createBank(String name, OfflinePlayer player) {
-        return null;
-    }
-    @Override
-    public EconomyResponse deleteBank(String name) {
-        return null;
-    }
-    @Override
-    public EconomyResponse bankBalance(String name) {
-        return null;
-    }
-    @Override
-    public EconomyResponse bankHas(String name, double amount) {
-        return null;
-    }
-    @Override
-    public EconomyResponse bankWithdraw(String name, double amount) {
-        return null;
-    }
-    @Override
-    public EconomyResponse bankDeposit(String name, double amount) {
-        return null;
-    }
-    @Override
-    public EconomyResponse isBankOwner(String name, String playerName) {
-        return null;
-    }
-    @Override
-    public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
-        return null;
-    }
-    @Override
-    public EconomyResponse isBankMember(String name, String playerName) {
-        return null;
-    }
-    @Override
-    public EconomyResponse isBankMember(String name, OfflinePlayer player) {
-        return null;
-    }
-    @Override
-    public List<String> getBanks() {
-        return List.of();
     }
     @Override
     public boolean createPlayerAccount(String playerName) {
@@ -211,5 +171,90 @@ public class VaultEconomyProvider implements Economy {
     @Override
     public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
         return createPlayerAccount(player);
+    }
+    @Override
+    public EconomyResponse createBank(String name, String player) {
+        if (getBank().create(name, getOfflinePlayer(player))) {
+            return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank name already exists");
+    }
+    @Override
+    public EconomyResponse createBank(String name, OfflinePlayer player) {
+        if (getBank().create(name, player)) {
+            return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank name already exists");
+    }
+    @Override
+    public EconomyResponse deleteBank(String name) {
+        if (getBank().exists(name)) {
+            getBank().delete(name);
+            return new EconomyResponse(0, 0, EconomyResponse.ResponseType.SUCCESS, null);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank name does not exists");
+    }
+    @Override
+    public EconomyResponse bankBalance(String name) {
+        if (getBank().exists(name)) {
+            return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse bankHas(String name, double amount) {
+        if (getBank().exists(name)) {
+            if (getBank().has(name, amount)) {
+                return new EconomyResponse(amount, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not have " + amount);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse bankWithdraw(String name, double amount) {
+        if (getBank().exists(name)) {
+            if (getBank().has(name, amount)) {
+                getBank().remove(name, amount);
+                return new EconomyResponse(amount, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not have " + amount);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse bankDeposit(String name, double amount) {
+        if (getBank().exists(name)) {
+            getBank().add(name, amount);
+            return new EconomyResponse(amount, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse isBankOwner(String name, String playerName) {
+        if (getBank().exists(name)) {
+            if (getBank().isOwner(name, getOfflinePlayer(playerName))) {
+                return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, playerName + " is not bank owner");
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse isBankOwner(String name, OfflinePlayer player) {
+        if (getBank().exists(name)) {
+            if (getBank().isOwner(name, player)) {
+                return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, player.getName() + " is not bank owner");
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse isBankMember(String name, String playerName) {
+        if (getBank().exists(name)) {
+            if (getBank().isMember(name, getOfflinePlayer(playerName))) {
+                return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, playerName + " is not bank owner");
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public EconomyResponse isBankMember(String name, OfflinePlayer player) {
+        if (getBank().exists(name)) {
+            if (getBank().isMember(name, player)) {
+                return new EconomyResponse(0, getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, player.getName() + " is not bank owner");
+        } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists");
+    }
+    @Override
+    public List<String> getBanks() {
+        return getBank().getListed();
     }
 }

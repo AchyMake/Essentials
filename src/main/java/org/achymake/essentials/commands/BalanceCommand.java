@@ -36,7 +36,7 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
                 if (args[0].equalsIgnoreCase("top")) {
                     if (player.hasPermission("essentials.command.balance.top")) {
                         player.sendMessage(getMessage().get("commands.balance.top.title"));
-                        var list = new ArrayList<>(getEconomy().getTopAccounts(getEconomy().getAccounts(), 10));
+                        var list = new ArrayList<>(getEconomy().getTopAccounts());
                         for (int i = 0; i < list.size(); i++) {
                             player.sendMessage(getMessage().get("commands.balance.top.listed", String.valueOf(i + 1), list.get(i).getKey().getName(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
                         }
@@ -48,7 +48,7 @@ public class BalanceCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("top")) {
                     consoleCommandSender.sendMessage(getMessage().get("commands.balance.top.title"));
-                    var list = new ArrayList<>(getEconomy().getTopAccounts(getEconomy().getAccounts(), 10));
+                    var list = new ArrayList<>(getEconomy().getTopAccounts());
                     for (int i = 0; i < list.size(); i++) {
                         consoleCommandSender.sendMessage(getMessage().get("commands.balance.top.listed", String.valueOf(i + 1), list.get(i).getKey().getName(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
                     }

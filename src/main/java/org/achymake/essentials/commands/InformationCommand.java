@@ -1,6 +1,7 @@
 package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Bank;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EconomyHandler;
@@ -21,6 +22,9 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private Bank getBank() {
+        return getInstance().getBank();
+    }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
     }
@@ -40,7 +44,19 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(getMessage().get("commands.information.title"));
                     player.sendMessage(getMessage().get("commands.information.name", offlinePlayer.getName()));
                     player.sendMessage(getMessage().get("commands.information.account", getEconomy().currency()) + getEconomy().format(getUserdata().getAccount(offlinePlayer)));
-                    player.sendMessage(getMessage().get("commands.information.bank", getEconomy().currency()) + getEconomy().format(getUserdata().getBankAccount(offlinePlayer)));
+                    if (getUserdata().hasBank(offlinePlayer)) {
+                        var bank = getUserdata().getBank(offlinePlayer);
+                        player.sendMessage(getMessage().get("commands.information.bank.name", bank));
+                        player.sendMessage(getMessage().get("commands.information.bank.owner", getBank().getOwner(bank).getName()));
+                        player.sendMessage(getMessage().get("commands.information.bank.account", getEconomy().currency()) + getEconomy().format(getBank().get(bank)));
+                        var members = getBank().getMembers(bank);
+                        if (!members.isEmpty()) {
+                            player.sendMessage(getMessage().get("commands.information.bank.member.title"));
+                            for (var member : members) {
+                                player.sendMessage(getMessage().get("commands.information.bank.member.listed", member.getName()));
+                            }
+                        }
+                    }
                     player.sendMessage(getMessage().get("commands.information.homes", String.valueOf(getUserdata().getHomes(offlinePlayer).size())));
                     if (!getUserdata().getHomes(offlinePlayer).isEmpty()) {
                         getUserdata().getHomes(offlinePlayer).forEach(home -> player.sendMessage(getMessage().get("commands.information.listed", home)));

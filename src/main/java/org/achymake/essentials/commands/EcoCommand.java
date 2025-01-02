@@ -33,7 +33,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setDouble(offlinePlayer, "account", getEconomy().getStartingBalance());
+                        getEconomy().reset(offlinePlayer);
                         player.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getEconomy().getStartingBalance())));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;
@@ -68,7 +68,7 @@ public class EcoCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                 if (args[0].equalsIgnoreCase("reset")) {
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setDouble(offlinePlayer, "account", getEconomy().getStartingBalance());
+                        getEconomy().reset(offlinePlayer);
                         consoleCommandSender.sendMessage(getMessage().get("commands.eco.reset", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(getEconomy().getStartingBalance())));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                     return true;

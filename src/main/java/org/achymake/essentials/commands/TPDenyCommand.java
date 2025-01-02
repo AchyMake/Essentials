@@ -33,30 +33,36 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getUserdata().getTpaFrom(player) != null) {
-                    var target = getUserdata().getTpaFrom(player).getPlayer();
-                    if (target != null) {
-                        var tpaTask = getUserdata().getTaskID(target, "tpa");
-                        if (getScheduler().isQueued(tpaTask)) {
-                            getScheduler().cancel(tpaTask);
-                            getUserdata().setString(player, "tpa.from", null);
-                            getUserdata().setString(target, "tpa.sent", null);
-                            getUserdata().removeTask(target, "tpa");
-                            target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
+                if (getUserdata().hasTaskID(player, "tpa")) {
+                    if (getUserdata().getTpaFrom(player) != null) {
+                        var target = getUserdata().getTpaFrom(player).getPlayer();
+                        if (target != null) {
+                            var tpaTask = getUserdata().getTaskID(target, "tpa");
+                            if (getScheduler().isQueued(tpaTask)) {
+                                getScheduler().cancel(tpaTask);
+                                getUserdata().setString(player, "tpa.from", null);
+                                getUserdata().setString(target, "tpa.sent", null);
+                                getUserdata().removeTask(target, "tpa");
+                                getUserdata().removeTask(player, "tpa");
+                                target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
+                                player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
+                            }
                         }
                     }
-                } else if (getUserdata().getTpaHereFrom(player) != null) {
-                    var target = getUserdata().getTpaHereFrom(player).getPlayer();
-                    if (target != null) {
-                        var tpaHereTask = getUserdata().getTaskID(target, "tpahere");
-                        if (getScheduler().isQueued(tpaHereTask)) {
-                            getScheduler().cancel(tpaHereTask);
-                            getUserdata().setString(player, "tpahere.from", null);
-                            getUserdata().setString(target, "tpahere.sent", null);
-                            getUserdata().removeTask(target, "tpahere");
-                            target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
-                            player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
+                } else if (getUserdata().hasTaskID(player, "tpahere")) {
+                    if (getUserdata().getTpaHereFrom(player) != null) {
+                        var target = getUserdata().getTpaHereFrom(player).getPlayer();
+                        if (target != null) {
+                            var tpaHereTask = getUserdata().getTaskID(target, "tpahere");
+                            if (getScheduler().isQueued(tpaHereTask)) {
+                                getScheduler().cancel(tpaHereTask);
+                                getUserdata().setString(player, "tpahere.from", null);
+                                getUserdata().setString(target, "tpahere.sent", null);
+                                getUserdata().removeTask(target, "tpahere");
+                                getUserdata().removeTask(player, "tpahere");
+                                target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
+                                player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
+                            }
                         }
                     }
                 } else player.sendMessage(getMessage().get("commands.tpdeny.invalid"));

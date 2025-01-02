@@ -449,16 +449,28 @@ permissions:
     description: ban target
     default: op
   essentials.command.bank:
-    description: check bank/top or withdraw/deposit
+    description: bank command
+    default: op
+  essentials.command.bank.create:
+    description: creates bank
+    default: op
+  essentials.command.bank.info:
+    description: check bank
+    default: op
+  essentials.command.bank.info.other:
+    description: check other bank
+    default: op
+  essentials.command.bank.rename:
+    description: rename bank
     default: op
   essentials.command.bank.top:
-    description: check bank/top or withdraw/deposit
+    description: top bank
     default: op
   essentials.command.bank.withdraw:
-    description: check bank/top or withdraw/deposit
+    description: bank withdraw
     default: op
   essentials.command.bank.deposit:
-    description: check bank/top or withdraw/deposit
+    description: bank deposit
     default: op
   essentials.command.board:
     description: toggle board

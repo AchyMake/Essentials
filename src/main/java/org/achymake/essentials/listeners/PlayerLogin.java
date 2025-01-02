@@ -58,25 +58,23 @@ public class PlayerLogin implements Listener {
                     } else allow(event, player);
                 } else allow(event, player);
             } else event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, getConfig().getString("connection.login.whitelisted"));
-        } else {
-            if (server.getOnlinePlayers().size() >= server.getMaxPlayers()) {
-                if (player.hasPermission("essentials.event.login.full_server")) {
-                    if (getUserdata().exists(player)) {
-                        if (getUserdata().isBanned(player)) {
-                            if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
-                                event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
-                            } else allow(event, player);
+        } else if (server.getOnlinePlayers().size() >= server.getMaxPlayers()) {
+            if (player.hasPermission("essentials.event.login.full_server")) {
+                if (getUserdata().exists(player)) {
+                    if (getUserdata().isBanned(player)) {
+                        if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                            event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                         } else allow(event, player);
                     } else allow(event, player);
-                } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
-            } else if (getUserdata().exists(player)) {
-                if (getUserdata().isBanned(player)) {
-                    if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
-                        event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
-                    } else allow(event, player);
+                } else allow(event, player);
+            } else event.disallow(PlayerLoginEvent.Result.KICK_FULL, getConfig().getString("connection.login.full"));
+        } else if (getUserdata().exists(player)) {
+            if (getUserdata().isBanned(player)) {
+                if (!getInstance().getDateHandler().expired(getUserdata().getBanExpire(player))) {
+                    event.disallow(PlayerLoginEvent.Result.KICK_BANNED, getMessage().addColor(getMessage().get("events.login.banned", getUserdata().getBanReason(player), getDateHandler().getFormatted(getUserdata().getBanExpire(player)))));
                 } else allow(event, player);
             } else allow(event, player);
-        }
+        } else allow(event, player);
     }
     private void allow(PlayerLoginEvent event, Player player) {
         event.allow();
