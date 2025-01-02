@@ -59,7 +59,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                                     player.sendMessage(getMessage().get("commands.bank.info.member.listed", member.getName()));
                                 }
                             }
-                        } else player.sendMessage(getMessage().get("error.bank.invalid"));
+                        } else player.sendMessage(getMessage().get("error.bank.empty"));
                         return true;
                     }
                 } else if (args[0].equalsIgnoreCase("delete")) {
