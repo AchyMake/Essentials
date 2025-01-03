@@ -59,6 +59,11 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                         return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getBank().get(instance.getUserdata().getBank(player)));
                     } else return "0";
                 }
+                case "bank_name" -> {
+                    if (instance.getUserdata().hasBank(player)) {
+                        return instance.getUserdata().getBank(player);
+                    } else return "None";
+                }
                 case "pvp" -> {
                     return String.valueOf(instance.getUserdata().isPVP(player));
                 }

@@ -29,8 +29,8 @@ public class PlayerTeleport implements Listener {
                 if (getUserdata().getLocation(player, "death") != null && getUserdata().getLocation(player, "death") == event.getTo()) {
                     getUserdata().setString(player, "locations.death", null);
                 }
+                getUserdata().setLocation(player, event.getFrom(), "recent");
             }
-            getUserdata().setLocation(player, event.getFrom(), "recent");
         } else event.setCancelled(true);
     }
 }
