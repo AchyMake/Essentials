@@ -81,6 +81,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             if (getBank().isMember(bank, player)) {
                                 getBank().removeMember(bank, player);
                             }
+                            player.sendMessage(getMessage().get("commands.bank.leave", bank));
                             getUserdata().setString(player, "bank", "");
                             getUserdata().setString(player, "bank-rank", "default");
                             return true;

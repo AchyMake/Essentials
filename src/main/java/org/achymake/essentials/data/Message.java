@@ -94,6 +94,7 @@ public class Message {
         config.set("commands.bank.invite.sender.decide", "&6You can type&c /bank cancel&6 to cancel the invite");
         config.set("commands.bank.invite.occupied", "&cYou already sent a bank invite please wait");
         config.set("commands.bank.invite.already-has", "{0}&c already has a bank");
+        config.set("commands.bank.leave", "&6You left&f {0}&6 bank");
         config.set("commands.bank.rank.set", "{0}&6 bank rank is now&f {1}");
         config.set("commands.bank.remove", "{0}&6 has been removed from bank&f {1}");
         config.set("commands.bank.rename", "&6Your bank has been renamed to&f {0}");
