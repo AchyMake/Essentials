@@ -87,6 +87,11 @@ public final class Essentials extends JavaPlugin {
         getProjectileHandler().disable();
         getScheduleHandler().disable();
         new PlaceholderProvider().unregister();
+        if (!getOnlinePlayers().isEmpty()) {
+            getOnlinePlayers().forEach(player -> {
+                getUserdata().setLocation(player, player.getLocation(), "quit");
+            });
+        }
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
     private void commands() {
