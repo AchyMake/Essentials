@@ -313,14 +313,14 @@ public class Message {
         config.set("commands.tpa.target.decide", "&6You can type&a /tpaccept&6 or&c /tpdeny");
         config.set("commands.tpa.sender.notify", "&6You sent a tpa request to&f {0}");
         config.set("commands.tpa.sender.decide", "&6You can type&c /tpcancel&6 to cancel tpa request");
-        config.set("commands.tpa.occupied", "&cYou already sent a tpa request");
+        config.set("commands.tpa.occupied", "&cYou already sent a tpa request please wait");
         config.set("commands.tpa.request-self", "&cYou can not send tpa request to your self");
         config.set("commands.tpahere.expired", "&cTeleport request has been expired");
         config.set("commands.tpahere.target.notify", "{0}&6 has sent you a tpahere request");
         config.set("commands.tpahere.target.decide", "&6You can type&a /tpaccept&6 or&c /tpdeny");
         config.set("commands.tpahere.sender.notify", "&6You have sent a tpahere request to&f {0}");
         config.set("commands.tpahere.sender.decide", "&6You can type&c /tpcancel&6 to cancel the request");
-        config.set("commands.tpahere.occupied", "&cYou already sent a tpahere request");
+        config.set("commands.tpahere.occupied", "&cYou already sent a tpahere request please wait");
         config.set("commands.tpahere.request-self", "&cYou can not send tpahere request to your self");
         config.set("commands.tpcancel.target", "{0}&6 cancelled teleport request");
         config.set("commands.tpcancel.sender", "&6You cancelled teleport request");
