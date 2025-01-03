@@ -141,10 +141,13 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("top")) {
                     if (player.hasPermission("essentials.command.bank.top")) {
-                        player.sendMessage(getMessage().get("commands.bank.top.title"));
-                        var list = new ArrayList<>(getEconomy().getTopBanks());
-                        for (int i = 0; i < list.size(); i++) {
-                            player.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
+                        var top = getEconomy().getTopBanks();
+                        if (!top.isEmpty()) {
+                            player.sendMessage(getMessage().get("commands.bank.top.title"));
+                            var list = new ArrayList<>(top);
+                            for (int i = 0; i < list.size(); i++) {
+                                player.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
+                            }
                         }
                         return true;
                     }
