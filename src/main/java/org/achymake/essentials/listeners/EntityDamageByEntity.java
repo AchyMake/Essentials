@@ -76,7 +76,9 @@ public class EntityDamageByEntity implements Listener {
                         if (test > 0) {
                             player.setCooldown(heldItem.getType(), test);
                         }
-                    } else event.setCancelled(true);
+                    } else if (getConfig().getBoolean("attack.cooldown.enable")) {
+                        event.setCancelled(true);
+                    }
                 } else event.setCancelled(true);
             }
             case Snowball snowball -> {

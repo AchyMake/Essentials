@@ -158,6 +158,7 @@ physics:
   disable-redstone: false
 attack:
   cooldown:
+    enable: true
     wooden_sword: 5
     stone_sword: 5
     iron_sword: 5
@@ -172,17 +173,21 @@ attack:
     netherite_axe: 5
 projectile:
   creative:
+    # instant remove on hit if creative
     instant-remove: true
   removal-timer:
+    # if 0 or under it is disabled
     player: 30
     snowman: 3
     skeleton: 3
     entity: 3
   cooldown:
+    # if 0 or under it is disabled
     egg: 10
     snowball: 10
     bow: 5
 vanish:
+  # vanished can pick items if sneaking
   sneaking-picks-item: true
 notification:
   # Permissions
