@@ -156,17 +156,29 @@ fire:
   disable-lava-fire-spread: true
 physics:
   disable-redstone: false
+attack:
+  cooldown:
+    wooden_sword: 5
+    stone_sword: 5
+    iron_sword: 5
+    golden_sword: 5
+    diamond_sword: 5
+    netherite_sword: 5
+    wooden_axe: 5
+    stone_axe: 5
+    iron_axe: 5
+    golden_axe: 5
+    diamond_axe: 5
+    netherite_axe: 5
 projectile:
   creative:
     instant-remove: true
   removal-timer:
-    enable: true
     player: 30
     snowman: 3
     skeleton: 3
     entity: 3
   cooldown:
-    enable: true
     egg: 10
     snowball: 10
     bow: 5

@@ -60,16 +60,23 @@ public class EntityDamageByEntity implements Listener {
             }
             case Player player -> {
                 if (!getUserdata().isDisabled(player)) {
-                    if (entity instanceof Player target) {
-                        if (!target.getWorld().getPVP())return;
-                        if (!getUserdata().isPVP(player)) {
-                            event.setCancelled(true);
-                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
-                        } else if (!getUserdata().isPVP(target)) {
-                            event.setCancelled(true);
-                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
-                        } else disableTeleport(target);
-                    }
+                    var heldItem = player.getInventory().getItemInMainHand();
+                    var test = getConfig().getInt("attack.cooldown." + heldItem.getType().toString().toLowerCase());
+                    if (!player.hasCooldown(heldItem)) {
+                        if (entity instanceof Player target) {
+                            if (!target.getWorld().getPVP())return;
+                            if (!getUserdata().isPVP(player)) {
+                                event.setCancelled(true);
+                                getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
+                            } else if (!getUserdata().isPVP(target)) {
+                                event.setCancelled(true);
+                                getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
+                            } else disableTeleport(target);
+                        }
+                        if (test > 0) {
+                            player.setCooldown(heldItem.getType(), test);
+                        }
+                    } else event.setCancelled(true);
                 } else event.setCancelled(true);
             }
             case Snowball snowball -> {
