@@ -28,11 +28,11 @@ public class EntityDamageByEntity implements Listener {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityDamageByEntity() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
@@ -40,7 +40,7 @@ public class EntityDamageByEntity implements Listener {
         var damager = event.getDamager();
         switch (damager) {
             case Arrow arrow -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (arrow.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -73,7 +73,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             case Snowball snowball -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (snowball.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -92,7 +92,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             case SpectralArrow spectralArrow -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (spectralArrow.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -111,7 +111,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             case ThrownPotion thrownPotion -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (thrownPotion.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -130,7 +130,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             case Trident trident -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (trident.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -149,7 +149,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             case WindCharge windCharge -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (windCharge.getShooter() instanceof Player player) {
                         if (!getUserdata().isDisabled(player)) {
                             if (entity instanceof Player target) {
@@ -168,7 +168,7 @@ public class EntityDamageByEntity implements Listener {
                 } else event.setCancelled(true);
             }
             default -> {
-                if (!getEntityHandler().disableEntityDamageByEntity(damager.getType(), entity.getType())) {
+                if (!getEntityHandler().isEntityDamageByEntityDisabled(damager.getType(), entity.getType())) {
                     if (entity instanceof Player player) {
                         disableTeleport(player);
                     }

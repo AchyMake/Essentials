@@ -3,6 +3,8 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
@@ -16,54 +18,167 @@ public class EntityHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    public EntityType getType(String entityTypeString) {
-        return EntityType.valueOf(entityTypeString.toUpperCase());
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
     }
+    private RandomHandler getRandomHandler() {
+        return getInstance().getRandomHandler();
+    }
+    /**
+     * get file of entity/entityType.yml
+     * @param entityType entityType
+     * @return file
+     * @since many moons ago
+     */
     public File getFile(EntityType entityType) {
         return new File(getInstance().getDataFolder(), "entity/" + entityType.toString() + ".yml");
     }
+    /**
+     * exists
+     * @param entityType entityType
+     * @return true if file exists else false
+     * @since many moons ago
+     */
     public boolean exists(EntityType entityType) {
         return getFile(entityType).exists();
     }
+    /**
+     * get config
+     * @param entityType entityType
+     * @return config
+     * @since many moons ago
+     */
     public FileConfiguration getConfig(EntityType entityType) {
         return YamlConfiguration.loadConfiguration(getFile(entityType));
     }
+    /**
+     * get entityType
+     * @param entityTypeString string
+     * @return entityType else null if entityType does not exist
+     * @since many moons ago
+     */
+    public EntityType getType(String entityTypeString) {
+        return EntityType.valueOf(entityTypeString.toUpperCase());
+    }
+    /**
+     * is hostile
+     * @param entityType entityType
+     * @return true if entityType is hostile else false
+     * @since many moons ago
+     */
     public boolean isHostile(EntityType entityType) {
         return getConfig(entityType).getBoolean("settings.hostile");
     }
+    /**
+     * is friendly this is the opposite of hostile
+     * @param entityType entityType
+     * @return true if entityType is friendly else false
+     * @since many moons ago
+     */
     public boolean isFriendly(EntityType entityType) {
         return !isHostile(entityType);
     }
-    public int chunkLimit(EntityType entityType) {
+    /**
+     * get chunk limit of entityType
+     * @param entityType entityType
+     * @return integer
+     * @since many moons ago
+     */
+    public int getChunkLimit(EntityType entityType) {
         return getConfig(entityType).getInt("settings.chunk-limit");
     }
-    public boolean disableCreatureSpawn(EntityType entityType) {
+    /**
+     * is creature spawn disabled
+     * @param entityType entityType
+     * @return true if entityType is disabled for spawning else false
+     * @since many moons ago
+     */
+    public boolean isCreatureSpawnDisabled(EntityType entityType) {
         return getConfig(entityType).getBoolean("settings.disable-spawn");
     }
-    public boolean disableEntityBlockForm(EntityType entityType) {
+    /**
+     * is entity block form disabled
+     * @param entityType entityType
+     * @return true if entityType is disabled for block forming else false
+     * @since many moons ago
+     */
+    public boolean isEntityBlockFormDisabled(EntityType entityType) {
         return getConfig(entityType).getBoolean("settings.disable-block-form");
     }
-    public boolean disableEntityChangeBlock(EntityType entityType) {
+    /**
+     * is entity change block disabled
+     * @param entityType entityType
+     * @return true if entityType is disabled for block changing else false
+     * @since many moons ago
+     */
+    public boolean isEntityChangeBlockDisabled(EntityType entityType) {
         return getConfig(entityType).getBoolean("settings.disable-change-block");
     }
-    public boolean disableEntityDamageByEntity(EntityType entityType, EntityType targetEntityType) {
+    /**
+     * is entity damage disabled
+     * @param entityType entityType
+     * @return true if entityType is disabled for block changing else false
+     * @since many moons ago
+     */
+    public boolean isEntityDamageByEntityDisabled(EntityType entityType, EntityType targetEntityType) {
         return getConfig(entityType).getBoolean("settings.disable-entity-damage." + targetEntityType.toString());
     }
-    public boolean disableEntityExplode(EntityType entityType) {
+    /**
+     * is entity explode disabled
+     * @param entityType entityType
+     * @return true if entityType is disabled for explode else false
+     * @since many moons ago
+     */
+    public boolean isEntityExplodeDisabled(EntityType entityType) {
         return getConfig(entityType).getBoolean("settings.disable-explode");
     }
-    public boolean disableEntityInteract(EntityType entityType, Material blockMaterial) {
-        return getConfig(entityType).getBoolean("settings.disable-interact." + blockMaterial.toString());
+    /**
+     * is entity interact disabled
+     * @param entityType entityType
+     * @param material material
+     * @return true if entityType is disabled for interact else false
+     * @since many moons ago
+     */
+    public boolean isEntityInteractDisabled(EntityType entityType, Material material) {
+        return getConfig(entityType).getBoolean("settings.disable-interact." + material.toString());
     }
-    public boolean disableEntityTarget(EntityType entityType, EntityType targetEntityType) {
+    /**
+     * is entity target disabled
+     * @param entityType entityType
+     * @param targetEntityType entityType
+     * @return true if entityType is disabled for target targetEntityType else false
+     * @since many moons ago
+     */
+    public boolean isEntityTargetDisabled(EntityType entityType, EntityType targetEntityType) {
         return getConfig(entityType).getBoolean("settings.disable-target." + targetEntityType.toString());
     }
-    public boolean disableHangingBreakByEntity(EntityType entityType, EntityType targetEntityType) {
-        return getConfig(entityType).getBoolean("settings.disable-hanging-break." + targetEntityType.toString());
+    /**
+     * is entity hanging break disabled
+     * @param removerEntityType entityType
+     * @param hangingEntityType entityType
+     * @return true if removerEntityType is disabled for breaking hangingEntityType else false
+     * @since many moons ago
+     */
+    public boolean disableHangingBreakByEntity(EntityType removerEntityType, EntityType hangingEntityType) {
+        return getConfig(removerEntityType).getBoolean("settings.disable-hanging-break." + hangingEntityType.toString());
     }
-    public boolean disableSpawnReason(EntityType entityType, CreatureSpawnEvent.SpawnReason spawnReason) {
+    /**
+     * is entity spawn reason disabled
+     * @param entityType entityType
+     * @param spawnReason spawnReason
+     * @return true if entityType is disabled for spawn by spawnReason else false
+     * @since many moons ago
+     */
+    public boolean isSpawnReasonDisabled(EntityType entityType, CreatureSpawnEvent.SpawnReason spawnReason) {
         return getConfig(entityType).getBoolean("settings.disable-spawn-reason." + spawnReason.toString());
     }
+    /**
+     * set integer
+     * @param entityType entityType
+     * @param path path
+     * @param value integer
+     * @since many moons ago
+     */
     public void setInt(EntityType entityType, String path, int value) {
         var file = getFile(entityType);
         var config = YamlConfiguration.loadConfiguration(file);
@@ -74,6 +189,13 @@ public class EntityHandler {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * set boolean
+     * @param entityType entityType
+     * @param path path
+     * @param value boolean
+     * @since many moons ago
+     */
     public void setBoolean(EntityType entityType, String path, boolean value) {
         var file = getFile(entityType);
         var config = YamlConfiguration.loadConfiguration(file);
@@ -84,158 +206,12 @@ public class EntityHandler {
             getInstance().sendWarning(e.getMessage());
         }
     }
-    public void reload() {
-        new ACACIA_BOAT().reload();
-        new ACACIA_CHEST_BOAT().reload();
-        new ALLAY().reload();
-        new AREA_EFFECT_CLOUD().reload();
-        new ARMADILLO().reload();
-        new ARMOR_STAND().reload();
-        new ARROW().reload();
-        new AXOLOTL().reload();
-        new BAMBOO_CHEST_RAFT().reload();
-        new BAMBOO_RAFT().reload();
-        new BAT().reload();
-        new BEE().reload();
-        new BIRCH_BOAT().reload();
-        new BIRCH_CHEST_BOAT().reload();
-        new BLAZE().reload();
-        new BLOCK_DISPLAY().reload();
-        new BOGGED().reload();
-        new BREEZE().reload();
-        new BREEZE_WIND_CHARGE().reload();
-        new CAMEL().reload();
-        new CAT().reload();
-        new CAVE_SPIDER().reload();
-        new CHERRY_BOAT().reload();
-        new CHERRY_CHEST_BOAT().reload();
-        new CHEST_MINECART().reload();
-        new CHICKEN().reload();
-        new COD().reload();
-        new COMMAND_BLOCK_MINECART().reload();
-        new COW().reload();
-        new CREAKING().reload();
-        new CREAKING_TRANSIENT().reload();
-        new CREEPER().reload();
-        new DARK_OAK_BOAT().reload();
-        new DARK_OAK_CHEST_BOAT().reload();
-        new DOLPHIN().reload();
-        new DONKEY().reload();
-        new DRAGON_FIREBALL().reload();
-        new DROWNED().reload();
-        new EGG().reload();
-        new ELDER_GUARDIAN().reload();
-        new END_CRYSTAL().reload();
-        new ENDER_DRAGON().reload();
-        new ENDER_PEARL().reload();
-        new ENDERMAN().reload();
-        new ENDERMITE().reload();
-        new EVOKER().reload();
-        new EVOKER_FANGS().reload();
-        new EXPERIENCE_BOTTLE().reload();
-        new EXPERIENCE_ORB().reload();
-        new EYE_OF_ENDER().reload();
-        new FALLING_BLOCK().reload();
-        new FIREBALL().reload();
-        new FIREWORK_ROCKET().reload();
-        new FISHING_BOBBER().reload();
-        new FOX().reload();
-        new FROG().reload();
-        new FURNACE_MINECART().reload();
-        new GHAST().reload();
-        new GIANT().reload();
-        new GLOW_ITEM_FRAME().reload();
-        new GLOW_SQUID().reload();
-        new GOAT().reload();
-        new GUARDIAN().reload();
-        new HOGLIN().reload();
-        new HOPPER_MINECART().reload();
-        new HORSE().reload();
-        new HUSK().reload();
-        new ILLUSIONER().reload();
-        new INTERACTION().reload();
-        new IRON_GOLEM().reload();
-        new ITEM().reload();
-        new ITEM_DISPLAY().reload();
-        new ITEM_FRAME().reload();
-        new JUNGLE_BOAT().reload();
-        new JUNGLE_CHEST_BOAT().reload();
-        new LEASH_KNOT().reload();
-        new LIGHTNING_BOLT().reload();
-        new LLAMA().reload();
-        new LLAMA_SPIT().reload();
-        new MAGMA_CUBE().reload();
-        new MANGROVE_BOAT().reload();
-        new MANGROVE_CHEST_BOAT().reload();
-        new MARKER().reload();
-        new MINECART().reload();
-        new MOOSHROOM().reload();
-        new MULE().reload();
-        new OAK_BOAT().reload();
-        new OAK_CHEST_BOAT().reload();
-        new OCELOT().reload();
-        new OMINOUS_ITEM_SPAWNER().reload();
-        new PAINTING().reload();
-        new PALE_OAK_BOAT().reload();
-        new PALE_OAK_CHEST_BOAT().reload();
-        new PANDA().reload();
-        new PARROT().reload();
-        new PHANTOM().reload();
-        new PIG().reload();
-        new PIGLIN().reload();
-        new PIGLIN_BRUTE().reload();
-        new PILLAGER().reload();
-        new POLAR_BEAR().reload();
-        new POTION().reload();
-        new PUFFERFISH().reload();
-        new RABBIT().reload();
-        new RAVAGER().reload();
-        new SALMON().reload();
-        new SHEEP().reload();
-        new SHULKER().reload();
-        new SHULKER_BULLET().reload();
-        new SILVERFISH().reload();
-        new SKELETON().reload();
-        new SKELETON_HORSE().reload();
-        new SLIME().reload();
-        new SMALL_FIREBALL().reload();
-        new SNIFFER().reload();
-        new SNOW_GOLEM().reload();
-        new SNOWBALL().reload();
-        new SPAWNER_MINECART().reload();
-        new SPECTRAL_ARROW().reload();
-        new SPIDER().reload();
-        new SPRUCE_BOAT().reload();
-        new SPRUCE_CHEST_BOAT().reload();
-        new SQUID().reload();
-        new STRAY().reload();
-        new STRIDER().reload();
-        new TADPOLE().reload();
-        new TEXT_DISPLAY().reload();
-        new TNT().reload();
-        new TNT_MINECART().reload();
-        new TRADER_LLAMA().reload();
-        new TRIDENT().reload();
-        new TROPICAL_FISH().reload();
-        new TURTLE().reload();
-        new UNKNOWN().reload();
-        new VEX().reload();
-        new VILLAGER().reload();
-        new VINDICATOR().reload();
-        new WANDERING_TRADER().reload();
-        new WARDEN().reload();
-        new WIND_CHARGE().reload();
-        new WITCH().reload();
-        new WITHER().reload();
-        new WITHER_SKELETON().reload();
-        new WITHER_SKULL().reload();
-        new WOLF().reload();
-        new ZOGLIN().reload();
-        new ZOMBIE().reload();
-        new ZOMBIE_HORSE().reload();
-        new ZOMBIE_VILLAGER().reload();
-        new ZOMBIFIED_PIGLIN().reload();
-    }
+    /**
+     * get equipment
+     * @param entity entity
+     * @return entityEquipment
+     * @since many moons ago
+     */
     public EntityEquipment getEquipment(Entity entity) {
         switch (entity) {
             case Allay e -> {
@@ -492,6 +468,1009 @@ public class EntityHandler {
             }
         }
     }
+    /**
+     * set equipment this is the level section from entity/entityType.yml
+     * @param entity entity
+     * @since many moons ago
+     */
+    public void setEquipment(Entity entity) {
+        var equipment = getEquipment(entity);
+        if (equipment != null) {
+            var config = getConfig(entity.getType());
+            if (config.isConfigurationSection("levels")) {
+                config.getConfigurationSection("levels").getKeys(false).forEach(level -> {
+                    var section = "levels." + level;
+                    if (getRandomHandler().isTrue(config.getDouble(section + ".chance"))) {
+                        if (config.isDouble(section + ".health")) {
+                            var health = config.getDouble(section + ".health");
+                            setHealth(entity, health);
+                        }
+                        if (config.isDouble(section + ".scale")) {
+                            var scale = getAttribute(entity, Attribute.SCALE);
+                            if (scale != null) {
+                                scale.setBaseValue(config.getDouble(section + ".scale"));
+                            }
+                        }
+                        if (config.isString(section + ".main-hand.item") && config.isInt(section + ".main-hand.amount")) {
+                            var itemName = config.getString(section + ".main-hand.item");
+                            var itemAmount = config.getInt(section + ".main-hand.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".main-hand.enchantments")) {
+                                config.getConfigurationSection(section + ".main-hand.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".main-hand.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".main-hand.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setItemInMainHand(item);
+                        }
+                        if (config.isDouble(section + ".main-hand.drop-chance")) {
+                            equipment.setItemInMainHandDropChance((float) config.getDouble(section + ".main-hand.drop-chance"));
+                        }
+                        if (config.isString(section + ".off-hand.item") && config.isInt(section + ".off-hand.amount")) {
+                            var itemName = config.getString(section + ".off-hand.item");
+                            var itemAmount = config.getInt(section + ".off-hand.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".off-hand.enchantments")) {
+                                config.getConfigurationSection(section + ".off-hand.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".off-hand.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".off-hand.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setItemInOffHand(item);
+                        }
+                        if (config.isDouble(section + ".off-hand.drop-chance")) {
+                            equipment.setItemInOffHandDropChance((float) config.getDouble(section + ".off-hand.drop-chance"));
+                        }
+                        if (config.isString(section + ".helmet.item") && config.isInt(section + ".helmet.amount")) {
+                            var itemName = config.getString(section + ".helmet.item");
+                            var itemAmount = config.getInt(section + ".helmet.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".helmet.enchantments")) {
+                                config.getConfigurationSection(section + ".helmet.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".helmet.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".helmet.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setHelmet(item);
+                        }
+                        if (config.isDouble(section + ".helmet.drop-chance")) {
+                            equipment.setHelmetDropChance((float) config.getDouble(section + ".helmet.drop-chance"));
+                        }
+                        if (config.isString(section + ".chestplate.item") && config.isInt(section + ".chestplate.amount")) {
+                            var itemName = config.getString(section + ".chestplate.item");
+                            var itemAmount = config.getInt(section + ".chestplate.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".chestplate.enchantments")) {
+                                config.getConfigurationSection(section + ".chestplate.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".chestplate.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".chestplate.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setChestplate(item);
+                        }
+                        if (config.isDouble(section + ".chestplate.drop-chance")) {
+                            equipment.setChestplateDropChance((float) config.getDouble(section + ".chestplate.drop-chance"));
+                        }
+                        if (config.isString(section + ".leggings.item") && config.isInt(section + ".leggings.amount")) {
+                            var itemName = config.getString(section + ".leggings.item");
+                            var itemAmount = config.getInt(section + ".leggings.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".leggings.enchantments")) {
+                                config.getConfigurationSection(section + ".leggings.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".leggings.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".leggings.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setLeggings(item);
+                        }
+                        if (config.isDouble(section + ".leggings.drop-chance")) {
+                            equipment.setLeggingsDropChance((float) config.getDouble(section + ".leggings.drop-chance"));
+                        }
+                        if (config.isString(section + ".boots.item") && config.isInt(section + ".boots.amount")) {
+                            var itemName = config.getString(section + ".boots.item");
+                            var itemAmount = config.getInt(section + ".boots.amount");
+                            var item = getMaterials().getItemStack(itemName, itemAmount);
+                            if (config.isConfigurationSection(section + ".boots.enchantments")) {
+                                config.getConfigurationSection(section + ".boots.enchantments").getKeys(false).forEach(enchantment -> {
+                                    if (!config.isInt(section + ".boots.enchantments." + enchantment))return;
+                                    var enchantLvl = config.getInt(section + ".boots.enchantments." + enchantment);
+                                    item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                });
+                            }
+                            equipment.setBoots(item);
+                        }
+                        if (config.isDouble(section + ".boots.drop-chance")) {
+                            equipment.setBootsDropChance((float) config.getDouble(section + ".boots.drop-chance"));
+                        }
+                    }
+                });
+            }
+        }
+    }
+    /**
+     * set health
+     * @param target entity
+     * @param value double
+     * @since many moons ago
+     */
+    public void setHealth(Entity target, double value) {
+        switch (target) {
+            case Allay entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Armadillo entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case ArmorStand entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Axolotl entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Bat entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Bee entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Blaze entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Bogged entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Breeze entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Camel entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Cat entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case CaveSpider entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Chicken entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Cod entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case MushroomCow entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Cow entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Creaking entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Creeper entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Dolphin entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Donkey entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Drowned entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case ElderGuardian entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case EnderDragon entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Enderman entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Endermite entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Evoker entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Fox entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Frog entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Ghast entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Giant entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case GlowSquid entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Goat entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Guardian entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Hoglin entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Horse entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Husk entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Illusioner entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case IronGolem entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case TraderLlama entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Llama entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case MagmaCube entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Mule entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Ocelot entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Panda entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Parrot entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Phantom entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Pig entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Piglin entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case PiglinBrute entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Pillager entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case PolarBear entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case PufferFish entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Rabbit entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Ravager entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Salmon entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Sheep entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Shulker entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Silverfish entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Skeleton entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case SkeletonHorse entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Slime entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Sniffer entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Snowman entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Spider entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Squid entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Stray entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Strider entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Tadpole entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case TropicalFish entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Turtle entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Vex entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case ZombieVillager entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case PigZombie entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Villager entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Vindicator entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case WanderingTrader entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Warden entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Witch entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Wither entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case WitherSkeleton entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Wolf entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Zoglin entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case Zombie entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case ZombieHorse entity -> {
+                entity.setMaxHealth(value);
+                entity.setHealth(value);
+            }
+            case null, default -> {}
+        }
+    }
+    /**
+     * set target
+     * @param target entity
+     * @param livingEntity livingEntity
+     * @since many moons ago
+     */
+    public void setTarget(Entity target, LivingEntity livingEntity) {
+        switch (target) {
+            case Allay entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Armadillo entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Axolotl entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Bat entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Bee entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Blaze entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Bogged entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Breeze entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Camel entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Cat entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case CaveSpider entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Chicken entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Cod entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case MushroomCow entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Cow entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Creaking entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Creeper entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Dolphin entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Donkey entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Drowned entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case ElderGuardian entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case EnderDragon entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Enderman entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Endermite entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Evoker entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Fox entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Frog entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Ghast entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Giant entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case GlowSquid entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Goat entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Guardian entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Hoglin entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Horse entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Husk entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Illusioner entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case IronGolem entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case TraderLlama entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Llama entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case MagmaCube entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Mule entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Ocelot entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Panda entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Parrot entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Phantom entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Pig entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Piglin entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case PiglinBrute entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Pillager entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case PolarBear entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case PufferFish entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Rabbit entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Ravager entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Salmon entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Sheep entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Shulker entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Silverfish entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Skeleton entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case SkeletonHorse entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Slime entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Sniffer entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Snowman entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Spider entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Squid entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Stray entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Strider entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Tadpole entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case TropicalFish entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Turtle entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Vex entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case ZombieVillager entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case PigZombie entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Villager entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Vindicator entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case WanderingTrader entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Warden entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Witch entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Wither entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case WitherSkeleton entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Wolf entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Zoglin entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case Zombie entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case ZombieHorse entity -> {
+                entity.setTarget(livingEntity);
+            }
+            case null, default -> {}
+        }
+    }
+    /**
+     * get attribute
+     * @param target entity
+     * @param attribute attribute
+     * @return attributeInstance
+     * @since many moons ago
+     */
+    public AttributeInstance getAttribute(Entity target, Attribute attribute) {
+        switch (target) {
+            case Allay entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Armadillo entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case ArmorStand entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Axolotl entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Bat entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Bee entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Blaze entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Bogged entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Breeze entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Camel entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Cat entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case CaveSpider entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Chicken entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Cod entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case MushroomCow entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Cow entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Creaking entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Creeper entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Dolphin entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Donkey entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Drowned entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case ElderGuardian entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case EnderDragon entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Enderman entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Endermite entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Evoker entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Fox entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Frog entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Ghast entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Giant entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case GlowSquid entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Goat entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Guardian entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Hoglin entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Horse entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Husk entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Illusioner entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case IronGolem entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case TraderLlama entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Llama entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case MagmaCube entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Mule entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Ocelot entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Panda entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Parrot entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Phantom entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Pig entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Piglin entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case PiglinBrute entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Pillager entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case PolarBear entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case PufferFish entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Rabbit entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Ravager entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Salmon entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Sheep entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Shulker entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Silverfish entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Skeleton entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case SkeletonHorse entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Slime entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Sniffer entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Snowman entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Spider entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Squid entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Stray entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Strider entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Tadpole entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case TropicalFish entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Turtle entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Vex entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case ZombieVillager entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case PigZombie entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Villager entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Vindicator entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case WanderingTrader entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Warden entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Witch entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Wither entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case WitherSkeleton entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Wolf entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Zoglin entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case Zombie entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case ZombieHorse entity -> {
+                return entity.getAttribute(attribute);
+            }
+            case null, default -> {
+                return null;
+            }
+        }
+    }
+    /**
+     * is tamed
+     * @param tamed entity
+     * @return true if entity is tamed else false
+     * @since many moons ago
+     */
     public boolean isTamed(Entity tamed) {
         switch (tamed) {
             case TraderLlama entity -> {
@@ -535,6 +1514,12 @@ public class EntityHandler {
             }
         }
     }
+    /**
+     * get owner
+     * @param tamed entity
+     * @return animalTamer
+     * @since many moons ago
+     */
     public AnimalTamer getOwner(Entity tamed) {
         switch (tamed) {
             case TraderLlama entity -> {
@@ -577,5 +1562,161 @@ public class EntityHandler {
                 return null;
             }
         }
+    }
+    /**
+     * reload entity folder
+     * @since many moons ago
+     */
+    public void reload() {
+        new ACACIA_BOAT().reload();
+        new ACACIA_CHEST_BOAT().reload();
+        new ALLAY().reload();
+        new AREA_EFFECT_CLOUD().reload();
+        new ARMADILLO().reload();
+        new ARMOR_STAND().reload();
+        new ARROW().reload();
+        new AXOLOTL().reload();
+        new BAMBOO_CHEST_RAFT().reload();
+        new BAMBOO_RAFT().reload();
+        new BAT().reload();
+        new BEE().reload();
+        new BIRCH_BOAT().reload();
+        new BIRCH_CHEST_BOAT().reload();
+        new BLAZE().reload();
+        new BLOCK_DISPLAY().reload();
+        new BOGGED().reload();
+        new BREEZE().reload();
+        new BREEZE_WIND_CHARGE().reload();
+        new CAMEL().reload();
+        new CAT().reload();
+        new CAVE_SPIDER().reload();
+        new CHERRY_BOAT().reload();
+        new CHERRY_CHEST_BOAT().reload();
+        new CHEST_MINECART().reload();
+        new CHICKEN().reload();
+        new COD().reload();
+        new COMMAND_BLOCK_MINECART().reload();
+        new COW().reload();
+        new CREAKING().reload();
+        new CREAKING_TRANSIENT().reload();
+        new CREEPER().reload();
+        new DARK_OAK_BOAT().reload();
+        new DARK_OAK_CHEST_BOAT().reload();
+        new DOLPHIN().reload();
+        new DONKEY().reload();
+        new DRAGON_FIREBALL().reload();
+        new DROWNED().reload();
+        new EGG().reload();
+        new ELDER_GUARDIAN().reload();
+        new END_CRYSTAL().reload();
+        new ENDER_DRAGON().reload();
+        new ENDER_PEARL().reload();
+        new ENDERMAN().reload();
+        new ENDERMITE().reload();
+        new EVOKER().reload();
+        new EVOKER_FANGS().reload();
+        new EXPERIENCE_BOTTLE().reload();
+        new EXPERIENCE_ORB().reload();
+        new EYE_OF_ENDER().reload();
+        new FALLING_BLOCK().reload();
+        new FIREBALL().reload();
+        new FIREWORK_ROCKET().reload();
+        new FISHING_BOBBER().reload();
+        new FOX().reload();
+        new FROG().reload();
+        new FURNACE_MINECART().reload();
+        new GHAST().reload();
+        new GIANT().reload();
+        new GLOW_ITEM_FRAME().reload();
+        new GLOW_SQUID().reload();
+        new GOAT().reload();
+        new GUARDIAN().reload();
+        new HOGLIN().reload();
+        new HOPPER_MINECART().reload();
+        new HORSE().reload();
+        new HUSK().reload();
+        new ILLUSIONER().reload();
+        new INTERACTION().reload();
+        new IRON_GOLEM().reload();
+        new ITEM().reload();
+        new ITEM_DISPLAY().reload();
+        new ITEM_FRAME().reload();
+        new JUNGLE_BOAT().reload();
+        new JUNGLE_CHEST_BOAT().reload();
+        new LEASH_KNOT().reload();
+        new LIGHTNING_BOLT().reload();
+        new LLAMA().reload();
+        new LLAMA_SPIT().reload();
+        new MAGMA_CUBE().reload();
+        new MANGROVE_BOAT().reload();
+        new MANGROVE_CHEST_BOAT().reload();
+        new MARKER().reload();
+        new MINECART().reload();
+        new MOOSHROOM().reload();
+        new MULE().reload();
+        new OAK_BOAT().reload();
+        new OAK_CHEST_BOAT().reload();
+        new OCELOT().reload();
+        new OMINOUS_ITEM_SPAWNER().reload();
+        new PAINTING().reload();
+        new PALE_OAK_BOAT().reload();
+        new PALE_OAK_CHEST_BOAT().reload();
+        new PANDA().reload();
+        new PARROT().reload();
+        new PHANTOM().reload();
+        new PIG().reload();
+        new PIGLIN().reload();
+        new PIGLIN_BRUTE().reload();
+        new PILLAGER().reload();
+        new POLAR_BEAR().reload();
+        new POTION().reload();
+        new PUFFERFISH().reload();
+        new RABBIT().reload();
+        new RAVAGER().reload();
+        new SALMON().reload();
+        new SHEEP().reload();
+        new SHULKER().reload();
+        new SHULKER_BULLET().reload();
+        new SILVERFISH().reload();
+        new SKELETON().reload();
+        new SKELETON_HORSE().reload();
+        new SLIME().reload();
+        new SMALL_FIREBALL().reload();
+        new SNIFFER().reload();
+        new SNOW_GOLEM().reload();
+        new SNOWBALL().reload();
+        new SPAWNER_MINECART().reload();
+        new SPECTRAL_ARROW().reload();
+        new SPIDER().reload();
+        new SPRUCE_BOAT().reload();
+        new SPRUCE_CHEST_BOAT().reload();
+        new SQUID().reload();
+        new STRAY().reload();
+        new STRIDER().reload();
+        new TADPOLE().reload();
+        new TEXT_DISPLAY().reload();
+        new TNT().reload();
+        new TNT_MINECART().reload();
+        new TRADER_LLAMA().reload();
+        new TRIDENT().reload();
+        new TROPICAL_FISH().reload();
+        new TURTLE().reload();
+        new UNKNOWN().reload();
+        new VEX().reload();
+        new VILLAGER().reload();
+        new VINDICATOR().reload();
+        new WANDERING_TRADER().reload();
+        new WARDEN().reload();
+        new WIND_CHARGE().reload();
+        new WITCH().reload();
+        new WITHER().reload();
+        new WITHER_SKELETON().reload();
+        new WITHER_SKULL().reload();
+        new WOLF().reload();
+        new ZOGLIN().reload();
+        new ZOMBIE().reload();
+        new ZOMBIE_HORSE().reload();
+        new ZOMBIE_VILLAGER().reload();
+        new ZOMBIFIED_PIGLIN().reload();
     }
 }

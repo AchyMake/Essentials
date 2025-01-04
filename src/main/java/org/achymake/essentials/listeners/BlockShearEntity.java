@@ -16,7 +16,7 @@ public class BlockShearEntity implements Listener {
         return getInstance().getConfig();
     }
     private PluginManager getManager() {
-        return getInstance().getManager();
+        return getInstance().getPluginManager();
     }
     public BlockShearEntity() {
         getManager().registerEvents(this, getInstance());

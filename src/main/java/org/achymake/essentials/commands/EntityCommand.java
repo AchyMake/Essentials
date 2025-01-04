@@ -149,15 +149,15 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     if (args[1].equalsIgnoreCase("hostile")) {
                         commands.add(String.valueOf(getEntityHandler().isHostile(entityType)));
                     } else if (args[1].equalsIgnoreCase("chunk-limit")) {
-                        commands.add(String.valueOf(getEntityHandler().chunkLimit(entityType)));
+                        commands.add(String.valueOf(getEntityHandler().getChunkLimit(entityType)));
                     } else if (args[1].equalsIgnoreCase("disable-spawn")) {
-                        commands.add(String.valueOf(getEntityHandler().disableCreatureSpawn(entityType)));
+                        commands.add(String.valueOf(getEntityHandler().isCreatureSpawnDisabled(entityType)));
                     } else if (args[1].equalsIgnoreCase("disable-block-form")) {
-                        commands.add(String.valueOf(getEntityHandler().disableEntityBlockForm(entityType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityBlockFormDisabled(entityType)));
                     } else if (args[1].equalsIgnoreCase("disable-change-block")) {
-                        commands.add(String.valueOf(getEntityHandler().disableEntityChangeBlock(entityType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityChangeBlockDisabled(entityType)));
                     } else if (args[1].equalsIgnoreCase("disable-explode")) {
-                        commands.add(String.valueOf(getEntityHandler().disableEntityExplode(entityType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityExplodeDisabled(entityType)));
                     } else if (args[1].equalsIgnoreCase("disable-interact")) {
                         for (var material : Material.values()) {
                             var materialName = material.name().toLowerCase();
@@ -186,19 +186,19 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                 if (getEntityHandler().exists(entityType)) {
                     if (args[1].equalsIgnoreCase("disable-interact")) {
                         var blockType = getInstance().getMaterialHandler().get(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableEntityInteract(entityType, blockType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityInteractDisabled(entityType, blockType)));
                     } else if (args[1].equalsIgnoreCase("disable-target")) {
                         var targetType = getEntityHandler().getType(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableEntityTarget(entityType, targetType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityTargetDisabled(entityType, targetType)));
                     } else if (args[1].equalsIgnoreCase("disable-entity-damage")) {
                         var targetType = getEntityHandler().getType(args[2]);
-                        commands.add(String.valueOf(getEntityHandler().disableEntityDamageByEntity(entityType, targetType)));
+                        commands.add(String.valueOf(getEntityHandler().isEntityDamageByEntityDisabled(entityType, targetType)));
                     } else if (args[1].equalsIgnoreCase("disable-hanging-break")) {
                         var targetType = getEntityHandler().getType(args[2]);
                         commands.add(String.valueOf(getEntityHandler().disableHangingBreakByEntity(entityType, targetType)));
                     } else if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                         var spawnReason = CreatureSpawnEvent.SpawnReason.valueOf(args[2].toUpperCase());
-                        commands.add(String.valueOf(getEntityHandler().disableSpawnReason(entityType, spawnReason)));
+                        commands.add(String.valueOf(getEntityHandler().isSpawnReasonDisabled(entityType, spawnReason)));
                     }
                 }
             }

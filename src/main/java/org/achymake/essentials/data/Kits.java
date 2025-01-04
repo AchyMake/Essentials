@@ -5,7 +5,6 @@ import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -26,72 +25,104 @@ public class Kits {
     }
     private final File file = new File(getInstance().getDataFolder(), "kits.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get listed
+     * @return set string
+     * @since many moons ago
+     */
     public Set<String> getListed() {
         return config.getKeys(false);
     }
+    /**
+     * is kitName listed
+     * @return true if kitName exists else false
+     * @since many moons ago
+     */
     public boolean isListed(String kitName) {
         return getListed().contains(kitName);
     }
+    /**
+     * get cooldown
+     * @param kitName string
+     * @return integer if null this will return 0
+     * @since many moons ago
+     */
     public int getCooldown(String kitName) {
         return config.getInt(kitName + ".cooldown");
     }
+    /**
+     * has price
+     * @param kitName string
+     * @return true if kitName has price
+     * @since many moons ago
+     */
     public boolean hasPrice(String kitName) {
         return config.isDouble(kitName + ".price");
     }
+    /**
+     * get price
+     * @param kitName string
+     * @return double if kitName has price else 0.0
+     * @since many moons ago
+     */
     public double getPrice(String kitName) {
         return config.getDouble(kitName + ".price");
     }
-    public void sendKits(Player player) {
-        if (!getListed().isEmpty()) {
-            player.sendMessage(getMessage().get("commands.kit.title"));
-            getListed().forEach(kits -> {
-                if (player.hasPermission("essentials.command.kit." + kits)) {
-                    player.sendMessage(getMessage().get("commands.kit.listed", kits));
-                }
-            });
-        } else player.sendMessage(getMessage().get("commands.kit.empty"));
-    }
+    /**
+     * get kit
+     * @param kitName string
+     * @return list itemStack if kitName exists else empty list
+     * @since many moons ago
+     */
     public List<ItemStack> get(String kitName) {
         var itemStacks = new ArrayList<ItemStack>();
-        config.getConfigurationSection(kitName + ".items").getKeys(false).forEach(sections -> {
-            var section = kitName + ".items." + sections;
-            if (config.isString(section + ".type")) {
-                var itemStack = getMaterials().getItemStack(config.getString(section + ".type"), 1);
-                if (itemStack != null) {
-                    if (config.getInt(section + ".amount") > 0) {
-                        itemStack.setAmount(config.getInt(section + ".amount"));
-                    }
-                    var meta = itemStack.getItemMeta();
-                    var name = config.getString(section + ".name");
-                    if (name != null) {
-                        meta.setDisplayName(getMessage().addColor(name));
-                    }
-                    if (config.isList(section + ".lore")) {
-                        var lore = new ArrayList<String>();
-                        for (var listedLore : config.getStringList(section + ".lore")) {
-                            lore.add(getMessage().addColor(listedLore));
+        if (config.isConfigurationSection(kitName + ".items")) {
+            config.getConfigurationSection(kitName + ".items").getKeys(false).forEach(sections -> {
+                var section = kitName + ".items." + sections;
+                var materialName = config.getString(section + ".type");
+                if (materialName != null) {
+                    var itemStack = getMaterials().getItemStack(materialName, 1);
+                    if (itemStack != null) {
+                        var amount = config.getInt(section + ".amount");
+                        if (amount > 0) {
+                            itemStack.setAmount(amount);
                         }
-                        meta.setLore(lore);
-                        lore.clear();
-                    }
-                    if (config.isConfigurationSection(section + ".enchantments")) {
-                        config.getConfigurationSection(section + ".enchantments").getKeys(false).forEach(enchantmentString -> {
-                            var enchantment = Enchantment.getByName(enchantmentString.toUpperCase());
-                            if (enchantment != null) {
-                                var lvl = config.getInt(section + ".enchantments." + enchantmentString);
-                                if (lvl > 0) {
-                                    meta.addEnchant(enchantment, lvl, true);
-                                }
+                        var meta = itemStack.getItemMeta();
+                        var name = config.getString(section + ".name");
+                        if (name != null) {
+                            meta.setDisplayName(getMessage().addColor(name));
+                        }
+                        var stringList = config.getStringList(section + ".lore");
+                        if (!stringList.isEmpty()) {
+                            var lore = new ArrayList<String>();
+                            for (var string : stringList) {
+                                lore.add(getMessage().addColor(string));
                             }
-                        });
+                            meta.setLore(lore);
+                        }
+                        if (config.isConfigurationSection(section + ".enchantments")) {
+                            config.getConfigurationSection(section + ".enchantments").getKeys(false).forEach(enchantmentString -> {
+                                var enchantment = Enchantment.getByName(enchantmentString.toUpperCase());
+                                if (enchantment != null) {
+                                    var lvl = config.getInt(section + ".enchantments." + enchantmentString);
+                                    if (lvl > 0) {
+                                        meta.addEnchant(enchantment, lvl, true);
+                                    }
+                                }
+                            });
+                        }
+                        itemStack.setItemMeta(meta);
+                        itemStacks.add(itemStack);
                     }
-                    itemStack.setItemMeta(meta);
-                    itemStacks.add(itemStack);
                 }
-            }
-        });
+            });
+        }
         return itemStacks;
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         var lore = new ArrayList<String>();
         lore.add("&9Kit");
@@ -131,6 +162,10 @@ public class Kits {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload kits.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);

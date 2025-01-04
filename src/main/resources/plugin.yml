@@ -1,7 +1,7 @@
 name: Essentials
 version: '${project.version}'
 main: org.achymake.essentials.Essentials
-api-version: '1.21'
+api-version: '1.21.3'
 prefix: '${project.name}'
 load: STARTUP
 depend:
@@ -969,6 +969,9 @@ permissions:
     default: op
   essentials.event.block_break.spawner:
     description: allows to obtain spawner by silk touch
+    default: op
+  essentials.event.block_break.budding_amethyst:
+    description: allows to obtain budding amethyst by silk touch
     default: op
   essentials.event.quit.message:
     description: sends quit message

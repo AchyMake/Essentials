@@ -27,11 +27,11 @@ public class PlayerRespawn implements Listener {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PlayerRespawn() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerRespawn(PlayerRespawnEvent event) {

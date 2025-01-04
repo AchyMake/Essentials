@@ -22,12 +22,12 @@ public class AnnouncementCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             if (args.length > 0) {
-                getMessage().sendAll(getMessage().get("commands.announcement", getMessage().getBuilder(args, 0)));
+                getMessage().sendAll(getMessage().get("commands.announcement", getMessage().toString(args, 0)));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender) {
             if (args.length > 0) {
-                getMessage().sendAll(getMessage().get("commands.announcement", getMessage().getBuilder(args, 0)));
+                getMessage().sendAll(getMessage().get("commands.announcement", getMessage().toString(args, 0)));
                 return true;
             }
         }

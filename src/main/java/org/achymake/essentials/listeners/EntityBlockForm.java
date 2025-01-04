@@ -15,15 +15,15 @@ public class EntityBlockForm implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityBlockForm() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityBlockForm(EntityBlockFormEvent event) {
-        if (!getEntityHandler().disableEntityBlockForm(event.getEntity().getType()))return;
+        if (!getEntityHandler().isEntityBlockFormDisabled(event.getEntity().getType()))return;
         event.setCancelled(true);
     }
 }

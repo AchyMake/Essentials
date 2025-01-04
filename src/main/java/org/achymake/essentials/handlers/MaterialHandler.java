@@ -1,15 +1,9 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -22,55 +16,115 @@ import org.bukkit.persistence.PersistentDataType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class MaterialHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
+    /**
+     * get material
+     * @param materialName string
+     * @return material
+     * @since many moons ago
+     */
     public Material get(String materialName) {
         return Material.valueOf(materialName.toUpperCase());
     }
+    /**
+     * get enchantment
+     * @param enchantmentName string
+     * @return enchantment
+     * @since many moons ago
+     */
     public Enchantment getEnchantment(String enchantmentName) {
         return Enchantment.getByName(enchantmentName.toUpperCase());
     }
+    /**
+     * set enchantment
+     * @param itemStack itemStack
+     * @param enchantmentName string
+     * @param level integer
+     * @since many moons ago
+     */
     public void setEnchantment(ItemStack itemStack, String enchantmentName, int level) {
         if (level > 0) {
             itemStack.addUnsafeEnchantment(getEnchantment(enchantmentName), level);
         } else itemStack.removeEnchantment(getEnchantment(enchantmentName));
     }
+    /**
+     * has enchantment
+     * @param itemStack itemStack
+     * @param enchantmentName string
+     * @return true if itemStack has enchantmentName else false
+     * @since many moons ago
+     */
     public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {
         return itemStack.getItemMeta().hasEnchant(getEnchantment(enchantmentName));
     }
-    public ArrayList<Enchantment> getEnchantments() {
-        return new ArrayList<Enchantment>(Arrays.asList(Enchantment.values()));
+    /**
+     * get enchantments
+     * @return list enchantments
+     * @since many moons ago
+     */
+    public List<Enchantment> getEnchantments() {
+        return new ArrayList<>(Arrays.asList(Enchantment.values()));
     }
+    /**
+     * get persistent data container of itemMeta
+     * @param itemMeta itemMeta
+     * @return persistentDataContainer
+     * @since many moons ago
+     */
     public PersistentDataContainer getData(ItemMeta itemMeta) {
         return itemMeta.getPersistentDataContainer();
     }
-    public NamespacedKey getKey(String key) {
-        return new NamespacedKey(Essentials.getInstance(), key);
-    }
+    /**
+     * get new itemStack
+     * @param materialName string
+     * @param amount integer
+     * @return itemStack if materialName is null returns null
+     * @since many moons ago
+     */
     public ItemStack getItemStack(String materialName, int amount) {
         var material = get(materialName.toUpperCase());
         if (material != null) {
-            return new ItemStack(get(materialName.toUpperCase()), amount);
+            return new ItemStack(material, amount);
         } else return null;
     }
+    /**
+     * give itemStack
+     * @param player target
+     * @param itemStack itemStack
+     * @since many moons ago
+     */
     public void giveItemStack(Player player, ItemStack itemStack) {
         if (itemStack != null) {
             if (Arrays.asList(player.getInventory().getStorageContents()).contains(null)) {
                 player.getInventory().addItem(itemStack);
-            } else dropItem(player.getLocation(), itemStack);
+            } else getWorldHandler().dropItem(player.getLocation(), itemStack);
         }
     }
+    /**
+     * give itemStack
+     * @param player target
+     * @param itemStacks collection itemStacks
+     * @since many moons ago
+     */
     public void giveItemStacks(Player player, Collection<ItemStack> itemStacks) {
         for (var itemStack : itemStacks) {
             giveItemStack(player, itemStack);
         }
     }
-    public Item dropItem(Location location, ItemStack itemStack) {
-        return location.getWorld().dropItem(location, itemStack);
-    }
+    /**
+     * get spawner
+     * @param entityType string
+     * @param amount integer
+     * @since many moons ago
+     */
     public ItemStack getSpawner(String entityType, int amount) {
         var spawner = getItemStack("spawner", amount);
         var itemMeta = spawner.getItemMeta();
@@ -85,26 +139,17 @@ public class MaterialHandler {
             var name = getInstance().getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
             itemMeta.setDisplayName(name.replaceAll("%entity_type%", getInstance().getMessage().toTitleCase(entityType.toUpperCase())));
         }
-        getData(itemMeta).set(getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());
+        getData(itemMeta).set(getInstance().getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());
         itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         spawner.setItemMeta(itemMeta);
         return spawner;
     }
-    public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
-        var container = getData(heldItem.getItemMeta());
-        if (container.has(getKey("entity_type"), PersistentDataType.STRING)) {
-            var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
-            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getKey("entity_type"), PersistentDataType.STRING)));
-            creatureSpawner.update();
-        }
-    }
-    public Item dropSpawner(Block block) {
-        var creatureSpawner = (CreatureSpawner) block.getState();
-        var itemStack = getItemStack("spawner", 1);
-        if (creatureSpawner.getSpawnedType() != null) {
-            return dropItem(block.getLocation().add(0.5, 0.3, 0.5), getSpawner(creatureSpawner.getSpawnedType().toString(), 1));
-        } else return dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
-    }
+    /**
+     * get player head
+     * @param offlinePlayer or player
+     * @param amount integer
+     * @since many moons ago
+     */
     public ItemStack getPlayerHead(OfflinePlayer offlinePlayer, int amount) {
         var itemStack = getItemStack("player_head", amount);
         var skullMeta = (SkullMeta) itemStack.getItemMeta();
@@ -112,6 +157,12 @@ public class MaterialHandler {
         itemStack.setItemMeta(skullMeta);
         return itemStack;
     }
+    /**
+     * repair itemStack
+     * @param itemStack itemStack
+     * @return true if itemStack gets repaired else false
+     * @since many moons ago
+     */
     public boolean repair(ItemStack itemStack) {
         var damageable = (Damageable) itemStack.getItemMeta();
         if (damageable.hasDamage()) {
@@ -120,10 +171,13 @@ public class MaterialHandler {
             return true;
         } else return false;
     }
+    /**
+     * is air
+     * @param itemStack itemStack
+     * @return true if itemStack is null or air else false
+     * @since many moons ago
+     */
     public boolean isAir(ItemStack itemStack) {
         return itemStack == null || itemStack.getType().equals(get("air"));
-    }
-    public boolean isAir(Block block) {
-        return block.getType().equals(get("air"));
     }
 }

@@ -45,33 +45,54 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "display_name" -> {
                     return instance.getUserdata().getDisplayName(player);
                 }
-                case "vanished" -> {
-                    return String.valueOf(instance.getVanishHandler().getVanished().contains(player));
-                }
-                case "online_players" -> {
-                    return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
-                }
                 case "account" -> {
-                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getUserdata().getAccount(player));
-                }
-                case "bank" -> {
-                    if (instance.getUserdata().hasBank(player)) {
-                        return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getBank().get(instance.getUserdata().getBank(player)));
-                    } else return "0";
+                    return instance.getVaultEconomyProvider().currencyNamePlural() + instance.getVaultEconomyProvider().format(instance.getUserdata().getAccount(player));
                 }
                 case "bank_name" -> {
                     if (instance.getUserdata().hasBank(player)) {
                         return instance.getUserdata().getBank(player);
                     } else return "None";
                 }
+                case "bank_account" -> {
+                    if (instance.getUserdata().hasBank(player)) {
+                        return instance.getVaultEconomyProvider().currencyNamePlural() + instance.getVaultEconomyProvider().format(instance.getBank().get(instance.getUserdata().getBank(player)));
+                    } else return "0";
+                }
                 case "pvp" -> {
                     return String.valueOf(instance.getUserdata().isPVP(player));
                 }
-                case "max_homes" -> {
+                case "homes_max" -> {
                     return String.valueOf(instance.getUserdata().getMaxHomes(player));
+                }
+                case "homes_size" -> {
+                    return String.valueOf(instance.getUserdata().getHomes(player).size());
                 }
                 case "homes_left" -> {
                     return String.valueOf(instance.getUserdata().getMaxHomes(player) - instance.getUserdata().getHomes(player).size());
+                }
+                case "health" -> {
+                    return String.valueOf((int) player.getHealth());
+                }
+                case "is_flying" -> {
+                    return String.valueOf(player.isFlying());
+                }
+                case "walk_speed" -> {
+                    return String.valueOf(player.getWalkSpeed());
+                }
+                case "fly_speed" -> {
+                    return String.valueOf(player.getFlySpeed());
+                }
+                case "vanished" -> {
+                    return String.valueOf(instance.getVanishHandler().isVanish(player));
+                }
+                case "online_players" -> {
+                    return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
+                }
+                case "ping" -> {
+                    return String.valueOf(player.getPing());
+                }
+                case "locale" -> {
+                    return player.getLocale();
                 }
             }
         }

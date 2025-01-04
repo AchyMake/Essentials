@@ -22,24 +22,25 @@ public class EntityPlace implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityPlace() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityPlace(EntityPlaceEvent event) {
+        var entity = event.getEntity();
         var type = event.getEntityType();
-        if (!getEntityHandler().disableCreatureSpawn(type)) {
+        if (!getEntityHandler().isCreatureSpawnDisabled(type)) {
             if (!getUserdata().isDisabled(event.getPlayer())) {
-                var chunkLimit = getEntityHandler().chunkLimit(type);
+                var chunkLimit = getEntityHandler().getChunkLimit(type);
                 if (chunkLimit > 0) {
-                    var chunk = event.getEntity().getLocation().getChunk();
+                    var chunk = entity.getLocation().getChunk();
                     var listed = new ArrayList<Entity>();
                     for (var entities : chunk.getEntities()) {
                         if (entities.getType().equals(type)) {
-                            listed.add(event.getEntity());
+                            listed.add(entities);
                         }
                     }
                     if (listed.size() >= chunkLimit) {

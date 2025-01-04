@@ -17,11 +17,11 @@ public class EntityMount implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityMount() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerMount(EntityMountEvent event) {

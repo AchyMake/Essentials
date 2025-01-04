@@ -32,7 +32,7 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
                 var username = args[0];
                 var target = getInstance().getPlayer(username);
                 if (target != null) {
-                    var message = getMessage().getBuilder(args, 1);
+                    var message = getMessage().toString(args, 1);
                     getUserdata().setString(target, "last-whisper", player.getUniqueId().toString());
                     getUserdata().setString(player, "last-whisper", target.getUniqueId().toString());
                     target.sendMessage(getMessage().get("commands.whisper.target", player.getName(), message));

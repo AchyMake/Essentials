@@ -86,6 +86,7 @@ economy:
   starting-balance: 0.0
   minimum-payment: 1.00
   bank:
+    enable: true
     starting-balance: 0.0
     minimum-withdraw: 1.00
     minimum-deposit: 1.00
@@ -155,6 +156,22 @@ fire:
   disable-lava-fire-spread: true
 physics:
   disable-redstone: false
+projectile:
+  creative:
+    instant-remove: true
+  removal-timer:
+    enable: true
+    player: 30
+    snowman: 3
+    skeleton: 3
+    entity: 3
+  cooldown:
+    enable: true
+    egg: 10
+    snowball: 10
+    bow: 5
+vanish:
+  sneaking-picks-item: true
 notification:
   # Permissions
   # essentials.event.block_break.notify

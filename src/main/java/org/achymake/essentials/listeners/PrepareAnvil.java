@@ -19,25 +19,23 @@ public class PrepareAnvil implements Listener {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PrepareAnvil() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         var result = event.getResult();
         if (result == null)return;
-        var resultMeta = result.getItemMeta();
+        var meta = result.getItemMeta();
         var view = event.getView();
         var player = view.getPlayer();
         var rename = view.getRenameText();
         if (rename != null) {
-            if (rename.contains("&")) {
-                if (player.hasPermission("essentials.event.anvil.color")) {
-                    resultMeta.setDisplayName(getMessage().addColor(rename));
-                }
+            if (rename.contains("&") && player.hasPermission("essentials.event.anvil.color")) {
+                meta.setDisplayName(getMessage().addColor(rename));
             }
         }
         var secondItem = event.getInventory().getSecondItem();
@@ -49,15 +47,15 @@ public class PrepareAnvil implements Listener {
                     var maxLevel = enchantment.getMaxLevel();
                     if (bookLevel > maxLevel) {
                         if (player.hasPermission("essentials.event.anvil.unsafe")) {
-                            resultMeta.addEnchant(enchantment, bookLevel, true);
+                            meta.addEnchant(enchantment, bookLevel, true);
                         } else if (player.hasPermission("essentials.event.anvil.safe")) {
-                            resultMeta.addEnchant(enchantment, maxLevel, true);
+                            meta.addEnchant(enchantment, maxLevel, true);
                         }
                     }
                 });
             }
         }
-        result.setItemMeta(resultMeta);
+        result.setItemMeta(meta);
         event.setResult(result);
     }
 }

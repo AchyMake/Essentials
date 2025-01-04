@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TablistHandler {
     private Essentials getInstance() {
@@ -23,36 +24,109 @@ public class TablistHandler {
     }
     private final File file = new File(getInstance().getDataFolder(), "tablist.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get tablist.yml
+     * @return config
+     * @since many moons ago
+     */
     public FileConfiguration getConfig() {
         return config;
     }
+    /**
+     * is enabled
+     * @return true if enabled else false
+     * @since many moons ago
+     */
     public boolean isEnable() {
         return config.getBoolean("enable");
     }
+    /**
+     * get tick
+     * @return long
+     * @since many moons ago
+     */
     public long getTick() {
         return config.getLong("tick");
     }
+    /**
+     * has tablist name
+     * @return true if name is string else false
+     * @since many moons ago
+     */
+    public boolean hasName() {
+        return config.isString("name");
+    }
+    public String getName() {
+        return config.getString("name");
+    }
+    /**
+     * has tablist header
+     * @return true if header is list string else false
+     * @since many moons ago
+     */
+    public boolean hasHeaderLines() {
+        return config.isList("header.lines");
+    }
+    public List<String> getHeaderLines() {
+        return config.getStringList("header.lines");
+    }
+    /**
+     * has tablist footer
+     * @return true if footer is list string else false
+     * @since many moons ago
+     */
+    public boolean hasFooterLines() {
+        return config.isList("footer.lines");
+    }
+    public List<String> getFooterLines() {
+        return config.getStringList("footer.lines");
+    }
+    /**
+     * get world tick
+     * @return long
+     * @since many moons ago
+     */
     public long getTick(String worldName) {
         return config.getLong("worlds." + worldName + ".tick");
     }
-    private boolean hasName() {
-        return config.isString("name");
-    }
-    private boolean hasName(String worldName) {
+    /**
+     * has world tablist name
+     * @return true if name is string else false
+     * @since many moons ago
+     */
+    public boolean hasName(String worldName) {
         return config.isString("worlds." + worldName + ".name");
     }
-    private boolean hasHeaderLines() {
-        return config.isList("header.lines");
+    public String getName(String worldName) {
+        return config.getString("worlds." + worldName + ".name");
     }
-    private boolean hasHeaderLines(String worldName) {
+    /**
+     * has world tablist header
+     * @return true if header is list string else false
+     * @since many moons ago
+     */
+    public boolean hasHeaderLines(String worldName) {
         return config.isList("worlds." + worldName + ".header.lines");
     }
-    private boolean hasFooterLines() {
-        return config.isList("footer.lines");
+    public List<String> getHeaderLines(String worldName) {
+        return config.getStringList("worlds." + worldName + ".header.lines");
     }
-    private boolean hasFooterLines(String worldName) {
+    /**
+     * has world tablist footer
+     * @return true if footer is list string else false
+     * @since many moons ago
+     */
+    public boolean hasFooterLines(String worldName) {
         return config.isList("worlds." + worldName + ".footer.lines");
     }
+    public List<String> getFooterLines(String worldName) {
+        return config.getStringList("worlds." + worldName + ".footer.lines");
+    }
+    /**
+     * apply tablist
+     * @param player target
+     * @since many moons ago
+     */
     public void apply(Player player) {
         if (isEnable()) {
             var world = player.getWorld().getName();
@@ -65,6 +139,11 @@ public class TablistHandler {
             }
         }
     }
+    /**
+     * disable tablist
+     * @param player target
+     * @since many moons ago
+     */
     public void disable(Player player) {
         if (getUserdata().hasTaskID(player, "tab")) {
             getUserdata().removeTask(player, "tab");
@@ -73,6 +152,10 @@ public class TablistHandler {
             player.setPlayerListFooter(null);
         }
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         config.set("enable", false);
         var header = new ArrayList<String>();
@@ -106,6 +189,10 @@ public class TablistHandler {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload tablist.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);

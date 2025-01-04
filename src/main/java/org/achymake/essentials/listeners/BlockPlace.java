@@ -4,6 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,21 +25,24 @@ public class BlockPlace implements Listener {
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public BlockPlace() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         var player = event.getPlayer();
         if (!getUserdata().isDisabled(player)) {
             if (event.getBlockPlaced().getType().equals(getMaterials().get("spawner"))) {
-                getMaterials().updateSpawner(event.getBlockPlaced(), event.getItemInHand());
+                getWorldHandler().updateSpawner(event.getBlockPlaced(), event.getItemInHand());
             }
             if (getConfig().getBoolean("notification.enable")) {
                 if (!getConfig().getStringList("notification.block-place").contains(event.getBlockPlaced().getType().toString()))return;

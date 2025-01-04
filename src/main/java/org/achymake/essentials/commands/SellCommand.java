@@ -3,8 +3,8 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Worth;
-import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,8 +18,8 @@ public class SellCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EconomyHandler getEconomy() {
-        return getInstance().getEconomyHandler();
+    private VaultEconomyProvider getEconomy() {
+        return getInstance().getVaultEconomyProvider();
     }
     private Worth getWorth() {
         return getInstance().getWorth();
@@ -43,9 +43,9 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                     if (getWorth().isListed(heldItem.getType())) {
                         var amount = heldItem.getAmount();
                         var result = getWorth().get(heldItem.getType()) * amount;
-                        getEconomy().add(player, result);
+                        getEconomy().depositPlayer(player, result);
                         heldItem.setAmount(0);
-                        player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
+                        player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currencyNamePlural() + getEconomy().format(result)));
                     } else player.sendMessage(getMessage().get("commands.sell.unsellable", itemName));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
@@ -58,9 +58,9 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                             if (getWorth().isListed(itemStack.getType())) {
                                 var amount = itemStack.getAmount();
                                 var result = getWorth().get(itemStack.getType()) * amount;
-                                getEconomy().add(player, result);
+                                getEconomy().depositPlayer(player, result);
                                 itemStack.setAmount(0);
-                                player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
+                                player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currencyNamePlural() + getEconomy().format(result)));
                             }
                         }
                     }
@@ -76,9 +76,9 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                                 if (itemAmount >= amount) {
                                     var result = getWorth().get(heldItem.getType()) * amount;
                                     var newAmount = itemAmount - amount;
-                                    getEconomy().add(player, result);
+                                    getEconomy().depositPlayer(player, result);
                                     heldItem.setAmount(newAmount);
-                                    player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
+                                    player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currencyNamePlural() + getEconomy().format(result)));
                                 } else player.sendMessage(getMessage().get("commands.sell.insufficient", itemName));
                             } else player.sendMessage(getMessage().get("commands.sell.unsellable", itemName));
                         } else player.sendMessage(getMessage().get("error.item.invalid"));

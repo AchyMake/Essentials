@@ -15,16 +15,17 @@ public class HangingPlace implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public HangingPlace() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onHangingPlace(HangingPlaceEvent event) {
-        if (event.getPlayer() == null)return;
-        if (!getUserdata().isDisabled(event.getPlayer()))return;
+        var player = event.getPlayer();
+        if (player == null)return;
+        if (!getUserdata().isDisabled(player))return;
         event.setCancelled(true);
     }
 }

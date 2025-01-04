@@ -4,6 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,14 +25,17 @@ public class BlockBreak implements Listener {
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public BlockBreak() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
@@ -42,7 +46,14 @@ public class BlockBreak implements Listener {
             if (block.getType().equals(getMaterials().get("spawner"))) {
                 if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {
                     if (player.hasPermission("essentials.event.block_break.spawner")) {
-                        getMaterials().dropSpawner(block);
+                        getWorldHandler().dropSpawner(block);
+                        event.setExpToDrop(0);
+                    }
+                }
+            } else if (block.getType().equals(getMaterials().get("budding_amethyst"))) {
+                if (getMaterials().hasEnchantment(heldItem, "silk_touch")) {
+                    if (player.hasPermission("essentials.event.block_break.budding_amethyst")) {
+                        getWorldHandler().dropItem(block.getLocation().add(0.5,0.3,0.5), getMaterials().getItemStack("budding_amethyst", 1));
                         event.setExpToDrop(0);
                     }
                 }

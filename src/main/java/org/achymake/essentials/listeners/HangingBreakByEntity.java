@@ -14,21 +14,21 @@ public class HangingBreakByEntity implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntities() {
+    private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public HangingBreakByEntity() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onHangingBreakByEntity(HangingBreakByEntityEvent event) {
-        if (!getEntities().disableHangingBreakByEntity(event.getRemover().getType(), event.getEntity().getType())) {
+        if (!getEntityHandler().disableHangingBreakByEntity(event.getRemover().getType(), event.getEntity().getType())) {
             if (event.getRemover() instanceof Player player) {
                 if (!getUserdata().isDisabled(player))return;
                 event.setCancelled(true);

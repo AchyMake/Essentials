@@ -5,7 +5,6 @@ import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,27 +17,31 @@ public class Warps {
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
     }
-    private Message getMessage() {
-        return getInstance().getMessage();
-    }
     private final File file = new File(getInstance().getDataFolder(), "warps.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get listed
+     * @return set string
+     * @since many moons ago
+     */
     public Set<String> getListed() {
         return config.getKeys(false);
     }
+    /**
+     * is warp listed
+     * @param warpName string
+     * @return true if warpName is listed else false
+     * @since many moons ago
+     */
     public boolean isListed(String warpName) {
         return getListed().contains(warpName);
     }
-    public void sendWarps(Player player) {
-        if (!getListed().isEmpty()) {
-            player.sendMessage(getMessage().get("commands.warp.title"));
-            getListed().forEach(warps -> {
-                if (player.hasPermission("essentials.command.warp." + warps)) {
-                    player.sendMessage(getMessage().get("commands.warp.listed", warps));
-                }
-            });
-        } else player.sendMessage(getMessage().get("commands.warp.empty"));
-    }
+    /**
+     * get location
+     * @param warpName string
+     * @return location if warpName exists else null
+     * @since many moons ago
+     */
     public Location getLocation(String warpName) {
         if (config.isConfigurationSection(warpName)) {
             if (config.isString(warpName + ".world")) {
@@ -54,6 +57,12 @@ public class Warps {
             } else return null;
         } else return null;
     }
+    /**
+     * set location or remove
+     * @param warpName string
+     * @param location location or null to remove
+     * @since many moons ago
+     */
     public void setLocation(String warpName, Location location) {
         if (location != null) {
             config.set(warpName + ".world", location.getWorld().getName());
@@ -76,6 +85,10 @@ public class Warps {
             }
         }
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         config.options().copyDefaults(true);
         try {
@@ -84,6 +97,10 @@ public class Warps {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload if exists else setup
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);

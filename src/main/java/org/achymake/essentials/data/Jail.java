@@ -18,6 +18,11 @@ public class Jail {
     }
     private final File file = new File(getInstance().getDataFolder(), "jail.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get jail location
+     * @return location if world exists else null
+     * @since many moons ago
+     */
     public Location getLocation() {
         if (config.isString("world")) {
             var world = getWorldHandler().get(config.getString("world"));
@@ -31,6 +36,11 @@ public class Jail {
             } else return null;
         } else return null;
     }
+    /**
+     * set jail location
+     * @param location location
+     * @since many moons ago
+     */
     public void setLocation(Location location) {
         var world = location.getWorld();
         if (world != null) {
@@ -47,6 +57,10 @@ public class Jail {
             }
         }
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         config.options().copyDefaults(true);
         try {
@@ -55,6 +69,10 @@ public class Jail {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload jail.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);

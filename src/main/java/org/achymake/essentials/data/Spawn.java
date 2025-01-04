@@ -18,6 +18,11 @@ public class Spawn {
     }
     private final File file = new File(getInstance().getDataFolder(), "spawn.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get spawn
+     * @return location if world exists
+     * @since many moons ago
+     */
     public Location getLocation() {
         if (config.isString("world")) {
             var world = getWorldHandler().get(config.getString("world"));
@@ -31,6 +36,11 @@ public class Spawn {
             } else return null;
         } else return null;
     }
+    /**
+     * set spawn
+     * @param location location
+     * @since many moons ago
+     */
     public void setLocation(Location location) {
         config.set("world", location.getWorld().getName());
         config.set("x", location.getX());
@@ -44,6 +54,10 @@ public class Spawn {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         config.options().copyDefaults(true);
         try {
@@ -52,6 +66,10 @@ public class Spawn {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload spawn.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);

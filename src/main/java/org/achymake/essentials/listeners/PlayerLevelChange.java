@@ -17,11 +17,11 @@ public class PlayerLevelChange implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PlayerLevelChange() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerLevelChange(PlayerLevelChangeEvent event) {

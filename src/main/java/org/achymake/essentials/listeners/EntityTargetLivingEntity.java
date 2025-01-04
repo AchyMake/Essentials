@@ -20,21 +20,27 @@ public class EntityTargetLivingEntity implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityTargetLivingEntity() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() == null)return;
-        if (event.getEntity() instanceof Player)return;
-        if (!getEntityHandler().disableEntityTarget(event.getEntityType(), event.getTarget().getType())) {
-            if (event.getTarget() instanceof Player player) {
+        var target = event.getTarget();
+        if (target == null)return;
+        var entity = event.getEntity();
+        if (entity instanceof Player)return;
+        if (!getEntityHandler().isEntityTargetDisabled(event.getEntityType(), target.getType())) {
+            if (target instanceof Player player) {
                 if (!getUserdata().isVanished(player))return;
                 event.setCancelled(true);
+                getEntityHandler().setTarget(entity, null);
             }
-        } else event.setCancelled(true);
+        } else {
+            event.setCancelled(true);
+            getEntityHandler().setTarget(entity, null);
+        }
     }
 }

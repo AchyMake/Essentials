@@ -15,15 +15,15 @@ public class EntityChangeBlock implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityChangeBlock() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityChangeBlock(EntityChangeBlockEvent event) {
-        if (!getEntityHandler().disableEntityChangeBlock(event.getEntityType()))return;
+        if (!getEntityHandler().isEntityChangeBlockDisabled(event.getEntityType()))return;
         event.setCancelled(true);
     }
 }

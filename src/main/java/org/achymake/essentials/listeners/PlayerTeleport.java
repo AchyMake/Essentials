@@ -15,21 +15,18 @@ public class PlayerTeleport implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PlayerTeleport() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         var player = event.getPlayer();
         if (!getUserdata().isDisabled(player)) {
             if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-                if (getUserdata().getLocation(player, "death") != null && getUserdata().getLocation(player, "death") == event.getTo()) {
-                    getUserdata().setString(player, "locations.death", null);
-                }
-                getUserdata().setLocation(player, event.getFrom(), "recent");
+                getUserdata().setLocation(player, player.getLocation(), "recent");
             }
         } else event.setCancelled(true);
     }

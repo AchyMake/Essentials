@@ -34,7 +34,14 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                getWarps().sendWarps(player);
+                if (!getWarps().getListed().isEmpty()) {
+                    player.sendMessage(getMessage().get("commands.warp.title"));
+                    getWarps().getListed().forEach(warps -> {
+                        if (player.hasPermission("essentials.command.warp." + warps)) {
+                            player.sendMessage(getMessage().get("commands.warp.listed", warps));
+                        }
+                    });
+                } else player.sendMessage(getMessage().get("commands.warp.empty"));
                 return true;
             } else if (args.length == 1) {
                 var warpName = args[0].toLowerCase();

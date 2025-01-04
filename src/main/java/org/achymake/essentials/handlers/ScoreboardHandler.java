@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScoreboardHandler {
     private Essentials getInstance() {
@@ -29,37 +30,54 @@ public class ScoreboardHandler {
     public ScoreboardManager getScoreboardManager() {
         return Bukkit.getScoreboardManager();
     }
+    /**
+     * get scoreboard.yml
+     * @return config
+     * @since many moons ago
+     */
     public FileConfiguration getConfig() {
         return config;
     }
-    private boolean isEnable() {
+    public boolean isEnable() {
         return config.getBoolean("enable");
     }
-    private long getTick() {
+    public long getTick() {
         return config.getLong("tick");
     }
-    private long getTick(String worldName) {
-        return config.getLong("worlds." + worldName + ".tick");
+    public boolean hasTitle() {
+        return config.isString("title");
     }
-    private String getTitle() {
+    public String getTitle() {
         return config.getString("title");
     }
-    private String getTitle(String worldName) {
-        return config.getString("worlds." + worldName + ".title");
-    }
-    private boolean isList() {
+    public boolean isLine() {
         return config.isList("lines");
     }
-    private boolean isList(String worldName) {
+    public List<String> getLines() {
+        return config.getStringList("lines").reversed();
+    }
+    public long getTick(String worldName) {
+        return config.getLong("worlds." + worldName + ".tick");
+    }
+    public boolean hasTitle(String worldName) {
+        return config.isString("worlds." + worldName + ".title");
+    }
+    public String getTitle(String worldName) {
+        return config.getString("worlds." + worldName + ".title");
+    }
+    public boolean isLine(String worldName) {
         return config.isList("worlds." + worldName + ".lines");
+    }
+    public List<String> getLines(String worldName) {
+        return config.getStringList("worlds." + worldName + ".lines").reversed();
     }
     public void apply(Player player) {
         if (isEnable()) {
             var world = player.getWorld().getName();
-            if (getTitle(world) != null && isList(world)) {
+            if (hasTitle(world) && isLine(world)) {
                 var taskID = getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
-            } else if (getTitle() != null && isList()) {
+            } else if (hasTitle() && isLine()) {
                 var taskID = getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId();
                 getUserdata().addTaskID(player, "board", taskID);
             }

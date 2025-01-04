@@ -1,22 +1,24 @@
 package org.achymake.essentials;
 
-import net.milkbowl.vault.economy.Economy;
 import org.achymake.essentials.commands.*;
 import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
 import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 public final class Essentials extends JavaPlugin {
     private static Essentials instance;
@@ -31,7 +33,6 @@ public final class Essentials extends JavaPlugin {
     private Worth worth;
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
-    private EconomyHandler economyHandler;
     private EntityHandler entityHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
@@ -42,9 +43,11 @@ public final class Essentials extends JavaPlugin {
     private TablistHandler tablistHandler;
     private VanishHandler vanishHandler;
     private WorldHandler worldHandler;
+    private VaultEconomyProvider vaultEconomyProvider;
     private UpdateChecker updateChecker;
+    private PluginManager pluginManager;
     private BukkitScheduler bukkitScheduler;
-    private PluginManager manager;
+    private ServicesManager servicesManager;
     @Override
     public void onEnable() {
         instance = this;
@@ -59,7 +62,6 @@ public final class Essentials extends JavaPlugin {
         worth = new Worth();
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
-        economyHandler = new EconomyHandler();
         entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
@@ -70,14 +72,16 @@ public final class Essentials extends JavaPlugin {
         tablistHandler = new TablistHandler();
         vanishHandler = new VanishHandler();
         worldHandler = new WorldHandler();
+        vaultEconomyProvider = new VaultEconomyProvider();
         updateChecker = new UpdateChecker();
+        pluginManager = getServer().getPluginManager();
         bukkitScheduler = getServer().getScheduler();
-        manager = getServer().getPluginManager();
+        servicesManager = getServer().getServicesManager();
         commands();
         events();
         reload();
+        getVaultEconomyProvider().register();
         new PlaceholderProvider().register();
-        getServer().getServicesManager().register(Economy.class, new VaultEconomyProvider(), this, ServicePriority.Normal);
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
     }
@@ -86,10 +90,13 @@ public final class Essentials extends JavaPlugin {
         getVanishHandler().disable();
         getProjectileHandler().disable();
         getScheduleHandler().disable();
+        getVaultEconomyProvider().unregister();
         new PlaceholderProvider().unregister();
         if (!getOnlinePlayers().isEmpty()) {
             getOnlinePlayers().forEach(player -> {
                 getUserdata().setLocation(player, player.getLocation(), "quit");
+                getScoreboardHandler().disable(player);
+                getTablistHandler().disable(player);
             });
         }
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
@@ -211,6 +218,7 @@ public final class Essentials extends JavaPlugin {
         new PlayerBucketEmpty();
         new PlayerBucketEntity();
         new PlayerBucketFill();
+        new PlayerChangedWorld();
         new PlayerCommandPreprocess();
         new PlayerDeath();
         new PlayerGameModeChange();
@@ -297,14 +305,20 @@ public final class Essentials extends JavaPlugin {
     public List<OfflinePlayer> getOfflinePlayers() {
         return getUserdata().getOfflinePlayers();
     }
-    public PluginManager getManager() {
-        return manager;
+    public ServicesManager getServicesManager() {
+        return servicesManager;
     }
     public BukkitScheduler getBukkitScheduler() {
         return bukkitScheduler;
     }
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
+    }
+    public VaultEconomyProvider getVaultEconomyProvider() {
+        return vaultEconomyProvider;
     }
     public WorldHandler getWorldHandler() {
         return worldHandler;
@@ -335,9 +349,6 @@ public final class Essentials extends JavaPlugin {
     }
     public EntityHandler getEntityHandler() {
         return entityHandler;
-    }
-    public EconomyHandler getEconomyHandler() {
-        return economyHandler;
     }
     public DateHandler getDateHandler() {
         return dateHandler;
@@ -404,5 +415,8 @@ public final class Essentials extends JavaPlugin {
     }
     public OfflinePlayer getOfflinePlayer(String username) {
         return getServer().getOfflinePlayer(username);
+    }
+    public NamespacedKey getKey(String key) {
+        return new NamespacedKey(this, key);
     }
 }

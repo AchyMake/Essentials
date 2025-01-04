@@ -16,16 +16,16 @@ public class EntityInteract implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityInteract() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityInteract(EntityInteractEvent event) {
         if (event.getEntity() instanceof Player)return;
-        if (!getEntityHandler().disableEntityInteract(event.getEntityType(), event.getBlock().getType()))return;
+        if (!getEntityHandler().isEntityInteractDisabled(event.getEntityType(), event.getBlock().getType()))return;
         event.setCancelled(true);
     }
 }

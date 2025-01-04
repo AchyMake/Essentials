@@ -3,17 +3,15 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.RandomHandler;
+import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.PluginManager;
-
-import java.util.Random;
 
 public class PlayerDeath implements Listener {
     private Essentials getInstance() {
@@ -25,8 +23,8 @@ public class PlayerDeath implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private EconomyHandler getEconomy() {
-        return getInstance().getEconomyHandler();
+    private VaultEconomyProvider getEconomy() {
+        return getInstance().getVaultEconomyProvider();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -37,11 +35,11 @@ public class PlayerDeath implements Listener {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PlayerDeath() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
@@ -51,10 +49,10 @@ public class PlayerDeath implements Listener {
             event.getDrops().add(getMaterials().getPlayerHead(player, 1));
         }
         if (getConfig().getBoolean("deaths.drop-economy.enable")) {
-            var lost = new Random().nextDouble(getConfig().getDouble("deaths.drop-economy.min"), getConfig().getDouble("deaths.drop-economy.max"));
+            var lost = getRandomHandler().nextDouble(getConfig().getDouble("deaths.drop-economy.min"), getConfig().getDouble("deaths.drop-economy.max"));
             if (getEconomy().has(player, lost)) {
-                getEconomy().remove(player, lost);
-                player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
+                getEconomy().withdrawPlayer(player, lost);
+                player.sendMessage(getMessage().get("events.death", getEconomy().currencyNamePlural() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
             }
         }
         if (player.hasPermission("essentials.event.death.keep_inventory")) {
@@ -65,9 +63,6 @@ public class PlayerDeath implements Listener {
             event.setKeepLevel(true);
             event.setDroppedExp(0);
         }
-        var location = player.getLocation();
-        if (!location.getBlock().getType().equals(getMaterials().get("lava"))) {
-            getUserdata().setLocation(player, player.getLocation(), "death");
-        }
+        getUserdata().setLocation(player, player.getLocation(), "death");
     }
 }

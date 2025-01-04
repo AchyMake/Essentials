@@ -84,7 +84,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                 var value = Integer.parseInt(args[1]);
                 if (value > 0) {
                     if (isDates(args[2])) {
-                        var reason = getMessage().getBuilder(args, 3);
+                        var reason = getMessage().toString(args, 3);
                         if (target != null) {
                             if (target == player) {
                                 if (args[2].equalsIgnoreCase("d")) {
@@ -177,7 +177,7 @@ public class BanCommand implements CommandExecutor, TabCompleter {
                 var value = Integer.parseInt(args[1]);
                 if (value > 0) {
                     if (isDates(args[2])) {
-                        var reason = getMessage().getBuilder(args, 3);
+                        var reason = getMessage().toString(args, 3);
                         if (target != null) {
                             if (!getUserdata().isBanned(target)) {
                                 if (args[2].equalsIgnoreCase("d")) {

@@ -18,23 +18,24 @@ public class VehicleCreate implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public VehicleCreate() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleCreate(VehicleCreateEvent event) {
-        var type = event.getVehicle().getType();
-        if (!getEntityHandler().disableCreatureSpawn(type)) {
-            var chunkLimit = getEntityHandler().chunkLimit(type);
+        var vehicle = event.getVehicle();
+        var type = vehicle.getType();
+        if (!getEntityHandler().isCreatureSpawnDisabled(type)) {
+            var chunkLimit = getEntityHandler().getChunkLimit(type);
             if (chunkLimit > 0) {
-                var chunk = event.getVehicle().getLocation().getChunk();
+                var chunk = vehicle.getLocation().getChunk();
                 var listed = new ArrayList<Entity>();
                 for (var entities : chunk.getEntities()) {
                     if (entities.getType().equals(type)) {
-                        listed.add(event.getVehicle());
+                        listed.add(entities);
                     }
                 }
                 if (listed.size() >= chunkLimit) {

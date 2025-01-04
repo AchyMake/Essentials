@@ -21,12 +21,29 @@ public class Skulls {
     }
     private final File file = new File(getInstance().getDataFolder(), "skulls.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * get listed
+     * @return set string
+     * @since many moons ago
+     */
     public Set<String> getListed() {
         return config.getKeys(false);
     }
+    /**
+     * is skullName listed
+     * @return true if skullName exists else false
+     * @since many moons ago
+     */
     public boolean isListed(String skullName) {
         return getListed().contains(skullName);
     }
+    /**
+     * get player head with key
+     * @param skullName string
+     * @param amount integer
+     * @return item stack which is likely the custom player head
+     * @since many moons ago
+     */
     public ItemStack getCustomHead(String skullName, int amount) {
         var skullItem = getMaterials().getItemStack("player_head", amount);
         var skullMeta = (SkullMeta) skullItem.getItemMeta();
@@ -40,6 +57,10 @@ public class Skulls {
         }
         return skullItem;
     }
+    /**
+     * setup
+     * @since many moons ago
+     */
     private void setup() {
         config.set("Chest", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDliMjk4M2MwMWI4ZGE3ZGMxYzBmMTJkMDJjNGFiMjBjZDhlNjg3NWU4ZGY2OWVhZTJhODY3YmFlZTYyMzZkNCJ9fX0=");
         config.set("Barrel", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmE1MDIwY2VjYjAzODg0NzQ2ZWNlNzE2N2E2YWVlOWNiOGM3Y2U1ZDNkYzlkZWNiYzM2OTBiMjIyYzZlMjEyZSJ9fX0=");
@@ -54,6 +75,10 @@ public class Skulls {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reload skulls.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (getInstance().isBukkit())return;
         if (file.exists()) {

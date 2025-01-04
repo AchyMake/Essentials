@@ -3,7 +3,6 @@ package org.achymake.essentials.runnable;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.TablistHandler;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public record Tab(Player getPlayer) implements Runnable {
@@ -16,52 +15,61 @@ public record Tab(Player getPlayer) implements Runnable {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private FileConfiguration getConfig() {
-        return getTablistHandler().getConfig();
+    private String getWorldName() {
+        return getPlayer().getWorld().getName();
     }
-    private String getName() {
-        if (getConfig().isString("worlds." + getPlayer().getWorld().getName() + ".name")) {
-            return getMessage().addPlaceholder(getPlayer(), getConfig().getString("worlds." + getPlayer().getWorld().getName() + ".name"));
-        } else if (getConfig().isString("name")) {
-            return getMessage().addPlaceholder(getPlayer(), getConfig().getString("name"));
-        } else return getPlayer().getName();
+    private String getPlayerListHeader() {
+        return getPlayer().getPlayerListHeader();
+    }
+    private String getPlayerListName() {
+        return getPlayer().getPlayerListName();
+    }
+    private String getPlayerListFooter() {
+        return getPlayer().getPlayerListFooter();
     }
     private String getHeader() {
-        var list = getConfig().getStringList("worlds." + getPlayer().getWorld().getName() + ".header.lines");
-        if (list.isEmpty()) {
-            return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("header.lines")));
-        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("worlds." + getPlayer().getWorld().getName() + ".header.lines")));
+        if (!getTablistHandler().hasHeaderLines(getWorldName())) {
+            if (!getTablistHandler().hasHeaderLines()) {
+                return null;
+            } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getHeaderLines()));
+        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getHeaderLines(getWorldName())));
+    }
+    private String getName() {
+        if (!getTablistHandler().hasName(getWorldName())) {
+            if (!getTablistHandler().hasName()) {
+                return getPlayer().getName();
+            } else return getMessage().addPlaceholder(getPlayer(), getTablistHandler().getName());
+        } else return getMessage().addPlaceholder(getPlayer(), getTablistHandler().getName(getWorldName()));
     }
     private String getFooter() {
-        var list = getConfig().getStringList("worlds." + getPlayer().getWorld().getName() + ".footer.lines");
-        if (list.isEmpty()) {
-            return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("footer.lines")));
-        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getConfig().getStringList("worlds." + getPlayer().getWorld().getName() + ".footer.lines")));
-    }
-    private boolean isEnable() {
-        return getConfig().getBoolean("enable");
-    }
-    private void setHeader() {
-        if (!getHeader().equals(getPlayer().getPlayerListHeader())) {
-            getPlayer().setPlayerListHeader(getHeader());
-        }
-    }
-    private void setName() {
-        if (!getName().equals(getPlayer().getPlayerListName())) {
-            getPlayer().setPlayerListName(getName());
-        }
-    }
-    private void setFooter() {
-        if (!getFooter().equals(getPlayer().getPlayerListFooter())) {
-            getPlayer().setPlayerListFooter(getFooter());
-        }
+        if (!getTablistHandler().hasFooterLines(getWorldName())) {
+            if (!getTablistHandler().hasFooterLines()) {
+                return null;
+            } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines()));
+        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines(getWorldName())));
     }
     @Override
     public void run() {
-        if (isEnable()) {
-            setHeader();
-            setName();
-            setFooter();
+        if (getPlayerListHeader() != null) {
+            if (getHeader() != null) {
+                if (!getPlayerListHeader().equals(getHeader())) {
+                    getPlayer().setPlayerListHeader(getHeader());
+                }
+            }
+        } else if (getHeader() != null) {
+            getPlayer().setPlayerListHeader(getHeader());
+        }
+        if (!getPlayerListName().equals(getName())) {
+            getPlayer().setPlayerListName(getName());
+        }
+        if (getPlayerListFooter() != null) {
+            if (getFooter() != null) {
+                if (!getPlayerListFooter().equals(getFooter())) {
+                    getPlayer().setPlayerListFooter(getFooter());
+                }
+            }
+        } else if (getFooter() != null) {
+            getPlayer().setPlayerListFooter(getFooter());
         }
     }
     @Override

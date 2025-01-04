@@ -14,7 +14,13 @@ public class ProjectileHandler {
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
-    public void addRemovalTask(Projectile projectile, long timer) {
+    /**
+     * add removal task
+     * @param projectile projectile
+     * @param seconds integer
+     * @since many moons ago
+     */
+    public void addRemovalTask(Projectile projectile, int seconds) {
         int taskID = getScheduler().runLater(new Runnable() {
             @Override
             public void run() {
@@ -22,9 +28,14 @@ public class ProjectileHandler {
                     remove(projectile);
                 }
             }
-        }, timer * 20L).getTaskId();
+        }, seconds * 20L).getTaskId();
         getProjectiles().put(projectile, taskID);
     }
+    /**
+     * remove projectile
+     * @param projectile projectile
+     * @since many moons ago
+     */
     public void remove(Projectile projectile) {
         if (projectiles.containsKey(projectile)) {
             var taskID = projectiles.get(projectile);
@@ -35,6 +46,11 @@ public class ProjectileHandler {
             projectile.remove();
         } else projectile.remove();
     }
+    /**
+     * cancel removal task
+     * @param projectile projectile
+     * @since many moons ago
+     */
     public void cancel(Projectile projectile) {
         if (projectiles.containsKey(projectile)) {
             var taskID = projectiles.get(projectile);
@@ -44,6 +60,10 @@ public class ProjectileHandler {
             projectiles.remove(projectile);
         }
     }
+    /**
+     * disable essentials projectile handler
+     * @since many moons ago
+     */
     public void disable() {
         if (projectiles.isEmpty())return;
         projectiles.forEach((projectile, taskID) -> {
@@ -56,6 +76,11 @@ public class ProjectileHandler {
         });
         projectiles.clear();
     }
+    /**
+     * get projectiles entity and taskID
+     * @return map projectile, integer
+     * @since many moons ago
+     */
     public Map<Projectile, Integer> getProjectiles() {
         return projectiles;
     }

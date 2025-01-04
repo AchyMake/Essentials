@@ -6,12 +6,16 @@ import org.achymake.essentials.data.Userdata;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class WorldHandler {
     private Essentials getInstance() {
@@ -23,79 +27,163 @@ public class WorldHandler {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
+    }
+    private RandomHandler getRandomHandler() {
+        return getInstance().getRandomHandler();
+    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
     }
+    /**
+     * get world
+     * @param worldName string
+     * @return world if worldName exists else null
+     * @since many moons ago
+     */
     public World get(String worldName) {
         return getInstance().getServer().getWorld(worldName);
     }
-    public List<String> getListed() {
-        var listed = new ArrayList<String>();
-        getInstance().getServer().getWorlds().forEach(world -> listed.add(world.getName()));
-        return listed;
+    /**
+     * get listed
+     * @return list world
+     * @since many moons ago
+     */
+    public List<World> getListed() {
+        return new ArrayList<>(getInstance().getServer().getWorlds());
     }
-    public boolean setMorning(World world) {
-        if (world != null) {
-            world.setTime(0);
-            return true;
-        } else return false;
+    /**
+     * set morning
+     * @param world world
+     * @since many moons ago
+     */
+    public void setMorning(World world) {
+        world.setTime(0);
     }
-    public boolean setDay(World world) {
-        if (world != null) {
-            world.setTime(1000);
-            return true;
-        } else return false;
+    /**
+     * set day
+     * @param world world
+     * @since many moons ago
+     */
+    public void setDay(World world) {
+        world.setTime(1000);
     }
-    public boolean setNoon(World world) {
-        if (world != null) {
-            world.setTime(6000);
-            return true;
-        } else return false;
+    /**
+     * set noon
+     * @param world world
+     * @since many moons ago
+     */
+    public void setNoon(World world) {
+        world.setTime(6000);
     }
-    public boolean setNight(World world) {
-        if (world != null) {
-            world.setTime(13000);
-            return true;
-        } else return false;
+    /**
+     * set night
+     * @param world world
+     * @since many moons ago
+     */
+    public void setNight(World world) {
+        world.setTime(13000);
     }
-    public boolean setMidnight(World world) {
-        if (world != null) {
-            world.setTime(18000);
-            return true;
-        } else return false;
+    /**
+     * set midnight
+     * @param world world
+     * @since many moons ago
+     */
+    public void setMidnight(World world) {
+        world.setTime(18000);
     }
-    public boolean setTime(World world, long value) {
-        if (world != null) {
-            world.setTime(value);
-            return true;
-        } else return false;
+    /**
+     * set time
+     * @param world world
+     * @param value long
+     * @since many moons ago
+     */
+    public void setTime(World world, long value) {
+        world.setTime(value);
     }
-    public boolean addTime(World world, long value) {
-        if (world != null) {
-            world.setTime(world.getTime() + value);
-            return true;
-        } else return false;
+    /**
+     * add time
+     * @param world world
+     * @param value long
+     * @since many moons ago
+     */
+    public void addTime(World world, long value) {
+        world.setTime(world.getTime() + value);
     }
-    public boolean removeTime(World world, long value) {
-        if (world != null) {
-            world.setTime(world.getTime() - value);
-            return true;
-        } else return false;
+    /**
+     * remove time
+     * @param world world
+     * @param value long
+     * @since many moons ago
+     */
+    public void removeTime(World world, long value) {
+        world.setTime(world.getTime() - value);
     }
+    /**
+     * drop itemStack
+     * @param location location
+     * @param itemStack itemStack
+     * @since many moons ago
+     */
+    public Item dropItem(Location location, ItemStack itemStack) {
+        return location.getWorld().dropItem(location, itemStack);
+    }
+    /**
+     * update spawner
+     * @param blockPlaced block
+     * @param heldItem itemStack
+     * @since many moons ago
+     */
+    public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
+        var container = getMaterials().getData(heldItem.getItemMeta());
+        if (container.has(getInstance().getKey("entity_type"), PersistentDataType.STRING)) {
+            var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
+            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getInstance().getKey("entity_type"), PersistentDataType.STRING)));
+            creatureSpawner.update();
+        }
+    }
+    /**
+     * drop spawner
+     * @param block block
+     * @return item
+     * @since many moons ago
+     */
+    public Item dropSpawner(Block block) {
+        var creatureSpawner = (CreatureSpawner) block.getState();
+        var itemStack = getMaterials().getItemStack("spawner", 1);
+        if (creatureSpawner.getSpawnedType() != null) {
+            return dropItem(block.getLocation().add(0.5, 0.3, 0.5), getMaterials().getSpawner(creatureSpawner.getSpawnedType().toString(), 1));
+        } else return dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
+    }
+    /**
+     * gets the highest random block
+     * @param world world
+     * @param spread integer
+     * @return block
+     * @since many moons ago
+     */
     public Block highestRandomBlock(World world, int spread) {
-        var random = new Random();
-        return world.getHighestBlockAt(random.nextInt(0, spread), random.nextInt(0, spread));
+        return world.getHighestBlockAt(getRandomHandler().nextInt(0, spread), getRandomHandler().nextInt(0, spread));
     }
-    public void teleport(Player player, Location location, String name, int timer) {
+    /**
+     * teleport player
+     * @param player target
+     * @param location location
+     * @param name string
+     * @param seconds integer
+     * @since many moons ago
+     */
+    public void teleport(Player player, Location location, String name, int seconds) {
         if (!getUserdata().hasTaskID(player, "teleport")) {
             if (!location.getChunk().isLoaded()) {
                 location.getChunk().load();
             }
-            if (timer > 0) {
-                getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(timer)));
+            if (seconds > 0) {
+                getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(seconds)));
                 var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -103,7 +191,7 @@ public class WorldHandler {
                         player.teleport(location);
                         getUserdata().removeTask(player, "teleport");
                     }
-                }, timer * 20L).getTaskId();
+                }, seconds * 20L).getTaskId();
                 getUserdata().addTaskID(player, "teleport", taskID);
             } else {
                 getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
@@ -111,6 +199,11 @@ public class WorldHandler {
             }
         } else player.sendMessage(getMessage().get("events.teleport.has-task"));
     }
+    /**
+     * teleport player random using main config settings
+     * @param player target
+     * @since many moons ago
+     */
     public void randomTeleport(Player player) {
         getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
         var block = highestRandomBlock(get(getConfig().getString("commands.rtp.world")), getConfig().getInt("commands.rtp.spread"));
@@ -126,9 +219,13 @@ public class WorldHandler {
                     }
                     getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
                     player.teleport(block.getLocation().add(0.5,1,0.5));
+                    getUserdata().removeTask(player, "rtp");
                 }
             }
         }, 3).getTaskId();
         getUserdata().addTaskID(player, "rtp", taskID);
+    }
+    public boolean isAir(Block block) {
+        return block == null || block.getType().equals(getMaterials().get("air"));
     }
 }

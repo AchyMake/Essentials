@@ -16,16 +16,16 @@ public class EntityExplode implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public EntityExplode() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.getEntity() instanceof Player)return;
-        if (!getEntityHandler().disableEntityExplode(event.getEntityType()))return;
+        if (!getEntityHandler().isEntityExplodeDisabled(event.getEntityType()))return;
         event.setCancelled(true);
     }
 }

@@ -21,15 +21,162 @@ public class Message {
     }
     private final File file = new File(getInstance().getDataFolder(), "message.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    /**
+     * @param path string
+     * @return string else missing value
+     * @since many moons ago
+     */
     public String get(String path) {
         if (config.isString(path)) {
             return addColor(config.getString(path));
         } else return path + ": is missing a value";
     }
+    /**
+     * @param path string
+     * @param format replacements
+     * @return string else missing value
+     * @since many moons ago
+     */
     public String get(String path, String... format) {
         if (config.isString(path)) {
             return addColor(MessageFormat.format(config.getString(path), format));
         } else return path + ": is missing a value";
+    }
+    /**
+     * sends action bar message
+     * @param player target
+     * @param message string
+     * @since many moons ago
+     */
+    public void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
+    }
+    /**
+     * sends list of strings
+     * @param player target
+     * @param strings list string
+     * @since many moons ago
+     */
+    public void sendStringList(Player player, List<String> strings) {
+        strings.forEach(string -> player.sendMessage(addPlaceholder(player, string)));
+    }
+    /**
+     * sends message to all players
+     * @param message string
+     * @since many moons ago
+     */
+    public void sendAll(String message) {
+        getInstance().getOnlinePlayers().forEach(player -> player.sendMessage(addColor(message)));
+    }
+    /**
+     * sends message to all players if they have the permission
+     * @param message string
+     * @param permission string
+     * @since many moons ago
+     */
+    public void sendAll(String message, String permission) {
+        getInstance().getOnlinePlayers().forEach(player -> {
+            if (player.hasPermission(permission)) {
+                player.sendMessage(addColor(message));
+            }
+        });
+    }
+    /**
+     * adds placeholders to the message
+     * @param player target
+     * @param message string
+     * @since many moons ago
+     */
+    public String addPlaceholder(Player player, String message) {
+        return addColor(PlaceholderAPI.setPlaceholders(player, message));
+    }
+    /**
+     * adds colors to the message
+     * @param message string
+     * @since many moons ago
+     */
+    public String addColor(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
+    }
+    /**
+     * sends list string to console
+     * @param sender console sender
+     * @param strings list string
+     * @since many moons ago
+     */
+    public void sendStringList(ConsoleCommandSender sender, List<String> strings) {
+        strings.forEach(sender::sendMessage);
+    }
+    /**
+     * list string to string
+     * @param args strings
+     * @param value integer
+     * @since many moons ago
+     */
+    public String toString(String[] args, int value) {
+        var builder = getBuilder();
+        for(var i = value; i < args.length; i++) {
+            builder.append(args[i]);
+            builder.append(" ");
+        }
+        return builder.toString().strip();
+    }
+    /**
+     * list string to string
+     * @param lines strings
+     * @since many moons ago
+     */
+    public String toString(List<String> lines) {
+        var builder = getBuilder();
+        for (var line : lines) {
+            builder.append(line).append("&r");
+            builder.append("\n");
+        }
+        return builder.toString().strip();
+    }
+    /**
+     * example: iron_ingot returns Iron Ingot
+     * @param string string
+     * @return string
+     * @since many moons ago
+     */
+    public String toTitleCase(String string) {
+        if (string.contains(" ")) {
+            var builder = getBuilder();
+            for (var strings : string.split(" ")) {
+                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
+                builder.append(" ");
+            }
+            return builder.toString().strip();
+        } else if (string.contains("_")) {
+            var builder = getBuilder();
+            for (var strings : string.split("_")) {
+                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
+                builder.append(" ");
+            }
+            return builder.toString().strip();
+        } else return string.toUpperCase().charAt(0) + string.substring(1).toLowerCase();
+    }
+    /**
+     * gets new StringBuilder
+     * @return stringBuilder
+     * @since many moons ago
+     */
+    public StringBuilder getBuilder() {
+        return new StringBuilder();
+    }
+    /**
+     * censors string
+     * @return string
+     * @since many moons ago
+     */
+    public String censor(String message) {
+        for (var censored : getInstance().getConfig().getStringList("chat.censor")) {
+            if (message.toLowerCase().contains(censored.toLowerCase())) {
+                return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
+            }
+        }
+        return message;
     }
     private void setup() {
         config.options().copyDefaults(true);
@@ -184,8 +331,8 @@ public class Message {
         config.set("commands.information.title", "&6Information:");
         config.set("commands.information.name", "&6name&f: {0}");
         config.set("commands.information.account", "&6account&f:&a {0}");
-        config.set("commands.information.bank.owner", "&6bank-owner&f: {0}");
         config.set("commands.information.bank.name", "&6bank-name&f: {0}");
+        config.set("commands.information.bank.owner", "&6bank-owner&f: {0}");
         config.set("commands.information.bank.account", "&6bank-account&f:&a {0}");
         config.set("commands.information.bank.member.title", "&6bank-member:");
         config.set("commands.information.bank.member.listed", "- {0}");
@@ -378,78 +525,13 @@ public class Message {
             getInstance().sendWarning(e.getMessage());
         }
     }
+    /**
+     * reloads message.yml
+     * @since many moons ago
+     */
     public void reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
         } else setup();
-    }
-    public void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
-    }
-    public void sendStringList(Player player, List<String> strings) {
-        strings.forEach(string -> player.sendMessage(addPlaceholder(player, string)));
-    }
-    public void sendAll(String message) {
-        getInstance().getOnlinePlayers().forEach(player -> player.sendMessage(addColor(message)));
-    }
-    public void sendAll(String message, String permission) {
-        getInstance().getOnlinePlayers().forEach(player -> {
-            if (player.hasPermission(permission)) {
-                player.sendMessage(addColor(message));
-            }
-        });
-    }
-    public String addPlaceholder(Player player, String message) {
-        return addColor(PlaceholderAPI.setPlaceholders(player, message));
-    }
-    public String addColor(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message);
-    }
-    public void sendStringList(ConsoleCommandSender sender, List<String> strings) {
-        strings.forEach(sender::sendMessage);
-    }
-    public String getBuilder(String[] args, int value) {
-        var builder = getBuilder();
-        for(var i = value; i < args.length; i++) {
-            builder.append(args[i]);
-            builder.append(" ");
-        }
-        return builder.toString().strip();
-    }
-    public String toString(List<String> lines) {
-        var builder = getBuilder();
-        for (var line : lines) {
-            builder.append(line).append("&r");
-            builder.append("\n");
-        }
-        return builder.toString().strip();
-    }
-    public String toTitleCase(String string) {
-        if (string.contains(" ")) {
-            var builder = getBuilder();
-            for (var strings : string.split(" ")) {
-                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
-                builder.append(" ");
-            }
-            return builder.toString().strip();
-        } else if (string.contains("_")) {
-            var builder = getBuilder();
-            for (var strings : string.split("_")) {
-                builder.append(strings.toUpperCase().charAt(0)).append(strings.substring(1).toLowerCase());
-                builder.append(" ");
-            }
-            return builder.toString().strip();
-        } else return string.toUpperCase().charAt(0) + string.substring(1).toLowerCase();
-    }
-    public StringBuilder getBuilder() {
-        return new StringBuilder();
-    }
-    public String censor(String message) {
-        for (var censored : getInstance().getConfig().getStringList("chat.censor")) {
-            if (message.toLowerCase().contains(censored.toLowerCase())) {
-                return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
-            }
-        }
-        return message;
     }
 }

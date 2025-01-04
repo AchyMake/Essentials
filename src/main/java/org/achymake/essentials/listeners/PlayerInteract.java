@@ -2,6 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -22,11 +23,14 @@ public class PlayerInteract implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private PluginManager getManager() {
-        return getInstance().getManager();
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
+    }
+    private PluginManager getPluginManager() {
+        return getInstance().getPluginManager();
     }
     public PlayerInteract() {
-        getManager().registerEvents(this, getInstance());
+        getPluginManager().registerEvents(this, getInstance());
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -39,15 +43,15 @@ public class PlayerInteract implements Listener {
             event.setUseItemInHand(Event.Result.DENY);
             event.setUseInteractedBlock(Event.Result.DENY);
         } else if (event.getAction().equals(Action.PHYSICAL)) {
-            if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("farmland")) {
+            if (event.getClickedBlock().getType() == getMaterials().get("farmland")) {
                 if (!getConfig().getBoolean("crops.disable-tramping-farmland"))return;
                 event.setCancelled(true);
                 event.setUseInteractedBlock(Event.Result.DENY);
-            } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("turtle_egg")) {
+            } else if (event.getClickedBlock().getType() == getMaterials().get("turtle_egg")) {
                 if (!getConfig().getBoolean("eggs.disable-tramping-turtle-egg"))return;
                 event.setCancelled(true);
                 event.setUseInteractedBlock(Event.Result.DENY);
-            } else if (event.getClickedBlock().getType() == getInstance().getMaterialHandler().get("sniffer_egg")) {
+            } else if (event.getClickedBlock().getType() == getMaterials().get("sniffer_egg")) {
                 if (!getConfig().getBoolean("eggs.disable-tramping-sniffer-egg"))return;
                 event.setCancelled(true);
                 event.setUseInteractedBlock(Event.Result.DENY);
