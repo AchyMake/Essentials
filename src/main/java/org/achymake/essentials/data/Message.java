@@ -353,7 +353,7 @@ public class Message {
         config.set("commands.inventory.self", "&cYou can not open an inventory of your own");
         config.set("commands.inventory.exempt", "&cYou are not allowed to open&f {0}&6 inventory");
         config.set("commands.inventory.title", "{0} inventory");
-        config.set("commands.jail.toggle", "{0}&6 jailed if now {1}");
+        config.set("commands.jail.toggle", "{0}&6 jailed is now {1}");
         config.set("commands.jail.invalid", "&cJail has not been set");
         config.set("commands.jail.exempt", "&cYou are not allowed to jail&f {0}");
         config.set("commands.kit.title", "&6Kits:");
@@ -381,7 +381,7 @@ public class Message {
         config.set("commands.nickname.sender", "&6You changed&f {0}&6 nickname to&f {1}");
         config.set("commands.nickname.exempt", "&cYou are not allowed to change nickname for&f {0}");
         config.set("commands.pay.target", "&6You received&a {0}&6 from&f {1}");
-        config.set("commands.pay.sender", "&6You paid&a {0}&f {1}");
+        config.set("commands.pay.sender", "&6You paid&f {0}&a {1}");
         config.set("commands.pay.insufficient-funds", "&cYou do not have&a {0}&c to pay&f {1}");
         config.set("commands.pay.minimum-payment", "&cYou have to at least pay&a {0}");
         config.set("commands.pay.self", "&cYou can not pay your self");

@@ -36,7 +36,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
                 } else player.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
@@ -44,7 +44,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(itemName))) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(itemName)))));
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
@@ -56,10 +56,9 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                var itemName = args[0];
                 getWorth().getListed().forEach(listed -> {
                     var lowered = listed.toLowerCase();
-                    if (lowered.startsWith(itemName)) {
+                    if (lowered.startsWith(args[0])) {
                         commands.add(lowered);
                     }
                 });
