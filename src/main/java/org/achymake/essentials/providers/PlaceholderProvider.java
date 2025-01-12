@@ -70,11 +70,14 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "homes_left" -> {
                     return String.valueOf(instance.getUserdata().getMaxHomes(player) - instance.getUserdata().getHomes(player).size());
                 }
+                case "vanished" -> {
+                    return String.valueOf(instance.getVanishHandler().isVanish(player));
+                }
+                case "online_players" -> {
+                    return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
+                }
                 case "health" -> {
                     return String.valueOf((int) player.getHealth());
-                }
-                case "is_flying" -> {
-                    return String.valueOf(player.isFlying());
                 }
                 case "walk_speed" -> {
                     return String.valueOf(player.getWalkSpeed());
@@ -82,17 +85,50 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "fly_speed" -> {
                     return String.valueOf(player.getFlySpeed());
                 }
-                case "vanished" -> {
-                    return String.valueOf(instance.getVanishHandler().isVanish(player));
+                case "is_flying" -> {
+                    return String.valueOf(player.isFlying());
                 }
-                case "online_players" -> {
-                    return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
+                case "is_invulnerable" -> {
+                    return String.valueOf(player.isInvulnerable());
+                }
+                case "has_passenger" -> {
+                    return String.valueOf(!player.isEmpty());
+                }
+                case "is_inside_vehicle" -> {
+                    return String.valueOf(player.isInsideVehicle());
+                }
+                case "is_sleeping" -> {
+                    return String.valueOf(player.isSleeping());
+                }
+                case "is_whitelisted" -> {
+                    return String.valueOf(player.isWhitelisted());
+                }
+                case "is_collidable" -> {
+                    return String.valueOf(player.isCollidable());
+                }
+                case "is_sprinting" -> {
+                    return String.valueOf(player.isSprinting());
+                }
+                case "is_sneaking" -> {
+                    return String.valueOf(player.isSneaking());
+                }
+                case "experience_needed_for_next_level" -> {
+                    return String.valueOf(player.getExperiencePointsNeededForNextLevel());
+                }
+                case "locale" -> {
+                    return player.getLocale();
                 }
                 case "ping" -> {
                     return String.valueOf(player.getPing());
                 }
-                case "locale" -> {
-                    return player.getLocale();
+                case "world_name" -> {
+                    return player.getWorld().getName();
+                }
+                case "world_seed" -> {
+                    return String.valueOf(player.getWorld().getSeed());
+                }
+                case "world_environment" -> {
+                    return instance.getMessage().toTitleCase(player.getWorld().getEnvironment().toString());
                 }
             }
         }

@@ -40,7 +40,7 @@ public class ProjectileHit implements Listener {
         } else if (event.getHitBlock() != null) {
             if (event.getEntity().getShooter() instanceof Player player) {
                 if (player.getGameMode().equals(GameMode.CREATIVE)) {
-                    if (!getConfig().getBoolean("projectile.creative.instant-remove"))return;
+                    if (!getConfig().getBoolean("projectile.creative.instant-remove." + event.getEntityType().toString().toLowerCase()))return;
                     getProjectileHandler().remove(event.getEntity());
                 } else getProjectileHandler().cancel(event.getEntity());
             }

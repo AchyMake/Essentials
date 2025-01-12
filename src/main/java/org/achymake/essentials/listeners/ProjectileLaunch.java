@@ -34,9 +34,10 @@ public class ProjectileLaunch implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         var projectile = event.getEntity();
+        var projectileType = projectile.getType().toString().toLowerCase();
         if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
             if (projectile.getShooter() instanceof Player player) {
-                var timer = getConfig().getInt("projectile.removal-timer.player");
+                var timer = getConfig().getInt("projectile.removal-timer.player." + projectileType);
                 if (timer > 0) {
                     getProjectileHandler().addRemovalTask(event.getEntity(), timer);
                 }
@@ -48,7 +49,7 @@ public class ProjectileLaunch implements Listener {
                 }
             } else if (projectile.getShooter() instanceof Entity entity) {
                 var entityType = entity.getType().toString().toLowerCase();
-                var timer = getConfig().getInt("projectile.removal-timer." + entityType);
+                var timer = getConfig().getInt("projectile.removal-timer." + entityType + "."  + projectileType);
                 if (timer > 0) {
                     getProjectileHandler().addRemovalTask(event.getEntity(), timer);
                 }

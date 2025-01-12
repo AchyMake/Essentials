@@ -3,7 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

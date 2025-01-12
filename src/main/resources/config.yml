@@ -174,13 +174,39 @@ attack:
 projectile:
   creative:
     # instant remove on hit if creative
-    instant-remove: true
+    instant-remove:
+      arrow: true
+      egg: false
+      ender_pearl: false
+      snowball: false
+      spectral_arrow: true
+      potion: false
+      wind_charge: false
   removal-timer:
     # if 0 or under it is disabled
-    player: 30
-    snowman: 3
-    skeleton: 3
-    entity: 3
+    player:
+      arrow: 30
+      egg: 30
+      ender_pearl: 30
+      snowball: 30
+      spectral_arrow: 30
+      potion: 30
+      experience_bottle: 30
+      wind_charge: 30
+    snowman:
+      snowball: 15
+    skeleton:
+      arrow: 15
+    stray:
+      arrow: 15
+    breeze:
+      breeze_wind_charge: 15
+    ghast:
+      fireball: 15
+    ender_dragon:
+      dragon_fireball: 15
+    wither:
+      wither_skull: 15
   cooldown:
     # if 0 or under it is disabled
     egg: 10

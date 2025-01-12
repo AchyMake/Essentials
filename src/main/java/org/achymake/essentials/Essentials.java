@@ -45,8 +45,8 @@ public final class Essentials extends JavaPlugin {
     private WorldHandler worldHandler;
     private VaultEconomyProvider vaultEconomyProvider;
     private UpdateChecker updateChecker;
-    private PluginManager pluginManager;
     private BukkitScheduler bukkitScheduler;
+    private PluginManager pluginManager;
     private ServicesManager servicesManager;
     @Override
     public void onEnable() {
@@ -74,8 +74,8 @@ public final class Essentials extends JavaPlugin {
         worldHandler = new WorldHandler();
         vaultEconomyProvider = new VaultEconomyProvider();
         updateChecker = new UpdateChecker();
-        pluginManager = getServer().getPluginManager();
         bukkitScheduler = getServer().getScheduler();
+        pluginManager = getServer().getPluginManager();
         servicesManager = getServer().getServicesManager();
         commands();
         events();
@@ -94,9 +94,9 @@ public final class Essentials extends JavaPlugin {
         new PlaceholderProvider().unregister();
         if (!getOnlinePlayers().isEmpty()) {
             getOnlinePlayers().forEach(player -> {
-                getUserdata().setLocation(player, player.getLocation(), "quit");
                 getScoreboardHandler().disable(player);
                 getTablistHandler().disable(player);
+                getUserdata().setLocation(player, player.getLocation(), "quit");
             });
         }
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
@@ -207,6 +207,7 @@ public final class Essentials extends JavaPlugin {
         new EntityInteract();
         new EntityMount();
         new EntityPlace();
+        new EntityPotionEffect();
         new EntityShootBow();
         new EntityTarget();
         new EntityTargetLivingEntity();
@@ -308,11 +309,11 @@ public final class Essentials extends JavaPlugin {
     public ServicesManager getServicesManager() {
         return servicesManager;
     }
-    public BukkitScheduler getBukkitScheduler() {
-        return bukkitScheduler;
-    }
     public PluginManager getPluginManager() {
         return pluginManager;
+    }
+    public BukkitScheduler getBukkitScheduler() {
+        return bukkitScheduler;
     }
     public UpdateChecker getUpdateChecker() {
         return updateChecker;

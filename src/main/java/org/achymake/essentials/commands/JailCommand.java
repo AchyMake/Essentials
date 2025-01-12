@@ -35,39 +35,33 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                     var jail = getJail().getLocation();
                     if (jail != null) {
                         if (target == player) {
-                            getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                             if (getUserdata().isJailed(target)) {
                                 var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
-                                    if (!recent.getChunk().isLoaded()) {
-                                        recent.getChunk().load();
-                                    }
+                                    getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                                    recent.getChunk().load();
                                     target.teleport(recent);
+                                    player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                                 }
-                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                             } else {
-                                if (!jail.getChunk().isLoaded()) {
-                                    jail.getChunk().load();
-                                }
+                                jail.getChunk().load();
                                 target.teleport(jail);
+                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                                 player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else if (!target.hasPermission("essentials.command.jail.exempt")) {
-                            getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                             if (getUserdata().isJailed(target)) {
                                 var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
-                                    if (!recent.getChunk().isLoaded()) {
-                                        recent.getChunk().load();
-                                    }
+                                    getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                                    recent.getChunk().load();
                                     target.teleport(recent);
+                                    player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                                 }
-                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                             } else {
-                                if (!jail.getChunk().isLoaded()) {
-                                    jail.getChunk().load();
-                                }
+                                jail.getChunk().load();
                                 target.teleport(jail);
+                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                                 player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.jail.exempt", target.getName()));
@@ -81,21 +75,18 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     var jail = getJail().getLocation();
                     if (jail != null) {
-                        getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                         if (getUserdata().isJailed(target)) {
                             var recent = getUserdata().getLocation(target, "recent");
                             if (recent != null) {
-                                if (!recent.getChunk().isLoaded()) {
-                                    recent.getChunk().load();
-                                }
+                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
+                                recent.getChunk().load();
                                 target.teleport(recent);
+                                consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                             }
-                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
                         } else {
-                            if (!jail.getChunk().isLoaded()) {
-                                jail.getChunk().load();
-                            }
+                            jail.getChunk().load();
                             target.teleport(jail);
+                            getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
                             consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                         }
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.jail.invalid"));
