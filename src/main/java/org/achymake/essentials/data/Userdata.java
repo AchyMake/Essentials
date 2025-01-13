@@ -1,6 +1,7 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
 import org.achymake.essentials.providers.VaultEconomyProvider;
@@ -12,6 +13,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,17 +26,20 @@ public class Userdata {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private FileConfiguration getMain() {
+    private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
     }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
+    }
+    private VaultEconomyProvider getEconomy() {
+        return getInstance().getVaultEconomyProvider();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -474,13 +479,13 @@ public class Userdata {
      */
     public int getMaxHomes(Player player) {
         if (!player.isOp()) {
-            for (var value : getMain().getConfigurationSection("homes").getKeys(false)) {
+            for (var value : getConfig().getConfigurationSection("homes").getKeys(false)) {
                 if (player.hasPermission("essentials.command.sethome.multiple." + value)) {
-                    return getMain().getInt("homes." + value);
+                    return getConfig().getInt("homes." + value);
                 }
             }
-            return getMain().getInt("homes.default");
-        } else return getMain().getInt("homes.op");
+            return getConfig().getInt("homes.default");
+        } else return getConfig().getInt("homes.op");
     }
     /**
      * get home
@@ -732,13 +737,13 @@ public class Userdata {
      */
     public String getChat(Player player) {
         if (!player.isOp()) {
-            for (var value : getMain().getConfigurationSection("chat.format").getKeys(false)) {
+            for (var value : getConfig().getConfigurationSection("chat.format").getKeys(false)) {
                 if (player.hasPermission("essentials.event.chat." + value)) {
-                    return getMain().getString("chat.format." + value);
+                    return getConfig().getString("chat.format." + value);
                 }
             }
-            return getMain().getString("chat.format.default");
-        } else return getMain().getString("chat.format.op");
+            return getConfig().getString("chat.format.default");
+        } else return getConfig().getString("chat.format.op");
     }
     /**
      * get default fly speed
@@ -799,6 +804,12 @@ public class Userdata {
         } else if (mode.equalsIgnoreCase("survival")) {
             player.setGameMode(GameMode.SURVIVAL);
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
+            return true;
+        } else return false;
+    }
+    public boolean setHelmet(Player player, ItemStack itemStack) {
+        if (player.getInventory().getHelmet() == null) {
+            player.getInventory().setHelmet(getMaterials().getItemStack(itemStack, 1));
             return true;
         } else return false;
     }
