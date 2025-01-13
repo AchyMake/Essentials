@@ -96,6 +96,19 @@ public class MaterialHandler {
         } else return null;
     }
     /**
+     * get copy of itemStack
+     * @param itemStack itemStack
+     * @return itemStack copy of itemStack if itemStack is null returns null
+     * @since many moons ago
+     */
+    public ItemStack getItemStack(ItemStack itemStack, int amount) {
+        if (itemStack != null) {
+            var copy = new ItemStack(itemStack);
+            copy.setAmount(amount);
+            return copy;
+        } else return null;
+    }
+    /**
      * give itemStack
      * @param player target
      * @param itemStack itemStack

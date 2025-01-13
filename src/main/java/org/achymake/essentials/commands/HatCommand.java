@@ -35,14 +35,12 @@ public class HatCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    var type = heldItem.getType().toString();
-                    var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                     var helmet = player.getInventory().getHelmet();
-                    if (helmet == null) {
-                        player.getInventory().setHelmet(getMaterials().getItemStack(type, 1));
+                    if (getMaterials().isAir(helmet)) {
+                        player.getInventory().setHelmet(getMaterials().getItemStack(heldItem, 1));
                         heldItem.setAmount(heldItem.getAmount() - 1);
-                        player.sendMessage(getMessage().get("commands.hat.success", itemName));
-                    } else player.sendMessage(getMessage().get("commands.hat.occupied", itemName));
+                        player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
+                    } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {
@@ -50,21 +48,19 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         var heldItem = player.getInventory().getItemInMainHand();
-                        var type = heldItem.getType().toString();
                         if (!getMaterials().isAir(heldItem)) {
                             var helmet = target.getInventory().getHelmet();
-                            var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                             if (target == player) {
-                                if (helmet == null) {
-                                    player.sendMessage(getMessage().get("commands.hat.target.success", target.getName(), itemName));
-                                    target.getInventory().setHelmet(getMaterials().getItemStack(type, 1));
+                                if (getMaterials().isAir(helmet)) {
+                                    player.sendMessage(getMessage().get("commands.hat.target.success", target.getName(), getMessage().toTitleCase(heldItem.getType().toString())));
+                                    target.getInventory().setHelmet(getMaterials().getItemStack(heldItem, 1));
                                     heldItem.setAmount(heldItem.getAmount() - 1);
                                 } else player.sendMessage(getMessage().get("commands.hat.target.occupied", target.getName(), getMessage().toTitleCase(helmet.getType().toString())));
                             } else if (!target.hasPermission("essentials.command.hat.exempt")) {
-                                if (helmet == null) {
-                                    target.getInventory().setHelmet(getMaterials().getItemStack(type, 1));
+                                if (getMaterials().isAir(helmet)) {
+                                    target.getInventory().setHelmet(getMaterials().getItemStack(heldItem, 1));
                                     heldItem.setAmount(heldItem.getAmount() - 1);
-                                    player.sendMessage(getMessage().get("commands.hat.target.success", target.getName(), itemName));
+                                    player.sendMessage(getMessage().get("commands.hat.target.success", target.getName(), getMessage().toTitleCase(heldItem.getType().toString())));
                                 } else player.sendMessage(getMessage().get("commands.hat.target.occupied", target.getName(), getMessage().toTitleCase(helmet.getType().toString())));
                             } else player.sendMessage(getMessage().get("commands.hat.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("error.item.invalid"));
