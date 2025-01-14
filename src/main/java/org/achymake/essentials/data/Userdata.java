@@ -291,6 +291,9 @@ public class Userdata {
     public boolean isPVP(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.pvp");
     }
+    public void setPVP(OfflinePlayer offlinePlayer, boolean value) {
+        setBoolean(offlinePlayer, "settings.pvp", value);
+    }
     /**
      * is frozen
      * @param offlinePlayer or player
