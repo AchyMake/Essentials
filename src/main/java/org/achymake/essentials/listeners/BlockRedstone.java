@@ -24,6 +24,9 @@ public class BlockRedstone implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockRedstone(BlockRedstoneEvent event) {
         if (!getConfig().getBoolean("physics.disable-redstone"))return;
-        event.setNewCurrent(0);
+        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("powered_rail")))return;
+        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("detector_rail")))return;
+        if (event.getBlock().getType().equals(getInstance().getMaterialHandler().get("activator_rail")))return;
+        event.setNewCurrent(event.getOldCurrent());
     }
 }
