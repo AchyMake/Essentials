@@ -33,7 +33,7 @@ public class DelHomeCommand implements CommandExecutor, TabCompleter {
                 if (getUserdata().isHome(player, homeName)) {
                     getUserdata().setString(player, "homes." + homeName, null);
                     player.sendMessage(getMessage().get("commands.delhome.success", homeName));
-                } else player.sendMessage(getMessage().get("commands.delhome.invalid"));
+                } else player.sendMessage(getMessage().get("commands.delhome.invalid", homeName));
                 return true;
             }
         }

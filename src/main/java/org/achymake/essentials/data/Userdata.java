@@ -17,10 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Userdata {
     private Essentials getInstance() {
@@ -479,12 +476,16 @@ public class Userdata {
      */
     public int getMaxHomes(Player player) {
         if (!player.isOp()) {
+            var listed = new ArrayList<Integer>();
             for (var value : getConfig().getConfigurationSection("homes").getKeys(false)) {
                 if (player.hasPermission("essentials.command.sethome.multiple." + value)) {
-                    return getConfig().getInt("homes." + value);
+                    listed.add(getConfig().getInt("homes." + value));
                 }
             }
-            return getConfig().getInt("homes.default");
+            listed.sort(Integer::compareTo);
+            if (!listed.isEmpty()) {
+                return listed.getLast();
+            } else return getConfig().getInt("homes.default");
         } else return getConfig().getInt("homes.op");
     }
     /**
