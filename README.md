@@ -35,7 +35,16 @@ public final class YourPlugin extends JavaPlugin {
     public void onDisable() {
     }
     public boolean isVanished(OfflinePlayer offlinePlayer) {
-        return Essentials.getInstance().getUserdata().isVanished(offlinePlayer);
+        return getEssentials().getUserdata().isVanished(offlinePlayer);
+    }
+    public boolean isPVP(OfflinePlayer offlinePlayer) {
+        return getEssentials().getUserdata().isPVP(offlinePlayer);
+    }
+    public boolean setPVP(OfflinePlayer offlinePlayer, boolean value) {
+        return getEssentials().getUserdata().setBoolean(offlinePlayer, "settings.pvp", value);
+    }
+    public Essentials getEssentials() {
+        return Essentials.getInstance();
     }
     public static YourPlugin getInstance() {
         return instance;

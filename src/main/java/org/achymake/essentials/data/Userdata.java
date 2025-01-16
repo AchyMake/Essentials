@@ -274,7 +274,7 @@ public class Userdata {
         } else return "default";
     }
     /**
-     * is frozen or jailed
+     * gets boolean for 'settings.jailed' and 'settings.frozen'
      * @param offlinePlayer or player
      * @return true if player is frozen or jailed else false
      * @since many moons ago
@@ -283,7 +283,7 @@ public class Userdata {
         return isFrozen(offlinePlayer) || isJailed(offlinePlayer);
     }
     /**
-     * is pvp
+     * gets boolean for 'settings.pvp'
      * @param offlinePlayer or player
      * @return true if player has pvp enabled else false
      * @since many moons ago
@@ -291,11 +291,8 @@ public class Userdata {
     public boolean isPVP(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.pvp");
     }
-    public void setPVP(OfflinePlayer offlinePlayer, boolean value) {
-        setBoolean(offlinePlayer, "settings.pvp", value);
-    }
     /**
-     * is frozen
+     * gets boolean for 'settings.frozen'
      * @param offlinePlayer or player
      * @return true if player is frozen else false
      * @since many moons ago
@@ -304,7 +301,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.frozen");
     }
     /**
-     * is jailed
+     * gets boolean for 'settings.jailed'
      * @param offlinePlayer or player
      * @return true if player is jailed else false
      * @since many moons ago
@@ -313,7 +310,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.jailed");
     }
     /**
-     * is muted
+     * gets boolean for 'settings.muted'
      * @param offlinePlayer or player
      * @return true if player is muted else false
      * @since many moons ago
@@ -322,7 +319,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.muted");
     }
     /**
-     * is banned
+     * gets boolean for 'settings.banned'
      * @param offlinePlayer or player
      * @return true if player is banned else false
      * @since many moons ago
@@ -331,7 +328,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.banned");
     }
     /**
-     * get ban reason
+     * gets string for 'settings.ban-reason'
      * @param offlinePlayer or player
      * @return string
      * @since many moons ago
@@ -343,7 +340,7 @@ public class Userdata {
         } else return "None";
     }
     /**
-     * get ban expire date
+     * gets long for 'settings.ban-expire'
      * @param offlinePlayer or player
      * @return long
      * @since many moons ago
@@ -352,7 +349,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getLong("settings.ban-expire");
     }
     /**
-     * has board
+     * gets boolean for 'settings.board'
      * @param offlinePlayer or player
      * @return true if offlinePlayer has board enabled else false
      * @since many moons ago
@@ -361,7 +358,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.board");
     }
     /**
-     * is vanished
+     * gets boolean for 'settings.vanished'
      * @param offlinePlayer or player
      * @return true if target is vanished else false
      * @since many moons ago
@@ -370,7 +367,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
     /**
-     * get last whisper
+     * gets offlinePlayer for 'last-whisper'
      * @param offlinePlayer or player
      * @return offlinePlayer else null
      * @since many moons ago
@@ -382,7 +379,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get bank invite sender
+     * gets offlinePlayer for 'bank-invite.sent'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -394,7 +391,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get bank invite from
+     * gets offlinePlayer for 'bank-invite.from'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -406,7 +403,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get tpa sender
+     * gets offlinePlayer for 'tpa.sent'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -418,7 +415,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get tpa from
+     * gets offlinePlayer for 'tpa.from'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -430,7 +427,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get tpahere sender
+     * gets offlinePlayer for 'tpahere.sent'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -442,7 +439,7 @@ public class Userdata {
         } else return null;
     }
     /**
-     * get tpahere from
+     * gets offlinePlayer for 'tpahere.from'
      * @param offlinePlayer or player
      * @return offlinePlayer else null if none
      * @since many moons ago
@@ -454,7 +451,6 @@ public class Userdata {
         } else return null;
     }
     /**
-     * does homeName exist
      * @param offlinePlayer or player
      * @param homeName string
      * @return true if homeName exists else false
@@ -464,7 +460,7 @@ public class Userdata {
         return getHomes(offlinePlayer).contains(homeName);
     }
     /**
-     * get homes
+     * gets set string of homes
      * @param offlinePlayer or player
      * @return set string
      * @since many moons ago
