@@ -51,8 +51,8 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var members = getBank().getMembers(bank);
                             player.sendMessage(getMessage().get("commands.bank.info.title"));
                             player.sendMessage(getMessage().get("commands.bank.info.name", bank));
-                            player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(bank))));
+                            player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
                                 for (var member : members) {
@@ -178,8 +178,8 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var members = getBank().getMembers(args[1]);
                             player.sendMessage(getMessage().get("commands.bank.info.title"));
                             player.sendMessage(getMessage().get("commands.bank.info.name", args[1]));
-                            player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(args[1]))));
+                            player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
                                 for (var member : members) {
