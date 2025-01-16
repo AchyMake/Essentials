@@ -30,11 +30,29 @@ public class SignChange implements Listener {
         var player = event.getPlayer();
         if (!getUserdata().isDisabled(player)) {
             if (!player.hasPermission("essentials.event.sign.color"))return;
-            for (int i = 0; i < event.getLines().length; i++) {
-                var message = event.getLine(i);
-                if (message == null)return;
-                if (!message.contains("&"))return;
-                event.setLine(i, getMessage().addColor(message));
+            var line1 = event.getLine(0);
+            if (line1 != null) {
+                if (line1.contains("&")) {
+                    event.setLine(0, getMessage().addColor(line1));
+                }
+            }
+            var line2 = event.getLine(1);
+            if (line2 != null) {
+                if (line2.contains("&")) {
+                    event.setLine(1, getMessage().addColor(line2));
+                }
+            }
+            var line3 = event.getLine(2);
+            if (line3 != null) {
+                if (line3.contains("&")) {
+                    event.setLine(2, getMessage().addColor(line3));
+                }
+            }
+            var line4 = event.getLine(3);
+            if (line4 != null) {
+                if (line4.contains("&")) {
+                    event.setLine(3, getMessage().addColor(line4));
+                }
             }
         } else event.setCancelled(true);
     }
