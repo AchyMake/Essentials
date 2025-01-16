@@ -56,7 +56,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
                                 for (var member : members) {
-                                    player.sendMessage(getMessage().get("commands.bank.info.member.listed", member.getName()));
+                                    player.sendMessage(getMessage().get("commands.bank.info.member.listed", member.getName(), getUserdata().getBankRank(member)));
                                 }
                             }
                         } else player.sendMessage(getMessage().get("error.bank.empty"));
@@ -183,7 +183,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
                                 for (var member : members) {
-                                    player.sendMessage(getMessage().get("commands.bank.info.member.listed", member.getName()));
+                                    player.sendMessage(getMessage().get("commands.bank.info.member.listed", member.getName(), getUserdata().getBankRank(member)));
                                 }
                             }
                         } else player.sendMessage(getMessage().get("error.bank.invalid", args[1]));

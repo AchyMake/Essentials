@@ -29,6 +29,7 @@ public class EntityPotionEffect implements Listener {
                 var newEffect = event.getNewEffect();
                 if (newEffect == null)return;
                 if (newEffect.getType() != oldEffect.getType())return;
+                if (newEffect.getAmplifier() != oldEffect.getAmplifier())return;
                 event.setCancelled(true);
                 player.addPotionEffect(new PotionEffect(newEffect.getType(),oldEffect.getDuration() + newEffect.getDuration(),newEffect.getAmplifier()));
             }

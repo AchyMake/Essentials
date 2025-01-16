@@ -233,7 +233,7 @@ public class Message {
         config.set("commands.bank.info.name", "&6name&f: {0}");
         config.set("commands.bank.info.account", "&6account&f:&a {0}");
         config.set("commands.bank.info.member.title", "&6members:");
-        config.set("commands.bank.info.member.listed", "- {0}");
+        config.set("commands.bank.info.member.listed", "- {0} &7{1}");
         config.set("commands.bank.invite.expired", "&cBank request has been expired");
         config.set("commands.bank.invite.target.notify", "{0}&6 has sent you a bank invite");
         config.set("commands.bank.invite.target.decide", "&6You can type&a /bank accept&6 or&c /bank deny");

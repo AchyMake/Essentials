@@ -186,11 +186,9 @@ public class EntityDamageByEntity implements Listener {
         }
     }
     private void disableTeleport(Player player) {
-        if (getConfig().getBoolean("teleport.cancel-on-damage")) {
-            if (getUserdata().hasTaskID(player, "teleport")) {
-                getMessage().sendActionBar(player, getMessage().get("events.damage"));
-                getUserdata().removeTask(player, "teleport");
-            }
-        }
+        if (!getUserdata().hasTaskID(player, "teleport"))return;
+        if (!getConfig().getBoolean("teleport.cancel-on-damage"))return;
+        getMessage().sendActionBar(player, getMessage().get("events.damage"));
+        getUserdata().removeTask(player, "teleport");
     }
 }
