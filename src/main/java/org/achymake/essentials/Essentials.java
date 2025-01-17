@@ -89,16 +89,14 @@ public final class Essentials extends JavaPlugin {
     public void onDisable() {
         getVanishHandler().disable();
         getProjectileHandler().disable();
-        getScheduleHandler().disable();
         getVaultEconomyProvider().unregister();
         new PlaceholderProvider().unregister();
+        getTablistHandler().disable();
+        getScoreboardHandler().disable();
         if (!getOnlinePlayers().isEmpty()) {
-            getOnlinePlayers().forEach(player -> {
-                getScoreboardHandler().disable(player);
-                getTablistHandler().disable(player);
-                getUserdata().setLocation(player, player.getLocation(), "quit");
-            });
+            getOnlinePlayers().forEach(player -> getUserdata().setLocation(player, player.getLocation(), "quit"));
         }
+        getScheduleHandler().disable();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
     private void commands() {
@@ -187,7 +185,6 @@ public final class Essentials extends JavaPlugin {
         new BlockDamage();
         new BlockDispense();
         new BlockDispenseArmor();
-        new BlockDispenseLoot();
         new BlockFertilize();
         new BlockIgnite();
         new BlockPistonExtend();
@@ -249,14 +246,8 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reload() {
-        if (!getOnlinePlayers().isEmpty()) {
-            for (var player : getOnlinePlayers()) {
-                getTablistHandler().disable(player);
-                if (getUserdata().hasBoard(player)) {
-                    getScoreboardHandler().disable(player);
-                }
-            }
-        }
+        getTablistHandler().disable();
+        getScoreboardHandler().disable();
         var file = new File(getDataFolder(), "config.yml");
         if (file.exists()) {
             try {

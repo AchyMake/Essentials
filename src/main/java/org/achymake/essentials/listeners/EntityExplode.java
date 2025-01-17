@@ -26,6 +26,6 @@ public class EntityExplode implements Listener {
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.getEntity() instanceof Player)return;
         if (!getEntityHandler().isEntityExplodeDisabled(event.getEntityType()))return;
-        event.setCancelled(true);
+        event.blockList().removeAll(event.blockList());
     }
 }

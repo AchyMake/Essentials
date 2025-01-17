@@ -21,18 +21,19 @@ public class EntityPotionEffect implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityPotionEffect(EntityPotionEffectEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            if (event.getCause().equals(EntityPotionEffectEvent.Cause.POTION_DRINK) || event.getCause().equals(EntityPotionEffectEvent.Cause.POTION_SPLASH)) {
-                if (!player.hasPermission("essentials.event.potion.multiply"))return;
-                var oldEffect = event.getOldEffect();
-                if (oldEffect == null)return;
-                var newEffect = event.getNewEffect();
-                if (newEffect == null)return;
-                if (newEffect.getType() != oldEffect.getType())return;
-                if (newEffect.getAmplifier() != oldEffect.getAmplifier())return;
-                event.setCancelled(true);
-                player.addPotionEffect(new PotionEffect(newEffect.getType(),oldEffect.getDuration() + newEffect.getDuration(),newEffect.getAmplifier()));
-            }
-        }
+        if (!(event.getEntity() instanceof Player player))return;
+        if (!isPotion(event.getCause()))return;
+        if (!player.hasPermission("essentials.event.potion.multiply"))return;
+        var oldEffect = event.getOldEffect();
+        if (oldEffect == null)return;
+        var newEffect = event.getNewEffect();
+        if (newEffect == null)return;
+        if (newEffect.getType() != oldEffect.getType())return;
+        if (newEffect.getAmplifier() != oldEffect.getAmplifier())return;
+        event.setCancelled(true);
+        player.addPotionEffect(new PotionEffect(newEffect.getType(), oldEffect.getDuration() + newEffect.getDuration(), newEffect.getAmplifier()));
+    }
+    private boolean isPotion(EntityPotionEffectEvent.Cause cause) {
+        return cause.equals(EntityPotionEffectEvent.Cause.POTION_DRINK) || cause.equals(EntityPotionEffectEvent.Cause.POTION_SPLASH);
     }
 }

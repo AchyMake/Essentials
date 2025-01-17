@@ -2,6 +2,7 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,9 @@ public class BlockIgnite implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -33,9 +37,12 @@ public class BlockIgnite implements Listener {
             event.setCancelled(true);
         } else if (event.getIgnitingBlock() != null) {
             var block = event.getIgnitingBlock();
-            if (block.isLiquid() && getConfig().getBoolean("fire.disable-lava-fire-spread")) {
+            var material = block.getType();
+            if (material.equals(getMaterials().get("lava"))) {
+                if (!getConfig().getBoolean("fire.disable-lava-fire-spread")) return;
                 event.setCancelled(true);
-            } else if (block.getType().equals(getInstance().getMaterialHandler().get("fire")) && getConfig().getBoolean("fire.disable-fire-spread")) {
+            } else if (material.equals(getMaterials().get("fire"))) {
+                if (!getConfig().getBoolean("fire.disable-fire-spread"))return;
                 event.setCancelled(true);
             }
         }

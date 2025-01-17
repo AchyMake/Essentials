@@ -72,22 +72,24 @@ public class ScoreboardHandler {
         return config.getStringList("worlds." + worldName + ".lines").reversed();
     }
     public void apply(Player player) {
-        if (isEnable()) {
-            var world = player.getWorld().getName();
-            if (hasTitle(world) && isLine(world)) {
-                var taskID = getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId();
-                getUserdata().addTaskID(player, "board", taskID);
-            } else if (hasTitle() && isLine()) {
-                var taskID = getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId();
-                getUserdata().addTaskID(player, "board", taskID);
-            }
+        if (!isEnable())return;
+        var world = player.getWorld().getName();
+        if (hasTitle(world) && isLine(world)) {
+            var taskID = getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId();
+            getUserdata().addTaskID(player, "board", taskID);
+        } else if (hasTitle() && isLine()) {
+            var taskID = getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId();
+            getUserdata().addTaskID(player, "board", taskID);
         }
     }
     public void disable(Player player) {
-        if (getUserdata().hasTaskID(player, "board")) {
-            getUserdata().removeTask(player, "board");
-            player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
-        }
+        if (!getUserdata().hasTaskID(player, "board"))return;
+        getUserdata().removeTask(player, "board");
+        player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
+    }
+    public void disable() {
+        if (getInstance().getOnlinePlayers().isEmpty())return;
+        getInstance().getOnlinePlayers().forEach(this::disable);
     }
     public boolean hasBoard(Player player) {
         return getUserdata().hasTaskID(player, "board");

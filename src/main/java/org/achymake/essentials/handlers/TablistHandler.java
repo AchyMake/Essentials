@@ -152,6 +152,10 @@ public class TablistHandler {
             player.setPlayerListFooter(null);
         }
     }
+    public void disable() {
+        if (getInstance().getOnlinePlayers().isEmpty())return;
+        getInstance().getOnlinePlayers().forEach(this::disable);
+    }
     /**
      * setup
      * @since many moons ago

@@ -40,25 +40,25 @@ public class BlockPlace implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         var player = event.getPlayer();
+        var block = event.getBlockPlaced();
+        var material = block.getType();
         if (!getUserdata().isDisabled(player)) {
-            if (event.getBlockPlaced().getType().equals(getMaterials().get("spawner"))) {
-                getWorldHandler().updateSpawner(event.getBlockPlaced(), event.getItemInHand());
+            if (material.equals(getMaterials().get("spawner"))) {
+                getWorldHandler().updateSpawner(block, event.getItemInHand());
             }
             if (getConfig().getBoolean("notification.enable")) {
-                if (!getConfig().getStringList("notification.block-place").contains(event.getBlockPlaced().getType().toString()))return;
-                var worldName = event.getBlockPlaced().getWorld().getName();
-                var x = String.valueOf(event.getBlockPlaced().getX());
-                var y = String.valueOf(event.getBlockPlaced().getY());
-                var z = String.valueOf(event.getBlockPlaced().getZ());
-                getConfig().getStringList("notification.message").forEach(messages -> {
-                    var addPlayer = messages.replaceAll("%player%", player.getName());
-                    var addMaterial = addPlayer.replaceAll("%material%", getMessage().toTitleCase(event.getBlockPlaced().getType().toString()));
-                    var addWorldName = addMaterial.replaceAll("%world", worldName);
-                    var addX = addWorldName.replaceAll("%x%", x);
-                    var addY = addX.replaceAll("%y%", y);
-                    var result = addY.replaceAll("%z%", z);
-                    getMessage().sendAll(result, "essentials.event.block_place.notify");
-                });
+                if (!getConfig().getStringList("notification.block-place").contains(material.toString()))return;
+                var name = player.getName();
+                var worldName = block.getWorld().getName();
+                var x = String.valueOf(block.getX());
+                var y = String.valueOf(block.getY());
+                var z = String.valueOf(block.getZ());
+                getConfig().getStringList("notification.message").forEach(messages -> getMessage().sendAll(messages.replaceAll("%player%", name)
+                            .replaceAll("%material%", getMessage().toTitleCase(material.toString()))
+                            .replaceAll("%world", worldName)
+                            .replaceAll("%x%", x)
+                            .replaceAll("%y%", y)
+                            .replaceAll("%z%", z), "essentials.event.block_place.notify"));
             }
         } else event.setCancelled(true);
     }

@@ -13,6 +13,7 @@ import org.bukkit.inventory.EntityEquipment;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class EntityHandler {
     private Essentials getInstance() {
@@ -86,6 +87,20 @@ public class EntityHandler {
      */
     public int getChunkLimit(EntityType entityType) {
         return getConfig(entityType).getInt("settings.chunk-limit");
+    }
+    public boolean isOverChunkLimit(Entity entity) {
+        var type = entity.getType();
+        var chunkLimit = getChunkLimit(type);
+        if (chunkLimit > 0) {
+            var chunk = entity.getLocation().getChunk();
+            var listed = new ArrayList<Entity>();
+            for (var entities : chunk.getEntities()) {
+                if (entities.getType().equals(type)) {
+                    listed.add(entities);
+                }
+            }
+            return listed.size() >= chunkLimit;
+        } else return false;
     }
     /**
      * is creature spawn disabled
@@ -940,266 +955,6 @@ public class EntityHandler {
         }
     }
     /**
-     * set target
-     * @param target entity
-     * @param livingEntity livingEntity
-     * @since many moons ago
-     */
-    public void setTarget(Entity target, LivingEntity livingEntity) {
-        switch (target) {
-            case Allay entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Armadillo entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Axolotl entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Bat entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Bee entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Blaze entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Bogged entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Breeze entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Camel entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Cat entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case CaveSpider entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Chicken entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Cod entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case MushroomCow entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Cow entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Creaking entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Creeper entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Dolphin entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Donkey entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Drowned entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case ElderGuardian entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case EnderDragon entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Enderman entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Endermite entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Evoker entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Fox entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Frog entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Ghast entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Giant entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case GlowSquid entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Goat entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Guardian entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Hoglin entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Horse entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Husk entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Illusioner entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case IronGolem entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case TraderLlama entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Llama entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case MagmaCube entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Mule entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Ocelot entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Panda entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Parrot entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Phantom entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Pig entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Piglin entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case PiglinBrute entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Pillager entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case PolarBear entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case PufferFish entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Rabbit entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Ravager entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Salmon entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Sheep entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Shulker entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Silverfish entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Skeleton entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case SkeletonHorse entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Slime entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Sniffer entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Snowman entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Spider entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Squid entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Stray entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Strider entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Tadpole entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case TropicalFish entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Turtle entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Vex entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case ZombieVillager entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case PigZombie entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Villager entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Vindicator entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case WanderingTrader entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Warden entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Witch entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Wither entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case WitherSkeleton entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Wolf entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Zoglin entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case Zombie entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case ZombieHorse entity -> {
-                entity.setTarget(livingEntity);
-            }
-            case null, default -> {}
-        }
-    }
-    /**
      * get attribute
      * @param target entity
      * @param attribute attribute
@@ -1467,101 +1222,27 @@ public class EntityHandler {
     }
     /**
      * is tamed
-     * @param tamed entity
+     * @param entity entity
      * @return true if entity is tamed else false
      * @since many moons ago
      */
-    public boolean isTamed(Entity tamed) {
-        switch (tamed) {
-            case TraderLlama entity -> {
-                return entity.isTamed();
-            }
-            case Camel entity -> {
-                return entity.isTamed();
-            }
-            case Donkey entity -> {
-                return entity.isTamed();
-            }
-            case Llama entity -> {
-                return entity.isTamed();
-            }
-            case Mule entity -> {
-                return entity.isTamed();
-            }
-            case ChestedHorse entity -> {
-                return entity.isTamed();
-            }
-            case Horse entity -> {
-                return entity.isTamed();
-            }
-            case ZombieHorse entity -> {
-                return entity.isTamed();
-            }
-            case AbstractHorse entity -> {
-                return entity.isTamed();
-            }
-            case Cat entity -> {
-                return entity.isTamed();
-            }
-            case Parrot entity -> {
-                return entity.isTamed();
-            }
-            case Wolf entity -> {
-                return entity.isTamed();
-            }
-            case null, default -> {
-                return false;
-            }
-        }
+    public boolean isTamed(Entity entity) {
+        if (entity instanceof Tameable tameable) {
+            return tameable.isTamed();
+        } else return false;
     }
     /**
      * get owner
-     * @param tamed entity
+     * @param entity entity
      * @return animalTamer
      * @since many moons ago
      */
-    public AnimalTamer getOwner(Entity tamed) {
-        switch (tamed) {
-            case TraderLlama entity -> {
-                return entity.getOwner();
-            }
-            case Camel entity -> {
-                return entity.getOwner();
-            }
-            case Donkey entity -> {
-                return entity.getOwner();
-            }
-            case Llama entity -> {
-                return entity.getOwner();
-            }
-            case Mule entity -> {
-                return entity.getOwner();
-            }
-            case ChestedHorse entity -> {
-                return entity.getOwner();
-            }
-            case Horse entity -> {
-                return entity.getOwner();
-            }
-            case ZombieHorse entity -> {
-                return entity.getOwner();
-            }
-            case AbstractHorse entity -> {
-                return entity.getOwner();
-            }
-            case Cat entity -> {
-                return entity.getOwner();
-            }
-            case Parrot entity -> {
-                return entity.getOwner();
-            }
-            case Wolf entity -> {
-                return entity.getOwner();
-            }
-            case null, default -> {
-                return null;
-            }
-        }
+    public AnimalTamer getOwner(Entity entity) {
+        if (entity instanceof Tameable tameable) {
+            if (tameable.getOwner() != null) {
+                return getInstance().getOfflinePlayer(tameable.getOwner().getUniqueId());
+            } else return null;
+        } else return null;
     }
     /**
      * reload entity folder

@@ -36,11 +36,11 @@ public class EntityTarget implements Listener {
             if (target instanceof Player player) {
                 if (!getUserdata().isVanished(player))return;
                 event.setCancelled(true);
-                getEntityHandler().setTarget(entity, null);
+                event.setTarget(null);
             }
         } else {
             event.setCancelled(true);
-            getEntityHandler().setTarget(entity, null);
+            event.setTarget(null);
         }
     }
 }

@@ -25,10 +25,8 @@ public class EntityShootBow implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityShootBow(EntityShootBowEvent event) {
         if (!getEntityHandler().isCreatureSpawnDisabled(event.getProjectile().getType()))return;
-        if (event.getEntity() instanceof Player player) {
-            var consumable = event.getConsumable();
-            if (consumable == null)return;
-            player.getInventory().addItem(consumable);
-        }
+        if (!(event.getEntity() instanceof Player player))return;
+        if (event.getConsumable() == null)return;
+        player.getInventory().addItem(event.getConsumable());
     }
 }

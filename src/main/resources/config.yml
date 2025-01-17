@@ -156,6 +156,8 @@ fire:
   disable-lava-fire-spread: true
 physics:
   disable-redstone: false
+  disable-sculk-sensor: false
+  disable-vault: false
 attack:
   cooldown:
     enable: true
