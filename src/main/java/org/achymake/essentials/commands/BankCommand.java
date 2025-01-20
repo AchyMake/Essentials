@@ -4,8 +4,8 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Bank;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -22,8 +22,8 @@ public class BankCommand implements CommandExecutor, TabCompleter {
     private Bank getBank() {
         return getInstance().getBank();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
@@ -39,7 +39,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getUserdata().hasBank(player)) {
-                    player.sendMessage(getMessage().get("commands.bank.self", getUserdata().getBank(player), getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                    player.sendMessage(getMessage().get("commands.bank.self", getUserdata().getBank(player), getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
                 } else player.sendMessage(getMessage().get("error.bank.empty"));
                 return true;
             } else if (args.length == 1) {
@@ -51,7 +51,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var members = getBank().getMembers(bank);
                             player.sendMessage(getMessage().get("commands.bank.info.title"));
                             player.sendMessage(getMessage().get("commands.bank.info.name", bank));
-                            player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(bank))));
+                            player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currency() + getEconomy().format(getBank().get(bank))));
                             player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
@@ -70,7 +70,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             if (!getBank().has(bank, 0.1)) {
                                 getBank().delete(bank);
                                 player.sendMessage(getMessage().get("commands.bank.delete.success"));
-                            } else player.sendMessage(getMessage().get("commands.bank.delete.sufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(bank))));
+                            } else player.sendMessage(getMessage().get("commands.bank.delete.sufficient-funds", getEconomy().currency() + getEconomy().format(getBank().get(bank))));
                             return true;
                         }
                     }
@@ -147,7 +147,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             player.sendMessage(getMessage().get("commands.bank.top.title"));
                             var list = new ArrayList<>(top);
                             for (int i = 0; i < list.size(); i++) {
-                                player.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currencyNamePlural() + getEconomy().format(list.get(i).getValue())));
+                                player.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
                             }
                         }
                         return true;
@@ -178,7 +178,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var members = getBank().getMembers(args[1]);
                             player.sendMessage(getMessage().get("commands.bank.info.title"));
                             player.sendMessage(getMessage().get("commands.bank.info.name", args[1]));
-                            player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(args[1]))));
+                            player.sendMessage(getMessage().get("commands.bank.info.account", getEconomy().currency() + getEconomy().format(getBank().get(args[1]))));
                             player.sendMessage(getMessage().get("commands.bank.info.owner", owner.getName()));
                             if (!members.isEmpty()) {
                                 player.sendMessage(getMessage().get("commands.bank.info.member.title"));
@@ -276,11 +276,11 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                                 if (amount >= getEconomy().getMinimumBankWithdraw()) {
                                     if (getBank().has(getUserdata().getBank(player), amount)) {
                                         getBank().remove(getUserdata().getBank(player), amount);
-                                        getEconomy().depositPlayer(player, amount);
-                                        player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                                        player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
-                                    } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                                } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
+                                        getEconomy().add(player, amount);
+                                        player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
+                                        player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                    } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                                } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                                 return true;
                             }
                         }
@@ -291,12 +291,12 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var amount = Double.parseDouble(args[1]);
                             if (amount >= getEconomy().getMinimumBankDeposit()) {
                                 if (getEconomy().has(player, amount)) {
-                                    getEconomy().withdrawPlayer(player, amount);
+                                    getEconomy().remove(player, amount);
                                     getBank().add(getUserdata().getBank(player), amount);
-                                    player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                                    player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
-                                } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                            } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
+                                    player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
+                                    player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                             return true;
                         }
                     }
@@ -345,7 +345,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     consoleCommandSender.sendMessage(getMessage().get("commands.bank.top.title"));
                     var list = new ArrayList<>(getEconomy().getTopBanks());
                     for (int i = 0; i < list.size(); i++) {
-                        consoleCommandSender.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currencyNamePlural() + getEconomy().format(list.get(i).getValue())));
+                        consoleCommandSender.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
                     }
                     return true;
                 }

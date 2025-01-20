@@ -3,7 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.providers.VaultEconomyProvider;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,8 +20,8 @@ public class PayCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -39,12 +39,12 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                         var amount = Double.parseDouble(args[1]);
                         if (amount >= getEconomy().getMinimumPayment()) {
                             if (getEconomy().has(player, amount)) {
-                                getEconomy().depositPlayer(target, amount);
-                                getEconomy().withdrawPlayer(player, amount);
-                                target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currencyNamePlural() + getEconomy().format(amount), player.getName()));
-                                player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount), target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumPayment())));
+                                getEconomy().add(target, amount);
+                                getEconomy().remove(player, amount);
+                                target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currency() + getEconomy().format(amount), player.getName()));
+                                player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), target.getName()));
+                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("commands.pay.self"));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
@@ -52,11 +52,11 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                         var amount = Double.parseDouble(args[1]);
                         if (amount >= getEconomy().getMinimumPayment()) {
                             if (getEconomy().has(player, amount)) {
-                                getEconomy().depositPlayer(offlinePlayer, amount);
-                                getEconomy().withdrawPlayer(player, amount);
-                                player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount), offlinePlayer.getName()));
-                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumPayment())));
+                                getEconomy().add(offlinePlayer, amount);
+                                getEconomy().remove(player, amount);
+                                player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;

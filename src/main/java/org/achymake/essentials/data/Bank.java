@@ -1,9 +1,9 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.InventoryHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,8 +26,8 @@ public class Bank {
     private InventoryHandler getInventoryHandler() {
         return getInstance().getInventoryHandler();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();

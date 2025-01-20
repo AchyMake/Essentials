@@ -3,8 +3,8 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Worth;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,8 +21,8 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
     private Worth getWorth() {
         return getInstance().getWorth();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -43,7 +43,7 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
                     var value = Double.parseDouble(args[0]);
                     getWorth().setWorth(heldItem.getType(), value);
                     if (getWorth().isListed(heldItem.getType())) {
-                        player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(heldItem.getType()))));
+                        player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType()))));
                     } else player.sendMessage(getMessage().get("commands.setworth.disable", itemName));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;

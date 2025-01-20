@@ -46,7 +46,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     return instance.getUserdata().getDisplayName(player);
                 }
                 case "account" -> {
-                    return instance.getVaultEconomyProvider().currencyNamePlural() + instance.getVaultEconomyProvider().format(instance.getUserdata().getAccount(player));
+                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getUserdata().getAccount(player));
                 }
                 case "bank_name" -> {
                     if (instance.getUserdata().hasBank(player)) {
@@ -55,7 +55,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 }
                 case "bank_account" -> {
                     if (instance.getUserdata().hasBank(player)) {
-                        return instance.getVaultEconomyProvider().currencyNamePlural() + instance.getVaultEconomyProvider().format(instance.getBank().get(instance.getUserdata().getBank(player)));
+                        return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getBank().get(instance.getUserdata().getBank(player)));
                     } else return "0";
                 }
                 case "pvp" -> {

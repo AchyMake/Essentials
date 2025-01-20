@@ -4,7 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Bank;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.providers.VaultEconomyProvider;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,8 +24,8 @@ public class InventoryClick implements Listener {
     private Bank getBank() {
         return getInstance().getBank();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -55,24 +55,24 @@ public class InventoryClick implements Listener {
                     if (amount >= getEconomy().getMinimumBankWithdraw()) {
                         if (getBank().has(getUserdata().getBank(player), amount)) {
                             getBank().remove(getUserdata().getBank(player), amount);
-                            getEconomy().depositPlayer(player, amount);
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                            getEconomy().add(player, amount);
+                            player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
+                            player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
                             getBank().closeBank(player);
                             event.getInventory().close();
-                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                    } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
+                        } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                    } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                 } else if (title.contains("deposit")) {
                     if (amount >= getEconomy().getMinimumBankDeposit()) {
                         if (getEconomy().has(player, amount)) {
-                            getEconomy().withdrawPlayer(player, amount);
+                            getEconomy().remove(player, amount);
                             getBank().add(getUserdata().getBank(player), amount);
-                            player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currencyNamePlural() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                            player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
+                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
                             getBank().closeBank(player);
                             event.getInventory().close();
-                        } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(amount)));
-                    } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currencyNamePlural() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
+                        } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
+                    } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                 }
             } else player.sendMessage(getMessage().addColor("&cYou have to click the result item"));
         } else event.setCancelled(true);

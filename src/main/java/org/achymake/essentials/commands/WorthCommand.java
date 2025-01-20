@@ -3,8 +3,8 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Worth;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -18,8 +18,8 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Worth getWorth() {
         return getInstance().getWorth();
@@ -36,7 +36,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
                 } else player.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
@@ -44,7 +44,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
                 if (getWorth().isListed(getMaterials().get(itemName))) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currencyNamePlural() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }

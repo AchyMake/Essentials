@@ -5,6 +5,7 @@ import org.achymake.essentials.data.Kits;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.CooldownHandler;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.*;
@@ -23,8 +24,8 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     private CooldownHandler getCooldown() {
         return getInstance().getCooldownHandler();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Kits getKits() {
         return getInstance().getKits();
@@ -60,10 +61,10 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                             if (getKits().hasPrice(kitName)) {
                                 if (getEconomy().has(player, getKits().getPrice(kitName))) {
                                     getMaterials().giveItemStacks(player, getKits().get(kitName));
-                                    getEconomy().withdrawPlayer(player, getKits().getPrice(kitName));
+                                    getEconomy().remove(player, getKits().getPrice(kitName));
                                     getCooldown().add(player, kitName, timer);
                                     player.sendMessage(getMessage().get("commands.kit.received", kitName));
-                                } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currencyNamePlural() + getEconomy().format(getKits().getPrice(kitName)), kitName));
+                                } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                             } else {
                                 getMaterials().giveItemStacks(player, getKits().get(kitName));
                                 getCooldown().add(player, kitName, timer);

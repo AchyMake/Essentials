@@ -1,10 +1,10 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -35,8 +35,8 @@ public class Userdata {
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -83,14 +83,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setString(OfflinePlayer offlinePlayer, String path, String value) {
+    public boolean setString(OfflinePlayer offlinePlayer, String path, String value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -102,14 +104,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
+    public boolean setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -121,14 +125,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setDouble(OfflinePlayer offlinePlayer, String path, double value) {
+    public boolean setDouble(OfflinePlayer offlinePlayer, String path, double value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -140,14 +146,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setInt(OfflinePlayer offlinePlayer, String path, int value) {
+    public boolean setInt(OfflinePlayer offlinePlayer, String path, int value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -159,14 +167,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setFloat(OfflinePlayer offlinePlayer, String path, float value) {
+    public boolean setFloat(OfflinePlayer offlinePlayer, String path, float value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -178,14 +188,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setLong(OfflinePlayer offlinePlayer, String path, long value) {
+    public boolean setLong(OfflinePlayer offlinePlayer, String path, long value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -197,14 +209,16 @@ public class Userdata {
      * @see File
      * @see FileConfiguration
      */
-    public void setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
+    public boolean setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -665,72 +679,6 @@ public class Userdata {
         getConfig(offlinePlayer).getConfigurationSection("tasks").getKeys(false).forEach(s -> removeTask(offlinePlayer, s));
     }
     /**
-     * sets file up for target
-     * @param offlinePlayer or player
-     * @since many moons ago
-     */
-    private void setup(OfflinePlayer offlinePlayer) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set("name", offlinePlayer.getName());
-        config.set("display-name", offlinePlayer.getName());
-        config.set("account", getEconomy().getStartingBalance());
-        config.set("bank", "");
-        config.set("bank-rank", "default");
-        config.set("settings.pvp", !isPVP(offlinePlayer));
-        config.set("settings.muted", isMuted(offlinePlayer));
-        config.set("settings.frozen", isFrozen(offlinePlayer));
-        config.set("settings.jailed", isJailed(offlinePlayer));
-        config.set("settings.banned", isBanned(offlinePlayer));
-        config.set("settings.ban-expire", 0);
-        config.set("settings.board", !hasBoard(offlinePlayer));
-        config.set("settings.vanished", isVanished(offlinePlayer));
-        config.createSection("tpa");
-        config.createSection("tpahere");
-        config.createSection("homes");
-        config.createSection("locations");
-        config.createSection("tasks");
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-        }
-    }
-    /**
-     * reloads target file else setup if file does not exist
-     * @param offlinePlayer or player
-     * @since many moons ago
-     */
-    public void reload(OfflinePlayer offlinePlayer) {
-        if (exists(offlinePlayer)) {
-            var file = getFile(offlinePlayer);
-            var config = YamlConfiguration.loadConfiguration(file);
-            try {
-                config.load(file);
-            } catch (IOException | InvalidConfigurationException e) {
-                getInstance().sendWarning(e.getMessage());
-            }
-            if (!offlinePlayer.getName().equals(config.getString("name"))) {
-                config.set("name", offlinePlayer.getName());
-                try {
-                    config.save(file);
-                } catch (IOException e) {
-                    getInstance().sendWarning(e.getMessage());
-                }
-            }
-            if (isBanned(offlinePlayer)) {
-                config.set("settings.banned", false);
-                config.set("settings.ban-expire", 0);
-                config.set("settings.ban-reason", null);
-                try {
-                    config.save(file);
-                } catch (IOException e) {
-                    getInstance().sendWarning(e.getMessage());
-                }
-            }
-        } else setup(offlinePlayer);
-    }
-    /**
      * gets main config chat format
      * @param player target
      * @since many moons ago
@@ -907,6 +855,58 @@ public class Userdata {
      * reload userdata folder
      * @since many moons ago
      */
+    /**
+     * sets file up for target
+     * @param offlinePlayer or player
+     * @since many moons ago
+     */
+    private boolean setup(OfflinePlayer offlinePlayer) {
+        var file = getFile(offlinePlayer);
+        var config = YamlConfiguration.loadConfiguration(file);
+        config.set("name", offlinePlayer.getName());
+        config.set("display-name", offlinePlayer.getName());
+        config.set("account", getEconomy().getStartingBalance());
+        config.set("bank", "");
+        config.set("bank-rank", "default");
+        config.set("settings.pvp", !isPVP(offlinePlayer));
+        config.set("settings.muted", isMuted(offlinePlayer));
+        config.set("settings.frozen", isFrozen(offlinePlayer));
+        config.set("settings.jailed", isJailed(offlinePlayer));
+        config.set("settings.banned", isBanned(offlinePlayer));
+        config.set("settings.ban-expire", 0);
+        config.set("settings.board", !hasBoard(offlinePlayer));
+        config.set("settings.vanished", isVanished(offlinePlayer));
+        config.createSection("tpa");
+        config.createSection("tpahere");
+        config.createSection("homes");
+        config.createSection("locations");
+        config.createSection("tasks");
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * reloads target file else setup if file does not exist
+     * @param offlinePlayer or player
+     * @since many moons ago
+     */
+    public boolean reload(OfflinePlayer offlinePlayer) {
+        if (exists(offlinePlayer)) {
+            var file = getFile(offlinePlayer);
+            var config = YamlConfiguration.loadConfiguration(file);
+            try {
+                config.load(file);
+                return true;
+            } catch (IOException | InvalidConfigurationException e) {
+                getInstance().sendWarning(e.getMessage());
+                return false;
+            }
+        } else return setup(offlinePlayer);
+    }
     public void reload() {
         var folder = new File(getInstance().getDataFolder(), "userdata");
         if (folder.exists() && folder.isDirectory()) {
@@ -952,5 +952,10 @@ public class Userdata {
             }
         }
         return listed;
+    }
+    public void disable() {
+        getInstance().getOnlinePlayers().forEach(player -> {
+            setLocation(player, player.getLocation(), "quit");
+        });
     }
 }

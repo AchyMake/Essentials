@@ -33,6 +33,7 @@ public final class Essentials extends JavaPlugin {
     private Worth worth;
     private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
+    private EconomyHandler economyHandler;
     private EntityHandler entityHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
@@ -43,7 +44,6 @@ public final class Essentials extends JavaPlugin {
     private TablistHandler tablistHandler;
     private VanishHandler vanishHandler;
     private WorldHandler worldHandler;
-    private VaultEconomyProvider vaultEconomyProvider;
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
     private PluginManager pluginManager;
@@ -62,6 +62,7 @@ public final class Essentials extends JavaPlugin {
         worth = new Worth();
         cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
+        economyHandler = new EconomyHandler();
         entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
@@ -72,7 +73,6 @@ public final class Essentials extends JavaPlugin {
         tablistHandler = new TablistHandler();
         vanishHandler = new VanishHandler();
         worldHandler = new WorldHandler();
-        vaultEconomyProvider = new VaultEconomyProvider();
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
         pluginManager = getServer().getPluginManager();
@@ -80,22 +80,22 @@ public final class Essentials extends JavaPlugin {
         commands();
         events();
         reload();
-        getVaultEconomyProvider().register();
+        getEconomyHandler().register();
         new PlaceholderProvider().register();
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
     }
     @Override
     public void onDisable() {
-        getVanishHandler().disable();
-        getProjectileHandler().disable();
-        getVaultEconomyProvider().unregister();
-        new PlaceholderProvider().unregister();
         getTablistHandler().disable();
         getScoreboardHandler().disable();
+        getVanishHandler().disable();
         if (!getOnlinePlayers().isEmpty()) {
             getOnlinePlayers().forEach(player -> getUserdata().setLocation(player, player.getLocation(), "quit"));
         }
+        getUserdata().disable();
+        getProjectileHandler().disable();
+        new PlaceholderProvider().unregister();
         getScheduleHandler().disable();
         sendInfo("Disabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
     }
@@ -199,6 +199,7 @@ public final class Essentials extends JavaPlugin {
         new EntityBlockForm();
         new EntityChangeBlock();
         new EntityDamage();
+        new EntityDamageByBlock();
         new EntityDamageByEntity();
         new EntityExplode();
         new EntityInteract();
@@ -309,9 +310,6 @@ public final class Essentials extends JavaPlugin {
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
     }
-    public VaultEconomyProvider getVaultEconomyProvider() {
-        return vaultEconomyProvider;
-    }
     public WorldHandler getWorldHandler() {
         return worldHandler;
     }
@@ -341,6 +339,9 @@ public final class Essentials extends JavaPlugin {
     }
     public EntityHandler getEntityHandler() {
         return entityHandler;
+    }
+    public EconomyHandler getEconomyHandler() {
+        return economyHandler;
     }
     public DateHandler getDateHandler() {
         return dateHandler;

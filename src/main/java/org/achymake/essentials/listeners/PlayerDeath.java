@@ -3,9 +3,9 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.RandomHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,8 +23,8 @@ public class PlayerDeath implements Listener {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private VaultEconomyProvider getEconomy() {
-        return getInstance().getVaultEconomyProvider();
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -51,8 +51,8 @@ public class PlayerDeath implements Listener {
         if (getConfig().getBoolean("deaths.drop-economy.enable")) {
             var lost = getRandomHandler().nextDouble(getConfig().getDouble("deaths.drop-economy.min"), getConfig().getDouble("deaths.drop-economy.max"));
             if (getEconomy().has(player, lost)) {
-                getEconomy().withdrawPlayer(player, lost);
-                player.sendMessage(getMessage().get("events.death", getEconomy().currencyNamePlural() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
+                getEconomy().remove(player, lost);
+                player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
             }
         }
         if (player.hasPermission("essentials.event.death.keep_inventory")) {
