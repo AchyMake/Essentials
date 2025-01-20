@@ -7,7 +7,6 @@ import org.achymake.essentials.listeners.*;
 import org.achymake.essentials.providers.*;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicesManager;
@@ -15,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -249,21 +247,10 @@ public final class Essentials extends JavaPlugin {
     public void reload() {
         getTablistHandler().disable();
         getScoreboardHandler().disable();
-        var file = new File(getDataFolder(), "config.yml");
-        if (file.exists()) {
-            try {
-                getConfig().load(file);
-            } catch (IOException | InvalidConfigurationException e) {
-                sendWarning(e.getMessage());
-            }
-        } else {
+        if (!new File(getDataFolder(), "config.yml").exists()) {
             getConfig().options().copyDefaults(true);
-            try {
-                getConfig().save(file);
-            } catch (IOException e) {
-                sendWarning(e.getMessage());
-            }
-        }
+            saveConfig();
+        } else reloadConfig();
         if (getConfig().getBoolean("server.motd.enable")) {
             var line1 = getMessage().addColor(getConfig().getString("server.motd.line-1"));
             var line2 = getMessage().addColor(getConfig().getString("server.motd.line-2"));
