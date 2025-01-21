@@ -44,7 +44,7 @@ public class PlayerBucketEmpty implements Listener {
             var z = String.valueOf(block.getZ());
             getConfig().getStringList("notification.message").forEach(messages -> getMessage().sendAll(messages.replaceAll("%player%", name)
                         .replaceAll("%material%", getMessage().toTitleCase(material.toString()))
-                        .replaceAll("%world", worldName)
+                        .replaceAll("%world%", worldName)
                         .replaceAll("%x%", x)
                         .replaceAll("%y%", y)
                         .replaceAll("%z%", z), "essentials.event.bucket_empty.notify"));

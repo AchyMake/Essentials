@@ -15,9 +15,6 @@ public record Tab(Player getPlayer) implements Runnable {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private String getWorldName() {
-        return getPlayer().getWorld().getName();
-    }
     private String getPlayerListHeader() {
         return getPlayer().getPlayerListHeader();
     }
@@ -28,25 +25,28 @@ public record Tab(Player getPlayer) implements Runnable {
         return getPlayer().getPlayerListFooter();
     }
     private String getHeader() {
-        if (!getTablistHandler().hasHeaderLines(getWorldName())) {
+        var world = getPlayer().getWorld();
+        if (!getTablistHandler().hasHeaderLines(world.getName())) {
             if (!getTablistHandler().hasHeaderLines()) {
                 return null;
             } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getHeaderLines()));
-        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getHeaderLines(getWorldName())));
+        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getHeaderLines(world.getName())));
     }
     private String getName() {
-        if (!getTablistHandler().hasName(getWorldName())) {
+        var world = getPlayer().getWorld();
+        if (!getTablistHandler().hasName(world.getName())) {
             if (!getTablistHandler().hasName()) {
                 return getPlayer().getName();
             } else return getMessage().addPlaceholder(getPlayer(), getTablistHandler().getName());
-        } else return getMessage().addPlaceholder(getPlayer(), getTablistHandler().getName(getWorldName()));
+        } else return getMessage().addPlaceholder(getPlayer(), getTablistHandler().getName(world.getName()));
     }
     private String getFooter() {
-        if (!getTablistHandler().hasFooterLines(getWorldName())) {
+        var world = getPlayer().getWorld();
+        if (!getTablistHandler().hasFooterLines(world.getName())) {
             if (!getTablistHandler().hasFooterLines()) {
                 return null;
             } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines()));
-        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines(getWorldName())));
+        } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines(world.getName())));
     }
     @Override
     public void run() {
@@ -56,9 +56,7 @@ public record Tab(Player getPlayer) implements Runnable {
                     getPlayer().setPlayerListHeader(getHeader());
                 }
             }
-        } else if (getHeader() != null) {
-            getPlayer().setPlayerListHeader(getHeader());
-        }
+        } else getPlayer().setPlayerListHeader(getHeader());
         if (!getPlayerListName().equals(getName())) {
             getPlayer().setPlayerListName(getName());
         }
@@ -68,9 +66,7 @@ public record Tab(Player getPlayer) implements Runnable {
                     getPlayer().setPlayerListFooter(getFooter());
                 }
             }
-        } else if (getFooter() != null) {
-            getPlayer().setPlayerListFooter(getFooter());
-        }
+        } else getPlayer().setPlayerListFooter(getFooter());
     }
     @Override
     public Player getPlayer() {

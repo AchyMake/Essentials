@@ -15,20 +15,11 @@ public record Vanish(Player getPlayer) implements Runnable {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private boolean isVanish() {
-        return getVanishHandler().isVanish(getPlayer());
-    }
-    private void enable() {
-        getMessage().sendActionBar(getPlayer(), getMessage().get("events.vanish", getMessage().get("enable")));
-    }
-    private void disable() {
-        getMessage().sendActionBar(getPlayer(), getMessage().get("events.vanish", getMessage().get("disable")));
-    }
     @Override
     public void run() {
-        if (isVanish()) {
-            enable();
-        } else disable();
+        if (getVanishHandler().isVanish(getPlayer())) {
+            getMessage().sendActionBar(getPlayer(), getMessage().get("events.vanish", getMessage().get("enable")));
+        } else getMessage().sendActionBar(getPlayer(), getMessage().get("events.vanish", getMessage().get("disable")));
     }
     @Override
     public Player getPlayer() {

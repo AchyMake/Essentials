@@ -39,7 +39,7 @@ public class SHEEP {
         config.set("settings.chunk-limit", -1);
         config.set("settings.disable-spawn", false);
         config.set("settings.disable-block-form", false);
-        config.set("settings.disable-change-block", false);
+        config.set("settings.disable-change-block", true);
         config.set("settings.disable-entity-damage.ITEM", true);
         config.set("settings.disable-entity-damage.ITEM_FRAME", true);
         config.set("settings.disable-entity-damage.GLOW_ITEM_FRAME", true);

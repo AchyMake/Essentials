@@ -46,7 +46,7 @@ public class WITHER {
         config.set("settings.disable-entity-damage.PAINTING", true);
         config.set("settings.disable-entity-damage.LEASH_KNOT", true);
         config.set("settings.disable-entity-damage.ARMOR_STAND", true);
-        config.set("settings.disable-explode", false);
+        config.set("settings.disable-explode", true);
         config.set("settings.disable-interact.FARMLAND", true);
         config.set("settings.disable-interact.TURTLE_EGG", true);
         config.set("settings.disable-interact.SNIFFER_EGG", true);

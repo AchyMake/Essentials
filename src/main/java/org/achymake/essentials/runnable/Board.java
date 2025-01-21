@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +31,17 @@ public record Board(Player getPlayer) implements Runnable {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private @NotNull String getWorldName() {
-        return getPlayer().getWorld().getName();
-    }
-    private @NotNull String getName() {
-        return getPlayer().getName();
-    }
     private String getTitle() {
-        if (!getScoreboardHandler().hasTitle(getWorldName())) {
+        var world = getPlayer().getWorld();
+        if (!getScoreboardHandler().hasTitle(world.getName())) {
             return getMessage().addPlaceholder(getPlayer(), getScoreboardHandler().getTitle());
-        } else return getMessage().addPlaceholder(getPlayer(), getScoreboardHandler().getTitle(getWorldName()));
+        } else return getMessage().addPlaceholder(getPlayer(), getScoreboardHandler().getTitle(world.getName()));
     }
     private List<String> getLines() {
         var listed = new ArrayList<String>();
-        if (getScoreboardHandler().isLine(getWorldName())) {
-            for (var line : getScoreboardHandler().getLines(getWorldName())) {
+        var world = getPlayer().getWorld();
+        if (getScoreboardHandler().isLine(world.getName())) {
+            for (var line : getScoreboardHandler().getLines(world.getName())) {
                 listed.add(getMessage().addPlaceholder(getPlayer(), line));
             }
         } else if (getScoreboardHandler().isLine()) {
@@ -58,7 +53,7 @@ public record Board(Player getPlayer) implements Runnable {
     }
     private void update() {
         var scoreboard = getMainScoreboard();
-        var sidebar = scoreboard.getObjective(getName() + "-board");
+        var sidebar = scoreboard.getObjective(getPlayer().getName() + "-board");
         if (sidebar != null) {
             if (getTitle() != null) {
                 if (!getTitle().equals(sidebar.getDisplayName())) {
@@ -80,7 +75,7 @@ public record Board(Player getPlayer) implements Runnable {
     private void create() {
         if (getTitle() != null) {
             var scoreboard = getNewScoreboard();
-            var sidebar = scoreboard.registerNewObjective(getName() + "-board", "yummy", getTitle());
+            var sidebar = scoreboard.registerNewObjective(getPlayer().getName() + "-board", "yummy", getTitle());
             sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
             sidebar.numberFormat(NumberFormat.blank());
             if (!getLines().isEmpty()) {
@@ -91,11 +86,8 @@ public record Board(Player getPlayer) implements Runnable {
                     sidebar.getScore(getLines().get(i)).setScore(i);
                 }
             }
-            setScoreboard(scoreboard);
+            getPlayer().setScoreboard(scoreboard);
         }
-    }
-    private void setScoreboard(Scoreboard scoreboard) {
-        getPlayer().setScoreboard(scoreboard);
     }
     @Override
     public void run() {
