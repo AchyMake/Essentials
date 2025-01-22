@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.InventoryHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,9 @@ public class HatCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private InventoryHandler getInventoryHandler() {
+        return getInstance().getInventoryHandler();
+    }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
@@ -36,7 +40,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
                     var helmet = player.getInventory().getHelmet();
-                    if (getUserdata().setHelmet(player, heldItem)) {
+                    if (getInventoryHandler().setHelmet(player.getInventory(), heldItem)) {
                         player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
                         heldItem.setAmount(heldItem.getAmount() - 1);
                     } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));
@@ -50,12 +54,12 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                         if (!getMaterials().isAir(heldItem)) {
                             var helmet = target.getInventory().getHelmet();
                             if (target == player) {
-                                if (getUserdata().setHelmet(target, heldItem)) {
+                                if (getInventoryHandler().setHelmet(target.getInventory(), heldItem)) {
                                     player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
                                     heldItem.setAmount(heldItem.getAmount() - 1);
                                 } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));
                             } else if (!target.hasPermission("essentials.command.hat.exempt")) {
-                                if (getUserdata().setHelmet(target, heldItem)) {
+                                if (getInventoryHandler().setHelmet(target.getInventory(), heldItem)) {
                                     player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
                                     heldItem.setAmount(heldItem.getAmount() - 1);
                                 } else player.sendMessage(getMessage().get("commands.hat.occupied", getMessage().toTitleCase(helmet.getType().toString())));

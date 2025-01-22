@@ -39,10 +39,12 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                         var amount = Double.parseDouble(args[1]);
                         if (amount >= getEconomy().getMinimumPayment()) {
                             if (getEconomy().has(player, amount)) {
-                                getEconomy().add(target, amount);
-                                getEconomy().remove(player, amount);
-                                target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currency() + getEconomy().format(amount), player.getName()));
-                                player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                                if (getEconomy().add(target, amount)) {
+                                    if (getEconomy().remove(player, amount)) {
+                                        target.sendMessage(getMessage().get("commands.pay.target", getEconomy().currency() + getEconomy().format(amount), player.getName()));
+                                        player.sendMessage(getMessage().get("commands.pay.sender", target.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                             } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), target.getName()));
                         } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("commands.pay.self"));
@@ -52,9 +54,11 @@ public class PayCommand implements CommandExecutor, TabCompleter {
                         var amount = Double.parseDouble(args[1]);
                         if (amount >= getEconomy().getMinimumPayment()) {
                             if (getEconomy().has(player, amount)) {
-                                getEconomy().add(offlinePlayer, amount);
-                                getEconomy().remove(player, amount);
-                                player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                                if (getEconomy().add(offlinePlayer, amount)) {
+                                    if (getEconomy().remove(player, amount)) {
+                                        player.sendMessage(getMessage().get("commands.pay.sender", offlinePlayer.getName(), getEconomy().currency() + getEconomy().format(amount)));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                             } else player.sendMessage(getMessage().get("commands.pay.insufficient-funds", getEconomy().currency() + getEconomy().format(amount), offlinePlayer.getName()));
                         } else player.sendMessage(getMessage().get("commands.pay.minimum-payment", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumPayment())));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));

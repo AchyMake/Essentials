@@ -67,7 +67,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         var bank = getUserdata().getBank(player);
                         var rank = getUserdata().getBankRank(player);
                         if (rank.equalsIgnoreCase("owner")) {
-                            if (!getBank().has(bank, 0.1)) {
+                            if (!getBank().has(bank, 0.01)) {
                                 getBank().delete(bank);
                                 player.sendMessage(getMessage().get("commands.bank.delete.success"));
                             } else player.sendMessage(getMessage().get("commands.bank.delete.sufficient-funds", getEconomy().currency() + getEconomy().format(getBank().get(bank))));
@@ -79,28 +79,30 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         var bank = getUserdata().getBank(player);
                         if (!getBank().isOwner(bank, player)) {
                             if (getBank().isMember(bank, player)) {
-                                getBank().removeMember(bank, player);
+                                if (getBank().removeMember(bank, player)) {
+                                    player.sendMessage(getMessage().get("commands.bank.leave", bank));
+                                    getUserdata().setString(player, "bank", "");
+                                    getUserdata().setString(player, "bank-rank", "default");
+                                } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getUserdata().getBank(player)).getName()));
                             }
-                            player.sendMessage(getMessage().get("commands.bank.leave", bank));
-                            getUserdata().setString(player, "bank", "");
-                            getUserdata().setString(player, "bank-rank", "default");
                             return true;
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("accept")) {
                     if (getUserdata().hasTaskID(player, "bank-invite")) {
                         if (getUserdata().getBankFrom(player) != null) {
-                            var target = getUserdata().getBankFrom(player).getPlayer();
+                            var target = getUserdata().getBankFrom(player);
                             if (target != null) {
                                 var bankTask = getUserdata().getTaskID(target, "bank-invite");
                                 if (getScheduler().isQueued(bankTask)) {
-                                    getUserdata().setString(target, "bank-invite.sent", null);
-                                    getUserdata().setString(player, "bank-invite.from", null);
-                                    getUserdata().removeTask(target, "bank-invite");
-                                    getUserdata().removeTask(player, "bank-invite");
-                                    getBank().addMember(getUserdata().getBank(target), player);
-                                    target.sendMessage(getMessage().get("commands.bank.accept.target", player.getName()));
-                                    player.sendMessage(getMessage().get("commands.bank.accept.sender", target.getName(), getUserdata().getBank(target)));
+                                    if (getBank().addMember(getUserdata().getBank(target), player)) {
+                                        target.sendMessage(getMessage().get("commands.bank.accept.target", player.getName()));
+                                        player.sendMessage(getMessage().get("commands.bank.accept.sender", target.getName(), getUserdata().getBank(target)));
+                                        getUserdata().setBankSent(target, null);
+                                        getUserdata().removeTask(target, "bank-invite");
+                                        getUserdata().setBankFrom(player, null);
+                                        getUserdata().removeTask(player, "bank-invite");
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getUserdata().getBank(player)).getName()));
                                 }
                             }
                         }
@@ -109,16 +111,16 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                 } else if (args[0].equalsIgnoreCase("deny")) {
                     if (getUserdata().hasTaskID(player, "bank-invite")) {
                         if (getUserdata().getBankFrom(player) != null) {
-                            var target = getUserdata().getBankFrom(player).getPlayer();
+                            var target = getUserdata().getBankFrom(player);
                             if (target != null) {
                                 var bankTask = getUserdata().getTaskID(target, "bank-invite");
                                 if (getScheduler().isQueued(bankTask)) {
-                                    getUserdata().setString(target, "bank-invite.sent", null);
-                                    getUserdata().setString(player, "bank-invite.from", null);
-                                    getUserdata().removeTask(target, "bank-invite");
-                                    getUserdata().removeTask(player, "bank-invite");
                                     target.sendMessage(getMessage().get("commands.bank.deny.target", player.getName()));
                                     player.sendMessage(getMessage().get("commands.bank.deny.sender", target.getName(), getUserdata().getBank(target)));
+                                    getUserdata().setBankSent(target, null);
+                                    getUserdata().removeTask(target, "bank-invite");
+                                    getUserdata().setBankFrom(player, null);
+                                    getUserdata().removeTask(player, "bank-invite");
                                 }
                             }
                         }
@@ -130,12 +132,12 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         if (target != null) {
                             var bankTask = getUserdata().getTaskID(player, "bank-invite");
                             if (getScheduler().isQueued(bankTask)) {
-                                getUserdata().setString(target, "bank-invite.from", null);
-                                getUserdata().setString(player, "bank-invite.sent", null);
-                                getUserdata().removeTask(target, "bank-invite");
-                                getUserdata().removeTask(player, "bank-invite");
                                 target.sendMessage(getMessage().get("commands.bank.cancel.target", player.getName()));
                                 player.sendMessage(getMessage().get("commands.bank.cancel.sender", target.getName()));
+                                getUserdata().setBankFrom(target, null);
+                                getUserdata().removeTask(target, "bank-invite");
+                                getUserdata().setBankSent(player, null);
+                                getUserdata().removeTask(player, "bank-invite");
                             }
                         }
                         return true;
@@ -150,23 +152,6 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getMessage().get("commands.bank.top.listed", String.valueOf(i + 1), list.get(i).getKey(), getEconomy().currency() + getEconomy().format(list.get(i).getValue())));
                             }
                         }
-                        return true;
-                    }
-                } else if (args[0].equalsIgnoreCase("withdraw")) {
-                    if (player.hasPermission("essentials.command.bank.withdraw")) {
-                        if (getUserdata().hasBank(player)) {
-                            var rank = getUserdata().getBankRank(player);
-                            if (rank.equalsIgnoreCase("member") || rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                                getBank().openBankWithdraw(player);
-                            }
-                        } else player.sendMessage(getMessage().get("error.bank.empty"));
-                        return true;
-                    }
-                } else if (args[0].equalsIgnoreCase("deposit")) {
-                    if (player.hasPermission("essentials.command.bank.deposit")) {
-                        if (getUserdata().hasBank(player)) {
-                            getBank().openBankDeposit(player);
-                        } else player.sendMessage(getMessage().get("error.bank.empty"));
                         return true;
                     }
                 }
@@ -197,8 +182,9 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
                             var target = getInstance().getOfflinePlayer(args[1]);
                             if (getBank().isMember(bank, target)) {
-                                getBank().removeMember(bank, target);
-                                player.sendMessage(getMessage().get("commands.bank.remove", target.getName(), bank));
+                                if (getBank().removeMember(bank, target)) {
+                                    player.sendMessage(getMessage().get("commands.bank.remove", target.getName(), bank));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getUserdata().getBank(player)).getName()));
                                 return true;
                             }
                         }
@@ -215,17 +201,17 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                                             var taskID = getScheduler().runLater(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    getUserdata().setString(target, "bank-invite.from", null);
-                                                    getUserdata().setString(player, "bank-invite.sent", null);
+                                                    getUserdata().setBankFrom(target, null);
                                                     getUserdata().removeTask(target, "bank-invite");
+                                                    getUserdata().setBankSent(player, null);
                                                     getUserdata().removeTask(player, "bank-invite");
                                                     target.sendMessage(getMessage().get("commands.bank.invite.expired"));
                                                     player.sendMessage(getMessage().get("commands.bank.invite.expired"));
                                                 }
                                             }, 300).getTaskId();
-                                            getUserdata().setString(player, "bank-invite.sent", target.getUniqueId().toString());
-                                            getUserdata().setString(target, "bank-invite.from", player.getUniqueId().toString());
+                                            getUserdata().setBankFrom(target, player);
                                             getUserdata().addTaskID(target, "bank-invite", taskID);
+                                            getUserdata().setBankSent(player, target);
                                             getUserdata().addTaskID(player, "bank-invite", taskID);
                                             target.sendMessage(getMessage().get("commands.bank.invite.target.notify", player.getName()));
                                             target.sendMessage(getMessage().get("commands.bank.invite.target.decide"));
@@ -247,14 +233,17 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var bank = getUserdata().getBank(player);
                             if (getBank().isOwner(bank, player)) {
                                 if (getBank().rename(bank, args[1])) {
-                                    getUserdata().setString(getBank().getOwner(args[1]), "bank", args[1]);
-                                    var members = getBank().getMembers(args[1]);
-                                    if (!members.isEmpty()) {
-                                        for (var member : members) {
-                                            getUserdata().setString(member, "bank", args[1]);
+                                    if (getUserdata().setString(player, "bank", args[1])) {
+                                        var members = getBank().getMembers(args[1]);
+                                        if (!members.isEmpty()) {
+                                            for (var member : members) {
+                                                if (!getUserdata().setString(member, "bank", args[1])) {
+                                                    player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(member).getName()));
+                                                }
+                                            }
                                         }
-                                    }
-                                    player.sendMessage(getMessage().get("commands.bank.rename", args[1]));
+                                        player.sendMessage(getMessage().get("commands.bank.rename", args[1]));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                                 } else player.sendMessage(getMessage().get("error.bank.exists", args[1]));
                                 return true;
                             }
@@ -275,10 +264,12 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                                 var amount = Double.parseDouble(args[1]);
                                 if (amount >= getEconomy().getMinimumBankWithdraw()) {
                                     if (getBank().has(getUserdata().getBank(player), amount)) {
-                                        getBank().remove(getUserdata().getBank(player), amount);
-                                        getEconomy().add(player, amount);
-                                        player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
-                                        player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                        if (getBank().remove(getUserdata().getBank(player), amount)) {
+                                            if (getEconomy().add(player, amount)) {
+                                                player.sendMessage(getMessage().get("commands.bank.withdraw.success", getEconomy().currency() + getEconomy().format(amount)));
+                                                player.sendMessage(getMessage().get("commands.bank.withdraw.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                            } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
+                                        } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getUserdata().getBank(player)).getName()));
                                     } else player.sendMessage(getMessage().get("commands.bank.withdraw.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                                 } else player.sendMessage(getMessage().get("commands.bank.withdraw.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankWithdraw())));
                                 return true;
@@ -291,10 +282,12 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                             var amount = Double.parseDouble(args[1]);
                             if (amount >= getEconomy().getMinimumBankDeposit()) {
                                 if (getEconomy().has(player, amount)) {
-                                    getEconomy().remove(player, amount);
-                                    getBank().add(getUserdata().getBank(player), amount);
-                                    player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
-                                    player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                    if (getEconomy().remove(player, amount)) {
+                                        if (getBank().add(getUserdata().getBank(player), amount)) {
+                                            player.sendMessage(getMessage().get("commands.bank.deposit.success", getEconomy().currency() + getEconomy().format(amount)));
+                                            player.sendMessage(getMessage().get("commands.bank.deposit.left", getEconomy().currency() + getEconomy().format(getBank().get(getUserdata().getBank(player)))));
+                                        } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getUserdata().getBank(player)).getName()));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                                 } else player.sendMessage(getMessage().get("commands.bank.deposit.insufficient-funds", getEconomy().currency() + getEconomy().format(amount)));
                             } else player.sendMessage(getMessage().get("commands.bank.deposit.minimum", getEconomy().currency() + getEconomy().format(getEconomy().getMinimumBankDeposit())));
                             return true;
@@ -308,30 +301,23 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         if (rank.equalsIgnoreCase("owner")) {
                             var target = getInstance().getOfflinePlayer(args[1]);
                             if (getBank().isMember(getUserdata().getBank(player), target)) {
-                                if (args[2].equalsIgnoreCase("default")) {
-                                    getUserdata().setString(target, "bank-rank", args[2]);
-                                    player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
-                                    return true;
-                                } else if (args[2].equalsIgnoreCase("member")) {
-                                    getUserdata().setString(target, "bank-rank", args[2]);
-                                    player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
-                                    return true;
-                                } else if (args[2].equalsIgnoreCase("co-owner")) {
-                                    getUserdata().setString(target, "bank-rank", args[2]);
-                                    player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                if (args[2].equalsIgnoreCase("default") ||
+                                        args[2].equalsIgnoreCase("member") ||
+                                        args[2].equalsIgnoreCase("co-owner")) {
+                                    if (getUserdata().setString(target, "bank-rank", args[2])) {
+                                        player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                                     return true;
                                 }
                             }
                         } else if (rank.equalsIgnoreCase("co-owner")) {
                             var target = getInstance().getOfflinePlayer(args[1]);
                             if (getBank().isMember(getUserdata().getBank(player), target)) {
-                                if (args[2].equalsIgnoreCase("default")) {
-                                    getUserdata().setString(target, "bank-rank", args[2]);
-                                    player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
-                                    return true;
-                                } else if (args[2].equalsIgnoreCase("member")) {
-                                    getUserdata().setString(target, "bank-rank", args[2]);
-                                    player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                if (args[2].equalsIgnoreCase("default") ||
+                                        args[2].equalsIgnoreCase("member")) {
+                                    if (getUserdata().setString(target, "bank-rank", args[2])) {
+                                        player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                                     return true;
                                 }
                             }
@@ -349,23 +335,6 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                     return true;
                 }
-            } else if (args.length == 2) {
-                var target = getInstance().getPlayer(args[1]);
-                if (target != null) {
-                    if (args[0].equalsIgnoreCase("withdraw")) {
-                        if (getUserdata().hasBank(target)) {
-                            var rank = getUserdata().getBankRank(target);
-                            if (rank.equalsIgnoreCase("member") || rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                                getBank().openBankWithdraw(target);
-                            }
-                        }
-                    } else if (args[0].equalsIgnoreCase("deposit")) {
-                        if (getUserdata().hasBank(target)) {
-                            getBank().openBankDeposit(target);
-                        }
-                    }
-                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
-                return true;
             }
         }
         return false;

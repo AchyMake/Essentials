@@ -29,23 +29,26 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (target == player) {
-                        getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target));
-                        if (getUserdata().isMuted(target)) {
-                            player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                        if (getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target))) {
+                            if (getUserdata().isMuted(target)) {
+                                player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                            } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                     } else if (!target.hasPermission("essentials.command.mute.exempt")) {
-                        getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target));
-                        if (getUserdata().isMuted(target)) {
-                            player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                        if (getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target))) {
+                            if (getUserdata().isMuted(target)) {
+                                player.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                            } else player.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                     } else player.sendMessage(getMessage().get("commands.mute.exempt", target.getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.muted", !getUserdata().isMuted(offlinePlayer));
-                        if (getUserdata().isMuted(offlinePlayer)) {
-                            player.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
-                        } else player.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                        if (getUserdata().setBoolean(offlinePlayer, "settings.muted", !getUserdata().isMuted(offlinePlayer))) {
+                            if (getUserdata().isMuted(offlinePlayer)) {
+                                player.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
+                            } else player.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
@@ -54,17 +57,19 @@ public class MuteCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target));
-                    if (getUserdata().isMuted(target)) {
-                        consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
-                    } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                    if (getUserdata().setBoolean(target, "settings.muted", !getUserdata().isMuted(target))) {
+                        if (getUserdata().isMuted(target)) {
+                            consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", target.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", target.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.muted", !getUserdata().isMuted(offlinePlayer));
-                        if (getUserdata().isMuted(offlinePlayer)) {
-                            consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
-                        } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                        if (getUserdata().setBoolean(offlinePlayer, "settings.muted", !getUserdata().isMuted(offlinePlayer))) {
+                            if (getUserdata().isMuted(offlinePlayer)) {
+                                consoleCommandSender.sendMessage(getMessage().get("commands.mute.enable", offlinePlayer.getName()));
+                            } else consoleCommandSender.sendMessage(getMessage().get("commands.mute.disable", offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;

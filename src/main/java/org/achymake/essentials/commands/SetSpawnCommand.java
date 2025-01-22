@@ -29,13 +29,9 @@ public class SetSpawnCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getSpawn().getLocation() != null) {
-                    getSpawn().setLocation(player.getLocation());
-                    player.sendMessage(getMessage().get("commands.setspawn.relocated"));
-                } else {
-                    getSpawn().setLocation(player.getLocation());
+                if (getSpawn().setLocation(player.getLocation())) {
                     player.sendMessage(getMessage().get("commands.setspawn.set"));
-                }
+                } else player.sendMessage(getMessage().get("error.file.exception", getSpawn().getFile().getName()));
                 return true;
             }
         }

@@ -31,14 +31,14 @@ public class BoardCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getScoreboard().hasBoard(player)) {
-                    getScoreboard().disable(player);
-                    getUserdata().setBoolean(player, "settings.board", false);
-                    player.sendMessage(getMessage().get("commands.board.self", getMessage().get("disable")));
-                } else {
+                    if (getUserdata().setBoolean(player, "settings.board", false)) {
+                        getScoreboard().disable(player);
+                        player.sendMessage(getMessage().get("commands.board.self", getMessage().get("disable")));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
+                } else if (getUserdata().setBoolean(player, "settings.board", true)) {
                     getScoreboard().apply(player);
-                    getUserdata().setBoolean(player, "settings.board", true);
                     player.sendMessage(getMessage().get("commands.board.self", getMessage().get("enable")));
-                }
+                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.spawn.other")) {
@@ -46,24 +46,24 @@ public class BoardCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         if (target == player) {
                             if (getScoreboard().hasBoard(target)) {
-                                getScoreboard().disable(target);
-                                getUserdata().setBoolean(target, "settings.board", false);
-                                player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
-                            } else {
+                                if (getUserdata().setBoolean(target, "settings.board", false)) {
+                                    getScoreboard().disable(target);
+                                    player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                            } else if (getUserdata().setBoolean(target, "settings.board", true)) {
                                 getScoreboard().apply(target);
-                                getUserdata().setBoolean(target, "settings.board", true);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("enable")));
-                            }
+                            } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                         } else if (!target.hasPermission("essentials.command.board.exempt")) {
                             if (getScoreboard().hasBoard(target)) {
-                                getScoreboard().disable(target);
-                                getUserdata().setBoolean(target, "settings.board", false);
-                                player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
-                            } else {
+                                if (getUserdata().setBoolean(target, "settings.board", false)) {
+                                    getScoreboard().disable(target);
+                                    player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                            } else if (getUserdata().setBoolean(target, "settings.board", true)) {
                                 getScoreboard().apply(target);
-                                getUserdata().setBoolean(target, "settings.board", true);
                                 player.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("enable")));
-                            }
+                            } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                         } else player.sendMessage(getMessage().get("commands.board.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -74,12 +74,14 @@ public class BoardCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getScoreboard().hasBoard(target)) {
-                        getScoreboard().disable(target);
-                        consoleCommandSender.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("disable")));
-                    } else {
+                        if (getUserdata().setBoolean(target, "settings.board", false)) {
+                            getScoreboard().disable(target);
+                            consoleCommandSender.sendMessage(getMessage().get("commands.board.self", getMessage().get("disable")));
+                        } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                    } else if (getUserdata().setBoolean(target, "settings.board", true)) {
                         getScoreboard().apply(target);
-                        consoleCommandSender.sendMessage(getMessage().get("commands.board.other", target.getName(), getMessage().get("enable")));
-                    }
+                        consoleCommandSender.sendMessage(getMessage().get("commands.board.self", getMessage().get("enable")));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }

@@ -39,12 +39,14 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    var itemName = getMessage().toTitleCase(heldItem.getType().toString());
+                    var material = heldItem.getType();
+                    var itemName = getMessage().toTitleCase(material.toString());
                     var value = Double.parseDouble(args[0]);
-                    getWorth().setWorth(heldItem.getType(), value);
-                    if (getWorth().isListed(heldItem.getType())) {
-                        player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(heldItem.getType()))));
-                    } else player.sendMessage(getMessage().get("commands.setworth.disable", itemName));
+                    if (getWorth().setWorth(material, value)) {
+                        if (getWorth().isListed(material)) {
+                            player.sendMessage(getMessage().get("commands.setworth.enable", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
+                        } else player.sendMessage(getMessage().get("commands.setworth.disable", itemName));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getWorth().getFile().getName()));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             }

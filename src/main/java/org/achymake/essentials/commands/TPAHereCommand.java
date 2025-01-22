@@ -20,11 +20,11 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private Message getMessage() {
-        return getInstance().getMessage();
-    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
     }
     public TPAHereCommand() {
         getInstance().getCommand("tpahere").setExecutor(this);
@@ -40,17 +40,17 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
                             int taskID = getScheduler().runLater( new Runnable() {
                                 @Override
                                 public void run() {
-                                    getUserdata().setString(target, "tpahere.from", null);
-                                    getUserdata().setString(player, "tpahere.sent", null);
+                                    getUserdata().setTpaHereFrom(target, null);
                                     getUserdata().removeTask(target, "tpahere");
+                                    getUserdata().setTpaHereSent(player, null);
                                     getUserdata().removeTask(player, "tpahere");
                                     target.sendMessage(getMessage().get("commands.tpahere.expired"));
                                     player.sendMessage(getMessage().get("commands.tpahere.expired"));
                                 }
                             }, 300).getTaskId();
-                            getUserdata().setString(target, "tpahere.from", player.getUniqueId().toString());
-                            getUserdata().setString(player, "tpahere.sent", target.getUniqueId().toString());
+                            getUserdata().setTpaHereFrom(target, player);
                             getUserdata().addTaskID(target, "tpahere", taskID);
+                            getUserdata().setTpaHereSent(player, target);
                             getUserdata().addTaskID(player, "tpahere", taskID);
                             target.sendMessage(getMessage().get("commands.tpahere.target.notify", player.getName()));
                             target.sendMessage(getMessage().get("commands.tpahere.target.decide"));

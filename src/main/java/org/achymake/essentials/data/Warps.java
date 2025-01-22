@@ -19,6 +19,12 @@ public class Warps {
     }
     private final File file = new File(getInstance().getDataFolder(), "warps.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
     /**
      * get listed
      * @return set string
@@ -63,7 +69,7 @@ public class Warps {
      * @param location location or null to remove
      * @since many moons ago
      */
-    public void setLocation(String warpName, Location location) {
+    public boolean setLocation(String warpName, Location location) {
         if (location != null) {
             config.set(warpName + ".world", location.getWorld().getName());
             config.set(warpName + ".x", location.getX());
@@ -73,15 +79,19 @@ public class Warps {
             config.set(warpName + ".pitch", location.getPitch());
             try {
                 config.save(file);
+                return true;
             } catch (IOException e) {
                 getInstance().sendWarning(e.getMessage());
+                return false;
             }
         } else {
             config.set(warpName, null);
             try {
                 config.save(file);
+                return true;
             } catch (IOException e) {
                 getInstance().sendWarning(e.getMessage());
+                return false;
             }
         }
     }
@@ -89,21 +99,24 @@ public class Warps {
      * setup
      * @since many moons ago
      */
-    private void setup() {
+    private boolean setup() {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reload if exists else setup
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

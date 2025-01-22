@@ -34,26 +34,26 @@ public class TPCancelCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getUserdata().hasTaskID(player, "tpa")) {
-                    var target = getUserdata().getTpaSent(player).getPlayer();
+                    var target = getUserdata().getTpaSent(player);
                     if (target != null) {
                         var tpaTask = getUserdata().getTaskID(player, "tpa");
                         if (getScheduler().isQueued(tpaTask)) {
-                            getUserdata().setString(target, "tpa.from", null);
-                            getUserdata().setString(player, "tpa.sent", null);
+                            getUserdata().setTpaFrom(target, null);
                             getUserdata().removeTask(target, "tpa");
+                            getUserdata().setTpaSent(player, null);
                             getUserdata().removeTask(player, "tpa");
                             target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpcancel.sender"));
                         }
                     }
                 } else if (getUserdata().hasTaskID(player, "tpahere")) {
-                    var target = getUserdata().getTpaHereSent(player).getPlayer();
+                    var target = getUserdata().getTpaHereSent(player);
                     if (target != null) {
                         var tpaHereTask = getUserdata().getTaskID(player, "tpahere");
                         if (getScheduler().isQueued(tpaHereTask)) {
-                            getUserdata().setString(target, "tpahere.from", null);
-                            getUserdata().setString(player, "tpahere.sent", null);
+                            getUserdata().setTpaHereFrom(target, null);
                             getUserdata().removeTask(target, "tpahere");
+                            getUserdata().setTpaHereSent(player, null);
                             getUserdata().removeTask(player, "tpahere");
                             target.sendMessage(getMessage().get("commands.tpcancel.target", player.getName()));
                             player.sendMessage(getMessage().get("commands.tpcancel.sender"));

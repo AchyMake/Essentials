@@ -4,10 +4,8 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Kits;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.CooldownHandler;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -20,9 +18,6 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
-    }
-    private CooldownHandler getCooldown() {
-        return getInstance().getCooldownHandler();
     }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
@@ -57,20 +52,20 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 var timer = getKits().getCooldown(kitName);
                 if (getKits().isListed(kitName)) {
                     if (player.hasPermission("essentials.command.kit." + kitName)) {
-                        if (!getCooldown().has(player, kitName, timer)) {
+                        if (!getUserdata().hasCooldown(player, kitName, timer)) {
                             if (getKits().hasPrice(kitName)) {
                                 if (getEconomy().has(player, getKits().getPrice(kitName))) {
                                     getMaterials().giveItemStacks(player, getKits().get(kitName));
                                     getEconomy().remove(player, getKits().getPrice(kitName));
-                                    getCooldown().add(player, kitName, timer);
+                                    getUserdata().addCooldown(player, kitName, timer);
                                     player.sendMessage(getMessage().get("commands.kit.received", kitName));
                                 } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                             } else {
                                 getMaterials().giveItemStacks(player, getKits().get(kitName));
-                                getCooldown().add(player, kitName, timer);
+                                getUserdata().addCooldown(player, kitName, timer);
                                 player.sendMessage(getMessage().get("commands.kit.received", kitName));
                             }
-                        } else player.sendMessage(getMessage().get("commands.kit.cooldown", getCooldown().get(player, kitName, timer)));
+                        } else player.sendMessage(getMessage().get("commands.kit.cooldown", getUserdata().getCooldown(player, kitName, timer)));
                         return true;
                     }
                 } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));

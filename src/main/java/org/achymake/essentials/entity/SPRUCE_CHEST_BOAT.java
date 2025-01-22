@@ -13,7 +13,7 @@ public class SPRUCE_CHEST_BOAT {
     }
     private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-    private void setup() {
+    private boolean setup() {
         config.set("settings.hostile", false);
         config.set("settings.chunk-limit", -1);
         config.set("settings.disable-spawn", false);
@@ -80,13 +80,16 @@ public class SPRUCE_CHEST_BOAT {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

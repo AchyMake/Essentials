@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.CooldownHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -17,9 +16,6 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private CooldownHandler getCooldown() {
-        return getInstance().getCooldownHandler();
-    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -32,11 +28,11 @@ public class FeedCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.feed");
                 if (timer > 0) {
-                    if (!getCooldown().has(player, "feed", timer)) {
+                    if (!getUserdata().hasCooldown(player, "feed", timer)) {
                         player.setFoodLevel(20);
                         player.sendMessage(getMessage().get("commands.feed.success"));
-                        getCooldown().add(player, "feed", timer);
-                    } else getMessage().sendActionBar(player, getMessage().get("commands.feed.cooldown", getCooldown().get(player, "feed", timer)));
+                        getUserdata().addCooldown(player, "feed", timer);
+                    } else getMessage().sendActionBar(player, getMessage().get("commands.feed.cooldown", getUserdata().getCooldown(player, "feed", timer)));
                 } else {
                     player.setFoodLevel(20);
                     player.sendMessage(getMessage().get("commands.feed.success"));

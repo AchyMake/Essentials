@@ -38,31 +38,37 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                             if (getUserdata().isJailed(target)) {
                                 var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
-                                    getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                                    recent.getChunk().load();
-                                    target.teleport(recent);
-                                    player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                    if (getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                        recent.getChunk().load();
+                                        target.teleport(recent);
+                                        player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                                 }
                             } else {
                                 jail.getChunk().load();
                                 target.teleport(jail);
-                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
+                                if (!getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                    target.teleport(getUserdata().getLocation(target, "recent"));
+                                    player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                                } else player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else if (!target.hasPermission("essentials.command.jail.exempt")) {
                             if (getUserdata().isJailed(target)) {
                                 var recent = getUserdata().getLocation(target, "recent");
                                 if (recent != null) {
-                                    getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                                    recent.getChunk().load();
-                                    target.teleport(recent);
-                                    player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                    if (getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                        recent.getChunk().load();
+                                        target.teleport(recent);
+                                        player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                                 }
                             } else {
                                 jail.getChunk().load();
                                 target.teleport(jail);
-                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                                player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
+                                if (!getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                    target.teleport(getUserdata().getLocation(target, "recent"));
+                                    player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                                } else player.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                             }
                         } else player.sendMessage(getMessage().get("commands.jail.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("commands.jail.invalid"));
@@ -78,16 +84,19 @@ public class JailCommand implements CommandExecutor, TabCompleter {
                         if (getUserdata().isJailed(target)) {
                             var recent = getUserdata().getLocation(target, "recent");
                             if (recent != null) {
-                                getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                                recent.getChunk().load();
-                                target.teleport(recent);
-                                consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                if (getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                    recent.getChunk().load();
+                                    target.teleport(recent);
+                                    consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("disable")));
+                                } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                             }
                         } else {
                             jail.getChunk().load();
                             target.teleport(jail);
-                            getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target));
-                            consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
+                            if (!getUserdata().setBoolean(target, "settings.jailed", !getUserdata().isJailed(target))) {
+                                target.teleport(getUserdata().getLocation(target, "recent"));
+                                consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                            } else consoleCommandSender.sendMessage(getMessage().get("commands.jail.toggle", target.getName(), getMessage().get("enable")));
                         }
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.jail.invalid"));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));

@@ -5,15 +5,13 @@ import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.WeatherType;
+import org.bukkit.*;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +38,12 @@ public class Userdata {
     }
     private Message getMessage() {
         return getInstance().getMessage();
+    }
+    private NamespacedKey getKey(String key) {
+        return getInstance().getKey(key);
+    }
+    public PersistentDataContainer getData(Player player) {
+        return player.getPersistentDataContainer();
     }
     /**
      * gets userdata/uuid.yml
@@ -380,88 +384,137 @@ public class Userdata {
     public boolean isVanished(OfflinePlayer offlinePlayer) {
         return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
-    /**
-     * gets offlinePlayer for 'last-whisper'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null
-     * @since many moons ago
-     */
-    public OfflinePlayer getLastWhisper(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("last-whisper")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("last-whisper")));
-        } else return null;
+    public void setLastWhisper(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("last-whisper"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("last-whisper"));
     }
     /**
-     * gets offlinePlayer for 'bank-invite.sent'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
+     * gets player for 'last-whisper'
+     * @param player player
+     * @return player else null
      * @since many moons ago
      */
-    public OfflinePlayer getBankSent(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("bank-invite.sent")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("bank-invite.sent")));
+    public Player getLastWhisper(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("last-whisper"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
-    /**
-     * gets offlinePlayer for 'bank-invite.from'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
-     * @since many moons ago
-     */
-    public OfflinePlayer getBankFrom(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("bank-invite.from")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("bank-invite.from")));
-        } else return null;
+    public void setBankSent(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("bank.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("bank.sent"));
     }
     /**
-     * gets offlinePlayer for 'tpa.sent'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
+     * gets player for 'bank.sent'
+     * @param player player
+     * @return player else null if none
      * @since many moons ago
      */
-    public OfflinePlayer getTpaSent(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("tpa.sent")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpa.sent")));
+    public Player getBankSent(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("bank.sent"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
-    /**
-     * gets offlinePlayer for 'tpa.from'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
-     * @since many moons ago
-     */
-    public OfflinePlayer getTpaFrom(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("tpa.from")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpa.from")));
-        } else return null;
+    public void setBankFrom(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("bank.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("bank.from"));
     }
     /**
-     * gets offlinePlayer for 'tpahere.sent'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
+     * gets player for 'bank.from'
+     * @param player player
+     * @return player else null if none
      * @since many moons ago
      */
-    public OfflinePlayer getTpaHereSent(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("tpahere.sent")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpahere.sent")));
+    public Player getBankFrom(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("bank.from"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
+    public void setTpaSent(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("tpa.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("tpa.sent"));
+    }
     /**
-     * gets offlinePlayer for 'tpahere.from'
-     * @param offlinePlayer or player
-     * @return offlinePlayer else null if none
+     * gets player for 'tpa.sent'
+     * @param player player
+     * @return player else null if none
      * @since many moons ago
      */
-    public OfflinePlayer getTpaHereFrom(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("tpahere.from")) {
-            return getInstance().getOfflinePlayer(UUID.fromString(config.getString("tpahere.from")));
+    public Player getTpaSent(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("tpa.sent"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+        } else return null;
+    }
+    public void setTpaFrom(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("tpa.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("tpa.from"));
+    }
+    /**
+     * gets player for 'tpa.from'
+     * @param player player
+     * @return player else null if none
+     * @since many moons ago
+     */
+    public Player getTpaFrom(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("tpa.from"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+        } else return null;
+    }
+    public void setTpaHereSent(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("tpahere.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("tpahere.sent"));
+    }
+    /**
+     * gets player for 'tpahere.sent'
+     * @param player player
+     * @return player else null if none
+     * @since many moons ago
+     */
+    public Player getTpaHereSent(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("tpahere.sent"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+        } else return null;
+    }
+    public void setTpaHereFrom(Player player, Player target) {
+        var data = getData(player);
+        if (target != null) {
+            data.set(getKey("tpahere.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getKey("tpahere.from"));
+    }
+    /**
+     * gets player for 'tpahere.from'
+     * @param player player
+     * @return player else null if none
+     * @since many moons ago
+     */
+    public Player getTpaHereFrom(Player player) {
+        var data = getData(player);
+        var tpaFrom = data.get(getKey("tpahere.from"), PersistentDataType.STRING);
+        if (tpaFrom != null) {
+            return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     /**
@@ -526,45 +579,26 @@ public class Userdata {
      * set home
      * @param player target
      * @param homeName string
-     * @return true if homeName exist else false,
-     * true if max home is above homes size else false
+     * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
     public boolean setHome(Player player, String homeName) {
         var location = player.getLocation();
-        if (isHome(player, homeName)) {
-            var file = getFile(player);
-            var config = YamlConfiguration.loadConfiguration(file);
-            config.set("homes." + homeName + ".world", location.getWorld().getName());
-            config.set("homes." + homeName + ".x", location.getX());
-            config.set("homes." + homeName + ".y", location.getY());
-            config.set("homes." + homeName + ".z", location.getZ());
-            config.set("homes." + homeName + ".yaw", location.getYaw());
-            config.set("homes." + homeName + ".pitch", location.getPitch());
-            try {
-                config.save(file);
-                return true;
-            } catch (IOException e) {
-                getInstance().sendWarning(e.getMessage());
-                return false;
-            }
-        } else if (getMaxHomes(player) > getHomes(player).size()) {
-            var file = getFile(player);
-            var config = YamlConfiguration.loadConfiguration(file);
-            config.set("homes." + homeName + ".world", location.getWorld().getName());
-            config.set("homes." + homeName + ".x", location.getX());
-            config.set("homes." + homeName + ".y", location.getY());
-            config.set("homes." + homeName + ".z", location.getZ());
-            config.set("homes." + homeName + ".yaw", location.getYaw());
-            config.set("homes." + homeName + ".pitch", location.getPitch());
-            try {
-                config.save(file);
-                return true;
-            } catch (IOException e) {
-                getInstance().sendWarning(e.getMessage());
-                return false;
-            }
-        } else return false;
+        var file = getFile(player);
+        var config = YamlConfiguration.loadConfiguration(file);
+        config.set("homes." + homeName + ".world", location.getWorld().getName());
+        config.set("homes." + homeName + ".x", location.getX());
+        config.set("homes." + homeName + ".y", location.getY());
+        config.set("homes." + homeName + ".z", location.getZ());
+        config.set("homes." + homeName + ".yaw", location.getYaw());
+        config.set("homes." + homeName + ".pitch", location.getPitch());
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+            return false;
+        }
     }
     /**
      * is location set
@@ -613,7 +647,7 @@ public class Userdata {
      * @param locationName string
      * @since many moons ago
      */
-    public void setLocation(OfflinePlayer offlinePlayer, Location location, String locationName) {
+    public boolean setLocation(OfflinePlayer offlinePlayer, Location location, String locationName) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set("locations." + locationName + ".world", location.getWorld().getName());
@@ -624,59 +658,63 @@ public class Userdata {
         config.set("locations." + locationName + ".pitch", location.getPitch());
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * add task id
-     * @param offlinePlayer or player
+     * @param player player
      * @param taskName string
      * @param value integer
      * @since many moons ago
      */
-    public void addTaskID(OfflinePlayer offlinePlayer, String taskName, int value) {
-        setInt(offlinePlayer, "tasks." + taskName, value);
+    public void addTaskID(Player player, String taskName, int value) {
+        setInt(player, "tasks." + taskName, value);
     }
     /**
      * has task id
-     * @param offlinePlayer or player
+     * @param player player
      * @param taskName string
      * @return true if target has task else false
      * @since many moons ago
      */
-    public boolean hasTaskID(OfflinePlayer offlinePlayer, String taskName) {
-        return getConfig(offlinePlayer).isInt("tasks." + taskName);
+    public boolean hasTaskID(Player player, String taskName) {
+        return getConfig(player).isInt("tasks." + taskName);
     }
     /**
      * get task id
-     * @param offlinePlayer or player
+     * @param player player
      * @param taskName string
      * @return integer
      * @since many moons ago
      */
-    public int getTaskID(OfflinePlayer offlinePlayer, String taskName) {
-        return getConfig(offlinePlayer).getInt("tasks." + taskName);
+    public int getTaskID(Player player, String taskName) {
+        return getConfig(player).getInt("tasks." + taskName);
     }
     /**
      * remove task which will likely cancel first if its scheduled
-     * @param offlinePlayer or player
+     * @param player player
      * @param taskName string
      * @since many moons ago
      */
-    public void removeTask(OfflinePlayer offlinePlayer, String taskName) {
-        if (getScheduler().isQueued(getTaskID(offlinePlayer, taskName))) {
-            getScheduler().cancel(getTaskID(offlinePlayer, taskName));
+    public void removeTask(Player player, String taskName) {
+        if (getScheduler().isQueued(getTaskID(player, taskName))) {
+            getScheduler().cancel(getTaskID(player, taskName));
         }
-        setString(offlinePlayer, "tasks." + taskName, null);
+        setString(player, "tasks." + taskName, null);
     }
     /**
      * this will cancel then remove all target tasks
-     * @param offlinePlayer or player
+     * @param player player
      * @since many moons ago
      */
-    public void disableTasks(OfflinePlayer offlinePlayer) {
-        getConfig(offlinePlayer).getConfigurationSection("tasks").getKeys(false).forEach(s -> removeTask(offlinePlayer, s));
+    public void disableTasks(Player player) {
+        var section = getConfig(player).getConfigurationSection("tasks").getKeys(false);
+        if (section.isEmpty())return;
+        section.forEach(s -> removeTask(player, s));
     }
     /**
      * gets main config chat format
@@ -728,38 +766,6 @@ public class Userdata {
         if (amount > 0) {
             player.setWalkSpeed(getDefaultWalkSpeed() * amount);
         } else player.setWalkSpeed(getDefaultWalkSpeed());
-    }
-    /**
-     * set game mode
-     * @param player target
-     * @param mode string
-     * @return true if mode is gamemode else false
-     * @since many moons ago
-     */
-    public boolean setGameMode(Player player, String mode) {
-        if (mode.equalsIgnoreCase("adventure")) {
-            player.setGameMode(GameMode.ADVENTURE);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.adventure")));
-            return true;
-        } else if (mode.equalsIgnoreCase("creative")) {
-            player.setGameMode(GameMode.CREATIVE);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.creative")));
-            return true;
-        } else if (mode.equalsIgnoreCase("spectator")) {
-            player.setGameMode(GameMode.SPECTATOR);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.spectator")));
-            return true;
-        } else if (mode.equalsIgnoreCase("survival")) {
-            player.setGameMode(GameMode.SURVIVAL);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
-            return true;
-        } else return false;
-    }
-    public boolean setHelmet(Player player, ItemStack itemStack) {
-        if (player.getInventory().getHelmet() == null) {
-            player.getInventory().setHelmet(getMaterials().getItemStack(itemStack, 1));
-            return true;
-        } else return false;
     }
     /**
      * set morning for target which is not server time relative
@@ -852,10 +858,6 @@ public class Userdata {
         }
     }
     /**
-     * reload userdata folder
-     * @since many moons ago
-     */
-    /**
      * sets file up for target
      * @param offlinePlayer or player
      * @since many moons ago
@@ -868,16 +870,14 @@ public class Userdata {
         config.set("account", getEconomy().getStartingBalance());
         config.set("bank", "");
         config.set("bank-rank", "default");
+        config.set("settings.board", !hasBoard(offlinePlayer));
         config.set("settings.pvp", !isPVP(offlinePlayer));
         config.set("settings.muted", isMuted(offlinePlayer));
         config.set("settings.frozen", isFrozen(offlinePlayer));
         config.set("settings.jailed", isJailed(offlinePlayer));
         config.set("settings.banned", isBanned(offlinePlayer));
         config.set("settings.ban-expire", 0);
-        config.set("settings.board", !hasBoard(offlinePlayer));
         config.set("settings.vanished", isVanished(offlinePlayer));
-        config.createSection("tpa");
-        config.createSection("tpahere");
         config.createSection("homes");
         config.createSection("locations");
         config.createSection("tasks");
@@ -907,6 +907,10 @@ public class Userdata {
             }
         } else return setup(offlinePlayer);
     }
+    /**
+     * reload userdata folder
+     * @since many moons ago
+     */
     public void reload() {
         var folder = new File(getInstance().getDataFolder(), "userdata");
         if (folder.exists() && folder.isDirectory()) {
@@ -923,39 +927,146 @@ public class Userdata {
         }
     }
     /**
-     * get userdata uuid
-     * @return list uuid
-     * @since many moons ago
-     */
-    public List<UUID> getUUIDs() {
-        var listed = new ArrayList<UUID>();
-        var folder = new File(getInstance().getDataFolder(), "userdata");
-        if (folder.exists() && folder.isDirectory()) {
-            for (var file : folder.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    listed.add(UUID.fromString(file.getName().replace(".yml", "")));
-                }
-            }
-        }
-        return listed;
-    }
-    /**
      * get offlinePlayers from userdata folder
      * @return list offlinePlayer
      * @since many moons ago
      */
     public List<OfflinePlayer> getOfflinePlayers() {
         var listed = new ArrayList<OfflinePlayer>();
-        if (!getUUIDs().isEmpty()) {
-            for (var uuid : getUUIDs()) {
-                listed.add(getInstance().getOfflinePlayer(uuid));
+        var folder = new File(getInstance().getDataFolder(), "userdata");
+        if (folder.exists() && folder.isDirectory()) {
+            for (var file : folder.listFiles()) {
+                if (file.exists() && file.isFile()) {
+                    var uuidString = file.getName().replace(".yml", "");
+                    listed.add(getInstance().getOfflinePlayer(UUID.fromString(uuidString)));
+                }
             }
         }
         return listed;
     }
+    public void disable(Player player) {
+        setLocation(player, player.getLocation(), "quit");
+        setWalkSpeed(player, 0);
+        setFlySpeed(player, 0);
+        disableTasks(player);
+        setTpaSent(player, null);
+        setTpaFrom(player, null);
+        setTpaHereSent(player, null);
+        setTpaHereFrom(player, null);
+        setBankSent(player, null);
+        setBankFrom(player, null);
+    }
     public void disable() {
-        getInstance().getOnlinePlayers().forEach(player -> {
-            setLocation(player, player.getLocation(), "quit");
-        });
+        getInstance().getOnlinePlayers().forEach(this::disable);
+    }
+    public boolean unban(OfflinePlayer offlinePlayer) {
+        var file = getFile(offlinePlayer);
+        var config = YamlConfiguration.loadConfiguration(file);
+        config.set("settings.banned", false);
+        config.set("settings.ban-reason", null);
+        config.set("settings.ban-expire", 0);
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+            return false;
+        }
+    }
+    /**
+     * set game mode
+     * @param player target
+     * @param mode string
+     * @return true if mode is gamemode else false
+     * @since many moons ago
+     */
+    public boolean setGameMode(Player player, String mode) {
+        if (mode.equalsIgnoreCase("adventure")) {
+            player.setGameMode(GameMode.ADVENTURE);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.adventure")));
+            return true;
+        } else if (mode.equalsIgnoreCase("creative")) {
+            player.setGameMode(GameMode.CREATIVE);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.creative")));
+            return true;
+        } else if (mode.equalsIgnoreCase("spectator")) {
+            player.setGameMode(GameMode.SPECTATOR);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.spectator")));
+            return true;
+        } else if (mode.equalsIgnoreCase("survival")) {
+            player.setGameMode(GameMode.SURVIVAL);
+            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
+            return true;
+        } else return false;
+    }
+    /**
+     * has cooldown
+     * @param player player
+     * @param name string
+     * @param seconds integer
+     * @return true if target has cooldown else false
+     * @since many moons ago
+     */
+    public boolean hasCooldown(Player player, String name, int seconds) {
+        var uuid = player.getUniqueId();
+        var cooldownString = getData(player).get(getKey("cooldown"), PersistentDataType.STRING);
+        if (cooldownString != null) {
+            var cooldown = getMessage().getMapStringLong(cooldownString);
+            getMessage().getMapStringLong(cooldownString).containsKey(name + "-" + uuid);
+            if (cooldown.containsKey(name + "-" + uuid)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+                return timeElapsed < Integer.parseInt(seconds + "000");
+            } else return false;
+        } else return false;
+    }
+    /**
+     * add cooldown
+     * @param player player
+     * @param name string
+     * @param seconds integer
+     * @since many moons ago
+     */
+    public void addCooldown(Player player, String name, int seconds) {
+        var uuid = player.getUniqueId();
+        var data = getData(player);
+        var cooldownString = data.get(getKey("cooldown"), PersistentDataType.STRING);
+        if (cooldownString != null) {
+            var cooldown = getMessage().getMapStringLong(cooldownString);
+            if (cooldown.containsKey(name + "-" + uuid)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+                if (timeElapsed > Integer.parseInt(seconds + "000")) {
+                    cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+                }
+            } else cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+            data.set(getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
+        } else {
+            var cooldown = new HashMap<String, Long>();
+            cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+            data.set(getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
+        }
+    }
+    /**
+     * get cooldown
+     * @param player player
+     * @param name string
+     * @param seconds integer
+     * @return string
+     * @since many moons ago
+     */
+    public String getCooldown(Player player, String name, int seconds) {
+        var uuid = player.getUniqueId();
+        var data = getData(player);
+        var cooldownString = data.get(getKey("cooldown"), PersistentDataType.STRING);
+        if (cooldownString != null) {
+            var cooldown = getMessage().getMapStringLong(cooldownString);
+            if (cooldown.containsKey(name + "-" + uuid)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+                var timerResult = Integer.parseInt(seconds + "000");
+                if (timeElapsed < timerResult) {
+                    var result = (timerResult - timeElapsed);
+                    return String.valueOf(result).substring(0, String.valueOf(result).length() - 3);
+                } else return "0";
+            } else return "0";
+        } else return "0";
     }
 }

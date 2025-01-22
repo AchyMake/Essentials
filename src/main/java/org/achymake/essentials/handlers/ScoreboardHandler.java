@@ -3,12 +3,10 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Board;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +25,8 @@ public class ScoreboardHandler {
     }
     private final File file = new File(getInstance().getDataFolder(), "scoreboard.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-    public ScoreboardManager getScoreboardManager() {
-        return Bukkit.getScoreboardManager();
+    public File getFile() {
+        return file;
     }
     /**
      * get scoreboard.yml
@@ -75,11 +73,9 @@ public class ScoreboardHandler {
         if (!isEnable())return;
         var world = player.getWorld().getName();
         if (hasTitle(world) && isLine(world)) {
-            var taskID = getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId();
-            getUserdata().addTaskID(player, "board", taskID);
+            getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId());
         } else if (hasTitle() && isLine()) {
-            var taskID = getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId();
-            getUserdata().addTaskID(player, "board", taskID);
+            getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId());
         }
     }
     public void disable(Player player) {
@@ -94,7 +90,7 @@ public class ScoreboardHandler {
     public boolean hasBoard(Player player) {
         return getUserdata().hasTaskID(player, "board");
     }
-    private void setup() {
+    private boolean setup() {
         var lines = new ArrayList<String>();
         lines.add("&ename&f: %essentials_display_name%");
         lines.add("&erank&f: %vault_prefix%%vault_rank%%vault_suffix%");
@@ -111,13 +107,16 @@ public class ScoreboardHandler {
         config.set("worlds.test.lines", lines);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

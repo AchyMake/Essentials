@@ -35,7 +35,7 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (getUserdata().hasTaskID(player, "tpa")) {
                     if (getUserdata().getTpaFrom(player) != null) {
-                        var target = getUserdata().getTpaFrom(player).getPlayer();
+                        var target = getUserdata().getTpaFrom(player);
                         if (target != null) {
                             var tpaTask = getUserdata().getTaskID(target, "tpa");
                             if (getScheduler().isQueued(tpaTask)) {
@@ -43,16 +43,16 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getMessage().get("commands.tpaccept.tpa.sender", target.getName()));
                                 getMessage().sendActionBar(target, getMessage().get("events.teleport.success", player.getName()));
                                 target.teleport(player);
-                                getUserdata().setString(target, "tpa.sent", null);
-                                getUserdata().setString(player, "tpa.from", null);
+                                getUserdata().setTpaSent(target, null);
                                 getUserdata().removeTask(target, "tpa");
+                                getUserdata().setTpaFrom(player, null);
                                 getUserdata().removeTask(player, "tpa");
                             }
                         }
                     }
                 } else if (getUserdata().hasTaskID(player, "tpahere")) {
                     if (getUserdata().getTpaHereFrom(player) != null) {
-                        var target = getUserdata().getTpaHereFrom(player).getPlayer();
+                        var target = getUserdata().getTpaHereFrom(player);
                         if (target != null) {
                             var tpaHereTask = getUserdata().getTaskID(target, "tpahere");
                             if (getScheduler().isQueued(tpaHereTask)) {
@@ -60,9 +60,9 @@ public class TPAcceptCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getMessage().get("commands.tpaccept.tpahere.sender", target.getName()));
                                 getMessage().sendActionBar(player, getMessage().get("events.teleport.success", target.getName()));
                                 player.teleport(target);
-                                getUserdata().setString(target, "tpahere.sent", null);
-                                getUserdata().setString(player, "tpahere.from", null);
+                                getUserdata().setTpaHereFrom(player, null);
                                 getUserdata().removeTask(target, "tpahere");
+                                getUserdata().setTpaHereSent(target, null);
                                 getUserdata().removeTask(player, "tpahere");
                             }
                         }

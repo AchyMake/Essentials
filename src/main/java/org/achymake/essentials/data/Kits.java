@@ -25,6 +25,12 @@ public class Kits {
     }
     private final File file = new File(getInstance().getDataFolder(), "kits.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
     /**
      * get listed
      * @return set string
@@ -40,6 +46,9 @@ public class Kits {
      */
     public boolean isListed(String kitName) {
         return getListed().contains(kitName);
+    }
+    public boolean hasCooldown(String kitName) {
+        return config.isInt(kitName + ".cooldown");
     }
     /**
      * get cooldown
@@ -123,10 +132,11 @@ public class Kits {
      * setup
      * @since many moons ago
      */
-    private void setup() {
+    private boolean setup() {
         var lore = new ArrayList<String>();
         lore.add("&9Kit");
         lore.add("&7- &6Starter");
+        config.options().copyDefaults(true);
         config.addDefault("starter.price", 75.0);
         config.addDefault("starter.cooldown", 3600);
         config.addDefault("starter.items.sword.type", "stone_sword");
@@ -155,20 +165,22 @@ public class Kits {
         config.addDefault("food.cooldown", 1800);
         config.addDefault("food.items.steak.type", "cooked_beef");
         config.addDefault("food.items.steak.amount", 16);
-        config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reload kits.yml
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

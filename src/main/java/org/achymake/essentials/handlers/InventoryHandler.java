@@ -3,10 +3,15 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class InventoryHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
+    }
+    private MaterialHandler getMaterials() {
+        return getInstance().getMaterialHandler();
     }
     private boolean isBukkit() {
         return getInstance().isBukkit();
@@ -103,5 +108,11 @@ public class InventoryHandler {
      */
     public InventoryView openWorkbench(Player player) {
         return player.openWorkbench(null, true);
+    }
+    public boolean setHelmet(PlayerInventory inventory, ItemStack itemStack) {
+        if (inventory.getHelmet() == null) {
+            inventory.setHelmet(getMaterials().getItemStack(itemStack, 1));
+            return true;
+        } else return false;
     }
 }

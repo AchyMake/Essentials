@@ -20,7 +20,7 @@ public record Board(Player getPlayer) implements Runnable {
         return getInstance().getScoreboardHandler();
     }
     private ScoreboardManager getScoreboardManager() {
-        return getScoreboardHandler().getScoreboardManager();
+        return getInstance().getServer().getScoreboardManager();
     }
     private Scoreboard getMainScoreboard() {
         return getScoreboardManager().getMainScoreboard();
@@ -61,12 +61,7 @@ public record Board(Player getPlayer) implements Runnable {
                 }
                 if (!getLines().isEmpty()) {
                     for (int i = 0; i < getLines().size(); i++) {
-                        var team = scoreboard.getTeam(String.valueOf(i));
-                        if (team != null) {
-                            if (!getLines().get(i).equals(team.getPrefix())) {
-                                team.setPrefix(getLines().get(i));
-                            }
-                        }
+                        sidebar.getScore(getLines().get(i)).setScore(i);
                     }
                 }
             }
@@ -80,9 +75,6 @@ public record Board(Player getPlayer) implements Runnable {
             sidebar.numberFormat(NumberFormat.blank());
             if (!getLines().isEmpty()) {
                 for (int i = 0; i < getLines().size(); i++) {
-                    var team = scoreboard.registerNewTeam(String.valueOf(i));
-                    team.addEntry(String.valueOf(i));
-                    team.setPrefix(getLines().get(i));
                     sidebar.getScore(getLines().get(i)).setScore(i);
                 }
             }

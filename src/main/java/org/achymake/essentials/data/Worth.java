@@ -15,6 +15,12 @@ public class Worth {
     }
     private final File file = new File(getInstance().getDataFolder(), "worth.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
     /**
      * get listed
      * @return set string
@@ -47,35 +53,40 @@ public class Worth {
      * @param value double
      * @since many moons ago
      */
-    public void setWorth(Material material, double value) {
+    public boolean setWorth(Material material, double value) {
         if (value > 0) {
             config.set(material.toString(), value);
         } else config.set(material.toString(), null);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * setup worth.yml
      * @since many moons ago
      */
-    private void setup() {
+    private boolean setup() {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reload worth.yml if exists else setup
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

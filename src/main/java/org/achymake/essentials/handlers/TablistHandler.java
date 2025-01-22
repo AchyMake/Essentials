@@ -24,6 +24,9 @@ public class TablistHandler {
     }
     private final File file = new File(getInstance().getDataFolder(), "tablist.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
     /**
      * get tablist.yml
      * @return config
@@ -131,11 +134,9 @@ public class TablistHandler {
         if (isEnable()) {
             var world = player.getWorld().getName();
             if (hasName(world) && hasHeaderLines(world) && hasFooterLines(world)) {
-                var taskID = getScheduler().runTimer(new Tab(player), 0, getTick(world)).getTaskId();
-                getUserdata().addTaskID(player, "tab", taskID);
+                getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick(world)).getTaskId());
             } else if (hasName() && hasHeaderLines() && hasFooterLines()) {
-                var taskID = getScheduler().runTimer(new Tab(player), 0, getTick()).getTaskId();
-                getUserdata().addTaskID(player, "tab", taskID);
+                getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick()).getTaskId());
             }
         }
     }
@@ -160,7 +161,7 @@ public class TablistHandler {
      * setup
      * @since many moons ago
      */
-    private void setup() {
+    private boolean setup() {
         config.set("enable", false);
         var header = new ArrayList<String>();
         header.add("&6--------&l[&e&lplay.yourserver.org&6&l]&6--------");
@@ -189,17 +190,20 @@ public class TablistHandler {
         config.set("worlds.test.footer.lines", testFooter);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reload tablist.yml
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

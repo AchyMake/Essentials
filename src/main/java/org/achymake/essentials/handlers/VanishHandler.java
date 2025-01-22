@@ -46,7 +46,7 @@ public class VanishHandler {
     /**
      * toggle vanish
      * @param player target
-     * @return true if target is vanish else false
+     * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
     public boolean toggleVanish(Player player) {
@@ -55,7 +55,7 @@ public class VanishHandler {
     /**
      * toggle vanish
      * @param offlinePlayer offlinePlayer
-     * @return true if target is vanish else false
+     * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
     public boolean toggleVanish(OfflinePlayer offlinePlayer) {
@@ -65,57 +65,59 @@ public class VanishHandler {
      * set vanish
      * @param offlinePlayer offlinePlayer
      * @param value boolean
-     * @return true if target is vanish else false
+     * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
     public boolean setVanish(OfflinePlayer offlinePlayer, boolean value) {
-        getUserdata().setBoolean(offlinePlayer, "settings.vanished", value);
-        return isVanish(offlinePlayer);
+        return getUserdata().setBoolean(offlinePlayer, "settings.vanished", value);
     }
     /**
      * set vanish
      * @param player target
      * @param value boolean
-     * @return true if target is vanish else false
+     * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
     public boolean setVanish(Player player, boolean value) {
         if (value) {
-            player.setAllowFlight(true);
-            player.setInvulnerable(true);
-            player.setSleepingIgnored(true);
-            player.setCollidable(false);
-            player.setSilent(true);
-            player.setCanPickupItems(false);
-            getInstance().getOnlinePlayers().forEach(players -> {
-                if (!getVanished().contains(players)) {
-                    players.hidePlayer(getInstance(), player);
-                }
-            });
-            getUserdata().setBoolean(player, "settings.vanished", true);
-            getVanished().add(player);
-            getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("enable")));
-            var taskID = getScheduler().runTimer(new Vanish(player), 0, 50).getTaskId();
-            getUserdata().addTaskID(player, "vanish", taskID);
+            if (getUserdata().setBoolean(player, "settings.vanished", true)) {
+                player.setAllowFlight(true);
+                player.setInvulnerable(true);
+                player.setSleepingIgnored(true);
+                player.setCollidable(false);
+                player.setSilent(true);
+                player.setCanPickupItems(false);
+                getInstance().getOnlinePlayers().forEach(players -> {
+                    if (!getVanished().contains(players)) {
+                        players.hidePlayer(getInstance(), player);
+                    }
+                });
+                getVanished().add(player);
+                getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("enable")));
+                var taskID = getScheduler().runTimer(new Vanish(player), 0, 50).getTaskId();
+                getUserdata().addTaskID(player, "vanish", taskID);
+                return true;
+            } else return false;
         } else {
-            if (!player.hasPermission("essentials.command.fly")) {
-                player.setAllowFlight(false);
-            }
-            player.setInvulnerable(false);
-            player.setSleepingIgnored(false);
-            player.setCollidable(true);
-            player.setSilent(false);
-            player.setCanPickupItems(true);
-            getUserdata().setBoolean(player, "settings.vanished", false);
-            getUserdata().removeTask(player, "vanish");
-            getVanished().remove(player);
-            getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
-            if (!getVanished().isEmpty()) {
-                getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
-            }
-            getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("disable")));
+            if (getUserdata().setBoolean(player, "settings.vanished", false)) {
+                if (!player.hasPermission("essentials.command.fly")) {
+                    player.setAllowFlight(false);
+                }
+                player.setInvulnerable(false);
+                player.setSleepingIgnored(false);
+                player.setCollidable(true);
+                player.setSilent(false);
+                player.setCanPickupItems(true);
+                getUserdata().removeTask(player, "vanish");
+                getVanished().remove(player);
+                getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
+                if (!getVanished().isEmpty()) {
+                    getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
+                }
+                getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("disable")));
+                return true;
+            } else return false;
         }
-        return isVanish(player);
     }
     /**
      * disable this is for onDisable

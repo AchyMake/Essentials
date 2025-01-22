@@ -1,5 +1,6 @@
 package org.achymake.essentials;
 
+import net.milkbowl.vault.economy.Economy;
 import org.achymake.essentials.commands.*;
 import org.achymake.essentials.data.*;
 import org.achymake.essentials.handlers.*;
@@ -9,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -29,7 +31,6 @@ public final class Essentials extends JavaPlugin {
     private Userdata userdata;
     private Warps warps;
     private Worth worth;
-    private CooldownHandler cooldownHandler;
     private DateHandler dateHandler;
     private EconomyHandler economyHandler;
     private EntityHandler entityHandler;
@@ -58,7 +59,6 @@ public final class Essentials extends JavaPlugin {
         userdata = new Userdata();
         warps = new Warps();
         worth = new Worth();
-        cooldownHandler = new CooldownHandler();
         dateHandler = new DateHandler();
         economyHandler = new EconomyHandler();
         entityHandler = new EntityHandler();
@@ -78,7 +78,7 @@ public final class Essentials extends JavaPlugin {
         commands();
         events();
         reload();
-        getEconomyHandler().register();
+        getServicesManager().register(Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
         new PlaceholderProvider().register();
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
@@ -209,8 +209,6 @@ public final class Essentials extends JavaPlugin {
         new EntityTargetLivingEntity();
         new HangingBreakByEntity();
         new HangingPlace();
-        new InventoryClick();
-        new InventoryClose();
         new NotePlay();
         new PlayerBucketEmpty();
         new PlayerBucketEntity();
@@ -245,8 +243,14 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reload() {
-        getTablistHandler().disable();
-        getScoreboardHandler().disable();
+        if (!getOnlinePlayers().isEmpty()) {
+            for (var player : getOnlinePlayers()) {
+                getTablistHandler().disable(player);
+                if (getUserdata().hasBoard(player)) {
+                    getScoreboardHandler().disable(player);
+                }
+            }
+        }
         if (!new File(getDataFolder(), "config.yml").exists()) {
             getConfig().options().copyDefaults(true);
             saveConfig();
@@ -264,9 +268,9 @@ public final class Essentials extends JavaPlugin {
         getSpawn().reload();
         getWarps().reload();
         getWorth().reload();
-        getEntityHandler().reload();
         getScoreboardHandler().reload();
         getTablistHandler().reload();
+        getEntityHandler().reload();
         if (!getOnlinePlayers().isEmpty()) {
             for (var player : getOnlinePlayers()) {
                 getTablistHandler().apply(player);
@@ -333,9 +337,6 @@ public final class Essentials extends JavaPlugin {
     public DateHandler getDateHandler() {
         return dateHandler;
     }
-    public CooldownHandler getCooldownHandler() {
-        return cooldownHandler;
-    }
     public Worth getWorth() {
         return worth;
     }
@@ -389,6 +390,9 @@ public final class Essentials extends JavaPlugin {
     }
     public Player getPlayer(String username) {
         return getServer().getPlayerExact(username);
+    }
+    public Player getPlayer(UUID uuid) {
+        return getServer().getPlayer(uuid);
     }
     public OfflinePlayer getOfflinePlayer(UUID uuid) {
         return getServer().getOfflinePlayer(uuid);

@@ -18,6 +18,12 @@ public class Jail {
     }
     private final File file = new File(getInstance().getDataFolder(), "jail.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
     /**
      * get jail location
      * @return location if world exists else null
@@ -41,41 +47,43 @@ public class Jail {
      * @param location location
      * @since many moons ago
      */
-    public void setLocation(Location location) {
-        var world = location.getWorld();
-        if (world != null) {
-            config.set("world", location.getWorld().getName());
-            config.set("x", location.getX());
-            config.set("y", location.getY());
-            config.set("z", location.getZ());
-            config.set("yaw", location.getYaw());
-            config.set("pitch", location.getPitch());
-            try {
-                config.save(file);
-            } catch (IOException e) {
-                getInstance().sendWarning(e.getMessage());
-            }
+    public boolean setLocation(Location location) {
+        config.set("world", location.getWorld().getName());
+        config.set("x", location.getX());
+        config.set("y", location.getY());
+        config.set("z", location.getZ());
+        config.set("yaw", location.getYaw());
+        config.set("pitch", location.getPitch());
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * setup
      * @since many moons ago
      */
-    private void setup() {
+    private boolean setup() {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reload jail.yml
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

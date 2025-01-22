@@ -29,23 +29,26 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (target == player) {
-                        getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
-                        if (getUserdata().isFrozen(target)) {
-                            player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                        if (getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target))) {
+                            if (getUserdata().isFrozen(target)) {
+                                player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                            } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                     } else if (!target.hasPermission("essentials.command.freeze.exempt")) {
-                        getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
-                        if (getUserdata().isFrozen(target)) {
-                            player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
-                        } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                        if (getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target))) {
+                            if (getUserdata().isFrozen(target)) {
+                                player.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                            } else player.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                     } else player.sendMessage(getMessage().get("commands.freeze.exempt", target.getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer));
-                        if (getUserdata().isFrozen(offlinePlayer)) {
-                            player.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
-                        } else player.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                        if (getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer))) {
+                            if (getUserdata().isFrozen(offlinePlayer)) {
+                                player.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
+                            } else player.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;
@@ -54,17 +57,19 @@ public class FreezeCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target));
-                    if (getUserdata().isFrozen(target)) {
-                        consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
-                    } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                    if (getUserdata().setBoolean(target, "settings.frozen", !getUserdata().isFrozen(target))) {
+                        if (getUserdata().isFrozen(target)) {
+                            consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", target.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", target.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
                 } else {
                     var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                     if (getUserdata().exists(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer));
-                        if (getUserdata().isFrozen(offlinePlayer)) {
-                            consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
-                        } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                        if (getUserdata().setBoolean(offlinePlayer, "settings.frozen", !getUserdata().isFrozen(offlinePlayer))) {
+                            if (getUserdata().isFrozen(offlinePlayer)) {
+                                consoleCommandSender.sendMessage(getMessage().get("commands.freeze.enable", offlinePlayer.getName()));
+                            } else consoleCommandSender.sendMessage(getMessage().get("commands.freeze.disable", offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                 }
                 return true;

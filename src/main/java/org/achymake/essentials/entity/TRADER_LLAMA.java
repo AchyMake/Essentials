@@ -13,7 +13,7 @@ public class TRADER_LLAMA {
     }
     private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-    private void setup() {
+    private boolean setup() {
         config.set("levels.1.chance", -1.0);
         config.set("levels.1.health", 40.0);
         config.set("levels.1.scale", 1.0);
@@ -101,13 +101,16 @@ public class TRADER_LLAMA {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

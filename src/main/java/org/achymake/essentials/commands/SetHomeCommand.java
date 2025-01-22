@@ -29,15 +29,19 @@ public class SetHomeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getUserdata().setHome(player, "home")) {
-                    player.sendMessage(getMessage().get("commands.sethome.success", "home"));
+                if (getUserdata().isHome(player, "home") || getUserdata().getMaxHomes(player) > getUserdata().getHomes(player).size()) {
+                    if (getUserdata().setHome(player, "home")) {
+                        player.sendMessage(getMessage().get("commands.sethome.success", "home"));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                 } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(getUserdata().getHomes(player).size())));
                 return true;
             } else if (args.length == 1) {
                 var homeName = args[0].toLowerCase();
                 if (!homeName.equalsIgnoreCase("bed")) {
-                    if (getUserdata().setHome(player, homeName)) {
-                        player.sendMessage(getMessage().get("commands.sethome.success", homeName));
+                    if (getUserdata().isHome(player, homeName) || getUserdata().getMaxHomes(player) > getUserdata().getHomes(player).size()) {
+                        if (getUserdata().setHome(player, homeName)) {
+                            player.sendMessage(getMessage().get("commands.sethome.success", homeName));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                     } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(getUserdata().getHomes(player).size())));
                 } else player.sendMessage(getMessage().get("commands.sethome.bed"));
                 return true;

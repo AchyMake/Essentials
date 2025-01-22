@@ -13,7 +13,9 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Message {
     private Essentials getInstance() {
@@ -21,6 +23,12 @@ public class Message {
     }
     private final File file = new File(getInstance().getDataFolder(), "message.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    public File getFile() {
+        return file;
+    }
+    public FileConfiguration getConfig() {
+        return config;
+    }
     /**
      * @param path string
      * @return string else missing value
@@ -134,6 +142,38 @@ public class Message {
         }
         return builder.toString().strip();
     }
+    public Map<String, Integer> getMapStringInteger(String mapString) {
+        var listed = new HashMap<String, Integer>();
+        var result = mapString.replace("{","")
+                .replace("}","")
+                .replace(",", "");
+        if (result.contains(" ")) {
+            for (var test : result.split(" ")) {
+                var args = test.split("=");
+                listed.put(args[0], Integer.parseInt(args[1]));
+            }
+        } else {
+            var args = result.split("=");
+            listed.put(args[0], Integer.parseInt(args[1]));
+        }
+        return listed;
+    }
+    public Map<String, Long> getMapStringLong(String mapString) {
+        var listed = new HashMap<String, Long>();
+        var result = mapString.replace("{","")
+                .replace("}","")
+                .replace(",", "");
+        if (result.contains(" ")) {
+            for (var test : result.split(" ")) {
+                var args = test.split("=");
+                listed.put(args[0], Long.parseLong(args[1]));
+            }
+        } else {
+            var args = result.split("=");
+            listed.put(args[0], Long.parseLong(args[1]));
+        }
+        return listed;
+    }
     /**
      * example: iron_ingot returns Iron Ingot
      * @param string string
@@ -178,8 +218,9 @@ public class Message {
         }
         return message;
     }
-    private void setup() {
+    private boolean setup() {
         config.options().copyDefaults(true);
+        config.set("error.file.exception", "&cUnable to save&f {0}&c please try again!");
         config.set("error.target.offline", "{0}&c is currently offline");
         config.set("error.target.invalid", "{0}&c has never joined");
         config.set("error.world.invalid", "{0}&c does not exists");
@@ -521,17 +562,20 @@ public class Message {
         config.set("events.login.banned", "&cReason&f: {0}&c, Expires&f: {1}");
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
      * reloads message.yml
      * @since many moons ago
      */
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.CooldownHandler;
 import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,9 +16,6 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
-    }
-    private CooldownHandler getCooldown() {
-        return getInstance().getCooldownHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -35,10 +31,10 @@ public class RTPCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.rtp");
-                if (!getCooldown().has(player, "rtp", timer)) {
-                    getCooldown().add(player, "rtp", timer);
+                if (!getUserdata().hasCooldown(player, "rtp", timer)) {
+                    getUserdata().addCooldown(player, "rtp", timer);
                     getWorldHandler().randomTeleport(player);
-                } else player.sendMessage(getMessage().get("commands.rtp.cooldown", getCooldown().get(player, "rtp", timer)));
+                } else player.sendMessage(getMessage().get("commands.rtp.cooldown", getUserdata().getCooldown(player, "rtp", timer)));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.rtp.other")) {

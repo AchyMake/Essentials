@@ -2,35 +2,24 @@ package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.achymake.essentials.handlers.InventoryHandler;
-import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.InventoryView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class Bank {
-    private final Map<Player, InventoryView> banks = new HashMap<>();
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private InventoryHandler getInventoryHandler() {
-        return getInstance().getInventoryHandler();
-    }
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
-    }
-    private MaterialHandler getMaterials() {
-        return getInstance().getMaterialHandler();
     }
     /**
      * get file bank/bankName.yml
@@ -137,28 +126,6 @@ public class Bank {
         } else return false;
     }
     /**
-     * get owner uuid string
-     * @param bankName string
-     * @return string if bank exists else null
-     * @since many moons ago
-     */
-    public String getOwnerUUIDString(String bankName) {
-        if (exists(bankName)) {
-            return getConfig(bankName).getString("owner");
-        } else return null;
-    }
-    /**
-     * get owner uuid
-     * @param bankName string
-     * @return uuid if bank exists else null
-     * @since many moons ago
-     */
-    public UUID getOwnerUUID(String bankName) {
-        if (exists(bankName)) {
-            return UUID.fromString(getOwnerUUIDString(bankName));
-        } else return null;
-    }
-    /**
      * get owner offlinePlayer
      * @param bankName string
      * @return offlinePlayer if bank exists else null
@@ -166,7 +133,10 @@ public class Bank {
      */
     public OfflinePlayer getOwner(String bankName) {
         if (exists(bankName)) {
-            return getInstance().getOfflinePlayer(getOwnerUUID(bankName));
+            var uuidString = getConfig(bankName).getString("owner");
+            if (uuidString != null) {
+                return getInstance().getOfflinePlayer(UUID.fromString(uuidString));
+            } else return null;
         } else return null;
     }
     /**
@@ -188,45 +158,16 @@ public class Bank {
      * @since many moons ago
      */
     public List<OfflinePlayer> getMembers(String bankName) {
+        var listed = new ArrayList<OfflinePlayer>();
         if (exists(bankName)) {
-            var listed = new ArrayList<OfflinePlayer>();
-            var members = getMembersUUID(bankName);
-            if (!members.isEmpty()) {
-                for (var memberUUID : members) {
-                    listed.add(getInstance().getOfflinePlayer(memberUUID));
+            var stringList = getConfig(bankName).getStringList("members");
+            if (!stringList.isEmpty()) {
+                for (var string : getConfig(bankName).getStringList("members")) {
+                    listed.add(getInstance().getOfflinePlayer(UUID.fromString(string)));
                 }
             }
-            return listed;
-        } else return new ArrayList<>();
-    }
-    /**
-     * get list uuid
-     * @param bankName string
-     * @return list uuid if exists else empty list
-     * @since many moons ago
-     */
-    public List<UUID> getMembersUUID(String bankName) {
-        if (exists(bankName)) {
-            var listed = new ArrayList<UUID>();
-            var members = getMembersString(bankName);
-            if (!members.isEmpty()) {
-                for (var memberUUIDString : members) {
-                    listed.add(UUID.fromString(memberUUIDString));
-                }
-            }
-            return listed;
-        } else return new ArrayList<>();
-    }
-    /**
-     * get list uuid string
-     * @param bankName string
-     * @return list uuid string if exists else empty list
-     * @since many moons ago
-     */
-    public List<String> getMembersString(String bankName) {
-        if (exists(bankName)) {
-            return getConfig(bankName).getStringList("members");
-        } else return new ArrayList<>();
+        }
+        return listed;
     }
     /**
      * is member
@@ -252,7 +193,7 @@ public class Bank {
             if (!isMember(bankName, offlinePlayer)) {
                 var file = getFile(bankName);
                 var config = YamlConfiguration.loadConfiguration(file);
-                var listed = getMembersString(bankName);
+                var listed = getConfig(bankName).getStringList("members");
                 listed.add(offlinePlayer.getUniqueId().toString());
                 config.set("members", listed);
                 try {
@@ -279,7 +220,7 @@ public class Bank {
             if (isMember(bankName, offlinePlayer)) {
                 var file = getFile(bankName);
                 var config = YamlConfiguration.loadConfiguration(file);
-                var listed = getMembersString(bankName);
+                var listed = getConfig(bankName).getStringList("members");
                 listed.remove(offlinePlayer.getUniqueId().toString());
                 config.set("members", listed);
                 try {
@@ -346,43 +287,6 @@ public class Bank {
             }
         } else return false;
     }
-    public boolean hasBankOpened(Player player) {
-        return banks.containsKey(player);
-    }
-    public void openBankWithdraw(Player player) {
-        var anvil = getInventoryHandler().openAnvil(player);
-        if (anvil != null) {
-            var itemStack = getMaterials().getItemStack("paper", 1);
-            var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("0.0");
-            itemStack.setItemMeta(itemMeta);
-            anvil.setTitle("Bank: Withdraw");
-            anvil.setItem(0, itemStack);
-            player.updateInventory();
-            banks.put(player, anvil);
-        } else player.sendMessage(getInstance().getMessage().get("error.invalid"));
-    }
-    public void openBankDeposit(Player player) {
-        var anvil = getInventoryHandler().openAnvil(player);
-        if (anvil != null) {
-            var itemStack = getMaterials().getItemStack("paper", 1);
-            var itemMeta = itemStack.getItemMeta();
-            itemMeta.setDisplayName("0.0");
-            itemStack.setItemMeta(itemMeta);
-            anvil.setTitle("Bank: Deposit");
-            anvil.setItem(0, itemStack);
-            player.updateInventory();
-            banks.put(player, anvil);
-        } else player.sendMessage(getInstance().getMessage().get("error.invalid"));
-    }
-    public void closeBank(Player player) {
-        if (banks.get(player).getTopInventory().isEmpty())return;
-        banks.get(player).getTopInventory().forEach(itemStack -> {
-            if (itemStack == null)return;
-            itemStack.setAmount(0);
-        });
-        banks.remove(player);
-    }
     public void reload() {
         var folder = new File(getInstance().getDataFolder(), "bank");
         if (folder.exists() && folder.isDirectory()) {
@@ -397,8 +301,5 @@ public class Bank {
                 }
             }
         }
-    }
-    public Map<Player, InventoryView> getBanks() {
-        return banks;
     }
 }

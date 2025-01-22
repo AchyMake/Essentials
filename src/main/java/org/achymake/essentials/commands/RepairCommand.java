@@ -2,7 +2,7 @@ package org.achymake.essentials.commands;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
-import org.achymake.essentials.handlers.CooldownHandler;
+import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,8 +17,8 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private CooldownHandler getCooldown() {
-        return getInstance().getCooldownHandler();
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
@@ -36,12 +36,12 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.repair");
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    if (!getCooldown().has(player, "repair", timer)) {
+                    if (!getUserdata().hasCooldown(player, "repair", timer)) {
                         if (getMaterials().repair(heldItem)) {
-                            getCooldown().add(player, "repair", timer);
+                            getUserdata().addCooldown(player, "repair", timer);
                             player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
                         } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
-                    } else player.sendMessage(getMessage().get("commands.repair.cooldown", getCooldown().get(player, "repair", timer)));
+                    } else player.sendMessage(getMessage().get("commands.repair.cooldown", getUserdata().getCooldown(player, "repair", timer)));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {

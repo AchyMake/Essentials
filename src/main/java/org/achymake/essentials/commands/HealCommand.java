@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.CooldownHandler;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -17,9 +16,6 @@ public class HealCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private CooldownHandler getCooldown() {
-        return getInstance().getCooldownHandler();
-    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -31,12 +27,12 @@ public class HealCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 int timer = getInstance().getConfig().getInt("commands.cooldown.heal");
-                if (!getCooldown().has(player, "heal", timer)) {
+                if (!getUserdata().hasCooldown(player, "heal", timer)) {
                     player.setFoodLevel(20);
                     player.setHealth(player.getMaxHealth());
-                    getCooldown().add(player, "heal", timer);
+                    getUserdata().addCooldown(player, "heal", timer);
                     player.sendMessage(getMessage().get("commands.heal.success"));
-                } else getMessage().sendActionBar(player, getMessage().get("commands.heal.cooldown", getCooldown().get(player, "heal", timer)));
+                } else getMessage().sendActionBar(player, getMessage().get("commands.heal.cooldown", getUserdata().getCooldown(player, "heal", timer)));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.heal.other")) {

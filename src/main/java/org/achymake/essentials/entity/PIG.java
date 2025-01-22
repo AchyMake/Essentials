@@ -13,7 +13,7 @@ public class PIG {
     }
     private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-    private void setup() {
+    private boolean setup() {
         config.set("levels.common.chance", -1.0);
         config.set("levels.common.health", 20.0);
         config.set("levels.common.scale", 1.0);
@@ -101,13 +101,16 @@ public class PIG {
         config.options().copyDefaults(true);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return true;
         }
     }
-    public void reload() {
+    public boolean reload() {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        } else setup();
+            return true;
+        } else return setup();
     }
 }

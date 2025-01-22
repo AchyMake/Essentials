@@ -29,10 +29,9 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                 if (getUserdata().exists(offlinePlayer)) {
                     if (getUserdata().isBanned(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.banned", false);
-                        getUserdata().setString(offlinePlayer, "settings.ban-reason", null);
-                        getUserdata().setInt(offlinePlayer, "settings.ban-expire", 0);
-                        player.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                        if (getUserdata().unban(offlinePlayer)) {
+                            player.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else player.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                 }
                 return true;
@@ -42,10 +41,9 @@ public class UnBanCommand implements CommandExecutor, TabCompleter {
                 var offlinePlayer = getInstance().getOfflinePlayer(args[0]);
                 if (getUserdata().exists(offlinePlayer)) {
                     if (getUserdata().isBanned(offlinePlayer)) {
-                        getUserdata().setBoolean(offlinePlayer, "settings.banned", false);
-                        getUserdata().setString(offlinePlayer, "settings.ban-reason", null);
-                        getUserdata().setInt(offlinePlayer, "settings.ban-expire", 0);
-                        consoleCommandSender.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                        if (getUserdata().unban(offlinePlayer)) {
+                            consoleCommandSender.sendMessage(getMessage().get("commands.unban.banned", offlinePlayer.getName()));
+                        } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(offlinePlayer).getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.unban.unbanned", offlinePlayer.getName()));
                     return true;
                 }

@@ -194,14 +194,16 @@ public class EntityHandler {
      * @param value integer
      * @since many moons ago
      */
-    public void setInt(EntityType entityType, String path, int value) {
+    public boolean setInt(EntityType entityType, String path, int value) {
         var file = getFile(entityType);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**
@@ -211,14 +213,16 @@ public class EntityHandler {
      * @param value boolean
      * @since many moons ago
      */
-    public void setBoolean(EntityType entityType, String path, boolean value) {
+    public boolean setBoolean(EntityType entityType, String path, boolean value) {
         var file = getFile(entityType);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set(path, value);
         try {
             config.save(file);
+            return true;
         } catch (IOException e) {
             getInstance().sendWarning(e.getMessage());
+            return false;
         }
     }
     /**

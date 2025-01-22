@@ -116,7 +116,4 @@ public class EconomyHandler {
     public double getMinimumBankDeposit() {
         return getConfig().getDouble("economy.bank.minimum-withdraw");
     }
-    public void register() {
-        getServicesManager().register(Economy.class, new VaultEconomyProvider(getInstance()), getInstance(), ServicePriority.Normal);
-    }
 }

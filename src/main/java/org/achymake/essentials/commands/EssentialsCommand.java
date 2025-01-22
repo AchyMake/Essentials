@@ -70,6 +70,7 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("reload")) {
                     commands.add("userdata");
+                    commands.add("bank");
                 }
             }
         }

@@ -188,16 +188,18 @@ public class VaultEconomyProvider implements Economy {
     public EconomyResponse bankWithdraw(String name, double amount) {
         if (ess.getBank().exists(name)) {
             if (ess.getBank().has(name, amount)) {
-                ess.getBank().remove(name, amount);
-                return new EconomyResponse(amount, ess.getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+                if (ess.getBank().remove(name, amount)) {
+                    return new EconomyResponse(amount, ess.getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+                } else return new EconomyResponse(amount, ess.getBank().get(name), EconomyResponse.ResponseType.FAILURE, "Could not save file");
             } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not have " + amount);
         } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists: " + name);
     }
     @Override
     public EconomyResponse bankDeposit(String name, double amount) {
         if (ess.getBank().exists(name)) {
-            ess.getBank().add(name, amount);
-            return new EconomyResponse(amount, ess.getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            if (ess.getBank().add(name, amount)) {
+                return new EconomyResponse(amount, ess.getBank().get(name), EconomyResponse.ResponseType.SUCCESS, null);
+            } else return new EconomyResponse(0, ess.getBank().get(name), EconomyResponse.ResponseType.FAILURE, "Could not save file");
         } else return new EconomyResponse(0, 0, EconomyResponse.ResponseType.FAILURE, "Bank does not exists: " + name);
     }
     @Override

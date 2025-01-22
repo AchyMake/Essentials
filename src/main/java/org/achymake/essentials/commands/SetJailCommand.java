@@ -29,13 +29,9 @@ public class SetJailCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                if (getJail().getLocation() != null) {
-                    getJail().setLocation(player.getLocation());
-                    player.sendMessage(getMessage().get("commands.setjail.relocated"));
-                } else {
-                    getJail().setLocation(player.getLocation());
+                if (getJail().setLocation(player.getLocation())) {
                     player.sendMessage(getMessage().get("commands.setjail.set"));
-                }
+                } else player.sendMessage(getMessage().get("error.file.exception", getJail().getFile().getName()));
                 return true;
             }
         }

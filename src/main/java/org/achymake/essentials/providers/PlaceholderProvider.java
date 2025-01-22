@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 public class PlaceholderProvider extends PlaceholderExpansion {
     @Override
     public String getIdentifier() {
-        return "essentials";
+        return Essentials.getInstance().name().toLowerCase();
     }
     @Override
     public String getAuthor() {
@@ -38,6 +38,9 @@ public class PlaceholderProvider extends PlaceholderExpansion {
             return "";
         } else {
             var instance = Essentials.getInstance();
+            var userdata = instance.getUserdata();
+            var bank = instance.getBank();
+            var economy = instance.getEconomyHandler();
             switch (params) {
                 case "name" -> {
                     return player.getName();
@@ -46,7 +49,7 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     return instance.getUserdata().getDisplayName(player);
                 }
                 case "account" -> {
-                    return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getUserdata().getAccount(player));
+                    return economy.currency() + economy.format(userdata.getAccount(player));
                 }
                 case "bank_name" -> {
                     if (instance.getUserdata().hasBank(player)) {
@@ -55,26 +58,31 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 }
                 case "bank_account" -> {
                     if (instance.getUserdata().hasBank(player)) {
-                        return instance.getEconomyHandler().currency() + instance.getEconomyHandler().format(instance.getBank().get(instance.getUserdata().getBank(player)));
+                        return economy.currency() + economy.format(bank.get(userdata.getBank(player)));
                     } else return "0";
                 }
+                case "bank_owner" -> {
+                    if (instance.getUserdata().hasBank(player)) {
+                        return bank.getOwner(userdata.getBank(player)).getName();
+                    } else return "None";
+                }
                 case "pvp" -> {
-                    return String.valueOf(instance.getUserdata().isPVP(player));
+                    return String.valueOf(userdata.isPVP(player));
                 }
                 case "homes_max" -> {
-                    return String.valueOf(instance.getUserdata().getMaxHomes(player));
+                    return String.valueOf(userdata.getMaxHomes(player));
                 }
                 case "homes_size" -> {
-                    return String.valueOf(instance.getUserdata().getHomes(player).size());
+                    return String.valueOf(userdata.getHomes(player).size());
                 }
                 case "homes_left" -> {
-                    return String.valueOf(instance.getUserdata().getMaxHomes(player) - instance.getUserdata().getHomes(player).size());
+                    return String.valueOf(userdata.getMaxHomes(player) - userdata.getHomes(player).size());
                 }
                 case "vanished" -> {
                     return String.valueOf(instance.getVanishHandler().isVanish(player));
                 }
                 case "online_players" -> {
-                    return String.valueOf(instance.getServer().getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
+                    return String.valueOf(instance.getOnlinePlayers().size() - instance.getVanishHandler().getVanished().size());
                 }
                 case "health" -> {
                     return String.valueOf((int) player.getHealth());

@@ -29,16 +29,15 @@ public class WhisperCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length > 1) {
-                var username = args[0];
-                var target = getInstance().getPlayer(username);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     var message = getMessage().toString(args, 1);
-                    getUserdata().setString(target, "last-whisper", player.getUniqueId().toString());
-                    getUserdata().setString(player, "last-whisper", target.getUniqueId().toString());
+                    getUserdata().setLastWhisper(target, player);
                     target.sendMessage(getMessage().get("commands.whisper.target", player.getName(), message));
+                    getUserdata().setLastWhisper(player, target);
                     player.sendMessage(getMessage().get("commands.whisper.sender", target.getName(), message));
                     getMessage().sendAll(getMessage().get("commands.whisper.notify", player.getName(), target.getName(), message), "essentials.command.whisper.notify");
-                } else player.sendMessage(getMessage().get("error.target.offline", username));
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
         }

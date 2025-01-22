@@ -20,11 +20,11 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
-    private Message getMessage() {
-        return getInstance().getMessage();
-    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
     }
     public TPACommand() {
         getInstance().getCommand("tpa").setExecutor(this);
@@ -40,17 +40,17 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                             var taskID = getScheduler().runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    getUserdata().setString(target, "tpa.from", null);
-                                    getUserdata().setString(player, "tpa.sent", null);
+                                    getUserdata().setTpaFrom(target, null);
                                     getUserdata().removeTask(target, "tpa");
+                                    getUserdata().setTpaSent(player, null);
                                     getUserdata().removeTask(player, "tpa");
                                     target.sendMessage(getMessage().get("commands.tpa.expired"));
                                     player.sendMessage(getMessage().get("commands.tpa.expired"));
                                 }
                             }, 300).getTaskId();
-                            getUserdata().setString(player, "tpa.sent", target.getUniqueId().toString());
-                            getUserdata().setString(target, "tpa.from", player.getUniqueId().toString());
+                            getUserdata().setTpaFrom(target, player);
                             getUserdata().addTaskID(target, "tpa", taskID);
+                            getUserdata().setTpaSent(player, target);
                             getUserdata().addTaskID(player, "tpa", taskID);
                             target.sendMessage(getMessage().get("commands.tpa.target.notify", player.getName()));
                             target.sendMessage(getMessage().get("commands.tpa.target.decide"));

@@ -35,14 +35,14 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 if (getUserdata().hasTaskID(player, "tpa")) {
                     if (getUserdata().getTpaFrom(player) != null) {
-                        var target = getUserdata().getTpaFrom(player).getPlayer();
+                        var target = getUserdata().getTpaFrom(player);
                         if (target != null) {
                             var tpaTask = getUserdata().getTaskID(target, "tpa");
                             if (getScheduler().isQueued(tpaTask)) {
                                 getScheduler().cancel(tpaTask);
-                                getUserdata().setString(player, "tpa.from", null);
-                                getUserdata().setString(target, "tpa.sent", null);
+                                getUserdata().setTpaSent(target, null);
                                 getUserdata().removeTask(target, "tpa");
+                                getUserdata().setTpaFrom(player, null);
                                 getUserdata().removeTask(player, "tpa");
                                 target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
                                 player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));
@@ -51,14 +51,14 @@ public class TPDenyCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (getUserdata().hasTaskID(player, "tpahere")) {
                     if (getUserdata().getTpaHereFrom(player) != null) {
-                        var target = getUserdata().getTpaHereFrom(player).getPlayer();
+                        var target = getUserdata().getTpaHereFrom(player);
                         if (target != null) {
                             var tpaHereTask = getUserdata().getTaskID(target, "tpahere");
                             if (getScheduler().isQueued(tpaHereTask)) {
                                 getScheduler().cancel(tpaHereTask);
-                                getUserdata().setString(player, "tpahere.from", null);
-                                getUserdata().setString(target, "tpahere.sent", null);
+                                getUserdata().setTpaHereSent(target, null);
                                 getUserdata().removeTask(target, "tpahere");
+                                getUserdata().setTpaHereFrom(player, null);
                                 getUserdata().removeTask(player, "tpahere");
                                 target.sendMessage(getMessage().get("commands.tpdeny.target", player.getName()));
                                 player.sendMessage(getMessage().get("commands.tpdeny.sender", target.getName()));

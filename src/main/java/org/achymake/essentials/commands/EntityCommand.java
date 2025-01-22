@@ -36,43 +36,49 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "settings.hostile", value);
-                    player.sendMessage(getMessage().get("commands.entity.hostile", entityName, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.hostile", value)) {
+                        player.sendMessage(getMessage().get("commands.entity.hostile", entityName, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("chunk-limit")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var limit = Integer.parseInt(args[2]);
-                    getEntityHandler().setInt(entityType, "settings.chunk-limit", limit);
-                    player.sendMessage(getMessage().get("commands.entity.chunk-limit", entityName, String.valueOf(limit)));
+                    if (getEntityHandler().setInt(entityType, "settings.chunk-limit", limit)) {
+                        player.sendMessage(getMessage().get("commands.entity.chunk-limit", entityName, String.valueOf(limit)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-spawn")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-spawn", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-spawn", entityName, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-spawn", value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-spawn", entityName, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-block-form")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-block-form", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-block-form", entityName, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-block-form", value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-block-form", entityName, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-explode")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-explode", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-explode", entityName, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-explode", value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-explode", entityName, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-change-block")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var value = Boolean.parseBoolean(args[2]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-change-block", value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-change-block", entityName, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-change-block", value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-change-block", entityName, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 }
             } else if (args.length == 4) {
@@ -81,40 +87,45 @@ public class EntityCommand implements CommandExecutor, TabCompleter {
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var blockType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-interact." + blockType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-interact", entityName, blockType, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-interact." + blockType, value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-interact", entityName, blockType, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-target")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-target." + targetType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-target", entityName, targetType, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-target." + targetType, value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-target", entityName, targetType, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-entity-damage")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-entity-damage." + targetType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-entity-damage", entityName, targetType, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-entity-damage." + targetType, value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-entity-damage", entityName, targetType, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-hanging-break")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var targetType = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-hanging-break." + targetType, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-hanging-break", entityName, targetType, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-hanging-break." + targetType, value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-hanging-break", entityName, targetType, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 } else if (args[1].equalsIgnoreCase("disable-spawn-reason")) {
                     var entityType = getEntityHandler().getType(args[0]);
                     var entityName = getMessage().toTitleCase(entityType.toString());
                     var spawnReason = args[2].toUpperCase();
                     var value = Boolean.parseBoolean(args[3]);
-                    getEntityHandler().setBoolean(entityType, "settings.disable-spawn-reason." + spawnReason, value);
-                    player.sendMessage(getMessage().get("commands.entity.disable-spawn-reason", entityName, spawnReason, String.valueOf(value)));
+                    if (getEntityHandler().setBoolean(entityType, "settings.disable-spawn-reason." + spawnReason, value)) {
+                        player.sendMessage(getMessage().get("commands.entity.disable-spawn-reason", entityName, spawnReason, String.valueOf(value)));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getEntityHandler().getFile(entityType).getName()));
                     return true;
                 }
             }
