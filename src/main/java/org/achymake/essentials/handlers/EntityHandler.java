@@ -1225,30 +1225,6 @@ public class EntityHandler {
         }
     }
     /**
-     * is tamed
-     * @param entity entity
-     * @return true if entity is tamed else false
-     * @since many moons ago
-     */
-    public boolean isTamed(Entity entity) {
-        if (entity instanceof Tameable tameable) {
-            return tameable.isTamed();
-        } else return false;
-    }
-    /**
-     * get owner
-     * @param entity entity
-     * @return animalTamer
-     * @since many moons ago
-     */
-    public AnimalTamer getOwner(Entity entity) {
-        if (entity instanceof Tameable tameable) {
-            if (tameable.getOwner() != null) {
-                return getInstance().getOfflinePlayer(tameable.getOwner().getUniqueId());
-            } else return null;
-        } else return null;
-    }
-    /**
      * reload entity folder
      * @since many moons ago
      */

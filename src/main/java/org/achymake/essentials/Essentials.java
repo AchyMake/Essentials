@@ -11,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -46,7 +45,6 @@ public final class Essentials extends JavaPlugin {
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
     private PluginManager pluginManager;
-    private ServicesManager servicesManager;
     @Override
     public void onEnable() {
         instance = this;
@@ -74,11 +72,10 @@ public final class Essentials extends JavaPlugin {
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
         pluginManager = getServer().getPluginManager();
-        servicesManager = getServer().getServicesManager();
         commands();
         events();
         reload();
-        getServicesManager().register(Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
+        getServer().getServicesManager().register(Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
         new PlaceholderProvider().register();
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
@@ -288,9 +285,6 @@ public final class Essentials extends JavaPlugin {
     }
     public List<OfflinePlayer> getOfflinePlayers() {
         return getUserdata().getOfflinePlayers();
-    }
-    public ServicesManager getServicesManager() {
-        return servicesManager;
     }
     public PluginManager getPluginManager() {
         return pluginManager;

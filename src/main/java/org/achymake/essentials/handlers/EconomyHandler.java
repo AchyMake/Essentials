@@ -1,14 +1,10 @@
 package org.achymake.essentials.handlers;
 
-import net.milkbowl.vault.economy.Economy;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Bank;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.providers.VaultEconomyProvider;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -26,9 +22,6 @@ public class EconomyHandler {
     }
     private Bank getBank() {
         return getInstance().getBank();
-    }
-    private ServicesManager getServicesManager() {
-        return getInstance().getServicesManager();
     }
     public double get(OfflinePlayer offlinePlayer) {
         return getUserdata().getAccount(offlinePlayer);
