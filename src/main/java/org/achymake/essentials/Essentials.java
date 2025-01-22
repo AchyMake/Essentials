@@ -76,6 +76,10 @@ public final class Essentials extends JavaPlugin {
         events();
         reload();
         getServer().getServicesManager().register(Economy.class, new VaultEconomyProvider(this), this, ServicePriority.Normal);
+        if (getPluginManager().isPluginEnabled("PVPAPI")) {
+            new PVPProvider(this).register();
+            sendInfo("Hooked to PVPAPI");
+        }
         new PlaceholderProvider().register();
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
