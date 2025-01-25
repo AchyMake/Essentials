@@ -4,6 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EntityHandler;
+import org.achymake.essentials.handlers.ScheduleHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -19,11 +20,14 @@ public class EntityDamageByEntity implements Listener {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
+    private Userdata getUserdata() {
+        return getInstance().getUserdata();
+    }
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private Userdata getUserdata() {
-        return getInstance().getUserdata();
+    private ScheduleHandler getScheduler() {
+        return getInstance().getScheduleHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -74,7 +78,7 @@ public class EntityDamageByEntity implements Listener {
                             } else disableTeleport(target);
                         }
                         if (cooldown > 0) {
-                            getInstance().getScheduleHandler().runLater(new Runnable() {
+                            getScheduler().runLater(new Runnable() {
                                 @Override
                                 public void run() {
                                     player.setCooldown(heldItem.getType(), cooldown);
