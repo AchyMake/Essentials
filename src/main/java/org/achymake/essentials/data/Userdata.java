@@ -2,7 +2,6 @@ package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EconomyHandler;
-import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.*;
@@ -23,9 +22,6 @@ public class Userdata {
     }
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
-    }
-    private MaterialHandler getMaterials() {
-        return getInstance().getMaterialHandler();
     }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
@@ -577,21 +573,23 @@ public class Userdata {
     }
     /**
      * set home
-     * @param player target
+     * @param offlinePlayer or player
+     * @param location location or null
      * @param homeName string
      * @return true if file saved else false and nothing changed
      * @since many moons ago
      */
-    public boolean setHome(Player player, String homeName) {
-        var location = player.getLocation();
-        var file = getFile(player);
+    public boolean setHome(OfflinePlayer offlinePlayer, Location location, String homeName) {
+        var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
-        config.set("homes." + homeName + ".world", location.getWorld().getName());
-        config.set("homes." + homeName + ".x", location.getX());
-        config.set("homes." + homeName + ".y", location.getY());
-        config.set("homes." + homeName + ".z", location.getZ());
-        config.set("homes." + homeName + ".yaw", location.getYaw());
-        config.set("homes." + homeName + ".pitch", location.getPitch());
+        if (location != null) {
+            config.set("homes." + homeName + ".world", location.getWorld().getName());
+            config.set("homes." + homeName + ".x", location.getX());
+            config.set("homes." + homeName + ".y", location.getY());
+            config.set("homes." + homeName + ".z", location.getZ());
+            config.set("homes." + homeName + ".yaw", location.getYaw());
+            config.set("homes." + homeName + ".pitch", location.getPitch());
+        } else config.set("homes." + homeName, null);
         try {
             config.save(file);
             return true;
@@ -946,15 +944,31 @@ public class Userdata {
     }
     public void disable(Player player) {
         setLocation(player, player.getLocation(), "quit");
-        setWalkSpeed(player, 0);
-        setFlySpeed(player, 0);
         disableTasks(player);
-        setTpaSent(player, null);
-        setTpaFrom(player, null);
-        setTpaHereSent(player, null);
-        setTpaHereFrom(player, null);
-        setBankSent(player, null);
-        setBankFrom(player, null);
+        if (player.getWalkSpeed() != getDefaultWalkSpeed()) {
+            setWalkSpeed(player, 0);
+        }
+        if (player.getFlySpeed() != getDefaultWalkSpeed()) {
+            setFlySpeed(player, 0);
+        }
+        if (getTpaSent(player) != null) {
+            setTpaSent(player, null);
+        }
+        if (getTpaFrom(player) != null) {
+            setTpaFrom(player, null);
+        }
+        if (getTpaHereSent(player) != null) {
+            setTpaHereSent(player, null);
+        }
+        if (getTpaHereFrom(player) != null) {
+            setTpaHereFrom(player, null);
+        }
+        if (getBankSent(player) != null) {
+            setBankSent(player, null);
+        }
+        if (getBankFrom(player) != null) {
+            setBankFrom(player, null);
+        }
     }
     public void disable() {
         getInstance().getOnlinePlayers().forEach(this::disable);

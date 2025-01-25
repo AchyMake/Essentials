@@ -61,7 +61,7 @@ public class EntityDamageByEntity implements Listener {
             case Player player -> {
                 if (!getUserdata().isDisabled(player)) {
                     var heldItem = player.getInventory().getItemInMainHand();
-                    var test = getConfig().getInt("attack.cooldown." + heldItem.getType().toString().toLowerCase());
+                    var cooldown = getConfig().getInt("attack.cooldown." + heldItem.getType().toString().toLowerCase());
                     if (!player.hasCooldown(heldItem)) {
                         if (entity instanceof Player target) {
                             if (!target.getWorld().getPVP())return;
@@ -73,8 +73,13 @@ public class EntityDamageByEntity implements Listener {
                                 getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
                             } else disableTeleport(target);
                         }
-                        if (test > 0) {
-                            player.setCooldown(heldItem.getType(), test);
+                        if (cooldown > 0) {
+                            getInstance().getScheduleHandler().runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    player.setCooldown(heldItem.getType(), cooldown);
+                                }
+                            }, 0);
                         }
                     } else if (getConfig().getBoolean("attack.cooldown.enable")) {
                         event.setCancelled(true);

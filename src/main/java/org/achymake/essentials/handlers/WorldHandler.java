@@ -169,6 +169,9 @@ public class WorldHandler {
     public Block highestRandomBlock(World world, int spread) {
         return world.getHighestBlockAt(getRandomHandler().nextInt(0, spread), getRandomHandler().nextInt(0, spread));
     }
+    public int getTeleportDelay() {
+        return getConfig().getInt("teleport.delay");
+    }
     /**
      * teleport player
      * @param player target

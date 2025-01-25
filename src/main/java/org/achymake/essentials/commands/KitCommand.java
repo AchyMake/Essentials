@@ -49,23 +49,35 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 var kitName = args[0];
-                var timer = getKits().getCooldown(kitName);
                 if (getKits().isListed(kitName)) {
                     if (player.hasPermission("essentials.command.kit." + kitName)) {
-                        if (!getUserdata().hasCooldown(player, kitName, timer)) {
-                            if (getKits().hasPrice(kitName)) {
-                                if (getEconomy().has(player, getKits().getPrice(kitName))) {
+                        if (getKits().hasCooldown(kitName)) {
+                            if (!getUserdata().hasCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName))) {
+                                if (getKits().hasPrice(kitName)) {
+                                    if (getEconomy().has(player, getKits().getPrice(kitName))) {
+                                        if (getEconomy().remove(player, getKits().getPrice(kitName))) {
+                                            getMaterials().giveItemStacks(player, getKits().get(kitName));
+                                            getUserdata().addCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName));
+                                            player.sendMessage(getMessage().get("commands.kit.received", kitName));
+                                        }
+                                    } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
+                                } else {
                                     getMaterials().giveItemStacks(player, getKits().get(kitName));
-                                    getEconomy().remove(player, getKits().getPrice(kitName));
-                                    getUserdata().addCooldown(player, kitName, timer);
+                                    getUserdata().addCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName));
                                     player.sendMessage(getMessage().get("commands.kit.received", kitName));
-                                } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
-                            } else {
-                                getMaterials().giveItemStacks(player, getKits().get(kitName));
-                                getUserdata().addCooldown(player, kitName, timer);
-                                player.sendMessage(getMessage().get("commands.kit.received", kitName));
-                            }
-                        } else player.sendMessage(getMessage().get("commands.kit.cooldown", getUserdata().getCooldown(player, kitName, timer)));
+                                }
+                            } else player.sendMessage(getMessage().get("commands.kit.cooldown", getUserdata().getCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName))));
+                        } else if (getKits().hasPrice(kitName)) {
+                            if (getEconomy().has(player, getKits().getPrice(kitName))) {
+                                if (getEconomy().remove(player, getKits().getPrice(kitName))) {
+                                    getMaterials().giveItemStacks(player, getKits().get(kitName));
+                                    player.sendMessage(getMessage().get("commands.kit.received", kitName));
+                                }
+                            } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
+                        } else {
+                            getMaterials().giveItemStacks(player, getKits().get(kitName));
+                            player.sendMessage(getMessage().get("commands.kit.received", kitName));
+                        }
                         return true;
                     }
                 } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));

@@ -452,10 +452,8 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         if (rank.equalsIgnoreCase("owner") || rank.equalsIgnoreCase("co-owner")) {
                             if (!getBank().getMembers(bank).isEmpty()) {
                                 getBank().getMembers(bank).forEach(target -> {
-                                    if (!getUserdata().isVanished(target)) {
-                                        if (target.getName().startsWith(args[1])) {
-                                            commands.add(target.getName());
-                                        }
+                                    if (target.getName().startsWith(args[1])) {
+                                        commands.add(target.getName());
                                     }
                                 });
                             }

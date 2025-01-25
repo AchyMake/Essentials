@@ -47,8 +47,8 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                     if (getUserdata().hasBank(offlinePlayer)) {
                         var bank = getUserdata().getBank(offlinePlayer);
                         player.sendMessage(getMessage().get("commands.information.bank.name", bank));
-                        player.sendMessage(getMessage().get("commands.information.bank.owner", getBank().getOwner(bank).getName()));
                         player.sendMessage(getMessage().get("commands.information.bank.account", getEconomy().currency()) + getEconomy().format(getBank().get(bank)));
+                        player.sendMessage(getMessage().get("commands.information.bank.owner", getBank().getOwner(bank).getName()));
                         var members = getBank().getMembers(bank);
                         if (!members.isEmpty()) {
                             player.sendMessage(getMessage().get("commands.information.bank.member.title"));
@@ -61,10 +61,10 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                     if (!getUserdata().getHomes(offlinePlayer).isEmpty()) {
                         getUserdata().getHomes(offlinePlayer).forEach(home -> player.sendMessage(getMessage().get("commands.information.listed", home)));
                     }
+                    player.sendMessage(getMessage().get("commands.information.pvp", String.valueOf(getUserdata().isPVP(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.muted", String.valueOf(getUserdata().isMuted(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.frozen", String.valueOf(getUserdata().isFrozen(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.jailed", String.valueOf(getUserdata().isJailed(offlinePlayer))));
-                    player.sendMessage(getMessage().get("commands.information.pvp", String.valueOf(getUserdata().isPVP(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.banned", String.valueOf(getUserdata().isBanned(offlinePlayer))));
                     player.sendMessage(getMessage().get("commands.information.ban-reason", getUserdata().getBanReason(offlinePlayer)));
                     player.sendMessage(getMessage().get("commands.information.ban-expire", simpleDateFormat.format(getUserdata().getBanExpire(offlinePlayer))));

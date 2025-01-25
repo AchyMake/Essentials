@@ -35,11 +35,10 @@ public class BackCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 var recent = getUserdata().getLocation(player, "recent");
-                var delay = getConfig().getInt("teleport.delay");
                 if (recent != null) {
                     var worldName = recent.getWorld().getName().toLowerCase();
                     if (player.hasPermission("essentials.command.back.world." + worldName)) {
-                        getWorldHandler().teleport(player, recent, "recent", delay);
+                        getWorldHandler().teleport(player, recent, "recent", getWorldHandler().getTeleportDelay());
                         return true;
                     }
                 }
@@ -48,7 +47,7 @@ public class BackCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("essentials.command.back.death")) {
                         var death = getUserdata().getLocation(player, "death");
                         if (death != null) {
-                            getWorldHandler().teleport(player, death, "death", getConfig().getInt("teleport.delay"));
+                            getWorldHandler().teleport(player, death, "death", getWorldHandler().getTeleportDelay());
                         }
                         return true;
                     }

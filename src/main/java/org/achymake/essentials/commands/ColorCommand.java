@@ -3,7 +3,6 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -27,16 +26,16 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                sendColorCodes(player);
+                getMessage().sendColorCodes(player);
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.color.other")) {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            sendColorCodes(target);
+                            getMessage().sendColorCodes(target);
                         } else if (!target.hasPermission("essentials.command.color.exempt")) {
-                            sendColorCodes(target);
+                            getMessage().sendColorCodes(target);
                         } else player.sendMessage(getMessage().get("commands.color.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -46,7 +45,7 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    sendColorCodes(target);
+                    getMessage().sendColorCodes(target);
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
@@ -70,16 +69,5 @@ public class ColorCommand implements CommandExecutor, TabCompleter {
             }
         }
         return commands;
-    }
-    private void sendColorCodes(Player player) {
-        player.sendMessage(getMessage().get("commands.color.title"));
-        player.sendMessage(ChatColor.BLACK + "&0" + ChatColor.DARK_BLUE + " &1" + ChatColor.DARK_GREEN + " &2" + ChatColor.DARK_AQUA + " &3");
-        player.sendMessage(ChatColor.DARK_RED + "&4" + ChatColor.DARK_PURPLE + " &5" + ChatColor.GOLD + " &6" + ChatColor.GRAY + " &7");
-        player.sendMessage(ChatColor.DARK_GRAY + "&8" + ChatColor.BLUE + " &9" + ChatColor.GREEN + " &a" + ChatColor.AQUA + " &b");
-        player.sendMessage(ChatColor.RED + "&c" + ChatColor.LIGHT_PURPLE + " &d" + ChatColor.YELLOW + " &e");
-        player.sendMessage("");
-        player.sendMessage("&k" + ChatColor.MAGIC + " Magic" + ChatColor.RESET + " &l" + ChatColor.BOLD + " Bold");
-        player.sendMessage("&m" + ChatColor.STRIKETHROUGH + " Strike" + ChatColor.RESET + " &n" + ChatColor.UNDERLINE + " Underline");
-        player.sendMessage("&o" + ChatColor.ITALIC + " Italic" + ChatColor.RESET + " &r Reset");
     }
 }

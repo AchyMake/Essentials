@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -44,12 +43,14 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var amount = Integer.parseInt(args[2]);
-                    var itemStack = getMaterials().getItemStack(args[1], amount);
-                    if (itemStack != null) {
-                        getMaterials().giveItemStack(target, itemStack);
-                        player.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
-                        return true;
+                    var amount = getMessage().getInteger(args[2]);
+                    if (amount > 0) {
+                        var itemStack = getMaterials().getItemStack(args[1], amount);
+                        if (itemStack != null) {
+                            getMaterials().giveItemStack(target, itemStack);
+                            player.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
+                            return true;
+                        }
                     }
                 }
             }
@@ -68,12 +69,14 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var amount = Integer.parseInt(args[2]);
-                    var itemStack = getMaterials().getItemStack(args[1], amount);
-                    if (itemStack != null) {
-                        getMaterials().giveItemStack(target, itemStack);
-                        consoleCommandSender.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
-                        return true;
+                    var amount = getMessage().getInteger(args[2]);
+                    if (amount > 0) {
+                        var itemStack = getMaterials().getItemStack(args[1], amount);
+                        if (itemStack != null) {
+                            getMaterials().giveItemStack(target, itemStack);
+                            consoleCommandSender.sendMessage(getMessage().get("commands.give", target.getName(), String.valueOf(amount), getMessage().toTitleCase(args[1])));
+                            return true;
+                        }
                     }
                 }
             }
@@ -93,7 +96,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
                     }
                 });
             } else if (args.length == 2) {
-                for (var material : Material.values()) {
+                for (var material : getMaterials().getValues()) {
                     var materialName = material.name().toLowerCase();
                     if (materialName.startsWith(args[1])) {
                         commands.add(materialName);

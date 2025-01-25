@@ -1,7 +1,6 @@
 package org.achymake.essentials.providers;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.pvpapi.PVPAPI;
 import org.achymake.pvpapi.handlers.PVPHandler;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.ServicePriority;

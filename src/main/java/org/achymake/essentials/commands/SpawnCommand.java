@@ -35,19 +35,18 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getSpawn().getLocation() != null) {
-                    getWorldHandler().teleport(player, getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                    getWorldHandler().teleport(player, getSpawn().getLocation(), "spawn", getWorldHandler().getTeleportDelay());
                 } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.spawn.other")) {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
-                        var spawn = getSpawn().getLocation();
-                        if (spawn != null) {
+                        if (getSpawn().getLocation() != null) {
                             if (target == player) {
-                                getWorldHandler().teleport(target, spawn, "spawn", 0);
+                                getWorldHandler().teleport(target, getSpawn().getLocation(), "spawn", 0);
                             } else if (!target.hasPermission("essentials.command.spawn.exempt")) {
-                                getWorldHandler().teleport(target, spawn, "spawn", 0);
+                                getWorldHandler().teleport(target, getSpawn().getLocation(), "spawn", 0);
                             } else player.sendMessage(getMessage().get("commands.spawn.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.spawn.invalid"));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
@@ -59,7 +58,7 @@ public class SpawnCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     if (getSpawn().getLocation() != null) {
-                        getWorldHandler().teleport(target, getSpawn().getLocation(), "spawn", getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(target, getSpawn().getLocation(), "spawn", 0);
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.spawn.invalid"));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;

@@ -33,15 +33,19 @@ public class RepairCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                int timer = getInstance().getConfig().getInt("commands.cooldown.repair");
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
-                    if (!getUserdata().hasCooldown(player, "repair", timer)) {
-                        if (getMaterials().repair(heldItem)) {
-                            getUserdata().addCooldown(player, "repair", timer);
-                            player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
-                        } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
-                    } else player.sendMessage(getMessage().get("commands.repair.cooldown", getUserdata().getCooldown(player, "repair", timer)));
+                    int timer = getInstance().getConfig().getInt("commands.cooldown.repair");
+                    if (timer > 0) {
+                        if (!getUserdata().hasCooldown(player, "repair", timer)) {
+                            if (getMaterials().repair(heldItem)) {
+                                getUserdata().addCooldown(player, "repair", timer);
+                                player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
+                            } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
+                        } else player.sendMessage(getMessage().get("commands.repair.cooldown", getUserdata().getCooldown(player, "repair", timer)));
+                    } else if (getMaterials().repair(heldItem)) {
+                        player.sendMessage(getMessage().get("commands.repair.damaged", getMessage().toTitleCase(heldItem.getType().toString())));
+                    } else player.sendMessage(getMessage().get("commands.repair.non-damaged", getMessage().toTitleCase(heldItem.getType().toString())));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 1) {

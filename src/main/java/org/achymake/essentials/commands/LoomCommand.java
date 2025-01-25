@@ -39,13 +39,13 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            if (getInventoryHandler().openLoom(target) == null) {
-                                player.sendMessage(getMessage().get("error.invalid"));
-                            } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            if (getInventoryHandler().openLoom(target) != null) {
+                                player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            } else player.sendMessage(getMessage().get("error.invalid"));
                         } else if (!target.hasPermission("essentials.command.loom.exempt")) {
-                            if (getInventoryHandler().openLoom(target) == null) {
-                                player.sendMessage(getMessage().get("error.invalid"));
-                            } else player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            if (getInventoryHandler().openLoom(target) != null) {
+                                player.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                            } else player.sendMessage(getMessage().get("error.invalid"));
                         } else player.sendMessage(getMessage().get("commands.loom.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -55,9 +55,9 @@ public class LoomCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    if (getInventoryHandler().openLoom(target) == null) {
-                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
-                    } else consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                    if (getInventoryHandler().openLoom(target) != null) {
+                        consoleCommandSender.sendMessage(getMessage().get("commands.loom.sender", target.getName()));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }

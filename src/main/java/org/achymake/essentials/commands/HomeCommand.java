@@ -33,27 +33,25 @@ public class HomeCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 0) {
-                var delay = getInstance().getConfig().getInt("teleport.delay");
                 var home = getUserdata().getHome(player, "home");
                 if (home != null) {
-                    getWorldHandler().teleport(player, home, "home", delay);
+                    getWorldHandler().teleport(player, home, "home", getWorldHandler().getTeleportDelay());
                 } else player.sendMessage(getMessage().get("commands.home.invalid", "home"));
                 return true;
             } else if (args.length == 1) {
-                var delay = getInstance().getConfig().getInt("teleport.delay");
                 var homeName = args[0].toLowerCase();
                 if (homeName.equalsIgnoreCase("bed")) {
                     if (player.hasPermission("essentials.command.home.bed")) {
                         var bed = player.getBedSpawnLocation();
                         if (bed != null) {
-                            getWorldHandler().teleport(player, bed, homeName, delay);
+                            getWorldHandler().teleport(player, bed, homeName, getWorldHandler().getTeleportDelay());
                         } else player.sendMessage(getMessage().get("commands.home.invalid", "bed"));
                         return true;
                     }
                 } else {
                     var home = getUserdata().getHome(player, homeName);
                     if (home != null) {
-                        getWorldHandler().teleport(player, home, homeName, delay);
+                        getWorldHandler().teleport(player, home, homeName, getWorldHandler().getTeleportDelay());
                     } else player.sendMessage(getMessage().get("commands.home.invalid", homeName));
                     return true;
                 }

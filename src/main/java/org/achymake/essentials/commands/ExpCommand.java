@@ -37,7 +37,7 @@ public class ExpCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var value = Integer.parseInt(args[2]);
+                    var value = getMessage().getInteger(args[2]);
                     if (args[1].equalsIgnoreCase("add")) {
                         target.giveExp(value);
                         player.sendMessage(getMessage().get("commands.exp.add", String.valueOf(value), target.getName()));
@@ -65,7 +65,7 @@ public class ExpCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    var value = Integer.parseInt(args[2]);
+                    var value = getMessage().getInteger(args[2]);
                     if (args[1].equalsIgnoreCase("add")) {
                         target.giveExp(value);
                         consoleCommandSender.sendMessage(getMessage().get("commands.exp.add", String.valueOf(value), target.getName()));

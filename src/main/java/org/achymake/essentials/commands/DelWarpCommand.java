@@ -38,8 +38,9 @@ public class DelWarpCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var warpName = args[0].toLowerCase();
                 if (getWarps().isListed(warpName)) {
-                    getWarps().setLocation(warpName, null);
-                    consoleCommandSender.sendMessage(getMessage().get("commands.delwarp.success", warpName));
+                    if (getWarps().setLocation(warpName, null)) {
+                        consoleCommandSender.sendMessage(getMessage().get("commands.delwarp.success", warpName));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.file.exception", getWarps().getFile().getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.delwarp.invalid", warpName));
                 return true;
             }

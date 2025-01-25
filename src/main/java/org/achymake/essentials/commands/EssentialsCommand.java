@@ -36,6 +36,9 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
                         getInstance().reloadUserdata();
                         player.sendMessage(getMessage().addColor("&6" + getInstance().name() + "&f: reloaded > userdata"));
                         return true;
+                    } else if (args[1].equalsIgnoreCase("bank")) {
+                        getInstance().getBank().reload();
+                        player.sendMessage(getMessage().addColor("&6" + getInstance().name() + "&f: reloaded > bank"));
                     }
                 }
             }
@@ -55,6 +58,9 @@ public class EssentialsCommand implements CommandExecutor, TabCompleter {
                         getInstance().reloadUserdata();
                         consoleCommandSender.sendMessage(getInstance().name() + ": reloaded > userdata");
                         return true;
+                    } else if (args[1].equalsIgnoreCase("bank")) {
+                        getInstance().getBank().reload();
+                        consoleCommandSender.sendMessage(getInstance().name() + ": reloaded > bank");
                     }
                 }
             }

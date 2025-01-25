@@ -36,9 +36,7 @@ public class EconomyHandler {
         return set(offlinePlayer, amount + get(offlinePlayer));
     }
     public boolean remove(OfflinePlayer offlinePlayer, double amount) {
-        if (has(offlinePlayer, get(offlinePlayer) - amount)) {
-            return set(offlinePlayer, get(offlinePlayer) - amount);
-        } else return false;
+        return set(offlinePlayer, get(offlinePlayer) - amount);
     }
     /**
      * get set map offlinePlayer, double

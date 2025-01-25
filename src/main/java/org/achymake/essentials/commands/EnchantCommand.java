@@ -33,20 +33,22 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                 if (!getMaterials().isAir(heldItem)) {
                     var itemMeta = heldItem.getItemMeta();
                     var enchantName = args[0];
-                    if (itemMeta.hasEnchant(getMaterials().getEnchantment(enchantName))) {
-                        getMaterials().setEnchantment(heldItem, enchantName, 0);
-                        player.sendMessage(getMessage().get("commands.enchant.remove", getMessage().toTitleCase(enchantName)));
-                    } else {
-                        getMaterials().setEnchantment(heldItem, enchantName, 1);
-                        player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(1)));
-                    }
+                    if (getMaterials().isEnchantment(enchantName)) {
+                        if (itemMeta.hasEnchant(getMaterials().getEnchantment(enchantName))) {
+                            getMaterials().setEnchantment(heldItem, enchantName, 0);
+                            player.sendMessage(getMessage().get("commands.enchant.remove", getMessage().toTitleCase(enchantName)));
+                        } else {
+                            getMaterials().setEnchantment(heldItem, enchantName, 1);
+                            player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(1)));
+                        }
+                    } else player.sendMessage(getMessage().get("error.enchantment.invalid", enchantName));
                 } else player.sendMessage(getMessage().get("error.item.invalid"));
                 return true;
             } else if (args.length == 2) {
                 var heldItem = player.getInventory().getItemInMainHand();
                 if (!getMaterials().isAir(heldItem)) {
                     var enchantName = args[0];
-                    var amount = Integer.parseInt(args[1]);
+                    var amount = getMessage().getInteger(args[1]);
                     getMaterials().setEnchantment(heldItem, enchantName, amount);
                     if (amount > 0) {
                         player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(amount)));

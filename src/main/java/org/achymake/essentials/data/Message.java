@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,6 +143,14 @@ public class Message {
         }
         return builder.toString().strip();
     }
+    public List<String> getStringList(String lines) {
+        var listed = new ArrayList<String>();
+        var result = lines.replace("[","").replace("]","");
+        for (var test : result.split(",")) {
+            listed.add(test.strip());
+        }
+        return listed;
+    }
     public Map<String, Integer> getMapStringInteger(String mapString) {
         var listed = new HashMap<String, Integer>();
         var result = mapString.replace("{","")
@@ -218,6 +227,23 @@ public class Message {
         }
         return message;
     }
+    public int getInteger(String arg) {
+        var result = Integer.parseInt(arg);
+        if (result > -1) {
+            return result;
+        } else return 0;
+    }
+    public void sendColorCodes(Player player) {
+        player.sendMessage(get("commands.color.title"));
+        player.sendMessage(ChatColor.BLACK + "&0" + ChatColor.DARK_BLUE + " &1" + ChatColor.DARK_GREEN + " &2" + ChatColor.DARK_AQUA + " &3");
+        player.sendMessage(ChatColor.DARK_RED + "&4" + ChatColor.DARK_PURPLE + " &5" + ChatColor.GOLD + " &6" + ChatColor.GRAY + " &7");
+        player.sendMessage(ChatColor.DARK_GRAY + "&8" + ChatColor.BLUE + " &9" + ChatColor.GREEN + " &a" + ChatColor.AQUA + " &b");
+        player.sendMessage(ChatColor.RED + "&c" + ChatColor.LIGHT_PURPLE + " &d" + ChatColor.YELLOW + " &e");
+        player.sendMessage("");
+        player.sendMessage("&k" + ChatColor.MAGIC + " Magic" + ChatColor.RESET + " &l" + ChatColor.BOLD + " Bold");
+        player.sendMessage("&m" + ChatColor.STRIKETHROUGH + " Strike" + ChatColor.RESET + " &n" + ChatColor.UNDERLINE + " Underline");
+        player.sendMessage("&o" + ChatColor.ITALIC + " Italic" + ChatColor.RESET + " &r Reset");
+    }
     private boolean setup() {
         config.options().copyDefaults(true);
         config.set("error.file.exception", "&cUnable to save&f {0}&c please try again!");
@@ -225,6 +251,7 @@ public class Message {
         config.set("error.target.invalid", "{0}&c has never joined");
         config.set("error.world.invalid", "{0}&c does not exists");
         config.set("error.item.invalid", "&cYou have to hold an item");
+        config.set("error.enchantment.invalid", "{0}&c is not an enchantment");
         config.set("error.bank.exists", "{0}&c already exists");
         config.set("error.bank.has", "&cYou are already in&f {0}&c bank");
         config.set("error.bank.empty", "&cYou do not have a bank");

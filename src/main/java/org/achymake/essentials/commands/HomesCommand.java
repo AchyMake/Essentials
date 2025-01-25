@@ -37,22 +37,21 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                 } else player.sendMessage(getMessage().get("commands.homes.empty"));
                 return true;
             } else if (args.length == 3) {
-                var target = args[1];
                 var targetHome = args[2];
                 if (args[0].equalsIgnoreCase("delete")) {
                     if (player.hasPermission("essentials.command.homes.delete")) {
-                        var offlinePlayer = getInstance().getOfflinePlayer(target);
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         if (getUserdata().exists(offlinePlayer)) {
                             if (getUserdata().isHome(offlinePlayer, targetHome)) {
                                 getUserdata().setString(offlinePlayer, "homes." + targetHome, null);
                                 player.sendMessage(getMessage().get("commands.homes.delete", targetHome, offlinePlayer.getName()));
                             } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), targetHome));
-                            return true;
-                        }
+                        } else player.sendMessage(getMessage().get("error.target.invalid", args[1]));
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("teleport")) {
                     if (player.hasPermission("essentials.command.homes.teleport")) {
-                        var offlinePlayer = getInstance().getOfflinePlayer(target);
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         if (getUserdata().exists(offlinePlayer)) {
                             if (targetHome.equalsIgnoreCase("bed")) {
                                 var location = offlinePlayer.getBedSpawnLocation();
@@ -73,8 +72,8 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                                     player.teleport(location);
                                 }
                             } else player.sendMessage(getMessage().get("commands.homes.invalid", offlinePlayer.getName(), targetHome));
-                            return true;
-                        }
+                        } else player.sendMessage(getMessage().get("error.target.invalid", args[1]));
+                        return true;
                     }
                 }
             }
@@ -115,10 +114,12 @@ public class HomesCommand implements CommandExecutor, TabCompleter {
                     }
                 }
             } else if (args.length == 3) {
-                if (player.hasPermission("essentials.command.homes.teleport")) {
-                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
-                    if (getUserdata().exists(offlinePlayer)) {
-                        commands.addAll(getUserdata().getHomes(offlinePlayer));
+                if (args[0].equalsIgnoreCase("teleport")) {
+                    if (player.hasPermission("essentials.command.homes.teleport")) {
+                        var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
+                        if (getUserdata().exists(offlinePlayer)) {
+                            commands.addAll(getUserdata().getHomes(offlinePlayer));
+                        }
                     }
                 }
             }

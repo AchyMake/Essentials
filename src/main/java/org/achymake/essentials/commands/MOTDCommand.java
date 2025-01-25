@@ -33,24 +33,22 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                 getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
                 return true;
             } else if (args.length == 1) {
-                var motd = args[0];
-                if (getConfig().isList("message-of-the-day." + motd)) {
-                    getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day." + motd));
-                } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                if (getConfig().isList("message-of-the-day." + args[0])) {
+                    getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day." + args[0]));
+                } else player.sendMessage(getMessage().get("commands.motd.invalid", args[0]));
                 return true;
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.motd.other")) {
                     var target = getInstance().getPlayer(args[1]);
-                    var motd = args[0];
                     if (target != null) {
                         if (target == player) {
-                            if (getConfig().isList("message-of-the-day." + motd)) {
-                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + motd));
-                            } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                            if (getConfig().isList("message-of-the-day." + args[0])) {
+                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
+                            } else player.sendMessage(getMessage().get("commands.motd.invalid", args[0]));
                         } else if (!target.hasPermission("essentials.command.motd.exempt")) {
-                            if (getConfig().isList("message-of-the-day." + motd)) {
-                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + motd));
-                            } else player.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                            if (getConfig().isList("message-of-the-day." + args[0])) {
+                                getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
+                            } else player.sendMessage(getMessage().get("commands.motd.invalid", args[0]));
                         } else player.sendMessage(getMessage().get("commands.motd.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                     return true;
@@ -61,18 +59,16 @@ public class MOTDCommand implements CommandExecutor, TabCompleter {
                 getMessage().sendStringList(consoleCommandSender, getConfig().getStringList("message-of-the-day.welcome"));
                 return true;
             } else if (args.length == 1) {
-                var motd = args[0];
-                if (getConfig().isList("message-of-the-day." + motd)) {
-                    getMessage().sendStringList(consoleCommandSender, getConfig().getStringList("message-of-the-day." + motd));
-                } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                if (getConfig().isList("message-of-the-day." + args[0])) {
+                    getMessage().sendStringList(consoleCommandSender, getConfig().getStringList("message-of-the-day." + args[0]));
+                } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", args[0]));
                 return true;
             } else if (args.length == 2) {
                 var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
-                    var motd = args[0];
-                    if (getConfig().isList("message-of-the-day." + motd)) {
-                        getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + motd));
-                    } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", motd));
+                    if (getConfig().isList("message-of-the-day." + args[0])) {
+                        getMessage().sendStringList(target, getConfig().getStringList("message-of-the-day." + args[0]));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.motd.invalid", args[0]));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
                 return true;
             }

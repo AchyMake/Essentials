@@ -48,7 +48,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.warp." + warpName)) {
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
-                        getWorldHandler().teleport(player, warp, warpName, getInstance().getConfig().getInt("teleport.delay"));
+                        getWorldHandler().teleport(player, warp, warpName, getWorldHandler().getTeleportDelay());
                     } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
                     return true;
                 }

@@ -30,7 +30,7 @@ public class SetHomeCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 if (getUserdata().isHome(player, "home") || getUserdata().getMaxHomes(player) > getUserdata().getHomes(player).size()) {
-                    if (getUserdata().setHome(player, "home")) {
+                    if (getUserdata().setHome(player, player.getLocation(), "home")) {
                         player.sendMessage(getMessage().get("commands.sethome.success", "home"));
                     } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                 } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(getUserdata().getHomes(player).size())));
@@ -39,7 +39,7 @@ public class SetHomeCommand implements CommandExecutor, TabCompleter {
                 var homeName = args[0].toLowerCase();
                 if (!homeName.equalsIgnoreCase("bed")) {
                     if (getUserdata().isHome(player, homeName) || getUserdata().getMaxHomes(player) > getUserdata().getHomes(player).size()) {
-                        if (getUserdata().setHome(player, homeName)) {
+                        if (getUserdata().setHome(player, player.getLocation(), homeName)) {
                             player.sendMessage(getMessage().get("commands.sethome.success", homeName));
                         } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                     } else player.sendMessage(getMessage().get("commands.sethome.limit-reached", String.valueOf(getUserdata().getHomes(player).size())));

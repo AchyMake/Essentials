@@ -27,9 +27,9 @@ public class CreatureSpawn implements Listener {
         if (event.getEntity() instanceof Player)return;
         if (!getEntityHandler().isSpawnReasonDisabled(event.getEntityType(), event.getSpawnReason())) {
             if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
-                if (getEntityHandler().isOverChunkLimit(event.getEntity())) {
-                    event.setCancelled(true);
-                } else getEntityHandler().setEquipment(event.getEntity());
+                if (!getEntityHandler().isOverChunkLimit(event.getEntity())) {
+                    getEntityHandler().setEquipment(event.getEntity());
+                } else event.setCancelled(true);
             } else event.setCancelled(true);
         } else event.setCancelled(true);
     }
