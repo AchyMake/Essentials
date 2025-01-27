@@ -3,15 +3,20 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntityHandler {
     private Essentials getInstance() {
@@ -22,6 +27,15 @@ public class EntityHandler {
     }
     private RandomHandler getRandomHandler() {
         return getInstance().getRandomHandler();
+    }
+    /**
+     * get file of entity/entityType.yml
+     * @param entity entity
+     * @return persistentDataContainer
+     * @since many moons ago
+     */
+    public PersistentDataContainer getData(Entity entity) {
+        return entity.getPersistentDataContainer();
     }
     /**
      * get file of entity/entityType.yml
@@ -86,6 +100,12 @@ public class EntityHandler {
     public int getChunkLimit(EntityType entityType) {
         return getConfig(entityType).getInt("settings.chunk-limit");
     }
+    /**
+     * get chunk limit of entityType
+     * @param entity entity
+     * @return true if chunk is over entity limit else false
+     * @since many moons ago
+     */
     public boolean isOverChunkLimit(Entity entity) {
         var type = entity.getType();
         var chunkLimit = getChunkLimit(type);
@@ -224,6 +244,44 @@ public class EntityHandler {
         }
     }
     /**
+     * get dropped exp
+     * @param entity entity
+     * @return integer
+     * @since many moons ago
+     */
+    public int getDroppedEXP(Entity entity) {
+        var value = getData(entity).get(getInstance().getKey("exp"), PersistentDataType.INTEGER);
+        if (value != null) {
+            return value;
+        } else return 0;
+    }
+    /**
+     * set dropped exp
+     * @param entity entity
+     * @param value integer
+     * @since many moons ago
+     */
+    public void setDroppedEXP(Entity entity, int value) {
+        getData(entity).set(getInstance().getKey("exp"), PersistentDataType.INTEGER, value);
+    }
+    private Set<Map.Entry<String, Double>> getLevels(EntityType entityType) {
+        var levels = new HashMap<String, Double>();
+        var config = getConfig(entityType);
+        config.getConfigurationSection("levels").getKeys(false).forEach(level -> {
+            levels.put(level, config.getDouble("levels." + level + ".chance"));
+        });
+        var list = new ArrayList<>(levels.entrySet());
+        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        var result = new LinkedHashMap<String, Double>();
+        result.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        for (var entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result.entrySet();
+    }
+    /**
      * set equipment this is the level section from entity/entityType.yml
      * @param entity entity
      * @since many moons ago
@@ -231,13 +289,14 @@ public class EntityHandler {
     public void setEquipment(Entity entity) {
         if (!(entity instanceof LivingEntity livingEntity))return;
         if (!exists(entity.getType()))return;
-        var config = getConfig(entity.getType());
-        if (!config.isConfigurationSection("levels"))return;
+        var levels = getLevels(livingEntity.getType());
+        if (levels.isEmpty())return;
         var equipment = livingEntity.getEquipment();
         if (equipment == null)return;
-        for (var level : config.getConfigurationSection("levels").getKeys(false)) {
-            var section = "levels." + level;
-            if (!getRandomHandler().isTrue(config.getDouble(section + ".chance")))return;
+        var config = getConfig(entity.getType());
+        for (var level : levels) {
+            if (!getRandomHandler().isTrue(level.getValue()))return;
+            var section = "levels." + level.getKey();
             if (config.isDouble(section + ".health")) {
                 var health = config.getDouble(section + ".health");
                 livingEntity.setMaxHealth(health);
@@ -248,8 +307,13 @@ public class EntityHandler {
             } else if (config.isDouble(section + ".scale.min") && config.isDouble(section + ".scale.max")) {
                 livingEntity.getAttribute(Attribute.SCALE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".scale.min"), config.getDouble(section + ".scale.max")));
             }
-            if (config.isString(section + ".main-hand.item") && config.isInt(section + ".main-hand.amount")) {
-                var itemName = config.getString(section + ".main-hand.item");
+            if (config.isInt(section + ".exp")) {
+                setDroppedEXP(livingEntity, config.getInt(section + ".exp"));
+            } else if (config.isInt(section + ".exp.min") && config.isInt(section + ".exp.max")) {
+                setDroppedEXP(livingEntity, getRandomHandler().nextInt(config.getInt(section + ".exp.min"), config.getInt(section + ".exp.max")));
+            }
+            if (config.isString(section + ".main-hand.type") && config.isInt(section + ".main-hand.amount")) {
+                var itemName = config.getString(section + ".main-hand.type");
                 var itemAmount = config.getInt(section + ".main-hand.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".main-hand.enchantments")) {
@@ -264,8 +328,8 @@ public class EntityHandler {
             if (config.isDouble(section + ".main-hand.drop-chance")) {
                 equipment.setItemInMainHandDropChance((float) config.getDouble(section + ".main-hand.drop-chance"));
             }
-            if (config.isString(section + ".off-hand.item") && config.isInt(section + ".off-hand.amount")) {
-                var itemName = config.getString(section + ".off-hand.item");
+            if (config.isString(section + ".off-hand.type") && config.isInt(section + ".off-hand.amount")) {
+                var itemName = config.getString(section + ".off-hand.type");
                 var itemAmount = config.getInt(section + ".off-hand.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".off-hand.enchantments")) {
@@ -280,8 +344,8 @@ public class EntityHandler {
             if (config.isDouble(section + ".off-hand.drop-chance")) {
                 equipment.setItemInOffHandDropChance((float) config.getDouble(section + ".off-hand.drop-chance"));
             }
-            if (config.isString(section + ".helmet.item") && config.isInt(section + ".helmet.amount")) {
-                var itemName = config.getString(section + ".helmet.item");
+            if (config.isString(section + ".helmet.type") && config.isInt(section + ".helmet.amount")) {
+                var itemName = config.getString(section + ".helmet.type");
                 var itemAmount = config.getInt(section + ".helmet.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".helmet.enchantments")) {
@@ -296,8 +360,8 @@ public class EntityHandler {
             if (config.isDouble(section + ".helmet.drop-chance")) {
                 equipment.setHelmetDropChance((float) config.getDouble(section + ".helmet.drop-chance"));
             }
-            if (config.isString(section + ".chestplate.item") && config.isInt(section + ".chestplate.amount")) {
-                var itemName = config.getString(section + ".chestplate.item");
+            if (config.isString(section + ".chestplate.type") && config.isInt(section + ".chestplate.amount")) {
+                var itemName = config.getString(section + ".chestplate.type");
                 var itemAmount = config.getInt(section + ".chestplate.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".chestplate.enchantments")) {
@@ -312,8 +376,8 @@ public class EntityHandler {
             if (config.isDouble(section + ".chestplate.drop-chance")) {
                 equipment.setChestplateDropChance((float) config.getDouble(section + ".chestplate.drop-chance"));
             }
-            if (config.isString(section + ".leggings.item") && config.isInt(section + ".leggings.amount")) {
-                var itemName = config.getString(section + ".leggings.item");
+            if (config.isString(section + ".leggings.type") && config.isInt(section + ".leggings.amount")) {
+                var itemName = config.getString(section + ".leggings.type");
                 var itemAmount = config.getInt(section + ".leggings.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".leggings.enchantments")) {
@@ -328,8 +392,8 @@ public class EntityHandler {
             if (config.isDouble(section + ".leggings.drop-chance")) {
                 equipment.setLeggingsDropChance((float) config.getDouble(section + ".leggings.drop-chance"));
             }
-            if (config.isString(section + ".boots.item") && config.isInt(section + ".boots.amount")) {
-                var itemName = config.getString(section + ".boots.item");
+            if (config.isString(section + ".boots.type") && config.isInt(section + ".boots.amount")) {
+                var itemName = config.getString(section + ".boots.type");
                 var itemAmount = config.getInt(section + ".boots.amount");
                 var item = getMaterials().getItemStack(itemName, itemAmount);
                 if (config.isConfigurationSection(section + ".boots.enchantments")) {
@@ -344,6 +408,28 @@ public class EntityHandler {
             if (config.isDouble(section + ".boots.drop-chance")) {
                 equipment.setBootsDropChance((float) config.getDouble(section + ".boots.drop-chance"));
             }
+        }
+    }
+    public boolean isTamed(Entity entity) {
+        if (entity instanceof Tameable tameable) {
+            return tameable.isTamed();
+        } else return false;
+    }
+    public OfflinePlayer getOwner(Entity entity) {
+        if (entity instanceof Tameable tameable) {
+            if (tameable.getOwner() != null) {
+                return getInstance().getOfflinePlayer(tameable.getOwner().getUniqueId());
+            } else return null;
+        } else return null;
+    }
+    public AttributeInstance getAttribute(Entity entity, Attribute attribute) {
+        if (entity instanceof LivingEntity livingEntity) {
+            return livingEntity.getAttribute(attribute);
+        } else return null;
+    }
+    public void setAttribute(Entity entity, Attribute attribute, double value) {
+        if (entity instanceof LivingEntity livingEntity) {
+            livingEntity.getAttribute(attribute).setBaseValue(value);
         }
     }
     /**

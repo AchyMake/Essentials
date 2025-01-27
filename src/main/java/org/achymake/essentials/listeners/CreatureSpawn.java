@@ -25,6 +25,7 @@ public class CreatureSpawn implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof Player)return;
+        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))return;
         if (!getEntityHandler().isSpawnReasonDisabled(event.getEntityType(), event.getSpawnReason())) {
             if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
                 if (!getEntityHandler().isOverChunkLimit(event.getEntity())) {

@@ -6,7 +6,7 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Essentials</artifactId>
-    <version>1.0.78</version>
+    <version>1.0.80</version>
     <packaging>jar</packaging>
 
     <name>Essentials</name>
@@ -86,8 +86,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.AchyMake</groupId>
-            <artifactId>PVPAPI</artifactId>
-            <version>1.0.1</version>
+            <artifactId>VaultExtra</artifactId>
+            <version>1.0.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

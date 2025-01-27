@@ -14,6 +14,7 @@ public class GLOW_ITEM_FRAME {
     private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     private boolean setup() {
+        config.options().copyDefaults(true);
         config.set("settings.hostile", false);
         config.set("settings.chunk-limit", -1);
         config.set("settings.disable-spawn", false);
@@ -77,7 +78,6 @@ public class GLOW_ITEM_FRAME {
         config.set("settings.disable-spawn-reason.TRIAL_SPAWNER", false);
         config.set("settings.disable-spawn-reason.VILLAGE_DEFENSE", false);
         config.set("settings.disable-spawn-reason.VILLAGE_INVASION", false);
-        config.options().copyDefaults(true);
         try {
             config.save(file);
             return true;

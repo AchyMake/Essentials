@@ -8,7 +8,7 @@ depend:
   - Vault
   - PlaceholderAPI
 softdepend:
-  - PVPAPI
+  - VaultExtra
 author: AchyMake
 description: '${project.description}'
 website: '${project.url}'

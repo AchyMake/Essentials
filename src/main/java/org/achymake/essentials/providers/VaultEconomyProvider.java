@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.achymake.essentials.Essentials;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.ServicePriority;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -12,6 +13,9 @@ public class VaultEconomyProvider implements Economy {
     private final Essentials ess;
     public VaultEconomyProvider(Essentials ess) {
         this.ess = ess;
+    }
+    public void register() {
+        ess.getServicesManager().register(Economy.class, this, ess, ServicePriority.Normal);
     }
     @Override
     public boolean isEnabled() {

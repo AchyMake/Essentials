@@ -1,9 +1,8 @@
 name: name
 display-name: name
 account: 0.0
-bank:
-  account: 0.0
-  members: {not yet coded}
+bank: bankName
+bank-rank: default
 settings:
   pvp: true
   banned: false
@@ -13,13 +12,6 @@ settings:
   ban-reason: ''
   ban-expire: 0
   vanished: false
-last-whisper: uuid
-tpa:
-  sent: uuid
-  from: uuid
-tpahere:
-  sent: uuid
-  from: uuid
 homes: {}
 locations: {}
 tasks: {}
