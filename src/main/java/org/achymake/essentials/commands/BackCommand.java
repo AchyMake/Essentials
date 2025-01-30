@@ -5,7 +5,6 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.command.*;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -14,9 +13,6 @@ import java.util.List;
 public class BackCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
-    }
-    private FileConfiguration getConfig() {
-        return getInstance().getConfig();
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();

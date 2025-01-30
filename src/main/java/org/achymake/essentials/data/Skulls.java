@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 public class Skulls {
     private Essentials getInstance() {
@@ -54,11 +55,10 @@ public class Skulls {
         var skullItem = getMaterials().getItemStack("player_head", amount);
         var skullMeta = (SkullMeta) skullItem.getItemMeta();
         if (16 >= skullName.length()) {
-            var profile = getInstance().getServer().createProfile(skullName);
+            var profile = getInstance().getServer().createProfile(UUID.randomUUID(), skullName);
             profile.setProperty(new ProfileProperty("textures", config.getString(skullName)));
             profile.update();
             skullMeta.setPlayerProfile(profile);
-            skullMeta.getPlayerProfile();
             skullItem.setItemMeta(skullMeta);
         }
         return skullItem;

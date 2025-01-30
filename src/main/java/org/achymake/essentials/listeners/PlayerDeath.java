@@ -44,9 +44,12 @@ public class PlayerDeath implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
         var player = event.getEntity();
+        var location = player.getLocation();
+        getUserdata().setLocation(player, location, "death");
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
-            if (!getRandomHandler().isTrue(getConfig().getDouble("deaths.drop-player-head.chance")))return;
-            event.getDrops().add(getMaterials().getPlayerHead(player, 1));
+            if (getRandomHandler().isTrue(getConfig().getDouble("deaths.drop-player-head.chance"))) {
+                event.getDrops().add(getMaterials().getPlayerHead(player, 1));
+            }
         }
         if (getConfig().getBoolean("deaths.drop-economy.enable")) {
             var lost = getRandomHandler().nextDouble(getConfig().getDouble("deaths.drop-economy.min"), getConfig().getDouble("deaths.drop-economy.max"));
@@ -55,14 +58,13 @@ public class PlayerDeath implements Listener {
                 player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
             }
         }
-        if (player.hasPermission("essentials.event.death.keep_inventory")) {
-            event.setKeepInventory(true);
-            event.getDrops().clear();
-        }
         if (player.hasPermission("essentials.event.death.keep_exp")) {
             event.setKeepLevel(true);
             event.setDroppedExp(0);
         }
-        getUserdata().setLocation(player, player.getLocation(), "death");
+        if (player.hasPermission("essentials.event.death.keep_inventory")) {
+            event.setKeepInventory(true);
+            event.getDrops().clear();
+        }
     }
 }
