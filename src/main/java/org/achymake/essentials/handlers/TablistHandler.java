@@ -3,7 +3,6 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Tab;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,7 +10,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TablistHandler {
     private Essentials getInstance() {
@@ -207,27 +205,13 @@ public class TablistHandler {
             return true;
         } else return setup();
     }
-    public Set<Map.Entry<Player, Integer>> getWeightedPlayers() {
-        var accounts = new HashMap<Player, Integer>();
-        for (var player : getInstance().getOnlinePlayers()) {
-            accounts.put(player, getWeight(player));
-        }
-        var list = new ArrayList<>(accounts.entrySet());
-        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-        var result = new LinkedHashMap<Player, Integer>();
-        for (var entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        return result.entrySet();
-    }
     public int getWeight(Player player) {
-        var listed = new ArrayList<>(getWeightedPlayers());
-        for (var i = 0; i < listed.size(); i++) {
-            if (listed.get(i).getKey() == player) {
-                return i;
+        if (getInstance().isLuckPermsEnabled()) {
+            var listed = new ArrayList<>(getInstance().getLuckPermsProvider().getWeightedPlayers());
+            for (var i = 0; i < listed.size(); i++) {
+                if (listed.get(i).getKey() == player) {
+                    return i;
+                }
             }
         }
         return 0;
