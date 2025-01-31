@@ -1,16 +1,18 @@
 package org.achymake.essentials.handlers;
 
+import net.luckperms.api.LuckPermsProvider;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Tab;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TablistHandler {
     private Essentials getInstance() {
@@ -205,5 +207,26 @@ public class TablistHandler {
             config = YamlConfiguration.loadConfiguration(file);
             return true;
         } else return setup();
+    }
+    public LinkedHashMap<OfflinePlayer, Integer> getWeightedPlayers() {
+        var accounts = new HashMap<OfflinePlayer, Integer>();
+        for (var player : getInstance().getOnlinePlayers()) {
+            accounts.put(player, getWeight(player));
+        }
+        var list = new ArrayList<>(accounts.entrySet());
+        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        var result = new LinkedHashMap<OfflinePlayer, Integer>();
+        result.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        for (var entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+    public int getWeight(Player player) {
+        if (getInstance().getPluginManager().isPluginEnabled("LuckPerms")) {
+            return getInstance().getLuckPermsProvider().getWeight(player);
+        } else return 0;
     }
 }

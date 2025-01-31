@@ -9,6 +9,7 @@ depend:
   - PlaceholderAPI
 softdepend:
   - VaultExtra
+  - LuckPerms
 author: AchyMake
 description: '${project.description}'
 website: '${project.url}'

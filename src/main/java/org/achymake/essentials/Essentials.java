@@ -41,6 +41,7 @@ public final class Essentials extends JavaPlugin {
     private TablistHandler tablistHandler;
     private VanishHandler vanishHandler;
     private WorldHandler worldHandler;
+    private LuckPermsProvider luckPermsProvider;
     private UpdateChecker updateChecker;
     private BukkitScheduler bukkitScheduler;
     private PluginManager pluginManager;
@@ -69,6 +70,7 @@ public final class Essentials extends JavaPlugin {
         tablistHandler = new TablistHandler();
         vanishHandler = new VanishHandler();
         worldHandler = new WorldHandler();
+        luckPermsProvider = new LuckPermsProvider();
         updateChecker = new UpdateChecker();
         bukkitScheduler = getServer().getScheduler();
         pluginManager = getServer().getPluginManager();
@@ -306,6 +308,9 @@ public final class Essentials extends JavaPlugin {
     }
     public UpdateChecker getUpdateChecker() {
         return updateChecker;
+    }
+    public LuckPermsProvider getLuckPermsProvider() {
+        return luckPermsProvider;
     }
     public WorldHandler getWorldHandler() {
         return worldHandler;
