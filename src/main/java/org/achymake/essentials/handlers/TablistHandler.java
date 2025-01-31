@@ -1,6 +1,5 @@
 package org.achymake.essentials.handlers;
 
-import net.luckperms.api.LuckPermsProvider;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Tab;
@@ -208,25 +207,29 @@ public class TablistHandler {
             return true;
         } else return setup();
     }
-    public LinkedHashMap<OfflinePlayer, Integer> getWeightedPlayers() {
-        var accounts = new HashMap<OfflinePlayer, Integer>();
+    public Set<Map.Entry<Player, Integer>> getWeightedPlayers() {
+        var accounts = new HashMap<Player, Integer>();
         for (var player : getInstance().getOnlinePlayers()) {
             accounts.put(player, getWeight(player));
         }
         var list = new ArrayList<>(accounts.entrySet());
         list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-        var result = new LinkedHashMap<OfflinePlayer, Integer>();
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        var result = new LinkedHashMap<Player, Integer>();
         for (var entry : list) {
             result.put(entry.getKey(), entry.getValue());
         }
-        return result;
+        result.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return result.entrySet();
     }
     public int getWeight(Player player) {
-        if (getInstance().getPluginManager().isPluginEnabled("LuckPerms")) {
-            return getInstance().getLuckPermsProvider().getWeight(player);
-        } else return 0;
+        var listed = new ArrayList<>(getWeightedPlayers());
+        for (var i = 0; i < listed.size(); i++) {
+            if (listed.get(i).getKey() == player) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

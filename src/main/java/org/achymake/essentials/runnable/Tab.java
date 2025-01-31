@@ -60,7 +60,7 @@ public record Tab(Player getPlayer) implements Runnable {
         if (!getPlayerListName().equals(getName())) {
             getPlayer().setPlayerListName(getName());
         }
-        getPlayer().setPlayerListOrder(getTablistHandler().getWeightedPlayers().get(getPlayer()));
+        getPlayer().setPlayerListOrder(getTablistHandler().getWeight(getPlayer()));
         if (getPlayerListFooter() != null) {
             if (getFooter() != null) {
                 if (!getPlayerListFooter().equals(getFooter())) {
