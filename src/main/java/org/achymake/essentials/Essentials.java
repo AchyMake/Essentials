@@ -414,7 +414,4 @@ public final class Essentials extends JavaPlugin {
     public NamespacedKey getKey(String key) {
         return new NamespacedKey(this, key);
     }
-    public boolean isLuckPermsEnabled() {
-        return getPluginManager().isPluginEnabled("LuckPerms");
-    }
 }

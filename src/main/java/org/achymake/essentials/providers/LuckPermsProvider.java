@@ -13,41 +13,48 @@ public class LuckPermsProvider {
         return Essentials.getInstance();
     }
     public int getWeight(Player player) {
-        if (getPlayerGroup(player) != null) {
-            return getPlayerGroup(player).getWeight().getAsInt();
+        var group = getPlayerGroup(player);
+        if (group != null) {
+            return group.getWeight().getAsInt();
         } else return 0;
     }
-    public Group getPlayerGroup(Player player) {
-        getLuckPerms().getGroupManager().loadAllGroups();
-        var group = getGroup(player);
-        if (group != null) {
-            if (getLuckPerms().getGroupManager().isLoaded(group)) {
-                return getLuckPerms().getGroupManager().getGroup(group);
-            } else {
-                return (Group) getLuckPerms().getGroupManager().loadGroup(group);
+    public int getWeighted(Player player) {
+        var listed = new ArrayList<>(getWeightedPlayers());
+        for (var i = 0; i < listed.size(); i++) {
+            if (listed.get(i).getKey() == player) {
+                return i;
             }
+        }
+        return 0;
+    }
+    public Group getPlayerGroup(Player player) {
+        var groupName = getGroupName(player);
+        if (groupName != null) {
+            if (getLuckPerms().getGroupManager().isLoaded(groupName)) {
+                return getLuckPerms().getGroupManager().getGroup(groupName);
+            } else return (Group) getLuckPerms().getGroupManager().loadGroup(groupName);
         } else return null;
     }
-    public String getGroup(Player player) {
+    public String getGroupName(Player player) {
         var user = getLuckPerms().getUserManager().getUser(player.getUniqueId());
         if (user != null) {
             return user.getPrimaryGroup();
         } else return null;
     }
     public Set<Map.Entry<Player, Integer>> getWeightedPlayers() {
-        var accounts = new HashMap<Player, Integer>();
+        var weights = new HashMap<Player, Integer>();
         for (var player : getInstance().getOnlinePlayers()) {
-            accounts.put(player, getWeight(player));
+            weights.put(player, getWeight(player));
         }
-        var list = new ArrayList<>(accounts.entrySet());
-        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        var list = new ArrayList<>(weights.entrySet());
+        list.sort(Map.Entry.comparingByValue());
         var result = new LinkedHashMap<Player, Integer>();
+        result.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         for (var entry : list) {
             result.put(entry.getKey(), entry.getValue());
         }
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
         return result.entrySet();
     }
     public LuckPerms getLuckPerms() {

@@ -206,14 +206,8 @@ public class TablistHandler {
         } else return setup();
     }
     public int getWeight(Player player) {
-        if (getInstance().isLuckPermsEnabled()) {
-            var listed = new ArrayList<>(getInstance().getLuckPermsProvider().getWeightedPlayers());
-            for (var i = 0; i < listed.size(); i++) {
-                if (listed.get(i).getKey() == player) {
-                    return i;
-                }
-            }
-        }
-        return 0;
+        if (getInstance().getPluginManager().isPluginEnabled("LuckPerms")) {
+            return getInstance().getLuckPermsProvider().getWeighted(player);
+        } else return 0;
     }
 }
