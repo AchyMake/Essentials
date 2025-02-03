@@ -15,15 +15,6 @@ public record Tab(Player getPlayer) implements Runnable {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private String getPlayerListHeader() {
-        return getPlayer().getPlayerListHeader();
-    }
-    private String getPlayerListName() {
-        return getPlayer().getPlayerListName();
-    }
-    private String getPlayerListFooter() {
-        return getPlayer().getPlayerListFooter();
-    }
     private String getHeader() {
         var world = getPlayer().getWorld();
         if (!getTablistHandler().hasHeaderLines(world.getName())) {
@@ -48,26 +39,36 @@ public record Tab(Player getPlayer) implements Runnable {
             } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines()));
         } else return getMessage().addPlaceholder(getPlayer(), getMessage().toString(getTablistHandler().getFooterLines(world.getName())));
     }
+    private void setHeader(String value) {
+        var header = getPlayer().getPlayerListHeader();
+        if (header != null) {
+            if (value == null)return;
+            if (header.equals(value))return;
+            getPlayer().setPlayerListHeader(value);
+        } else getPlayer().setPlayerListHeader(value);
+    }
+    private void setName(String value) {
+        if (getPlayer().getPlayerListName().equals(value))return;
+        getPlayer().setPlayerListName(value);
+    }
+    private void setFooter(String value) {
+        var footer = getPlayer().getPlayerListFooter();
+        if (footer != null) {
+            if (value == null)return;
+            if (footer.equals(value))return;
+            getPlayer().setPlayerListFooter(value);
+        } else getPlayer().setPlayerListFooter(value);
+    }
+    private void setOrder(int order) {
+        if (getPlayer().getPlayerListOrder() == order)return;
+        getPlayer().setPlayerListOrder(order);
+    }
     @Override
     public void run() {
-        if (getPlayerListHeader() != null) {
-            if (getHeader() != null) {
-                if (!getPlayerListHeader().equals(getHeader())) {
-                    getPlayer().setPlayerListHeader(getHeader());
-                }
-            }
-        } else getPlayer().setPlayerListHeader(getHeader());
-        if (!getPlayerListName().equals(getName())) {
-            getPlayer().setPlayerListName(getName());
-        }
-        getPlayer().setPlayerListOrder(getTablistHandler().getWeight(getPlayer()));
-        if (getPlayerListFooter() != null) {
-            if (getFooter() != null) {
-                if (!getPlayerListFooter().equals(getFooter())) {
-                    getPlayer().setPlayerListFooter(getFooter());
-                }
-            }
-        } else getPlayer().setPlayerListFooter(getFooter());
+        setHeader(getHeader());
+        setName(getName());
+        setFooter(getFooter());
+        setOrder(getTablistHandler().getWeight(getPlayer()));
     }
     @Override
     public Player getPlayer() {

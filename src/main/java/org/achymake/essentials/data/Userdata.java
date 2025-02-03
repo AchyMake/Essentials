@@ -35,9 +35,6 @@ public class Userdata {
     private Message getMessage() {
         return getInstance().getMessage();
     }
-    private NamespacedKey getKey(String key) {
-        return getInstance().getKey(key);
-    }
     public PersistentDataContainer getData(Player player) {
         return player.getPersistentDataContainer();
     }
@@ -383,8 +380,8 @@ public class Userdata {
     public void setLastWhisper(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("last-whisper"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("last-whisper"));
+            data.set(getInstance().getKey("last-whisper"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("last-whisper"));
     }
     /**
      * gets player for 'last-whisper'
@@ -394,7 +391,7 @@ public class Userdata {
      */
     public Player getLastWhisper(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("last-whisper"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("last-whisper"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -402,8 +399,8 @@ public class Userdata {
     public void setBankSent(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("bank.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("bank.sent"));
+            data.set(getInstance().getKey("bank.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("bank.sent"));
     }
     /**
      * gets player for 'bank.sent'
@@ -413,7 +410,7 @@ public class Userdata {
      */
     public Player getBankSent(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("bank.sent"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("bank.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -421,8 +418,8 @@ public class Userdata {
     public void setBankFrom(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("bank.from"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("bank.from"));
+            data.set(getInstance().getKey("bank.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("bank.from"));
     }
     /**
      * gets player for 'bank.from'
@@ -432,7 +429,7 @@ public class Userdata {
      */
     public Player getBankFrom(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("bank.from"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("bank.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -440,8 +437,8 @@ public class Userdata {
     public void setTpaSent(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("tpa.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("tpa.sent"));
+            data.set(getInstance().getKey("tpa.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("tpa.sent"));
     }
     /**
      * gets player for 'tpa.sent'
@@ -451,7 +448,7 @@ public class Userdata {
      */
     public Player getTpaSent(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("tpa.sent"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("tpa.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -459,8 +456,8 @@ public class Userdata {
     public void setTpaFrom(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("tpa.from"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("tpa.from"));
+            data.set(getInstance().getKey("tpa.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("tpa.from"));
     }
     /**
      * gets player for 'tpa.from'
@@ -470,7 +467,7 @@ public class Userdata {
      */
     public Player getTpaFrom(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("tpa.from"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("tpa.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -478,8 +475,8 @@ public class Userdata {
     public void setTpaHereSent(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("tpahere.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("tpahere.sent"));
+            data.set(getInstance().getKey("tpahere.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("tpahere.sent"));
     }
     /**
      * gets player for 'tpahere.sent'
@@ -489,7 +486,7 @@ public class Userdata {
      */
     public Player getTpaHereSent(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("tpahere.sent"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("tpahere.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -497,8 +494,8 @@ public class Userdata {
     public void setTpaHereFrom(Player player, Player target) {
         var data = getData(player);
         if (target != null) {
-            data.set(getKey("tpahere.from"), PersistentDataType.STRING, target.getUniqueId().toString());
-        } else data.remove(getKey("tpahere.from"));
+            data.set(getInstance().getKey("tpahere.from"), PersistentDataType.STRING, target.getUniqueId().toString());
+        } else data.remove(getInstance().getKey("tpahere.from"));
     }
     /**
      * gets player for 'tpahere.from'
@@ -508,7 +505,7 @@ public class Userdata {
      */
     public Player getTpaHereFrom(Player player) {
         var data = getData(player);
-        var tpaFrom = data.get(getKey("tpahere.from"), PersistentDataType.STRING);
+        var tpaFrom = data.get(getInstance().getKey("tpahere.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
@@ -1023,7 +1020,7 @@ public class Userdata {
      */
     public boolean hasCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
-        var cooldownString = getData(player).get(getKey("cooldown"), PersistentDataType.STRING);
+        var cooldownString = getData(player).get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
             getMessage().getMapStringLong(cooldownString).containsKey(name + "-" + uuid);
@@ -1043,7 +1040,7 @@ public class Userdata {
     public void addCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
         var data = getData(player);
-        var cooldownString = data.get(getKey("cooldown"), PersistentDataType.STRING);
+        var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
             if (cooldown.containsKey(name + "-" + uuid)) {
@@ -1052,11 +1049,11 @@ public class Userdata {
                     cooldown.put(name + "-" + uuid, System.currentTimeMillis());
                 }
             } else cooldown.put(name + "-" + uuid, System.currentTimeMillis());
-            data.set(getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
+            data.set(getInstance().getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
         } else {
             var cooldown = new HashMap<String, Long>();
             cooldown.put(name + "-" + uuid, System.currentTimeMillis());
-            data.set(getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
+            data.set(getInstance().getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
         }
     }
     /**
@@ -1070,7 +1067,7 @@ public class Userdata {
     public String getCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
         var data = getData(player);
-        var cooldownString = data.get(getKey("cooldown"), PersistentDataType.STRING);
+        var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
             if (cooldown.containsKey(name + "-" + uuid)) {

@@ -453,6 +453,16 @@ public class Message {
         config.set("commands.pay.insufficient-funds", "&cYou do not have&a {0}&c to pay&f {1}");
         config.set("commands.pay.minimum-payment", "&cYou have to at least pay&a {0}");
         config.set("commands.pay.self", "&cYou can not pay your self");
+        config.set("commands.points.self", "&6Points&f:&b {0}");
+        config.set("commands.points.top.title", "&6Top 10 Points:");
+        config.set("commands.points.top.listed", "&6{0}&f {1}&b {2}");
+        config.set("commands.points.check", "{0}&6 has&b {1}&6 points");
+        config.set("commands.points.add", "&6You added&b {0}&6 points to&f {1}");
+        config.set("commands.points.remove.success", "&6You removed&b {0}&6 points from&f {1}");
+        config.set("commands.points.remove.insufficient-points", "&fYou removed&b {0}&6 points from&f {1}");
+        config.set("commands.points.set", "&6You set&b {0}&6 points to&f {1}");
+        config.set("commands.points.pay.success", "&6You paid&f {0}&b {1}&6 points");
+        config.set("commands.points.pay.insufficient-points", "&cYou do not have&b {0}&c points");
         config.set("commands.pvp.self", "&6&lPVP: {0}");
         config.set("commands.pvp.sender", "&6You {1} pvp for&f {0}");
         config.set("commands.pvp.exempt", "&cYou are not allowed to toggle pvp for&f {0}");

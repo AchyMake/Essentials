@@ -6,7 +6,7 @@
 
     <groupId>org.achymake</groupId>
     <artifactId>Essentials</artifactId>
-    <version>1.0.86</version>
+    <version>1.0.87</version>
     <packaging>jar</packaging>
 
     <name>Essentials</name>
@@ -85,15 +85,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.luckperms</groupId>
-            <artifactId>api</artifactId>
-            <version>5.4</version>
+            <groupId>com.github.AchyMake</groupId>
+            <artifactId>VaultExtra</artifactId>
+            <version>1.0.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.AchyMake</groupId>
-            <artifactId>VaultExtra</artifactId>
-            <version>1.0.3</version>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

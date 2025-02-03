@@ -238,6 +238,11 @@ commands:
     permission: essentials.command.pay
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  points:
+    description: points command
+    permission: essentials.command.points
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   pvp:
     description: toggle pvp
     permission: essentials.command.pvp
@@ -714,6 +719,12 @@ permissions:
     default: op
   essentials.command.pay:
     description: pay others
+    default: op
+  essentials.command.points:
+    description: points command
+    default: op
+  essentials.command.points.check:
+    description: check others points
     default: op
   essentials.command.pvp:
     description: toggle pvp

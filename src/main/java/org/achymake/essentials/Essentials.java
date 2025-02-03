@@ -34,6 +34,7 @@ public final class Essentials extends JavaPlugin {
     private EntityHandler entityHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
+    private PointsHandler pointsHandler;
     private ProjectileHandler projectileHandler;
     private RandomHandler randomHandler;
     private ScheduleHandler scheduleHandler;
@@ -63,6 +64,7 @@ public final class Essentials extends JavaPlugin {
         entityHandler = new EntityHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
+        pointsHandler = new PointsHandler();
         projectileHandler = new ProjectileHandler();
         randomHandler = new RandomHandler();
         scheduleHandler = new ScheduleHandler();
@@ -81,6 +83,7 @@ public final class Essentials extends JavaPlugin {
         new VaultEconomyProvider(this).register();
         if (getPluginManager().isPluginEnabled("VaultExtra")) {
             new EntityProvider(this).register();
+            new PointsProvider(this).register();
             new UserProvider(this).register();
             new WarpProvider(this).register();
             new WorthProvider(this).register();
@@ -149,6 +152,7 @@ public final class Essentials extends JavaPlugin {
         new MuteCommand();
         new NicknameCommand();
         new PayCommand();
+        new PointsCommand();
         new PVPCommand();
         new RepairCommand();
         new RespondCommand();
@@ -333,6 +337,9 @@ public final class Essentials extends JavaPlugin {
     }
     public ProjectileHandler getProjectileHandler() {
         return projectileHandler;
+    }
+    public PointsHandler getPointsHandler() {
+        return pointsHandler;
     }
     public MaterialHandler getMaterialHandler() {
         return materialHandler;
