@@ -43,7 +43,6 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                         }
                         return true;
                     }
-                    return true;
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("check")) {
@@ -51,7 +50,8 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         if (getUserdata().exists(offlinePlayer)) {
                             player.sendMessage(getMessage().get("commands.points.check", offlinePlayer.getName(), getPointsHandler().format(getPointsHandler().get(offlinePlayer))));
-                        }
+                        } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                        return true;
                     }
                 }
             } else if (args.length == 3) {
@@ -59,39 +59,51 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                     if (player.hasPermission("essentials.commands.points.add")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         var amount = getMessage().getInteger(args[2]);
-                        if (getPointsHandler().add(offlinePlayer, amount)) {
-                            player.sendMessage(getMessage().get("commands.points.add", getPointsHandler().format(amount), offlinePlayer.getName()));
-                        }
+                        if (getUserdata().exists(offlinePlayer)) {
+                            if (getPointsHandler().add(offlinePlayer, amount)) {
+                                player.sendMessage(getMessage().get("commands.points.add", getPointsHandler().format(amount), offlinePlayer.getName()));
+                            }
+                        } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("set")) {
                     if (player.hasPermission("essentials.commands.points.set")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         var amount = getMessage().getInteger(args[2]);
-                        if (getPointsHandler().set(offlinePlayer, amount)) {
-                            player.sendMessage(getMessage().get("commands.points.set", getPointsHandler().format(amount), offlinePlayer.getName()));
-                        }
+                        if (getUserdata().exists(offlinePlayer)) {
+                            if (getPointsHandler().set(offlinePlayer, amount)) {
+                                player.sendMessage(getMessage().get("commands.points.set", getPointsHandler().format(amount), offlinePlayer.getName()));
+                            }
+                        } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("remove")) {
                     if (player.hasPermission("essentials.commands.points.remove")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         var amount = getMessage().getInteger(args[2]);
-                        if (getPointsHandler().has(offlinePlayer, amount)) {
-                            if (getPointsHandler().remove(offlinePlayer, amount)) {
-                                player.sendMessage(getMessage().get("commands.points.remove.success", getPointsHandler().format(amount), offlinePlayer.getName()));
-                            }
-                        } else player.sendMessage(getMessage().get("commands.points.remove.insufficient-points", getPointsHandler().format(amount), offlinePlayer.getName()));
+                        if (getUserdata().exists(offlinePlayer)) {
+                            if (getPointsHandler().has(offlinePlayer, amount)) {
+                                if (getPointsHandler().remove(offlinePlayer, amount)) {
+                                    player.sendMessage(getMessage().get("commands.points.remove.success", getPointsHandler().format(amount), offlinePlayer.getName()));
+                                }
+                            } else player.sendMessage(getMessage().get("commands.points.remove.insufficient-points", getPointsHandler().format(amount), offlinePlayer.getName()));
+                        } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                        return true;
                     }
                 } else if (args[0].equalsIgnoreCase("pay")) {
                     if (player.hasPermission("essentials.commands.points.pay")) {
                         var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
                         var amount = getMessage().getInteger(args[2]);
-                        if (getPointsHandler().has(player, amount)) {
-                            if (getPointsHandler().add(offlinePlayer, amount)) {
-                                if (getPointsHandler().remove(player, amount)) {
-                                    player.sendMessage(getMessage().get("commands.points.pay.success", offlinePlayer.getName(), getPointsHandler().format(amount)));
+                        if (getUserdata().exists(offlinePlayer)) {
+                            if (getPointsHandler().has(player, amount)) {
+                                if (getPointsHandler().add(offlinePlayer, amount)) {
+                                    if (getPointsHandler().remove(player, amount)) {
+                                        player.sendMessage(getMessage().get("commands.points.pay.success", offlinePlayer.getName(), getPointsHandler().format(amount)));
+                                    }
                                 }
-                            }
-                        } else player.sendMessage(getMessage().get("commands.points.pay.insufficient-points", getPointsHandler().format(amount)));
+                            } else player.sendMessage(getMessage().get("commands.points.pay.insufficient-points", getPointsHandler().format(amount)));
+                        } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                        return true;
                     }
                 }
             }
