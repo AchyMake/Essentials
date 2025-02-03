@@ -33,6 +33,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 player.sendMessage(getMessage().get("commands.points.self", getPointsHandler().format(getPointsHandler().get(player))));
+                return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("top")) {
                     if (player.hasPermission("essentials.command.points.top")) {
@@ -86,7 +87,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                                 if (getPointsHandler().remove(offlinePlayer, amount)) {
                                     player.sendMessage(getMessage().get("commands.points.remove.success", getPointsHandler().format(amount), offlinePlayer.getName()));
                                 }
-                            } else player.sendMessage(getMessage().get("commands.points.remove.insufficient-points", getPointsHandler().format(amount), offlinePlayer.getName()));
+                            } else player.sendMessage(getMessage().get("commands.points.remove.insufficient-points", offlinePlayer.getName(), getPointsHandler().format(amount)));
                         } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                         return true;
                     }

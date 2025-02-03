@@ -459,7 +459,7 @@ public class Message {
         config.set("commands.points.check", "{0}&6 has&b {1}&6 points");
         config.set("commands.points.add", "&6You added&b {0}&6 points to&f {1}");
         config.set("commands.points.remove.success", "&6You removed&b {0}&6 points from&f {1}");
-        config.set("commands.points.remove.insufficient-points", "&fYou removed&b {0}&6 points from&f {1}");
+        config.set("commands.points.remove.insufficient-points", "{0}&c does not have&b {1}&c points");
         config.set("commands.points.set", "&6You set&b {0}&6 points to&f {1}");
         config.set("commands.points.pay.success", "&6You paid&f {0}&b {1}&6 points");
         config.set("commands.points.pay.insufficient-points", "&cYou do not have&b {0}&c points");
