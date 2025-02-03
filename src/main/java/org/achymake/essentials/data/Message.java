@@ -571,6 +571,7 @@ public class Message {
         config.set("commands.worth.listed", "{0}&6 is worth&a {1}");
         config.set("commands.worth.unlisted", "{0}&c is not sellable");
         config.set("events.vanish", "&6&lVanish&f: {0}");
+        config.set("events.breed", "{0}&c has reached chunk limit of&f {1}");
         config.set("events.teleport.post", "&6Teleporting in&f {0}&6 seconds");
         config.set("events.teleport.success", "&6Teleporting to&f {0}");
         config.set("events.teleport.has-task", "&cYou can not teleport twice you have to wait");

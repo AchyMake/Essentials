@@ -1,6 +1,7 @@
 package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,9 @@ public class EntityPlace implements Listener {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
+    private Message getMessage() {
+        return getInstance().getMessage();
+    }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();
     }
@@ -29,10 +33,16 @@ public class EntityPlace implements Listener {
     public void onEntityPlace(EntityPlaceEvent event) {
         if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
             if (!getEntityHandler().isOverChunkLimit(event.getEntity())) {
-                if (event.getPlayer() == null)return;
-                if (!getUserdata().isDisabled(event.getPlayer()))return;
+                if (event.getPlayer() != null) {
+                    if (!getUserdata().isDisabled(event.getPlayer()))return;
+                    event.setCancelled(true);
+                }
+            } else {
                 event.setCancelled(true);
-            } else event.setCancelled(true);
+                if (event.getPlayer() != null) {
+                    getMessage().sendActionBar(event.getPlayer(), getMessage().get("events.breed", getMessage().toTitleCase(event.getEntityType().toString()), String.valueOf(getEntityHandler().getChunkLimit(event.getEntityType()))));
+                }
+            }
         } else event.setCancelled(true);
     }
 }

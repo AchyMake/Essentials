@@ -207,6 +207,7 @@ public final class Essentials extends JavaPlugin {
         new EntityDamageByBlock();
         new EntityDamageByEntity();
         new EntityDeath();
+        new EntityEnterLoveMode();
         new EntityExplode();
         new EntityInteract();
         new EntityMount();

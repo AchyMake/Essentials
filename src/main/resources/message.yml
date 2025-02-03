@@ -1,4 +1,6 @@
 error:
+  file:
+    exception: '&cUnable to save&f {0}&c please try again!'
   target:
     offline: '{0}&c is currently offline'
     invalid: '{0}&c has never joined'
@@ -73,7 +75,7 @@ commands:
       account: '&6account&f:&a {0}'
       member:
         title: '&6members:'
-        listed: '- {0}'
+        listed: '- {0} &7{1}'
     invite:
       expired: '&cBank request has been expired'
       target:
@@ -228,7 +230,7 @@ commands:
     exempt: '&cYou are not allowed to open&f {0}&6 inventory'
     title: '{0} inventory'
   jail:
-    toggle: '{0}&6 jailed if now {1}'
+    toggle: '{0}&6 jailed is now {1}'
     invalid: '&cJail has not been set'
     exempt: '&cYou are not allowed to jail&f {0}'
   kit:
@@ -263,7 +265,7 @@ commands:
     exempt: '&cYou are not allowed to change nickname for&f {0}'
   pay:
     target: '&6You received&a {0}&6 from&f {1}'
-    sender: '&6You paid&a {0}&f {1}'
+    sender: '&6You paid&f {0}&a {1}'
     insufficient-funds: '&cYou do not have&a {0}&c to pay&f {1}'
     minimum-payment: '&cYou have to at least pay&a {0}'
     self: '&cYou can not pay your self'
@@ -428,6 +430,7 @@ commands:
     unlisted: '{0}&c is not sellable'
 events:
   vanish: '&6&lVanish&f: {0}'
+  breed: '{0}&c has reached chunk limit of&f {1}'
   teleport:
     post: '&6Teleporting in&f {0}&6 seconds'
     success: '&6Teleporting to&f {0}'
