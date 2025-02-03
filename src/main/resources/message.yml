@@ -431,6 +431,7 @@ commands:
 events:
   vanish: '&6&lVanish&f: {0}'
   breed: '{0}&c has reached chunk limit of&f {1}'
+  entity-place: '{0}&c has reached chunk limit of&f {1}'
   teleport:
     post: '&6Teleporting in&f {0}&6 seconds'
     success: '&6Teleporting to&f {0}'

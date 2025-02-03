@@ -40,7 +40,7 @@ public class EntityPlace implements Listener {
             } else {
                 event.setCancelled(true);
                 if (event.getPlayer() != null) {
-                    getMessage().sendActionBar(event.getPlayer(), getMessage().get("events.breed", getMessage().toTitleCase(event.getEntityType().toString()), String.valueOf(getEntityHandler().getChunkLimit(event.getEntityType()))));
+                    getMessage().sendActionBar(event.getPlayer(), getMessage().get("events.entity-place", getMessage().toTitleCase(event.getEntityType().toString()), String.valueOf(getEntityHandler().getChunkLimit(event.getEntityType()))));
                 }
             }
         } else event.setCancelled(true);
