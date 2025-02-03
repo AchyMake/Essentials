@@ -1,19 +1,19 @@
 package org.achymake.essentials.providers;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.vaultextra.services.WarpHandler;
+import org.achymake.vaultextra.services.WarpService;
 import org.bukkit.Location;
 import org.bukkit.plugin.ServicePriority;
 
 import java.util.Set;
 
-public class WarpProvider implements WarpHandler {
+public class WarpProvider implements WarpService {
     private final Essentials ess;
     public WarpProvider(Essentials ess) {
         this.ess = ess;
     }
     public void register() {
-        ess.getServer().getServicesManager().register(WarpHandler.class, this, ess, ServicePriority.Normal);
+        ess.getServer().getServicesManager().register(WarpService.class, this, ess, ServicePriority.Normal);
     }
     @Override
     public boolean isEnable() {

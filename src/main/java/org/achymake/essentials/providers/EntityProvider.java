@@ -1,20 +1,20 @@
 package org.achymake.essentials.providers;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.vaultextra.services.EntityHandler;
+import org.achymake.vaultextra.services.EntityService;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.ServicePriority;
 
-public class EntityProvider implements EntityHandler {
+public class EntityProvider implements EntityService {
     private final Essentials ess;
     public EntityProvider(Essentials ess) {
         this.ess = ess;
     }
     public void register() {
-        ess.getServer().getServicesManager().register(EntityHandler.class, this, ess, ServicePriority.Normal);
+        ess.getServer().getServicesManager().register(EntityService.class, this, ess, ServicePriority.Normal);
     }
     @Override
     public boolean isEnable() {

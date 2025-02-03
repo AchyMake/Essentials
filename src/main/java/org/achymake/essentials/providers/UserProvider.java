@@ -1,7 +1,7 @@
 package org.achymake.essentials.providers;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.vaultextra.services.UserHandler;
+import org.achymake.vaultextra.services.UserService;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,13 +10,13 @@ import org.bukkit.plugin.ServicePriority;
 import java.io.File;
 import java.util.Set;
 
-public class UserProvider implements UserHandler {
+public class UserProvider implements UserService {
     private final Essentials ess;
     public UserProvider(Essentials ess) {
         this.ess = ess;
     }
     public void register() {
-        ess.getServer().getServicesManager().register(UserHandler.class, this, ess, ServicePriority.Normal);
+        ess.getServer().getServicesManager().register(UserService.class, this, ess, ServicePriority.Normal);
     }
     @Override
     public boolean isEnable() {
