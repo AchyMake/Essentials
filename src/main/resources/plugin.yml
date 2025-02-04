@@ -726,6 +726,21 @@ permissions:
   essentials.command.points.check:
     description: check others points
     default: op
+  essentials.command.points.add:
+    description: add points for others
+    default: op
+  essentials.command.points.pay:
+    description: pay points
+    default: op
+  essentials.command.points.remove:
+    description: remove points for others
+    default: op
+  essentials.command.points.set:
+    description: set points for others
+    default: op
+  essentials.command.points.top:
+    description: check top points
+    default: op
   essentials.command.pvp:
     description: toggle pvp
     default: op
@@ -914,6 +929,9 @@ permissions:
     default: op
   essentials.command.whisper:
     description: whisper to players
+    default: op
+  essentials.command.whisper.notify:
+    description: notify whispers
     default: op
   essentials.command.workbench:
     description: open workbench by command
