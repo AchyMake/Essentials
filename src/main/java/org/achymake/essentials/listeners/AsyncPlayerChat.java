@@ -39,15 +39,17 @@ public class AsyncPlayerChat implements Listener {
         if (!getUserdata().isMuted(player)) {
             var message = getMessage().censor(event.getMessage());
             if (!getUserdata().isVanished(player)) {
-                if (getMessage().isURL(event.getMessage())) {
-                    if (!player.hasPermission("essentials.event.chat.url")) {
-                        event.setCancelled(true);
-                    }
-                }
-                var formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
-                if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(formatString + getMessage().addColor(message));
-                } else event.setFormat(formatString + message);
+                if (!getMessage().isURL(event.getMessage())) {
+                    var formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
+                    if (player.hasPermission("essentials.event.chat.color")) {
+                        event.setFormat(formatString + getMessage().addColor(message));
+                    } else event.setFormat(formatString + message);
+                } else if (player.hasPermission("essentials.event.chat.url")) {
+                    var formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
+                    if (player.hasPermission("essentials.event.chat.color")) {
+                        event.setFormat(formatString + getMessage().addColor(message));
+                    } else event.setFormat(formatString + message);
+                } else event.setCancelled(true);
             } else {
                 event.setCancelled(true);
                 var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
