@@ -220,12 +220,15 @@ public class Message {
      * @since many moons ago
      */
     public String censor(String message) {
-        for (var censored : getInstance().getConfig().getStringList("chat.censor")) {
+        for (var censored : getConfig().getStringList("chat.censor")) {
             if (message.toLowerCase().contains(censored.toLowerCase())) {
                 return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
             }
         }
         return message;
+    }
+    public boolean isURL(String message) {
+        return message.contains("https://");
     }
     public int getInteger(String arg) {
         var result = Integer.parseInt(arg);

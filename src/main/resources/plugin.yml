@@ -988,6 +988,9 @@ permissions:
   essentials.event.chat.color:
     description: chat color
     default: op
+  essentials.event.chat.url:
+    description: allows to send url
+    default: op
   essentials.event.block_break.notify:
     description: notify block break
     default: op

@@ -37,20 +37,24 @@ public class AsyncPlayerChat implements Listener {
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
         if (!getUserdata().isMuted(player)) {
-            var message = getMessage().censor(event.getMessage());
-            if (!getUserdata().isVanished(player)) {
-                String formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
-                if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(formatString + getMessage().addColor(message));
-                } else event.setFormat(formatString + message);
-            } else {
-                event.setCancelled(true);
-                var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
-                for (var vanished : getVanishHandler().getVanished()) {
+            if (!getMessage().isURL(event.getMessage())) {
+                var message = getMessage().censor(event.getMessage());
+                if (!getUserdata().isVanished(player)) {
+                    String formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(formatString + getMessage().addColor(message));
-                    } else vanished.sendMessage(formatString + message);
+                        event.setFormat(formatString + getMessage().addColor(message));
+                    } else event.setFormat(formatString + message);
+                } else {
+                    event.setCancelled(true);
+                    var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
+                    for (var vanished : getVanishHandler().getVanished()) {
+                        if (player.hasPermission("essentials.event.chat.color")) {
+                            vanished.sendMessage(formatString + getMessage().addColor(message));
+                        } else vanished.sendMessage(formatString + message);
+                    }
                 }
+            } else if (!player.hasPermission("essentials.event.chat.url")) {
+                event.setCancelled(true);
             }
         } else event.setCancelled(true);
     }
