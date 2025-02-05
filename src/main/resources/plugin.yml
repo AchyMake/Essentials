@@ -198,6 +198,11 @@ commands:
     permission: essentials.command.inventory
     permission-message: You do not have the permissions to execute the command
     usage: /help
+  invulnerable:
+    description: invulnerable command
+    permission: essentials.command.invulnerable
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
   jail:
     description: toggle jail
     permission: essentials.command.jail
@@ -206,6 +211,11 @@ commands:
   kit:
     description: kit command
     permission: essentials.command.kit
+    permission-message: You do not have the permissions to execute the command
+    usage: /help
+  lightning:
+    description: lightning command
+    permission: essentials.command.lightning
     permission-message: You do not have the permissions to execute the command
     usage: /help
   loom:
@@ -663,6 +673,15 @@ permissions:
   essentials.command.inventory.exempt:
     description: exempts player inventory
     default: op
+  essentials.command.invulnerable:
+    description: invulnerable command
+    default: op
+  essentials.command.invulnerable.other:
+    description: toggle invulnerable for others
+    default: op
+  essentials.command.invulnerable.exempt:
+    description: exempts toggle invulnerable from others
+    default: op
   essentials.command.jail:
     description: toggle jail
     default: op
@@ -680,6 +699,12 @@ permissions:
     default: op
   essentials.command.kit.exempt:
     description: kit command
+    default: op
+  essentials.command.lightning:
+    description: lightning command
+    default: op
+  essentials.command.lightning.exempt:
+    description: exempts lightning by others
     default: op
   essentials.command.loom:
     description: open loom by command

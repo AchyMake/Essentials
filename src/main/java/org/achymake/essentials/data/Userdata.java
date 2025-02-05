@@ -966,6 +966,9 @@ public class Userdata {
         if (getBankFrom(player) != null) {
             setBankFrom(player, null);
         }
+        if (player.isInvulnerable()) {
+            player.setInvulnerable(false);
+        }
     }
     public void disable() {
         getInstance().getOnlinePlayers().forEach(this::disable);

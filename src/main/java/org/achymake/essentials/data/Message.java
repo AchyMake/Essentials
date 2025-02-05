@@ -421,6 +421,9 @@ public class Message {
         config.set("commands.inventory.self", "&cYou can not open an inventory of your own");
         config.set("commands.inventory.exempt", "&cYou are not allowed to open&f {0}&6 inventory");
         config.set("commands.inventory.title", "{0} inventory");
+        config.set("commands.invulnerable.self", "&6Invulnerable&f: {0}");
+        config.set("commands.invulnerable.other", "{0}&6 invulnerable&f: {1}");
+        config.set("commands.invulnerable.exempt", "&cYou are not allowed to toggle invulnerable for&f {0}");
         config.set("commands.jail.toggle", "{0}&6 jailed is now {1}");
         config.set("commands.jail.invalid", "&cJail has not been set");
         config.set("commands.jail.exempt", "&cYou are not allowed to jail&f {0}");
@@ -433,6 +436,10 @@ public class Message {
         config.set("commands.kit.invalid", "{0}&c does not exists");
         config.set("commands.kit.sender", "&6You gave&f {0}&6 kit to&f {1}");
         config.set("commands.kit.exempt", "&cYou are not allowed to give kits to&f {0}");
+        config.set("commands.lightning.block", "&6Lightning struck at x&f:{0}&6 y&f:{1}&6 z&f:{2}");
+        config.set("commands.lightning.invalid", "&cTarget block is either unloaded or outside of view!");
+        config.set("commands.lightning.target", "&6Lightning struck at&f {0}");
+        config.set("commands.lightning.exempt", "&cYou are not allowed to strike lightning for&f {0}");
         config.set("commands.loom.sender", "&6You opened loom for&f {0}");
         config.set("commands.loom.exempt", "&cYou are not allowed to open loom for&f {0}");
         config.set("commands.lvl.self", "&6Your lvl is&f {0}");

@@ -144,8 +144,10 @@ public final class Essentials extends JavaPlugin {
         new HomesCommand();
         new InformationCommand();
         new InventoryCommand();
+        new InvulnerableCommand();
         new JailCommand();
         new KitCommand();
+        new LightningCommand();
         new LoomCommand();
         new LvlCommand();
         new MOTDCommand();

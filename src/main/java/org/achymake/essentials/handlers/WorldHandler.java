@@ -228,6 +228,11 @@ public class WorldHandler {
         }, 3).getTaskId();
         getUserdata().addTaskID(player, "rtp", taskID);
     }
+    public void summonLightning(Location location) {
+        if (location == null)return;
+        if (!location.getChunk().isLoaded())return;
+        location.getWorld().strikeLightning(location);
+    }
     public boolean isAir(Block block) {
         return block == null || block.getType().equals(getMaterials().get("air"));
     }
