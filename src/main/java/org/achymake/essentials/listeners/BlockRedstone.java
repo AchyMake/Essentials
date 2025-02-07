@@ -33,6 +33,7 @@ public class BlockRedstone implements Listener {
         if (material.equals(getMaterials().get("detector_rail")))return;
         if (material.equals(getMaterials().get("activator_rail")))return;
         if (material.equals(getMaterials().get("daylight_detector")))return;
+        if (material.equals(getMaterials().get("redstone_lamp")))return;
         event.setNewCurrent(event.getOldCurrent());
     }
 }
