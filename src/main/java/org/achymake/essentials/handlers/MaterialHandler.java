@@ -1,8 +1,13 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.data.Message;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Lightable;
+import org.bukkit.block.data.type.RedstoneWallTorch;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -22,8 +27,14 @@ public class MaterialHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
+    private FileConfiguration getConfig() {
+        return getInstance().getConfig();
+    }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
+    }
+    private Message getMessage() {
+        return getInstance().getMessage();
     }
     /**
      * get material
@@ -149,16 +160,16 @@ public class MaterialHandler {
     public ItemStack getSpawner(String entityType, int amount) {
         var spawner = getItemStack("spawner", amount);
         var itemMeta = spawner.getItemMeta();
-        if (getInstance().getConfig().isList("spawner.lore")) {
+        if (getConfig().isList("spawner.lore")) {
             var listed = new ArrayList<String>();
-            for(var string : getInstance().getConfig().getStringList("spawner.lore")) {
-                listed.add(getInstance().getMessage().addColor(string));
+            for(var string : getConfig().getStringList("spawner.lore")) {
+                listed.add(getMessage().addColor(string));
             }
             itemMeta.setLore(listed);
         }
-        if (getInstance().getConfig().isString("spawner.display")) {
-            var name = getInstance().getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
-            itemMeta.setDisplayName(name.replaceAll("%entity_type%", getInstance().getMessage().toTitleCase(entityType.toUpperCase())));
+        if (getConfig().isString("spawner.display")) {
+            var name = getMessage().addColor(getConfig().getString("spawner.display"));
+            itemMeta.setDisplayName(name.replaceAll("%entity_type%", getMessage().toTitleCase(entityType.toUpperCase())));
         }
         getData(itemMeta).set(getInstance().getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());
         itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
@@ -200,5 +211,13 @@ public class MaterialHandler {
      */
     public boolean isAir(ItemStack itemStack) {
         return itemStack == null || itemStack.getType().equals(get("air"));
+    }
+    public BlockData disableTorch(BlockData blockData) {
+        if (blockData instanceof RedstoneWallTorch redstoneWallTorch) {
+            redstoneWallTorch.setLit(false);
+        } else if (blockData instanceof Lightable lightable) {
+            lightable.setLit(false);
+        }
+        return blockData;
     }
 }
