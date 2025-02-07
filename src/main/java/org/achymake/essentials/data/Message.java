@@ -2,7 +2,6 @@ package org.achymake.essentials.data;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.achymake.essentials.Essentials;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -58,7 +57,7 @@ public class Message {
      * @since many moons ago
      */
     public void sendActionBar(Player player, String message) {
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(addColor(message)));
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(addColor(message)));
     }
     /**
      * sends list of strings
@@ -151,22 +150,6 @@ public class Message {
         }
         return listed;
     }
-    public Map<String, Integer> getMapStringInteger(String mapString) {
-        var listed = new HashMap<String, Integer>();
-        var result = mapString.replace("{","")
-                .replace("}","")
-                .replace(",", "");
-        if (result.contains(" ")) {
-            for (var test : result.split(" ")) {
-                var args = test.split("=");
-                listed.put(args[0], Integer.parseInt(args[1]));
-            }
-        } else {
-            var args = result.split("=");
-            listed.put(args[0], Integer.parseInt(args[1]));
-        }
-        return listed;
-    }
     public Map<String, Long> getMapStringLong(String mapString) {
         var listed = new HashMap<String, Long>();
         var result = mapString.replace("{","")
@@ -228,7 +211,7 @@ public class Message {
         return message;
     }
     public boolean isURL(String message) {
-        return message.contains("https://");
+        return message.contains("http://") || message.contains("https://") || message.contains("www.");
     }
     public int getInteger(String arg) {
         var result = Integer.parseInt(arg);

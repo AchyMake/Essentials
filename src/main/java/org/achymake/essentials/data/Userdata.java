@@ -716,7 +716,7 @@ public class Userdata {
      * @param player target
      * @since many moons ago
      */
-    public String getChat(Player player) {
+    public String getChatFormat(Player player) {
         if (!player.isOp()) {
             for (var value : getConfig().getConfigurationSection("chat.format").getKeys(false)) {
                 if (player.hasPermission("essentials.event.chat." + value)) {
@@ -1082,5 +1082,11 @@ public class Userdata {
                 } else return "0";
             } else return "0";
         } else return "0";
+    }
+    public String getPrefix(Player player) {
+        return getMessage().addPlaceholder(player, "%vault_prefix%");
+    }
+    public String getSuffix(Player player) {
+        return getMessage().addPlaceholder(player, "%vault_suffix%");
     }
 }

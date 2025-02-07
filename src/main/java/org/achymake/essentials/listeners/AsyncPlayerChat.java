@@ -3,8 +3,6 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,14 +13,8 @@ public class AsyncPlayerChat implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private FileConfiguration getConfig() {
-        return getInstance().getConfig();
-    }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
-    }
-    private VanishHandler getVanishHandler() {
-        return getInstance().getVanishHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -36,28 +28,26 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
+        var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player));
+        var message = getMessage().censor(event.getMessage());
         if (!getUserdata().isMuted(player)) {
-            var message = getMessage().censor(event.getMessage());
             if (!getUserdata().isVanished(player)) {
-                if (!getMessage().isURL(event.getMessage())) {
-                    var formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
-                    if (player.hasPermission("essentials.event.chat.color")) {
-                        event.setFormat(formatString + getMessage().addColor(message));
-                    } else event.setFormat(formatString + message);
-                } else if (player.hasPermission("essentials.event.chat.url")) {
-                    var formatString = getMessage().addPlaceholder(player, getUserdata().getChat(player));
-                    if (player.hasPermission("essentials.event.chat.color")) {
-                        event.setFormat(formatString + getMessage().addColor(message));
-                    } else event.setFormat(formatString + message);
-                } else event.setCancelled(true);
+                if (getMessage().isURL(event.getMessage())) {
+                    if (player.hasPermission("essentials.event.chat.url")) {
+                        if (player.hasPermission("essentials.event.chat.color")) {
+                            event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(message));
+                        } else event.setFormat(getMessage().addColor(username + "&r") + message);
+                    } else event.setCancelled(true);
+                } else if (player.hasPermission("essentials.event.chat.color")) {
+                    event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(message));
+                } else event.setFormat(getMessage().addColor(username + "&r") + message);
             } else {
                 event.setCancelled(true);
-                var formatString = getMessage().addPlaceholder(player, getMessage().addColor(getConfig().getString("chat.format.vanished")));
-                for (var vanished : getVanishHandler().getVanished()) {
+                getInstance().getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(formatString + getMessage().addColor(message));
-                    } else vanished.sendMessage(formatString + message);
-                }
+                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(message));
+                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + message);
+                });
             }
         } else event.setCancelled(true);
     }

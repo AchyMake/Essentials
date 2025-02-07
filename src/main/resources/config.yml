@@ -136,9 +136,10 @@ message-of-the-day:
     -  "- https://store.your-server.org"
   rules:
     - "&6Rules:"
-    - "&61.&f No server crashing"
-    - "&62.&f No griefing"
-    - "&63.&f No Monkieng around! uhh?"
+    - "&61.&f no server crashing"
+    - "&61.&f no exploits"
+    - "&62.&f no griefing"
+    - "&63.&f no monkieng around! uhh?"
   help:
     - "&6Help:"
     - "- https://store.your-server.org/help"
