@@ -5,6 +5,8 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
 import org.achymake.essentials.handlers.WorldHandler;
+import org.bukkit.block.data.Lightable;
+import org.bukkit.block.data.type.RedstoneWallTorch;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -45,6 +47,16 @@ public class BlockPlace implements Listener {
         if (!getUserdata().isDisabled(player)) {
             if (material.equals(getMaterials().get("spawner"))) {
                 getWorldHandler().updateSpawner(block, event.getItemInHand());
+            } else if (material.equals(getMaterials().get("redstone_torch"))) {
+                if (getConfig().getBoolean("physics.disable-redstone")) {
+                    if (block.getBlockData() instanceof RedstoneWallTorch redstoneWallTorch) {
+                        redstoneWallTorch.setLit(false);
+                        block.setBlockData(redstoneWallTorch);
+                    } else if (block.getBlockData() instanceof Lightable lightable) {
+                        lightable.setLit(false);
+                        block.setBlockData(lightable);
+                    }
+                }
             }
             if (getConfig().getBoolean("notification.enable")) {
                 if (!getConfig().getStringList("notification.block-place").contains(material.toString()))return;
@@ -54,11 +66,11 @@ public class BlockPlace implements Listener {
                 var y = String.valueOf(block.getY());
                 var z = String.valueOf(block.getZ());
                 getConfig().getStringList("notification.message").forEach(messages -> getMessage().sendAll(messages.replaceAll("%player%", name)
-                            .replaceAll("%material%", getMessage().toTitleCase(material.toString()))
-                            .replaceAll("%world%", worldName)
-                            .replaceAll("%x%", x)
-                            .replaceAll("%y%", y)
-                            .replaceAll("%z%", z), "essentials.event.block_place.notify"));
+                        .replaceAll("%material%", getMessage().toTitleCase(material.toString()))
+                        .replaceAll("%world%", worldName)
+                        .replaceAll("%x%", x)
+                        .replaceAll("%y%", y)
+                        .replaceAll("%z%", z), "essentials.event.block_place.notify"));
             }
         } else event.setCancelled(true);
     }
