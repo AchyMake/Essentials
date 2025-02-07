@@ -32,7 +32,9 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public Material get(String materialName) {
-        return Material.valueOf(materialName.toUpperCase());
+        if (materialName.contains("minecraft:")) {
+            return Material.valueOf(materialName.replace("minecraft:", "").toUpperCase());
+        } else return Material.valueOf(materialName.toUpperCase());
     }
     /**
      * get enchantment
@@ -96,7 +98,7 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public ItemStack getItemStack(String materialName, int amount) {
-        var material = get(materialName.toUpperCase());
+        var material = get(materialName);
         if (material != null) {
             return new ItemStack(material, amount);
         } else return null;
