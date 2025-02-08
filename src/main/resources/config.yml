@@ -156,6 +156,7 @@ fire:
   disable-fire-spread: true
   disable-lava-fire-spread: true
 physics:
+  disable-pistons: false
   disable-redstone: false
   disable-sculk: false
   disable-vault: false

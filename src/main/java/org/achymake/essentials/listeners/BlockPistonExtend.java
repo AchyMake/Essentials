@@ -23,7 +23,7 @@ public class BlockPistonExtend implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockPistonExtend(BlockPistonExtendEvent event) {
-        if (!getConfig().getBoolean("physics.disable-redstone"))return;
+        if (!getConfig().getBoolean("physics.disable-pistons"))return;
         event.setCancelled(true);
     }
 }

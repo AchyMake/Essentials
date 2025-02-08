@@ -29,11 +29,7 @@ public class BlockRedstone implements Listener {
     public void onBlockRedstone(BlockRedstoneEvent event) {
         if (!getConfig().getBoolean("physics.disable-redstone"))return;
         var material = event.getBlock().getType();
-        if (material.equals(getMaterials().get("powered_rail")))return;
-        if (material.equals(getMaterials().get("detector_rail")))return;
-        if (material.equals(getMaterials().get("activator_rail")))return;
-        if (material.equals(getMaterials().get("daylight_detector")))return;
-        if (material.equals(getMaterials().get("redstone_lamp")))return;
+        if (!getMaterials().isRedstone(material))return;
         event.setNewCurrent(event.getOldCurrent());
     }
 }

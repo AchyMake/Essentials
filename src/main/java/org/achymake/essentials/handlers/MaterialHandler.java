@@ -220,4 +220,14 @@ public class MaterialHandler {
         }
         return blockData;
     }
+    public boolean isRedstone(Material material) {
+        return material.equals(get("redstone"))
+                || material.equals(get("redstone_wire"))
+                || material.equals(get("redstone_torch"))
+                || material.equals(get("redstone_wall_torch"))
+                || material.equals(get("repeater"))
+                || material.equals(get("comparator"))
+                || material.equals(get("redstone_block"))
+                || material.equals(get("observer"));
+    }
 }
