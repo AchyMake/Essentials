@@ -926,8 +926,8 @@ public class Userdata {
      * @return list offlinePlayer
      * @since many moons ago
      */
-    public List<OfflinePlayer> getOfflinePlayers() {
-        var listed = new ArrayList<OfflinePlayer>();
+    public Collection<OfflinePlayer> getOfflinePlayers() {
+        var listed = new HashSet<OfflinePlayer>();
         var folder = new File(getInstance().getDataFolder(), "userdata");
         if (folder.exists() && folder.isDirectory()) {
             for (var file : folder.listFiles()) {

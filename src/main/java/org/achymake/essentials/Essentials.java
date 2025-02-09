@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public final class Essentials extends JavaPlugin {
@@ -301,7 +302,7 @@ public final class Essentials extends JavaPlugin {
     public Collection<? extends Player> getOnlinePlayers() {
         return getServer().getOnlinePlayers();
     }
-    public List<OfflinePlayer> getOfflinePlayers() {
+    public Collection<? extends OfflinePlayer> getOfflinePlayers() {
         return getUserdata().getOfflinePlayers();
     }
     public ServicesManager getServicesManager() {
