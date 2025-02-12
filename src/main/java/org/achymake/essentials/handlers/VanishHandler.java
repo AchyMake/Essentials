@@ -89,7 +89,10 @@ public class VanishHandler {
                 player.setCanPickupItems(false);
                 getInstance().getOnlinePlayers().forEach(players -> players.hidePlayer(getInstance(), player));
                 getVanished().add(player);
-                getVanished().forEach(vanished -> player.showPlayer(getInstance(), vanished));
+                getVanished().forEach(vanished -> {
+                    player.showPlayer(getInstance(), vanished);
+                    vanished.showPlayer(getInstance(), player);
+                });
                 getMessage().sendActionBar(player, getMessage().get("events.vanish", getMessage().get("enable")));
                 var taskID = getScheduler().runTimer(new Vanish(player), 0, 50).getTaskId();
                 getUserdata().addTaskID(player, "vanish", taskID);
@@ -108,7 +111,6 @@ public class VanishHandler {
                 getUserdata().removeTask(player, "vanish");
                 getVanished().remove(player);
                 getInstance().getOnlinePlayers().forEach(players -> players.showPlayer(getInstance(), player));
-                getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
                 if (!getVanished().isEmpty()) {
                     getVanished().forEach(vanished -> player.hidePlayer(getInstance(), vanished));
                 }
