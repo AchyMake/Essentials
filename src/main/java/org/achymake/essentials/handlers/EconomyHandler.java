@@ -47,7 +47,9 @@ public class EconomyHandler {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
             if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
-                accounts.put(offlinePlayer, get(offlinePlayer));
+                if (has(offlinePlayer, 0.01)) {
+                    accounts.put(offlinePlayer, get(offlinePlayer));
+                }
             }
         }
         var list = new ArrayList<>(accounts.entrySet());
@@ -70,7 +72,9 @@ public class EconomyHandler {
     public Set<Map.Entry<String, Double>> getTopBanks() {
         var bankAccounts = new HashMap<String, Double>();
         for (var bankName : getBank().getListed()) {
-            bankAccounts.put(bankName, getBank().get(bankName));
+            if (getBank().has(bankName, 0.01)) {
+                bankAccounts.put(bankName, getBank().get(bankName));
+            }
         }
         if (!bankAccounts.isEmpty()) {
             var list = new ArrayList<>(bankAccounts.entrySet());

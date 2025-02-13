@@ -15,8 +15,6 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public final class Essentials extends JavaPlugin {

@@ -227,6 +227,7 @@ public class MaterialHandler {
                 || material.equals(get("redstone_wall_torch"))
                 || material.equals(get("repeater"))
                 || material.equals(get("comparator"))
-                || material.equals(get("redstone_block"));
+                || material.equals(get("redstone_block"))
+                || material.equals(get("observer"));
     }
 }

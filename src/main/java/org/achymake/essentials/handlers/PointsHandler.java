@@ -21,7 +21,9 @@ public class PointsHandler {
         var accounts = new HashMap<OfflinePlayer, Integer>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
             if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
-                accounts.put(offlinePlayer, get(offlinePlayer));
+                if (has(offlinePlayer, 1)) {
+                    accounts.put(offlinePlayer, get(offlinePlayer));
+                }
             }
         }
         var list = new ArrayList<>(accounts.entrySet());
