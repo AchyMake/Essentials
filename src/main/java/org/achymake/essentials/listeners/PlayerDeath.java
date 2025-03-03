@@ -58,6 +58,13 @@ public class PlayerDeath implements Listener {
                 player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
             }
         }
+        var helmet = player.getInventory().getHelmet();
+        if (helmet != null) {
+            if (getMaterials().hasEnchantment(helmet, "keep")) {
+                event.setKeepInventory(true);
+                event.getDrops().clear();
+            }
+        }
         if (player.hasPermission("essentials.event.death.keep_exp")) {
             event.setKeepLevel(true);
             event.setDroppedExp(0);

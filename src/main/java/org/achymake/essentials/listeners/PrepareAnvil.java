@@ -34,6 +34,5 @@ public class PrepareAnvil implements Listener {
         if (!player.hasPermission("essentials.event.anvil.color"))return;
         meta.setDisplayName(getMessage().addColor(rename));
         result.setItemMeta(meta);
-        event.setResult(result);
     }
 }

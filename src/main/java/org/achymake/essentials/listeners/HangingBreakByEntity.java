@@ -14,11 +14,11 @@ public class HangingBreakByEntity implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private EntityHandler getEntityHandler() {
-        return getInstance().getEntityHandler();
-    }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
+    }
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
     }
     private PluginManager getPluginManager() {
         return getInstance().getPluginManager();

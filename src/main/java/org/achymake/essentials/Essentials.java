@@ -130,7 +130,6 @@ public final class Essentials extends JavaPlugin {
         new FlySpeedCommand();
         new FreezeCommand();
         new GameModeCommand();
-        new GiveCommand();
         new GMACommand();
         new GMCCommand();
         new GMSCommand();
@@ -193,8 +192,7 @@ public final class Essentials extends JavaPlugin {
         new BellRing();
         new BlockBreak();
         new BlockDamage();
-        new BlockDispense();
-        new BlockDispenseArmor();
+        new BlockDispenseLoot();
         new BlockFertilize();
         new BlockIgnite();
         new BlockPistonExtend();
@@ -202,9 +200,7 @@ public final class Essentials extends JavaPlugin {
         new BlockPlace();
         new BlockReceiveGame();
         new BlockRedstone();
-        new BlockShearEntity();
         new BlockSpread();
-        new CrafterCraft();
         new CreatureSpawn();
         new EntityBlockForm();
         new EntityChangeBlock();

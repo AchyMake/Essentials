@@ -7,7 +7,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.type.RedstoneWallTorch;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -26,9 +25,6 @@ import java.util.List;
 public class MaterialHandler {
     private Essentials getInstance() {
         return Essentials.getInstance();
-    }
-    private FileConfiguration getConfig() {
-        return getInstance().getConfig();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -67,6 +63,7 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public void setEnchantment(ItemStack itemStack, String enchantmentName, int level) {
+        if (!isEnchantment(enchantmentName))return;
         if (level > 0) {
             itemStack.addUnsafeEnchantment(getEnchantment(enchantmentName), level);
         } else itemStack.removeEnchantment(getEnchantment(enchantmentName));
@@ -79,7 +76,9 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {
-        return itemStack.getItemMeta().hasEnchant(getEnchantment(enchantmentName));
+        if (isEnchantment(enchantmentName)) {
+            return itemStack.getItemMeta().hasEnchant(getEnchantment(enchantmentName));
+        } else return false;
     }
     /**
      * get enchantments
@@ -160,15 +159,15 @@ public class MaterialHandler {
     public ItemStack getSpawner(String entityType, int amount) {
         var spawner = getItemStack("spawner", amount);
         var itemMeta = spawner.getItemMeta();
-        if (getConfig().isList("spawner.lore")) {
+        if (getInstance().getConfig().isList("spawner.lore")) {
             var listed = new ArrayList<String>();
-            for(var string : getConfig().getStringList("spawner.lore")) {
+            for(var string : getInstance().getConfig().getStringList("spawner.lore")) {
                 listed.add(getMessage().addColor(string));
             }
             itemMeta.setLore(listed);
         }
-        if (getConfig().isString("spawner.display")) {
-            var name = getMessage().addColor(getConfig().getString("spawner.display"));
+        if (getInstance().getConfig().isString("spawner.display")) {
+            var name = getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
             itemMeta.setDisplayName(name.replaceAll("%entity_type%", getMessage().toTitleCase(entityType.toUpperCase())));
         }
         getData(itemMeta).set(getInstance().getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());

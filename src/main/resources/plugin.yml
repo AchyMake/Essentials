@@ -133,11 +133,6 @@ commands:
     permission: essentials.command.gamemode
     permission-message: You do not have the permissions to execute the command
     usage: /help
-  give:
-    description: give items
-    permission: essentials.command.give
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
   gma:
     description: changes to adventure
     permission: essentials.command.gamemode.adventure
@@ -612,9 +607,6 @@ permissions:
     default: op
   essentials.command.gamemode.notify:
     description: notify gamemode changes
-    default: op
-  essentials.command.give:
-    description: give items
     default: op
   essentials.command.grindstone:
     description: opens grindstone by command

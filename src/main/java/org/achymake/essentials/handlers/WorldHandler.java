@@ -4,11 +4,12 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -140,11 +141,13 @@ public class WorldHandler {
      */
     public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
         var container = getMaterials().getData(heldItem.getItemMeta());
-        if (container.has(getInstance().getKey("entity_type"), PersistentDataType.STRING)) {
-            var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
-            creatureSpawner.setSpawnedType(EntityType.valueOf(container.get(getInstance().getKey("entity_type"), PersistentDataType.STRING)));
-            creatureSpawner.update();
-        }
+        var type = container.get(getInstance().getKey("entity_type"), PersistentDataType.STRING);
+        if (type == null)return;
+        var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
+        var entityType = getInstance().getEntityHandler().getType(type);
+        if (entityType == null)return;
+        creatureSpawner.setSpawnedType(entityType);
+        creatureSpawner.update();
     }
     /**
      * drop spawner
@@ -235,5 +238,14 @@ public class WorldHandler {
     }
     public boolean isAir(Block block) {
         return block == null || block.getType().equals(getMaterials().get("air"));
+    }
+    public void spawnParticle(Location location, String particleType, int count, double offsetX, double offsetY, double offsetZ) {
+        var world = location.getWorld();
+        if (world != null) {
+            world.spawnParticle(Particle.valueOf(particleType), location, count, offsetX, offsetY, offsetZ, 0.0);
+        }
+    }
+    public void playSound(Player player, String soundType, double volume, double pitch) {
+        player.getWorld().playSound(player, Sound.valueOf(soundType), (float) volume, (float) pitch);
     }
 }
