@@ -1,5 +1,6 @@
 package org.achymake.essentials.runnable;
 
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.handlers.ScoreboardHandler;
@@ -11,7 +12,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public record Board(Player getPlayer) implements Runnable {
+public record PaperBoard(Player getPlayer) implements Runnable {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
@@ -71,6 +72,7 @@ public record Board(Player getPlayer) implements Runnable {
             var scoreboard = getNewScoreboard();
             var sidebar = scoreboard.registerNewObjective(getPlayer().getName() + "-board", "yummy", getTitle());
             sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+            sidebar.numberFormat(NumberFormat.blank());
             if (!getLines().isEmpty()) {
                 for (int i = 0; i < getLines().size(); i++) {
                     sidebar.getScore(getLines().get(i)).setScore(i);

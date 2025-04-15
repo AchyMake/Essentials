@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -232,20 +233,23 @@ public class WorldHandler {
         getUserdata().addTaskID(player, "rtp", taskID);
     }
     public void summonLightning(Location location) {
-        if (location == null)return;
+        var world = location.getWorld();
+        if (world == null)return;
         if (!location.getChunk().isLoaded())return;
-        location.getWorld().strikeLightning(location);
-    }
-    public boolean isAir(Block block) {
-        return block == null || block.getType().equals(getMaterials().get("air"));
+        world.strikeLightning(location);
     }
     public void spawnParticle(Location location, String particleType, int count, double offsetX, double offsetY, double offsetZ) {
         var world = location.getWorld();
-        if (world != null) {
-            world.spawnParticle(Particle.valueOf(particleType), location, count, offsetX, offsetY, offsetZ, 0.0);
-        }
+        if (world == null)return;
+        world.spawnParticle(Particle.valueOf(particleType), location, count, offsetX, offsetY, offsetZ, 0.0);
     }
-    public void playSound(Player player, String soundType, double volume, double pitch) {
-        player.getWorld().playSound(player, Sound.valueOf(soundType), (float) volume, (float) pitch);
+    public void playSound(Location location, String soundType, double volume, double pitch) {
+        var world = location.getWorld();
+        if (world == null)return;
+        world.playSound(location, Sound.valueOf(soundType), (float) volume, (float) pitch);
+    }
+    public void playSound(Entity entity, String soundType, double volume, double pitch) {
+        var world = entity.getWorld();
+        world.playSound(entity, Sound.valueOf(soundType), (float) volume, (float) pitch);
     }
 }

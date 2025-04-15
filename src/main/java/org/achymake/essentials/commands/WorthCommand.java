@@ -5,7 +5,11 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Worth;
 import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -35,16 +39,18 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
-                if (getWorth().isListed(getMaterials().get(args[0]))) {
-                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                var material = getMaterials().get(args[0]);
+                if (getWorth().isListed(material)) {
+                    player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
                 } else player.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
-                if (getWorth().isListed(getMaterials().get(itemName))) {
-                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(getMaterials().get(args[0])))));
+                var material = getMaterials().get(args[0]);
+                if (getWorth().isListed(material)) {
+                    consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
                 return true;
             }
@@ -56,12 +62,14 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                getWorth().getListed().forEach(listed -> {
-                    var lowered = listed.toLowerCase();
-                    if (lowered.startsWith(args[0])) {
-                        commands.add(lowered);
-                    }
-                });
+                if (!getWorth().getListed().isEmpty()) {
+                    getWorth().getListed().forEach(listed -> {
+                        var lowered = listed.toLowerCase();
+                        if (lowered.startsWith(args[0])) {
+                            commands.add(lowered);
+                        }
+                    });
+                }
             }
         }
         return commands;

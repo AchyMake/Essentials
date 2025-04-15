@@ -5,7 +5,11 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.data.Warps;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -55,8 +59,7 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.warp.other")) {
                     var warpName = args[0].toLowerCase();
-                    var username = args[1];
-                    var target = getInstance().getPlayer(username);
+                    var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         var warp = getWarps().getLocation(warpName);
                         if (warp != null) {
@@ -67,22 +70,21 @@ public class WarpCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                             } else player.sendMessage(getMessage().get("commands.warp.exempt", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.warp.invalid", warpName));
-                    } else player.sendMessage(getMessage().get("error.target.offline", username));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                     return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 2) {
                 var warpName = args[0].toLowerCase();
-                var username = args[1];
-                var target = getInstance().getPlayer(username);
+                var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var warp = getWarps().getLocation(warpName);
                     if (warp != null) {
                         getWorldHandler().teleport(target, warp, warpName, 0);
                         consoleCommandSender.sendMessage(getMessage().get("commands.warp.sender", target.getName(), warpName));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.warp.invalid", warpName));
-                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", username));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
                 return true;
             }
         }

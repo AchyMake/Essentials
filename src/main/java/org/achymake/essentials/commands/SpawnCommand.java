@@ -5,7 +5,11 @@ import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Spawn;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

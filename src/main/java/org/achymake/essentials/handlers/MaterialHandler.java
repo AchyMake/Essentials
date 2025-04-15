@@ -88,9 +88,6 @@ public class MaterialHandler {
     public List<Enchantment> getEnchantments() {
         return new ArrayList<>(Arrays.asList(Enchantment.values()));
     }
-    public Material[] getValues() {
-        return Material.values();
-    }
     /**
      * get persistent data container of itemMeta
      * @param itemMeta itemMeta

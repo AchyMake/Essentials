@@ -4,7 +4,11 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.InventoryHandler;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -34,8 +38,7 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    var username = args[0];
-                    var target = getInstance().getPlayer(username);
+                    var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
                             getInventoryHandler().openWorkbench(target);
@@ -44,18 +47,17 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
                             getInventoryHandler().openWorkbench(target);
                             player.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.workbench.exempt", target.getName()));
-                    } else player.sendMessage(getMessage().get("error.target.offline", username));
+                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
                 }
             }
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
-                var username = args[0];
-                var target = getInstance().getPlayer(username);
+                var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
                     getInventoryHandler().openWorkbench(target);
                     consoleCommandSender.sendMessage(getMessage().get("commands.workbench.sender", target.getName()));
-                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", username));
+                } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
         }
@@ -67,10 +69,9 @@ public class WorkbenchCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 if (player.hasPermission("essentials.command.workbench.other")) {
-                    var username = args[0];
                     getInstance().getOnlinePlayers().forEach(target -> {
                         if (!getUserdata().isVanished(target)) {
-                            if (target.getName().startsWith(username)) {
+                            if (target.getName().startsWith(args[0])) {
                                 commands.add(target.getName());
                             }
                         }

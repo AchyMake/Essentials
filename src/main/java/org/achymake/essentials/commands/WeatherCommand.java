@@ -6,6 +6,7 @@ import org.achymake.essentials.data.Userdata;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
@@ -71,6 +72,21 @@ public class WeatherCommand implements CommandExecutor, TabCompleter {
                 } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                 return true;
             }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            var target = getInstance().getPlayer(args[1]);
+            if (target != null) {
+                if (args[0].equalsIgnoreCase("clear")) {
+                    getUserdata().setWeather(target, "clear");
+                    consoleCommandSender.sendMessage(getMessage().get("commands.weather.other", target.getName(), getMessage().get("weather.clear")));
+                } else if (args[0].equalsIgnoreCase("rain")) {
+                    getUserdata().setWeather(target, "rain");
+                    consoleCommandSender.sendMessage(getMessage().get("commands.weather.other", target.getName(), getMessage().get("weather.rain")));
+                } else if (args[0].equalsIgnoreCase("reset")) {
+                    getUserdata().setWeather(target, "reset");
+                    consoleCommandSender.sendMessage(getMessage().get("commands.weather.other", target.getName(), getMessage().get("weather.reset")));
+                }
+            } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));
+            return true;
         }
         return false;
     }

@@ -2,19 +2,28 @@ package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EconomyHandler;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.*;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.WeatherType;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class Userdata {
     private Essentials getInstance() {
@@ -23,20 +32,20 @@ public class Userdata {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
+    private EconomyHandler getEconomy() {
+        return getInstance().getEconomyHandler();
+    }
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
+    }
     private ScheduleHandler getScheduler() {
         return getInstance().getScheduleHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
     }
-    private EconomyHandler getEconomy() {
-        return getInstance().getEconomyHandler();
-    }
     private Message getMessage() {
         return getInstance().getMessage();
-    }
-    public PersistentDataContainer getData(Player player) {
-        return player.getPersistentDataContainer();
     }
     /**
      * gets userdata/uuid.yml
@@ -378,7 +387,7 @@ public class Userdata {
         return getConfig(offlinePlayer).getBoolean("settings.vanished");
     }
     public void setLastWhisper(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("last-whisper"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("last-whisper"));
@@ -390,14 +399,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getLastWhisper(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("last-whisper"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setBankSent(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("bank.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("bank.sent"));
@@ -409,14 +418,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getBankSent(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("bank.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setBankFrom(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("bank.from"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("bank.from"));
@@ -428,14 +437,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getBankFrom(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("bank.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setTpaSent(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("tpa.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("tpa.sent"));
@@ -447,14 +456,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getTpaSent(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpa.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setTpaFrom(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("tpa.from"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("tpa.from"));
@@ -466,14 +475,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getTpaFrom(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpa.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setTpaHereSent(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("tpahere.sent"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("tpahere.sent"));
@@ -485,14 +494,14 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getTpaHereSent(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpahere.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
         } else return null;
     }
     public void setTpaHereFrom(Player player, Player target) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         if (target != null) {
             data.set(getInstance().getKey("tpahere.from"), PersistentDataType.STRING, target.getUniqueId().toString());
         } else data.remove(getInstance().getKey("tpahere.from"));
@@ -504,7 +513,7 @@ public class Userdata {
      * @since many moons ago
      */
     public Player getTpaHereFrom(Player player) {
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpahere.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
             return getInstance().getPlayer(UUID.fromString(tpaFrom));
@@ -1023,7 +1032,7 @@ public class Userdata {
      */
     public boolean hasCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
-        var cooldownString = getData(player).get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
+        var cooldownString = getEntityHandler().getData(player).get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
             getMessage().getMapStringLong(cooldownString).containsKey(name + "-" + uuid);
@@ -1042,7 +1051,7 @@ public class Userdata {
      */
     public void addCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
@@ -1069,7 +1078,7 @@ public class Userdata {
      */
     public String getCooldown(Player player, String name, int seconds) {
         var uuid = player.getUniqueId();
-        var data = getData(player);
+        var data = getEntityHandler().getData(player);
         var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
