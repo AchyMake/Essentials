@@ -500,6 +500,7 @@ public class EntityHandler {
         new GLOW_SQUID().reload();
         new GOAT().reload();
         new GUARDIAN().reload();
+        new HAPPY_GHAST().reload();
         new HOGLIN().reload();
         new HOPPER_MINECART().reload();
         new HORSE().reload();
