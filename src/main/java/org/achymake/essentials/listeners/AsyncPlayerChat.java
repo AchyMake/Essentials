@@ -29,24 +29,25 @@ public class AsyncPlayerChat implements Listener {
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
         var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player));
-        var message = getMessage().censor(event.getMessage());
+        var message = event.getMessage().replace("%", "%%");
+        var censored = getMessage().censor(message);
         if (!getUserdata().isMuted(player)) {
             if (!getUserdata().isVanished(player)) {
                 if (getMessage().isURL(event.getMessage())) {
                     if (player.hasPermission("essentials.event.chat.url")) {
                         if (player.hasPermission("essentials.event.chat.color")) {
-                            event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(message));
-                        } else event.setFormat(getMessage().addColor(username + "&r") + message);
+                            event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
+                        } else event.setFormat(getMessage().addColor(username + "&r") + censored);
                     } else event.setCancelled(true);
                 } else if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(message));
-                } else event.setFormat(getMessage().addColor(username + "&r") + message);
+                    event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
+                } else event.setFormat(getMessage().addColor(username + "&r") + censored);
             } else {
                 event.setCancelled(true);
                 getInstance().getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(message));
-                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + message);
+                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
+                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + censored);
                 });
             }
         } else event.setCancelled(true);
