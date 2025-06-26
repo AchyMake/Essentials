@@ -15,7 +15,9 @@ public class LuckPermsProvider {
     public int getWeight(Player player) {
         var group = getPlayerGroup(player);
         if (group != null) {
-            return group.getWeight().getAsInt();
+            if (group.getWeight().isEmpty()) {
+                return 0;
+            } else return group.getWeight().getAsInt();
         } else return 0;
     }
     public int getWeighted(Player player) {
