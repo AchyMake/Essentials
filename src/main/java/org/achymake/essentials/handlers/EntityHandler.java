@@ -28,6 +28,9 @@ public class EntityHandler {
     private RandomHandler getRandomHandler() {
         return getInstance().getRandomHandler();
     }
+    public List<CreatureSpawnEvent.SpawnReason> getSpawnReasons() {
+        return new ArrayList<>(Arrays.asList(CreatureSpawnEvent.SpawnReason.values()));
+    }
     /**
      * get file of entity/entityType.yml
      * @param entity entity
