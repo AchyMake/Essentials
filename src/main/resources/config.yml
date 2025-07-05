@@ -82,7 +82,7 @@ deaths:
 economy:
   enable: true
   currency: "€"
-  format: "#,##0"
+  format: "#,##0.00"
   starting-balance: 0.0
   minimum-payment: 1.00
   bank:
