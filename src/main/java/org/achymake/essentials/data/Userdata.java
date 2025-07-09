@@ -728,7 +728,7 @@ public class Userdata {
     public String getChatFormat(Player player) {
         if (!player.isOp()) {
             for (var value : getConfig().getConfigurationSection("chat.format").getKeys(false)) {
-                if (player.hasPermission("essentials.event.chat." + value)) {
+                if (player.hasPermission("essentials.event.chat.group" + value)) {
                     return getConfig().getString("chat.format." + value);
                 }
             }

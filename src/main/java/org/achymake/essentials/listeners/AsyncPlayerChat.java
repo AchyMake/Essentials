@@ -3,6 +3,7 @@ package org.achymake.essentials.listeners;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.VanishHandler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -15,6 +16,9 @@ public class AsyncPlayerChat implements Listener {
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
+    }
+    private VanishHandler getVanishHandler() {
+        return getInstance().getVanishHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -29,25 +33,28 @@ public class AsyncPlayerChat implements Listener {
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
         var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player));
-        var message = event.getMessage().replace("%", "%%");
-        var censored = getMessage().censor(message);
+        var message = getMessage().censor(event.getMessage().replace("%", "%%"));
+        var colored = getMessage().addColor(message);
+        if (player.hasPermission("essentials.event.chat.color")) {
+            event.setMessage(colored);
+        } else event.setMessage(message);
         if (!getUserdata().isMuted(player)) {
             if (!getUserdata().isVanished(player)) {
                 if (getMessage().isURL(event.getMessage())) {
                     if (player.hasPermission("essentials.event.chat.url")) {
                         if (player.hasPermission("essentials.event.chat.color")) {
-                            event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
-                        } else event.setFormat(getMessage().addColor(username + "&r") + censored);
+                            event.setMessage(colored);
+                        } else event.setMessage(message);
                     } else event.setCancelled(true);
                 } else if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
-                } else event.setFormat(getMessage().addColor(username + "&r") + censored);
+                    event.setMessage(colored);
+                } else event.setMessage(message);
             } else {
                 event.setCancelled(true);
-                getInstance().getVanishHandler().getVanished().forEach(vanished -> {
+                getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(censored));
-                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + censored);
+                        event.setMessage(colored);
+                    } else event.setMessage(message);
                 });
             }
         } else event.setCancelled(true);

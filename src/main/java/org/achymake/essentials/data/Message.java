@@ -96,7 +96,7 @@ public class Message {
      * @since many moons ago
      */
     public String addPlaceholder(Player player, String message) {
-        return addColor(PlaceholderAPI.setPlaceholders(player, message));
+        return addColor(PlaceholderAPI.setPlaceholders(player, message) + "&r");
     }
     /**
      * adds colors to the message

@@ -971,10 +971,10 @@ permissions:
   essentials.event.join.notify:
     description: notifies join event
     default: op
-  essentials.event.chat.default:
+  essentials.event.chat.group.default:
     description: chat format default
     default: op
-  essentials.event.chat.op:
+  essentials.event.chat.group.op:
     description: chat format op
     default: op
   essentials.event.chat.color:
