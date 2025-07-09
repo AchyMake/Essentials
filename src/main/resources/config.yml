@@ -11,6 +11,7 @@ spawner:
     - "&fSilk Touch"
 chat:
   format:
+    # permission: 'essentials.event.chat.group.default'
     default: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
     vip: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
     staff: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "

@@ -53,8 +53,8 @@ public class AsyncPlayerChat implements Listener {
                 event.setCancelled(true);
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        event.setMessage(colored);
-                    } else event.setMessage(message);
+                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(message));
+                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + message);
                 });
             }
         } else event.setCancelled(true);
