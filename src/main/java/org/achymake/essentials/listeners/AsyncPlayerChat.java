@@ -10,8 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.PluginManager;
 
-import java.text.MessageFormat;
-
 public class AsyncPlayerChat implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
@@ -42,12 +40,12 @@ public class AsyncPlayerChat implements Listener {
                 if (getMessage().isURL(event.getMessage())) {
                     if (player.hasPermission("essentials.event.chat.url")) {
                         if (player.hasPermission("essentials.event.chat.color")) {
-                            event.setFormat(MessageFormat.format("{0}{1}", username, colored));
-                        } else event.setFormat(MessageFormat.format("{0}{1}", username, message));
+                            event.setFormat(username + colored);
+                        } else event.setFormat(username + message);
                     } else event.setCancelled(true);
                 } else if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setFormat(MessageFormat.format("{0}{1}", username, colored));
-                } else event.setFormat(MessageFormat.format("{0}{1}", username, message));
+                    event.setFormat(username + colored);
+                } else event.setFormat(username + message);
             } else {
                 event.setCancelled(true);
                 var vanish = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player, true));

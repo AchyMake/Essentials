@@ -3,7 +3,6 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.runnable.Board;
-import org.achymake.essentials.runnable.PaperBoard;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -29,11 +28,6 @@ public class ScoreboardHandler {
     public File getFile() {
         return file;
     }
-    /**
-     * get scoreboard.yml
-     * @return config
-     * @since many moons ago
-     */
     public FileConfiguration getConfig() {
         return config;
     }
@@ -74,13 +68,9 @@ public class ScoreboardHandler {
         if (!isEnable())return;
         var world = player.getWorld().getName();
         if (hasTitle(world) && isLine(world)) {
-            if (getInstance().isBukkit()) {
-                getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId());
-            } else getUserdata().addTaskID(player, "board", getScheduler().runTimer(new PaperBoard(player), 0, getTick(world)).getTaskId());
+            getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId());
         } else if (hasTitle() && isLine()) {
-            if (getInstance().isBukkit()) {
-                getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId());
-            } else getUserdata().addTaskID(player, "board", getScheduler().runTimer(new PaperBoard(player), 0, getTick()).getTaskId());
+            getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick()).getTaskId());
         }
     }
     public void disable(Player player) {

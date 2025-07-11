@@ -43,14 +43,14 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         if (target == player) {
-                            if (getInventoryHandler().openCartographyTable(target) != null) {
-                                player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
-                            } else player.sendMessage(getMessage().get("error.invalid"));
+                            if (getInventoryHandler().openCartographyTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.invalid"));
+                            } else player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                             return true;
                         } else if (!target.hasPermission("essentials.command.cartography.exempt")) {
-                            if (getInventoryHandler().openCartographyTable(target) != null) {
-                                player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
-                            } else player.sendMessage(getMessage().get("error.invalid"));
+                            if (getInventoryHandler().openCartographyTable(target) == null) {
+                                player.sendMessage(getMessage().get("error.invalid"));
+                            } else player.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                         } else player.sendMessage(getMessage().get("commands.cartography.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                     return true;
@@ -60,9 +60,9 @@ public class CartographyCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var target = getInstance().getPlayer(args[0]);
                 if (target != null) {
-                    if (getInventoryHandler().openCartographyTable(target) != null) {
-                        consoleCommandSender.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
-                    } else consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
+                    if (getInventoryHandler().openCartographyTable(target) == null) {
+                        consoleCommandSender.sendMessage(getMessage().get("error.invalid"));
+                    } else consoleCommandSender.sendMessage(getMessage().get("commands.cartography.sender", target.getName()));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }

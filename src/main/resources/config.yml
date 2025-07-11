@@ -15,8 +15,8 @@ chat:
     default: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
     vip: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
     staff: "%vault_prefix%%essentials_display_name%%vault_suffix%&f: "
-    vanished: "&d%essentials_display_name%&f: "
-    op: "%vault_prefix%&c%essentials_display_name%%vault_suffix%&f: "
+    vanished: "&7&o&m%essentials_display_name%&f: "
+    op: "%vault_prefix%&4%essentials_display_name%%vault_suffix%&f: "
   censor:
     - nigga
     - fuck

@@ -71,6 +71,9 @@ public record Board(Player getPlayer) implements Runnable {
             var scoreboard = getNewScoreboard();
             var sidebar = scoreboard.registerNewObjective(getPlayer().getName() + "-board", "yummy", getTitle());
             sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
+            if (!getInstance().isBukkit()) {
+                sidebar.numberFormat(getInstance().getPaperHandler().getBlank());
+            }
             if (!getLines().isEmpty()) {
                 for (int i = 0; i < getLines().size(); i++) {
                     sidebar.getScore(getLines().get(i)).setScore(i);
