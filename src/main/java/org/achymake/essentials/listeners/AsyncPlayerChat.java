@@ -34,7 +34,7 @@ public class AsyncPlayerChat implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
         var player = event.getPlayer();
-        var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player));
+        var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player, false));
         var message = getMessage().censor(event.getMessage().replace("%", "%%"));
         var colored = getMessage().addColor(message);
         if (!getUserdata().isMuted(player)) {
@@ -50,10 +50,11 @@ public class AsyncPlayerChat implements Listener {
                 } else event.setFormat(MessageFormat.format("{0}{1}", username, message));
             } else {
                 event.setCancelled(true);
+                var vanish = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player, true));
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(username + colored);
-                    } else vanished.sendMessage(username + message);
+                        vanished.sendMessage(vanish + colored);
+                    } else vanished.sendMessage(vanish + message);
                 });
             }
         } else event.setCancelled(true);

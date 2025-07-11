@@ -725,15 +725,17 @@ public class Userdata {
      * @param player target
      * @since many moons ago
      */
-    public String getChatFormat(Player player) {
-        if (!player.isOp()) {
-            for (var value : getConfig().getConfigurationSection("chat.format").getKeys(false)) {
-                if (player.hasPermission("essentials.event.chat.group" + value)) {
-                    return getConfig().getString("chat.format." + value);
+    public String getChatFormat(Player player, boolean vanished) {
+        if (!vanished) {
+            if (!player.isOp()) {
+                for (var value : getConfig().getConfigurationSection("chat.format").getKeys(false)) {
+                    if (player.hasPermission("essentials.event.chat.group" + value)) {
+                        return getConfig().getString("chat.format." + value);
+                    }
                 }
-            }
-            return getConfig().getString("chat.format.default");
-        } else return getConfig().getString("chat.format.op");
+                return getConfig().getString("chat.format.default");
+            } else return getConfig().getString("chat.format.op");
+        } else return getConfig().getString("chat.format.vanished");
     }
     /**
      * get default fly speed
