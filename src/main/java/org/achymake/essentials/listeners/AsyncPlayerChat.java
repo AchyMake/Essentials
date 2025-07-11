@@ -10,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.PluginManager;
 
+import java.text.MessageFormat;
+
 public class AsyncPlayerChat implements Listener {
     private Essentials getInstance() {
         return Essentials.getInstance();
@@ -35,26 +37,23 @@ public class AsyncPlayerChat implements Listener {
         var username = getMessage().addPlaceholder(player, getUserdata().getChatFormat(player));
         var message = getMessage().censor(event.getMessage().replace("%", "%%"));
         var colored = getMessage().addColor(message);
-        if (player.hasPermission("essentials.event.chat.color")) {
-            event.setMessage(colored);
-        } else event.setMessage(message);
         if (!getUserdata().isMuted(player)) {
             if (!getUserdata().isVanished(player)) {
                 if (getMessage().isURL(event.getMessage())) {
                     if (player.hasPermission("essentials.event.chat.url")) {
                         if (player.hasPermission("essentials.event.chat.color")) {
-                            event.setMessage(colored);
-                        } else event.setMessage(message);
+                            event.setFormat(MessageFormat.format("{0}{1}", username, colored));
+                        } else event.setFormat(MessageFormat.format("{0}{1}", username, message));
                     } else event.setCancelled(true);
                 } else if (player.hasPermission("essentials.event.chat.color")) {
-                    event.setMessage(colored);
-                } else event.setMessage(message);
+                    event.setFormat(MessageFormat.format("{0}{1}", username, colored));
+                } else event.setFormat(MessageFormat.format("{0}{1}", username, message));
             } else {
                 event.setCancelled(true);
                 getVanishHandler().getVanished().forEach(vanished -> {
                     if (player.hasPermission("essentials.event.chat.color")) {
-                        vanished.sendMessage(getMessage().addColor(username + "&r") + getMessage().addColor(message));
-                    } else vanished.sendMessage(getMessage().addColor(username + "&r") + message);
+                        vanished.sendMessage(username + colored);
+                    } else vanished.sendMessage(username + message);
                 });
             }
         } else event.setCancelled(true);

@@ -361,7 +361,6 @@ public class Message {
         config.set("commands.gamemode.sender", "&6You changed&f {0}&6 gamemode to&f {1}");
         config.set("commands.gamemode.invalid", "{0}&c is not a gamemode");
         config.set("commands.gamemode.exempt", "&cYou are not allowed to change gamemode for&f {0}");
-        config.set("commands.give", "&6You gave&f {0} {1} {2}");
         config.set("commands.grindstone.sender", "&6You opened grindstone for&f {0}");
         config.set("commands.grindstone.exempt", "&cYou are not allowed to open grindstone for&f {0}");
         config.set("commands.hat.success", "&6You are now wearing&f {0}");
