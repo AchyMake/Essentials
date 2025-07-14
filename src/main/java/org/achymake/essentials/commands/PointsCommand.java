@@ -4,10 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.PointsHandler;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -106,6 +103,47 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                         } else player.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
                         return true;
                     }
+                }
+            }
+        } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("check")) {
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        consoleCommandSender.sendMessage(getMessage().get("commands.points.check", offlinePlayer.getName(), getPointsHandler().format(getPointsHandler().get(offlinePlayer))));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                    return true;
+                }
+            } else if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("add")) {
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
+                    var amount = getMessage().getInteger(args[2]);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        if (getPointsHandler().add(offlinePlayer, amount)) {
+                            consoleCommandSender.sendMessage(getMessage().get("commands.points.add", getPointsHandler().format(amount), offlinePlayer.getName()));
+                        }
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                    return true;
+                } else if (args[0].equalsIgnoreCase("set")) {
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
+                    var amount = getMessage().getInteger(args[2]);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        if (getPointsHandler().set(offlinePlayer, amount)) {
+                            consoleCommandSender.sendMessage(getMessage().get("commands.points.set", getPointsHandler().format(amount), offlinePlayer.getName()));
+                        }
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                    return true;
+                } else if (args[0].equalsIgnoreCase("remove")) {
+                    var offlinePlayer = getInstance().getOfflinePlayer(args[1]);
+                    var amount = getMessage().getInteger(args[2]);
+                    if (getUserdata().exists(offlinePlayer)) {
+                        if (getPointsHandler().has(offlinePlayer, amount)) {
+                            if (getPointsHandler().remove(offlinePlayer, amount)) {
+                                consoleCommandSender.sendMessage(getMessage().get("commands.points.remove.success", getPointsHandler().format(amount), offlinePlayer.getName()));
+                            }
+                        } else consoleCommandSender.sendMessage(getMessage().get("commands.points.remove.insufficient-points", offlinePlayer.getName(), getPointsHandler().format(amount)));
+                    } else consoleCommandSender.sendMessage(getMessage().get("error.target.invalid", offlinePlayer.getName()));
+                    return true;
                 }
             }
         }
