@@ -1,17 +1,15 @@
 package org.achymake.essentials.data;
 
-import com.destroystokyo.paper.profile.ProfileProperty;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.MaterialHandler;
+import org.achymake.essentials.handlers.PaperHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import java.util.UUID;
 
 public class Skulls {
     private Essentials getInstance() {
@@ -19,6 +17,9 @@ public class Skulls {
     }
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
+    }
+    private PaperHandler getPaperHandler() {
+        return getInstance().getPaperHandler();
     }
     private final File file = new File(getInstance().getDataFolder(), "skulls.yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -53,15 +54,9 @@ public class Skulls {
      */
     public ItemStack getCustomHead(String skullName, int amount) {
         var skullItem = getMaterials().getItemStack("player_head", amount);
-        var skullMeta = (SkullMeta) skullItem.getItemMeta();
         if (16 >= skullName.length()) {
-            var profile = getInstance().getServer().createProfile(UUID.randomUUID(), skullName);
-            profile.setProperty(new ProfileProperty("textures", config.getString(skullName)));
-            profile.update();
-            skullMeta.setPlayerProfile(profile);
-            skullItem.setItemMeta(skullMeta);
-        }
-        return skullItem;
+            return getPaperHandler().getCustomHead(skullName, config.getString(skullName), amount);
+        } else return skullItem;
     }
     /**
      * setup
