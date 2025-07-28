@@ -203,7 +203,7 @@ public class Message {
      * @since many moons ago
      */
     public String censor(String message) {
-        for (var censored : getConfig().getStringList("chat.censor")) {
+        for (var censored : getInstance().getConfig().getStringList("chat.censor")) {
             if (message.toLowerCase().contains(censored.toLowerCase())) {
                 return message.toLowerCase().replace(censored.toLowerCase(), "*".repeat(censored.length()));
             }
