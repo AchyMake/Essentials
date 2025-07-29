@@ -1,7 +1,7 @@
 name: Essentials
 version: '${project.version}'
 main: org.achymake.essentials.Essentials
-api-version: '1.21.7'
+api-version: '1.21.8'
 prefix: '${project.name}'
 load: STARTUP
 depend:

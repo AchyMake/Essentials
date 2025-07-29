@@ -64,8 +64,14 @@ public class ScoreboardHandler {
     public List<String> getLines(String worldName) {
         return config.getStringList("worlds." + worldName + ".lines").reversed();
     }
+    public void enable() {
+        var onlinePlayers = getInstance().getOnlinePlayers();
+        if (onlinePlayers.isEmpty())return;
+        onlinePlayers.forEach(this::apply);
+    }
     public void apply(Player player) {
         if (!isEnable())return;
+        if (hasBoard(player))return;
         var world = player.getWorld().getName();
         if (hasTitle(world) && isLine(world)) {
             getUserdata().addTaskID(player, "board", getScheduler().runTimer(new Board(player), 0, getTick(world)).getTaskId());
@@ -74,13 +80,14 @@ public class ScoreboardHandler {
         }
     }
     public void disable(Player player) {
-        if (!getUserdata().hasTaskID(player, "board"))return;
+        if (!hasBoard(player))return;
         getUserdata().removeTask(player, "board");
         player.getScoreboard().clearSlot(DisplaySlot.SIDEBAR);
     }
     public void disable() {
-        if (getInstance().getOnlinePlayers().isEmpty())return;
-        getInstance().getOnlinePlayers().forEach(this::disable);
+        var onlinePlayers = getInstance().getOnlinePlayers();
+        if (onlinePlayers.isEmpty())return;
+        onlinePlayers.forEach(this::disable);
     }
     public boolean hasBoard(Player player) {
         return getUserdata().hasTaskID(player, "board");

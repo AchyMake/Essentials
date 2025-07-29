@@ -255,14 +255,8 @@ public final class Essentials extends JavaPlugin {
         }
     }
     public void reload() {
-        if (!getOnlinePlayers().isEmpty()) {
-            for (var player : getOnlinePlayers()) {
-                getTablistHandler().disable(player);
-                if (getUserdata().hasBoard(player)) {
-                    getScoreboardHandler().disable(player);
-                }
-            }
-        }
+        getTablistHandler().disable();
+        getScoreboardHandler().disable();
         if (!new File(getDataFolder(), "config.yml").exists()) {
             getConfig().options().copyDefaults(true);
             saveConfig();
@@ -283,14 +277,8 @@ public final class Essentials extends JavaPlugin {
         getScoreboardHandler().reload();
         getTablistHandler().reload();
         getEntityHandler().reload();
-        if (!getOnlinePlayers().isEmpty()) {
-            for (var player : getOnlinePlayers()) {
-                getTablistHandler().apply(player);
-                if (getUserdata().hasBoard(player)) {
-                    getScoreboardHandler().apply(player);
-                }
-            }
-        }
+        getTablistHandler().enable();
+        getScoreboardHandler().enable();
     }
     public void reloadUserdata() {
         getUserdata().reload();

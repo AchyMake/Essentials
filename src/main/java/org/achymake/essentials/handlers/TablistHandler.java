@@ -124,19 +124,24 @@ public class TablistHandler {
     public List<String> getFooterLines(String worldName) {
         return config.getStringList("worlds." + worldName + ".footer.lines");
     }
+    public void enable() {
+        var onlinePlayers = getInstance().getOnlinePlayers();
+        if (onlinePlayers.isEmpty())return;
+        onlinePlayers.forEach(this::apply);
+    }
     /**
      * apply tablist
      * @param player target
      * @since many moons ago
      */
     public void apply(Player player) {
-        if (isEnable()) {
-            var world = player.getWorld().getName();
-            if (hasName(world) && hasHeaderLines(world) && hasFooterLines(world)) {
-                getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick(world)).getTaskId());
-            } else if (hasName() && hasHeaderLines() && hasFooterLines()) {
-                getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick()).getTaskId());
-            }
+        if (!isEnable())return;
+        if (hasTab(player))return;
+        var world = player.getWorld().getName();
+        if (hasName(world) && hasHeaderLines(world) && hasFooterLines(world)) {
+            getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick(world)).getTaskId());
+        } else if (hasName() && hasHeaderLines() && hasFooterLines()) {
+            getUserdata().addTaskID(player, "tab", getScheduler().runTimer(new Tab(player), 0, getTick()).getTaskId());
         }
     }
     /**
@@ -145,16 +150,16 @@ public class TablistHandler {
      * @since many moons ago
      */
     public void disable(Player player) {
-        if (getUserdata().hasTaskID(player, "tab")) {
-            getUserdata().removeTask(player, "tab");
-            player.setPlayerListHeader(null);
-            player.setPlayerListName(player.getName());
-            player.setPlayerListFooter(null);
-        }
+        if (!hasTab(player))return;
+        getUserdata().removeTask(player, "tab");
+        player.setPlayerListHeader(null);
+        player.setPlayerListName(player.getName());
+        player.setPlayerListFooter(null);
     }
     public void disable() {
-        if (getInstance().getOnlinePlayers().isEmpty())return;
-        getInstance().getOnlinePlayers().forEach(this::disable);
+        var onlinePlayers = getInstance().getOnlinePlayers();
+        if (onlinePlayers.isEmpty())return;
+        onlinePlayers.forEach(this::disable);
     }
     /**
      * setup
@@ -204,6 +209,9 @@ public class TablistHandler {
             config = YamlConfiguration.loadConfiguration(file);
             return true;
         } else return setup();
+    }
+    public boolean hasTab(Player player) {
+        return getUserdata().hasTaskID(player, "tab");
     }
     public int getWeight(Player player) {
         if (getInstance().getPluginManager().isPluginEnabled("LuckPerms")) {
