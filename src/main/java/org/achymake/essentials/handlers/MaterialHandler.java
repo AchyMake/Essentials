@@ -1,7 +1,6 @@
 package org.achymake.essentials.handlers;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.data.Message;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.data.BlockData;
@@ -9,13 +8,11 @@ import org.bukkit.block.data.Lightable;
 import org.bukkit.block.data.type.RedstoneWallTorch;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,9 +25,6 @@ public class MaterialHandler {
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
-    }
-    private Message getMessage() {
-        return getInstance().getMessage();
     }
     /**
      * get material
@@ -146,31 +140,6 @@ public class MaterialHandler {
         for (var itemStack : itemStacks) {
             giveItemStack(player, itemStack);
         }
-    }
-    /**
-     * get spawner
-     * @param entityType string
-     * @param amount integer
-     * @since many moons ago
-     */
-    public ItemStack getSpawner(String entityType, int amount) {
-        var spawner = getItemStack("spawner", amount);
-        var itemMeta = spawner.getItemMeta();
-        if (getInstance().getConfig().isList("spawner.lore")) {
-            var listed = new ArrayList<String>();
-            for(var string : getInstance().getConfig().getStringList("spawner.lore")) {
-                listed.add(getMessage().addColor(string));
-            }
-            itemMeta.setLore(listed);
-        }
-        if (getInstance().getConfig().isString("spawner.display")) {
-            var name = getMessage().addColor(getInstance().getConfig().getString("spawner.display"));
-            itemMeta.setDisplayName(name.replaceAll("%entity_type%", getMessage().toTitleCase(entityType.toUpperCase())));
-        }
-        getData(itemMeta).set(getInstance().getKey("entity_type"), PersistentDataType.STRING, entityType.toUpperCase());
-        itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
-        spawner.setItemMeta(itemMeta);
-        return spawner;
     }
     /**
      * get player head

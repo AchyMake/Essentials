@@ -99,9 +99,6 @@ public final class Essentials extends JavaPlugin {
         getTablistHandler().disable();
         getScoreboardHandler().disable();
         getVanishHandler().disable();
-        if (!getOnlinePlayers().isEmpty()) {
-            getOnlinePlayers().forEach(player -> getUserdata().setLocation(player, player.getLocation(), "quit"));
-        }
         getUserdata().disable();
         getProjectileHandler().disable();
         new PlaceholderProvider().unregister();
@@ -169,7 +166,6 @@ public final class Essentials extends JavaPlugin {
         new SkullCommand();
         new SmithingCommand();
         new SpawnCommand();
-        new SpawnerCommand();
         new StonecutterCommand();
         new StoreCommand();
         new TimeCommand();
@@ -215,7 +211,6 @@ public final class Essentials extends JavaPlugin {
         new EntityInteract();
         new EntityMount();
         new EntityPlace();
-        new EntityPotionEffect();
         new EntityShootBow();
         new EntityTarget();
         new EntityTargetLivingEntity();

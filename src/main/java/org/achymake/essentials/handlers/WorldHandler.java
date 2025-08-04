@@ -8,13 +8,11 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +26,6 @@ public class WorldHandler {
     }
     private Userdata getUserdata() {
         return getInstance().getUserdata();
-    }
-    private MaterialHandler getMaterials() {
-        return getInstance().getMaterialHandler();
     }
     private RandomHandler getRandomHandler() {
         return getInstance().getRandomHandler();
@@ -133,35 +128,6 @@ public class WorldHandler {
      */
     public Item dropItem(Location location, ItemStack itemStack) {
         return location.getWorld().dropItem(location, itemStack);
-    }
-    /**
-     * update spawner
-     * @param blockPlaced block
-     * @param heldItem itemStack
-     * @since many moons ago
-     */
-    public void updateSpawner(Block blockPlaced, ItemStack heldItem) {
-        var container = getMaterials().getData(heldItem.getItemMeta());
-        var type = container.get(getInstance().getKey("entity_type"), PersistentDataType.STRING);
-        if (type == null)return;
-        var creatureSpawner = (CreatureSpawner) blockPlaced.getState();
-        var entityType = getInstance().getEntityHandler().getType(type);
-        if (entityType == null)return;
-        creatureSpawner.setSpawnedType(entityType);
-        creatureSpawner.update();
-    }
-    /**
-     * drop spawner
-     * @param block block
-     * @return item
-     * @since many moons ago
-     */
-    public Item dropSpawner(Block block) {
-        var creatureSpawner = (CreatureSpawner) block.getState();
-        var itemStack = getMaterials().getItemStack("spawner", 1);
-        if (creatureSpawner.getSpawnedType() != null) {
-            return dropItem(block.getLocation().add(0.5, 0.3, 0.5), getMaterials().getSpawner(creatureSpawner.getSpawnedType().toString(), 1));
-        } else return dropItem(block.getLocation().add(0.5, 0.3, 0.5), itemStack);
     }
     /**
      * gets the highest random block

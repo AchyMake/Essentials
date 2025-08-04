@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.achymake.essentials.handlers.WorldHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,9 +24,6 @@ public class BlockPlace implements Listener {
     private MaterialHandler getMaterials() {
         return getInstance().getMaterialHandler();
     }
-    private WorldHandler getWorldHandler() {
-        return getInstance().getWorldHandler();
-    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -43,9 +39,6 @@ public class BlockPlace implements Listener {
         var block = event.getBlockPlaced();
         var material = block.getType();
         if (!getUserdata().isDisabled(player)) {
-            if (material.equals(getMaterials().get("spawner"))) {
-                getWorldHandler().updateSpawner(block, event.getItemInHand());
-            }
             if (getConfig().getBoolean("physics.disable-redstone")) {
                 if (material.equals(getMaterials().get("redstone_torch"))) {
                     block.setBlockData(getMaterials().disableTorch(block.getBlockData()));

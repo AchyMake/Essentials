@@ -950,40 +950,6 @@ public class Userdata {
         }
         return listed;
     }
-    public void disable(Player player) {
-        setLocation(player, player.getLocation(), "quit");
-        disableTasks(player);
-        if (player.getWalkSpeed() != getDefaultWalkSpeed()) {
-            setWalkSpeed(player, 0);
-        }
-        if (player.getFlySpeed() != getDefaultWalkSpeed()) {
-            setFlySpeed(player, 0);
-        }
-        if (getTpaSent(player) != null) {
-            setTpaSent(player, null);
-        }
-        if (getTpaFrom(player) != null) {
-            setTpaFrom(player, null);
-        }
-        if (getTpaHereSent(player) != null) {
-            setTpaHereSent(player, null);
-        }
-        if (getTpaHereFrom(player) != null) {
-            setTpaHereFrom(player, null);
-        }
-        if (getBankSent(player) != null) {
-            setBankSent(player, null);
-        }
-        if (getBankFrom(player) != null) {
-            setBankFrom(player, null);
-        }
-        if (player.isInvulnerable()) {
-            player.setInvulnerable(false);
-        }
-    }
-    public void disable() {
-        getInstance().getOnlinePlayers().forEach(this::disable);
-    }
     public boolean unban(OfflinePlayer offlinePlayer) {
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
@@ -1099,5 +1065,39 @@ public class Userdata {
     }
     public String getSuffix(Player player) {
         return getMessage().addPlaceholder(player, "%vault_suffix%");
+    }
+    public void disable(Player player) {
+        setLocation(player, player.getLocation(), "quit");
+        disableTasks(player);
+        if (player.getWalkSpeed() != getDefaultWalkSpeed()) {
+            setWalkSpeed(player, 0);
+        }
+        if (player.getFlySpeed() != getDefaultWalkSpeed()) {
+            setFlySpeed(player, 0);
+        }
+        if (getTpaSent(player) != null) {
+            setTpaSent(player, null);
+        }
+        if (getTpaFrom(player) != null) {
+            setTpaFrom(player, null);
+        }
+        if (getTpaHereSent(player) != null) {
+            setTpaHereSent(player, null);
+        }
+        if (getTpaHereFrom(player) != null) {
+            setTpaHereFrom(player, null);
+        }
+        if (getBankSent(player) != null) {
+            setBankSent(player, null);
+        }
+        if (getBankFrom(player) != null) {
+            setBankFrom(player, null);
+        }
+        if (player.isInvulnerable()) {
+            player.setInvulnerable(false);
+        }
+    }
+    public void disable() {
+        getInstance().getOnlinePlayers().forEach(this::disable);
     }
 }
