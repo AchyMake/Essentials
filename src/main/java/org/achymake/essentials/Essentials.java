@@ -82,14 +82,6 @@ public final class Essentials extends JavaPlugin {
         events();
         reload();
         new VaultEconomyProvider(this).register();
-        if (getPluginManager().isPluginEnabled("VaultExtra")) {
-            new EntityProvider(this).register();
-            new PointsProvider(this).register();
-            new UserProvider(this).register();
-            new WarpProvider(this).register();
-            new WorthProvider(this).register();
-            sendInfo("Hooked to VaultExtra");
-        }
         new PlaceholderProvider().register();
         sendInfo("Enabled for " + getMinecraftProvider() + " " + getMinecraftVersion());
         getUpdateChecker().getUpdate();
@@ -123,7 +115,6 @@ public final class Essentials extends JavaPlugin {
         new EnderChestCommand();
         new EntityCommand();
         new EssentialsCommand();
-        new ExpCommand();
         new FeedCommand();
         new FlyCommand();
         new FlySpeedCommand();
@@ -146,12 +137,10 @@ public final class Essentials extends JavaPlugin {
         new KitCommand();
         new LightningCommand();
         new LoomCommand();
-        new LvlCommand();
         new MOTDCommand();
         new MuteCommand();
         new NicknameCommand();
         new PayCommand();
-        new PointsCommand();
         new PVPCommand();
         new RepairCommand();
         new RespondCommand();

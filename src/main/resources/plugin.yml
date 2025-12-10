@@ -1,14 +1,13 @@
 name: Essentials
 version: '${project.version}'
 main: org.achymake.essentials.Essentials
-api-version: '1.21.8'
+api-version: '1.21.10'
 prefix: '${project.name}'
 load: STARTUP
 depend:
   - Vault
   - PlaceholderAPI
 softdepend:
-  - VaultExtra
   - LuckPerms
 author: AchyMake
 description: '${project.description}'
@@ -103,11 +102,6 @@ commands:
     usage: /help
     aliases:
       - ess
-  exp:
-    description: exp command
-    permission: essentials.command.exp
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
   feed:
     description: satisfy hunger by command
     permission: essentials.command.feed
@@ -218,11 +212,6 @@ commands:
     permission: essentials.command.loom
     permission-message: You do not have the permissions to execute the command
     usage: /help
-  lvl:
-    description: lvl command
-    permission: essentials.command.lvl
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
   motd:
     description: check motd
     permission: essentials.command.motd
@@ -241,11 +230,6 @@ commands:
   pay:
     description: pay others
     permission: essentials.command.pay
-    permission-message: You do not have the permissions to execute the command
-    usage: /help
-  points:
-    description: points command
-    permission: essentials.command.points
     permission-message: You do not have the permissions to execute the command
     usage: /help
   pvp:
@@ -445,10 +429,10 @@ permissions:
     description: exempts teleporting back to recent or death location
     default: op
   essentials.command.balance:
-    description: check balance/top
+    description: check balance
     default: op
   essentials.command.balance.top:
-    description: check balance/top
+    description: check balance top
     default: op
   essentials.command.ban:
     description: ban target
@@ -542,9 +526,6 @@ permissions:
     default: op
   essentials.command.essentials:
     description: essentials main command
-    default: op
-  essentials.command.exp:
-    description: exp command
     default: op
   essentials.command.feed:
     description: satisfy hunger by command
@@ -702,9 +683,6 @@ permissions:
   essentials.command.loom.exempt:
     description: open loom by command
     default: op
-  essentials.command.lvl:
-    description: lvl command
-    default: op
   essentials.command.motd:
     description: check motd
     default: op
@@ -731,27 +709,6 @@ permissions:
     default: op
   essentials.command.pay:
     description: pay others
-    default: op
-  essentials.command.points:
-    description: points command
-    default: op
-  essentials.command.points.check:
-    description: check others points
-    default: op
-  essentials.command.points.add:
-    description: add points for others
-    default: op
-  essentials.command.points.pay:
-    description: pay points
-    default: op
-  essentials.command.points.remove:
-    description: remove points for others
-    default: op
-  essentials.command.points.set:
-    description: set points for others
-    default: op
-  essentials.command.points.top:
-    description: check top points
     default: op
   essentials.command.pvp:
     description: toggle pvp

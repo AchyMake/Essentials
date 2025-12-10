@@ -17,13 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class Userdata {
     private Essentials getInstance() {
@@ -895,6 +889,20 @@ public class Userdata {
             return false;
         }
     }
+    private void update(OfflinePlayer offlinePlayer) {
+        if (!exists(offlinePlayer))return;
+        var file = getFile(offlinePlayer);
+        var config = YamlConfiguration.loadConfiguration(file);
+        var name = offlinePlayer.getName();
+        if (Objects.equals(name, config.getString("name")))return;
+        config.set("name", name);
+        config.set("display-name", name);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+        }
+    }
     /**
      * reloads target file else setup if file does not exist
      * @param offlinePlayer or player
@@ -902,6 +910,7 @@ public class Userdata {
      */
     public boolean reload(OfflinePlayer offlinePlayer) {
         if (exists(offlinePlayer)) {
+            update(offlinePlayer);
             var file = getFile(offlinePlayer);
             var config = YamlConfiguration.loadConfiguration(file);
             try {

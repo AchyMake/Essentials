@@ -468,6 +468,7 @@ public class EntityHandler {
         new CHICKEN().reload();
         new COD().reload();
         new COMMAND_BLOCK_MINECART().reload();
+        new COPPER_GOLEM().reload();
         new COW().reload();
         new CREAKING().reload();
         new CREAKING_TRANSIENT().reload();
