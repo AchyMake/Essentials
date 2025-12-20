@@ -4,11 +4,6 @@ server:
     enable: false
     line-1: "Minecraft Server"
     line-2: ""
-spawner:
-  display: "&dSpawner&f: %entity_type%"
-  lore:
-    - "&9Obtained by:"
-    - "&fSilk Touch"
 chat:
   format:
     # permission: 'essentials.event.chat.group.default'
@@ -161,21 +156,6 @@ physics:
   disable-redstone: false
   disable-sculk: false
   disable-vault: false
-attack:
-  cooldown:
-    enable: true
-    wooden_sword: 5
-    stone_sword: 5
-    iron_sword: 5
-    golden_sword: 5
-    diamond_sword: 5
-    netherite_sword: 5
-    wooden_axe: 5
-    stone_axe: 5
-    iron_axe: 5
-    golden_axe: 5
-    diamond_axe: 5
-    netherite_axe: 5
 projectile:
   creative:
     # instant remove on hit if creative

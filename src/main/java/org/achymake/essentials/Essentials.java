@@ -34,7 +34,6 @@ public final class Essentials extends JavaPlugin {
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
     private PaperHandler paperHandler;
-    private PointsHandler pointsHandler;
     private ProjectileHandler projectileHandler;
     private RandomHandler randomHandler;
     private ScheduleHandler scheduleHandler;
@@ -65,7 +64,6 @@ public final class Essentials extends JavaPlugin {
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
         paperHandler = new PaperHandler();
-        pointsHandler = new PointsHandler();
         projectileHandler = new ProjectileHandler();
         randomHandler = new RandomHandler();
         scheduleHandler = new ScheduleHandler();
@@ -308,9 +306,6 @@ public final class Essentials extends JavaPlugin {
     }
     public ProjectileHandler getProjectileHandler() {
         return projectileHandler;
-    }
-    public PointsHandler getPointsHandler() {
-        return pointsHandler;
     }
     public PaperHandler getPaperHandler() {
         return paperHandler;

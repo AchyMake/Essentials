@@ -4,7 +4,6 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
 import org.achymake.essentials.handlers.EntityHandler;
-import org.achymake.essentials.handlers.ScheduleHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -25,9 +24,6 @@ public class EntityDamageByEntity implements Listener {
     }
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
-    }
-    private ScheduleHandler getScheduler() {
-        return getInstance().getScheduleHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -64,29 +60,15 @@ public class EntityDamageByEntity implements Listener {
             }
             case Player player -> {
                 if (!getUserdata().isDisabled(player)) {
-                    var heldItem = player.getInventory().getItemInMainHand();
-                    var cooldown = getConfig().getInt("attack.cooldown." + heldItem.getType().toString().toLowerCase());
-                    if (!player.hasCooldown(heldItem)) {
-                        if (entity instanceof Player target) {
-                            if (!target.getWorld().getPVP())return;
-                            if (!getUserdata().isPVP(player)) {
-                                event.setCancelled(true);
-                                getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
-                            } else if (!getUserdata().isPVP(target)) {
-                                event.setCancelled(true);
-                                getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
-                            } else disableTeleport(target);
-                        }
-                        if (cooldown > 0) {
-                            getScheduler().runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    player.setCooldown(heldItem.getType(), cooldown);
-                                }
-                            }, 0);
-                        }
-                    } else if (getConfig().getBoolean("attack.cooldown.enable")) {
-                        event.setCancelled(true);
+                    if (entity instanceof Player target) {
+                        if (!target.getWorld().getPVP())return;
+                        if (!getUserdata().isPVP(player)) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.self"));
+                        } else if (!getUserdata().isPVP(target)) {
+                            event.setCancelled(true);
+                            getMessage().sendActionBar(player, getMessage().get("events.pvp.target", target.getName()));
+                        } else disableTeleport(target);
                     }
                 } else event.setCancelled(true);
             }
