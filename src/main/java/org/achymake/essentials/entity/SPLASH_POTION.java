@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 
-public class POTION {
+public class SPLASH_POTION {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
@@ -15,7 +15,7 @@ public class POTION {
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     private boolean setup() {
         config.options().copyDefaults(true);
-        config.set("settings.hostile", true);
+        config.set("settings.hostile", false);
         config.set("settings.chunk-limit", -1);
         config.set("settings.disable-spawn", false);
         config.set("settings.disable-block-form", false);

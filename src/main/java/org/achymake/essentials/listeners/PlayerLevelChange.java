@@ -58,7 +58,8 @@ public class PlayerLevelChange implements Listener {
                     var offsetX = getConfig().getDouble("levels.level-down.particle.offsetX");
                     var offsetY = getConfig().getDouble("levels.level-down.particle.offsetY");
                     var offsetZ = getConfig().getDouble("levels.level-down.particle.offsetZ");
-                    getWorldHandler().spawnParticle(player.getLocation(), particleType, count, offsetX, offsetY, offsetZ);
+                    var location = player.getLocation().add(0.0, 0.7, 0.0);
+                    getWorldHandler().spawnParticle(location, particleType, count, offsetX, offsetY, offsetZ);
                 }
             }
             if (getConfig().getBoolean("levels.level-down.sound.enable")) {

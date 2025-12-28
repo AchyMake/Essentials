@@ -460,6 +460,7 @@ public class EntityHandler {
         new BREEZE().reload();
         new BREEZE_WIND_CHARGE().reload();
         new CAMEL().reload();
+        new CAMEL_HUSK().reload();
         new CAT().reload();
         new CAVE_SPIDER().reload();
         new CHERRY_BOAT().reload();
@@ -471,7 +472,6 @@ public class EntityHandler {
         new COPPER_GOLEM().reload();
         new COW().reload();
         new CREAKING().reload();
-        new CREAKING_TRANSIENT().reload();
         new CREEPER().reload();
         new DARK_OAK_BOAT().reload();
         new DARK_OAK_CHEST_BOAT().reload();
@@ -519,15 +519,18 @@ public class EntityHandler {
         new JUNGLE_CHEST_BOAT().reload();
         new LEASH_KNOT().reload();
         new LIGHTNING_BOLT().reload();
+        new LINGERING_POTION().reload();
         new LLAMA().reload();
         new LLAMA_SPIT().reload();
         new MAGMA_CUBE().reload();
         new MANGROVE_BOAT().reload();
         new MANGROVE_CHEST_BOAT().reload();
+        new MANNEQUIN().reload();
         new MARKER().reload();
         new MINECART().reload();
         new MOOSHROOM().reload();
         new MULE().reload();
+        new NAUTILUS().reload();
         new OAK_BOAT().reload();
         new OAK_CHEST_BOAT().reload();
         new OCELOT().reload();
@@ -536,6 +539,7 @@ public class EntityHandler {
         new PALE_OAK_BOAT().reload();
         new PALE_OAK_CHEST_BOAT().reload();
         new PANDA().reload();
+        new PARCHED().reload();
         new PARROT().reload();
         new PHANTOM().reload();
         new PIG().reload();
@@ -543,7 +547,6 @@ public class EntityHandler {
         new PIGLIN_BRUTE().reload();
         new PILLAGER().reload();
         new POLAR_BEAR().reload();
-        new POTION().reload();
         new PUFFERFISH().reload();
         new RABBIT().reload();
         new RAVAGER().reload();
@@ -562,6 +565,7 @@ public class EntityHandler {
         new SPAWNER_MINECART().reload();
         new SPECTRAL_ARROW().reload();
         new SPIDER().reload();
+        new SPLASH_POTION().reload();
         new SPRUCE_BOAT().reload();
         new SPRUCE_CHEST_BOAT().reload();
         new SQUID().reload();
@@ -590,6 +594,7 @@ public class EntityHandler {
         new ZOGLIN().reload();
         new ZOMBIE().reload();
         new ZOMBIE_HORSE().reload();
+        new ZOMBIE_NAUTILUS().reload();
         new ZOMBIE_VILLAGER().reload();
         new ZOMBIFIED_PIGLIN().reload();
     }
