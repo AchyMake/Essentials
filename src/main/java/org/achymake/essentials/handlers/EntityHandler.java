@@ -3,9 +3,7 @@ package org.achymake.essentials.handlers;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
@@ -270,9 +268,7 @@ public class EntityHandler {
     private Set<Map.Entry<String, Double>> getLevels(EntityType entityType) {
         var levels = new HashMap<String, Double>();
         var config = getConfig(entityType);
-        config.getConfigurationSection("levels").getKeys(false).forEach(level -> {
-            levels.put(level, config.getDouble("levels." + level + ".chance"));
-        });
+        config.getConfigurationSection("levels").getKeys(false).forEach(level -> levels.put(level, config.getDouble("levels." + level + ".chance")));
         var list = new ArrayList<>(levels.entrySet());
         list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
         var result = new LinkedHashMap<String, Double>();
@@ -304,6 +300,12 @@ public class EntityHandler {
                 var health = config.getDouble(section + ".health");
                 livingEntity.setMaxHealth(health);
                 livingEntity.setHealth(health);
+            } else if (config.isDouble(section + ".health.min") && config.isDouble(section + ".health.max")) {
+                var healthMin = config.getDouble(section + ".health.min");
+                var healthMax = config.getDouble(section + ".health.max");
+                var result = getInstance().getRandomHandler().nextDouble(healthMin, healthMax);
+                livingEntity.setMaxHealth(result);
+                livingEntity.setHealth(result);
             }
             if (config.isDouble(section + ".scale")) {
                 livingEntity.getAttribute(Attribute.SCALE).setBaseValue(config.getDouble(section + ".scale"));
@@ -411,28 +413,6 @@ public class EntityHandler {
             if (config.isDouble(section + ".boots.drop-chance")) {
                 equipment.setBootsDropChance((float) config.getDouble(section + ".boots.drop-chance"));
             }
-        }
-    }
-    public boolean isTamed(Entity entity) {
-        if (entity instanceof Tameable tameable) {
-            return tameable.isTamed();
-        } else return false;
-    }
-    public OfflinePlayer getOwner(Entity entity) {
-        if (entity instanceof Tameable tameable) {
-            if (tameable.getOwner() != null) {
-                return getInstance().getOfflinePlayer(tameable.getOwner().getUniqueId());
-            } else return null;
-        } else return null;
-    }
-    public AttributeInstance getAttribute(Entity entity, Attribute attribute) {
-        if (entity instanceof LivingEntity livingEntity) {
-            return livingEntity.getAttribute(attribute);
-        } else return null;
-    }
-    public void setAttribute(Entity entity, Attribute attribute, double value) {
-        if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.getAttribute(attribute).setBaseValue(value);
         }
     }
     /**

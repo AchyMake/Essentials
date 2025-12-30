@@ -120,9 +120,6 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                 case "is_sneaking" -> {
                     return String.valueOf(player.isSneaking());
                 }
-                case "experience_needed_for_next_level" -> {
-                    return String.valueOf(player.getExperiencePointsNeededForNextLevel());
-                }
                 case "locale" -> {
                     return player.getLocale();
                 }
