@@ -53,6 +53,7 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
+        player.setDisplayName(getUserdata().getDisplayName(player));
         if (getUserdata().hasBoard(player)) {
             getScoreboardHandler().apply(player);
         }

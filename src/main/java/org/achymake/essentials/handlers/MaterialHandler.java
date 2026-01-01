@@ -124,11 +124,11 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public void giveItemStack(Player player, ItemStack itemStack) {
-        if (itemStack != null) {
-            if (Arrays.asList(player.getInventory().getStorageContents()).contains(null)) {
-                player.getInventory().addItem(itemStack);
-            } else getWorldHandler().dropItem(player.getLocation(), itemStack);
-        }
+        if (itemStack == null)return;
+        var rest = player.getInventory().addItem(itemStack).values();
+        if (rest.isEmpty())return;
+        var location = player.getLocation();
+        rest.forEach(itemStacks -> getWorldHandler().dropItem(location, itemStack));
     }
     /**
      * give itemStack
@@ -137,9 +137,7 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public void giveItemStacks(Player player, Collection<ItemStack> itemStacks) {
-        for (var itemStack : itemStacks) {
-            giveItemStack(player, itemStack);
-        }
+        itemStacks.forEach(itemStack -> giveItemStack(player, itemStack));
     }
     /**
      * get player head
@@ -186,13 +184,9 @@ public class MaterialHandler {
         return blockData;
     }
     public boolean isRedstone(Material material) {
-        return material.equals(get("redstone"))
-                || material.equals(get("redstone_wire"))
-                || material.equals(get("redstone_torch"))
-                || material.equals(get("redstone_wall_torch"))
-                || material.equals(get("repeater"))
-                || material.equals(get("comparator"))
-                || material.equals(get("redstone_block"))
-                || material.equals(get("observer"));
+        return material.equals(get("redstone")) || material.equals(get("redstone_wire"))
+                || material.equals(get("redstone_torch")) || material.equals(get("redstone_wall_torch"))
+                || material.equals(get("repeater")) || material.equals(get("comparator"))
+                || material.equals(get("redstone_block")) || material.equals(get("observer"));
     }
 }

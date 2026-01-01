@@ -26,6 +26,7 @@ public class CreatureSpawn implements Listener {
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof Player)return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))return;
+        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BREEDING))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CURED))return;
         if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.INFECTION))return;

@@ -42,7 +42,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)) {
+                if (!getMaterials().isAir(heldItem)  && !heldItem.getItemMeta().hasEnchants()) {
                     var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                     if (getWorth().isListed(heldItem.getType())) {
                         var amount = heldItem.getAmount();
@@ -56,13 +56,14 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("all")) {
-                    var itemStacks = player.getInventory().getStorageContents();
-                    for (var itemStack : itemStacks) {
-                        if (itemStack != null) {
-                            var itemName = getMessage().toTitleCase(itemStack.getType().toString());
-                            if (getWorth().isListed(itemStack.getType())) {
+                    var inventory = player.getInventory();
+                    for (var itemStack : inventory.getStorageContents()) {
+                        if (itemStack != null && !itemStack.getItemMeta().hasEnchants()) {
+                            var material = itemStack.getType();
+                            var itemName = getMessage().toTitleCase(material.toString());
+                            if (getWorth().isListed(material)) {
                                 var amount = itemStack.getAmount();
-                                var result = getWorth().get(itemStack.getType()) * amount;
+                                var result = getWorth().get(material) * amount;
                                 if (getEconomy().add(player, result)) {
                                     itemStack.setAmount(0);
                                     player.sendMessage(getMessage().get("commands.sell.sellable", String.valueOf(amount), itemName, getEconomy().currency() + getEconomy().format(result)));
@@ -75,7 +76,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                     var amount = Integer.parseInt(args[0]);
                     if (amount > 0) {
                         var heldItem = player.getInventory().getItemInMainHand();
-                        if (!getMaterials().isAir(heldItem)) {
+                        if (!getMaterials().isAir(heldItem) && !heldItem.getItemMeta().hasEnchants()) {
                             var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                             var itemAmount = heldItem.getAmount();
                             if (getWorth().isListed(heldItem.getType())) {
