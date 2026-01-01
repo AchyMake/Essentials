@@ -307,6 +307,21 @@ public class EntityHandler {
                 livingEntity.setMaxHealth(result);
                 livingEntity.setHealth(result);
             }
+            if (config.isDouble(section + ".movement_speed")) {
+                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(config.getDouble(section + ".movement_speed"));
+            } else if (config.isDouble(section + ".movement_speed.min") && config.isDouble(section + ".movement_speed.max")) {
+                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".movement_speed.min"), config.getDouble(section + ".movement_speed.max")));
+            }
+            if (config.isDouble(section + ".armor")) {
+                livingEntity.getAttribute(Attribute.ARMOR).setBaseValue(config.getDouble(section + ".armor"));
+            } else if (config.isDouble(section + ".armor.min") && config.isDouble(section + ".armor.max")) {
+                livingEntity.getAttribute(Attribute.ARMOR).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".armor.min"), config.getDouble(section + ".armor.max")));
+            }
+            if (config.isDouble(section + ".attack_damage")) {
+                livingEntity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(config.getDouble(section + ".attack_damage"));
+            } else if (config.isDouble(section + ".attack_damage.min") && config.isDouble(section + ".attack_damage.max")) {
+                livingEntity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".attack_damage.min"), config.getDouble(section + ".attack_damage.max")));
+            }
             if (config.isDouble(section + ".scale")) {
                 livingEntity.getAttribute(Attribute.SCALE).setBaseValue(config.getDouble(section + ".scale"));
             } else if (config.isDouble(section + ".scale.min") && config.isDouble(section + ".scale.max")) {

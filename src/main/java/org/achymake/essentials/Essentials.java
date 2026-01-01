@@ -178,6 +178,7 @@ public final class Essentials extends JavaPlugin {
         new BlockBreak();
         new BlockDamage();
         new BlockDispenseLoot();
+        new BlockDropItem();
         new BlockFertilize();
         new BlockIgnite();
         new BlockPistonExtend();
