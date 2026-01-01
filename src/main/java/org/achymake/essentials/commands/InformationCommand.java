@@ -43,9 +43,9 @@ public class InformationCommand implements CommandExecutor, TabCompleter {
                     var simpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                     player.sendMessage(getMessage().get("commands.information.title"));
                     player.sendMessage(getMessage().get("commands.information.name", offlinePlayer.getName()));
-                    player.sendMessage(getMessage().get("commands.information.account", getEconomy().currency()) + getEconomy().format(getUserdata().getAccount(offlinePlayer)));
-                    if (getUserdata().hasBank(offlinePlayer)) {
-                        var bank = getUserdata().getBank(offlinePlayer);
+                    player.sendMessage(getMessage().get("commands.information.account", getEconomy().currency()) + getEconomy().format(getEconomy().getAccount(offlinePlayer)));
+                    if (getEconomy().hasBank(offlinePlayer)) {
+                        var bank = getEconomy().getBank(offlinePlayer);
                         player.sendMessage(getMessage().get("commands.information.bank.name", bank));
                         player.sendMessage(getMessage().get("commands.information.bank.account", getEconomy().currency()) + getEconomy().format(getBank().get(bank)));
                         player.sendMessage(getMessage().get("commands.information.bank.owner", getBank().getOwner(bank).getName()));

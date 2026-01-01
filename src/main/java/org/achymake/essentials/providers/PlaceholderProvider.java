@@ -49,21 +49,21 @@ public class PlaceholderProvider extends PlaceholderExpansion {
                     return instance.getUserdata().getDisplayName(player);
                 }
                 case "account" -> {
-                    return economy.currency() + economy.format(userdata.getAccount(player));
+                    return economy.currency() + economy.format(economy.getAccount(player));
                 }
                 case "bank_name" -> {
-                    if (instance.getUserdata().hasBank(player)) {
-                        return instance.getUserdata().getBank(player);
+                    if (economy.hasBank(player)) {
+                        return economy.getBank(player);
                     } else return "None";
                 }
                 case "bank_account" -> {
-                    if (instance.getUserdata().hasBank(player)) {
-                        return economy.currency() + economy.format(bank.get(userdata.getBank(player)));
+                    if (economy.hasBank(player)) {
+                        return economy.currency() + economy.format(bank.get(economy.getBank(player)));
                     } else return "0";
                 }
                 case "bank_owner" -> {
-                    if (instance.getUserdata().hasBank(player)) {
-                        return bank.getOwner(userdata.getBank(player)).getName();
+                    if (economy.hasBank(player)) {
+                        return bank.getOwner(economy.getBank(player)).getName();
                     } else return "None";
                 }
                 case "pvp" -> {

@@ -24,10 +24,10 @@ public class EconomyHandler {
         return getInstance().getBank();
     }
     public double get(OfflinePlayer offlinePlayer) {
-        return getUserdata().getAccount(offlinePlayer);
+        return getAccount(offlinePlayer);
     }
     public boolean has(OfflinePlayer offlinePlayer, double amount) {
-        return getUserdata().getAccount(offlinePlayer) >= amount;
+        return getAccount(offlinePlayer) >= amount;
     }
     public boolean set(OfflinePlayer offlinePlayer, double amount) {
         return getUserdata().setDouble(offlinePlayer, "account", amount);
@@ -37,6 +37,49 @@ public class EconomyHandler {
     }
     public boolean remove(OfflinePlayer offlinePlayer, double amount) {
         return set(offlinePlayer, get(offlinePlayer) - amount);
+    }
+    /**
+     * get account
+     * @param offlinePlayer or player
+     * @return double
+     * @since many moons ago
+     */
+    public double getAccount(OfflinePlayer offlinePlayer) {
+        return getUserdata().getConfig(offlinePlayer).getDouble("account");
+    }
+    /**
+     * has bank
+     * @param offlinePlayer or player
+     * @return true if offlinePlayer has bank else false
+     * @since many moons ago
+     */
+    public boolean hasBank(OfflinePlayer offlinePlayer) {
+        return !getBank(offlinePlayer).isEmpty();
+    }
+    /**
+     * get bank name
+     * @param offlinePlayer or player
+     * @return string
+     * @since many moons ago
+     */
+    public String getBank(OfflinePlayer offlinePlayer) {
+        var config = getUserdata().getConfig(offlinePlayer);
+        if (config.isString("bank")) {
+            return config.getString("bank");
+        } else return "";
+    }
+    /**
+     * get bank rank
+     * @param offlinePlayer
+     * or player
+     * @return string
+     * @since many moons ago
+     */
+    public String getBankRank(OfflinePlayer offlinePlayer) {
+        var config = getUserdata().getConfig(offlinePlayer);
+        if (config.isString("bank-rank")) {
+            return config.getString("bank-rank");
+        } else return "default";
     }
     /**
      * get set map offlinePlayer, double

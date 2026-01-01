@@ -31,6 +31,7 @@ public final class Essentials extends JavaPlugin {
     private DateHandler dateHandler;
     private EconomyHandler economyHandler;
     private EntityHandler entityHandler;
+    private GameModeHandler gameModeHandler;
     private InventoryHandler inventoryHandler;
     private MaterialHandler materialHandler;
     private PaperHandler paperHandler;
@@ -61,6 +62,7 @@ public final class Essentials extends JavaPlugin {
         dateHandler = new DateHandler();
         economyHandler = new EconomyHandler();
         entityHandler = new EntityHandler();
+        gameModeHandler = new GameModeHandler();
         inventoryHandler = new InventoryHandler();
         materialHandler = new MaterialHandler();
         paperHandler = new PaperHandler();
@@ -317,6 +319,9 @@ public final class Essentials extends JavaPlugin {
     public InventoryHandler getInventoryHandler() {
         return inventoryHandler;
     }
+    public GameModeHandler getGameModeHandler() {
+        return gameModeHandler;
+    }
     public EntityHandler getEntityHandler() {
         return entityHandler;
     }
@@ -356,6 +361,9 @@ public final class Essentials extends JavaPlugin {
     public static Essentials getInstance() {
         return instance;
     }
+    public NamespacedKey getKey(String key) {
+        return new NamespacedKey(this, key);
+    }
     public void sendInfo(String message) {
         getLogger().info(message);
     }
@@ -388,8 +396,5 @@ public final class Essentials extends JavaPlugin {
     }
     public OfflinePlayer getOfflinePlayer(String username) {
         return getServer().getOfflinePlayer(username);
-    }
-    public NamespacedKey getKey(String key) {
-        return new NamespacedKey(this, key);
     }
 }

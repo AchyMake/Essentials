@@ -280,6 +280,12 @@ public class EntityHandler {
         }
         return result.entrySet();
     }
+    public boolean isNamed(Entity entity) {
+        return getData(entity).has(getInstance().getKey("named"));
+    }
+    public void setNamed(Entity entity) {
+        getData(entity).set(getInstance().getKey("named"), PersistentDataType.BOOLEAN, true);
+    }
     /**
      * set equipment this is the level section from entity/entityType.yml
      * @param entity entity
@@ -296,6 +302,11 @@ public class EntityHandler {
         for (var level : levels) {
             if (!getRandomHandler().isTrue(level.getValue()))return;
             var section = "levels." + level.getKey();
+            var name = config.getString(section + ".name");
+            if (name != null) {
+                livingEntity.setCustomName(getInstance().getMessage().addColor(name));
+                setNamed(livingEntity);
+            }
             if (config.isDouble(section + ".health")) {
                 var health = config.getDouble(section + ".health");
                 livingEntity.setMaxHealth(health);

@@ -3,6 +3,7 @@ package org.achymake.essentials.commands;
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
+import org.achymake.essentials.handlers.GameModeHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,9 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
     private Userdata getUserdata() {
         return getInstance().getUserdata();
     }
+    private GameModeHandler getGameModeHandler() {
+        return getInstance().getGameModeHandler();
+    }
     private Message getMessage() {
         return getInstance().getMessage();
     }
@@ -32,7 +36,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
             if (args.length == 1) {
                 var mode = args[0].toLowerCase();
                 if (player.hasPermission("essentials.command.gamemode." + mode)) {
-                    if (!getUserdata().setGameMode(player, mode)) {
+                    if (!getGameModeHandler().setGameMode(player, mode)) {
                         player.sendMessage(getMessage().get("gamemode.invalid", mode));
                     }
                     return true;
@@ -43,11 +47,11 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
                     if (target != null) {
                         var mode = args[0].toLowerCase();
                         if (target == player) {
-                            if (getUserdata().setGameMode(target, mode)) {
+                            if (getGameModeHandler().setGameMode(target, mode)) {
                                 player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode." + mode)));
                             } else player.sendMessage(getMessage().get("gamemode.invalid", mode));
                         } else if (!target.hasPermission("essentials.command.gamemode.exempt")) {
-                            if (getUserdata().setGameMode(target, mode)) {
+                            if (getGameModeHandler().setGameMode(target, mode)) {
                                 player.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode." + mode)));
                             } else player.sendMessage(getMessage().get("gamemode.invalid", mode));
                         } else player.sendMessage(getMessage().get("commands.gamemode.exempt", target.getName()));
@@ -60,7 +64,7 @@ public class GameModeCommand implements CommandExecutor, TabCompleter {
                 var target = getInstance().getPlayer(args[1]);
                 if (target != null) {
                     var mode = args[0].toLowerCase();
-                    if (getUserdata().setGameMode(target, mode)) {
+                    if (getGameModeHandler().setGameMode(target, mode)) {
                         consoleCommandSender.sendMessage(getMessage().get("commands.gamemode.sender", target.getName(), getMessage().get("gamemode." + mode)));
                     } else consoleCommandSender.sendMessage(getMessage().get("gamemode.invalid", mode));
                 } else consoleCommandSender.sendMessage(getMessage().get("error.target.offline", args[1]));

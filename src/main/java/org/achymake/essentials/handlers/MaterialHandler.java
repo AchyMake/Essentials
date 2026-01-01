@@ -10,9 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,8 +32,8 @@ public class MaterialHandler {
      */
     public Material get(String materialName) {
         if (materialName.contains("minecraft:")) {
-            return Material.valueOf(materialName.replace("minecraft:", "").toUpperCase());
-        } else return Material.valueOf(materialName.toUpperCase());
+            return Material.getMaterial(materialName.replace("minecraft:", "").toUpperCase());
+        } else return Material.getMaterial(materialName.toUpperCase());
     }
     /**
      * get enchantment
@@ -81,15 +79,6 @@ public class MaterialHandler {
      */
     public List<Enchantment> getEnchantments() {
         return new ArrayList<>(Arrays.asList(Enchantment.values()));
-    }
-    /**
-     * get persistent data container of itemMeta
-     * @param itemMeta itemMeta
-     * @return persistentDataContainer
-     * @since many moons ago
-     */
-    public PersistentDataContainer getData(ItemMeta itemMeta) {
-        return itemMeta.getPersistentDataContainer();
     }
     /**
      * get new itemStack

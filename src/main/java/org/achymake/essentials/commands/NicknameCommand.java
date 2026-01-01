@@ -34,18 +34,22 @@ public class NicknameCommand implements CommandExecutor, TabCompleter {
                 } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
                 return true;
             } else if (args.length == 1) {
-                if (getUserdata().setString(player, "display-name", args[0])) {
-                    player.sendMessage(getMessage().get("commands.nickname.self", args[0]));
-                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
-                return true;
+                if (16 > args[0].length()) {
+                    if (getUserdata().setString(player, "display-name", args[0])) {
+                        player.sendMessage(getMessage().get("commands.nickname.self", args[0]));
+                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(player).getName()));
+                    return true;
+                }
             } else if (args.length == 2) {
                 if (player.hasPermission("essentials.command.nickname.other")) {
                     var target = getInstance().getPlayer(args[1]);
                     if (target != null) {
                         if (!target.hasPermission("essentials.command.nickname.exempt")) {
-                            if (getUserdata().setString(target, "display-name", args[0])) {
-                                player.sendMessage(getMessage().get("commands.nickname.sender", target.getName(), args[0]));
-                            } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                            if (16 > args[0].length()) {
+                                if (getUserdata().setString(target, "display-name", args[0])) {
+                                    player.sendMessage(getMessage().get("commands.nickname.sender", target.getName(), args[0]));
+                                } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                            } else player.sendMessage(getMessage().get("commands.nickname.limit", String.valueOf(args[0].length()), args[0]));
                         } else player.sendMessage(getMessage().get("commands.nickname.exempt", target.getName()));
                     } else player.sendMessage(getMessage().get("error.target.offline", args[1]));
                     return true;

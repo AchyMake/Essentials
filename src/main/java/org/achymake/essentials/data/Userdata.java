@@ -5,7 +5,6 @@ import org.achymake.essentials.handlers.EconomyHandler;
 import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.ScheduleHandler;
 import org.achymake.essentials.handlers.WorldHandler;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
@@ -243,49 +242,6 @@ public class Userdata {
         if (config.isString("display-name")) {
             return config.getString("display-name");
         } else return offlinePlayer.getName();
-    }
-    /**
-     * get account
-     * @param offlinePlayer or player
-     * @return double
-     * @since many moons ago
-     */
-    public double getAccount(OfflinePlayer offlinePlayer) {
-        return getConfig(offlinePlayer).getDouble("account");
-    }
-    /**
-     * has bank
-     * @param offlinePlayer or player
-     * @return true if offlinePlayer has bank else false
-     * @since many moons ago
-     */
-    public boolean hasBank(OfflinePlayer offlinePlayer) {
-        return !getBank(offlinePlayer).isEmpty();
-    }
-    /**
-     * get bank name
-     * @param offlinePlayer or player
-     * @return string
-     * @since many moons ago
-     */
-    public String getBank(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("bank")) {
-            return config.getString("bank");
-        } else return "";
-    }
-    /**
-     * get bank rank
-     * @param offlinePlayer
-     * or player
-     * @return string
-     * @since many moons ago
-     */
-    public String getBankRank(OfflinePlayer offlinePlayer) {
-        var config = getConfig(offlinePlayer);
-        if (config.isString("bank-rank")) {
-            return config.getString("bank-rank");
-        } else return "default";
     }
     /**
      * gets boolean for 'settings.jailed' and 'settings.frozen'
@@ -891,10 +847,10 @@ public class Userdata {
     }
     private void update(OfflinePlayer offlinePlayer) {
         if (!exists(offlinePlayer))return;
+        var name = offlinePlayer.getName();
+        if (Objects.equals(name, getConfig(offlinePlayer).getString("name")))return;
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
-        var name = offlinePlayer.getName();
-        if (Objects.equals(name, config.getString("name")))return;
         config.set("name", name);
         config.set("display-name", name);
         try {
@@ -974,32 +930,6 @@ public class Userdata {
         }
     }
     /**
-     * set game mode
-     * @param player target
-     * @param mode string
-     * @return true if mode is gamemode else false
-     * @since many moons ago
-     */
-    public boolean setGameMode(Player player, String mode) {
-        if (mode.equalsIgnoreCase("adventure")) {
-            player.setGameMode(GameMode.ADVENTURE);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.adventure")));
-            return true;
-        } else if (mode.equalsIgnoreCase("creative")) {
-            player.setGameMode(GameMode.CREATIVE);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.creative")));
-            return true;
-        } else if (mode.equalsIgnoreCase("spectator")) {
-            player.setGameMode(GameMode.SPECTATOR);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.spectator")));
-            return true;
-        } else if (mode.equalsIgnoreCase("survival")) {
-            player.setGameMode(GameMode.SURVIVAL);
-            getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
-            return true;
-        } else return false;
-    }
-    /**
      * has cooldown
      * @param player player
      * @param name string
@@ -1068,12 +998,6 @@ public class Userdata {
                 } else return "0";
             } else return "0";
         } else return "0";
-    }
-    public String getPrefix(Player player) {
-        return getMessage().addPlaceholder(player, "%vault_prefix%");
-    }
-    public String getSuffix(Player player) {
-        return getMessage().addPlaceholder(player, "%vault_suffix%");
     }
     public void disable(Player player) {
         setLocation(player, player.getLocation(), "quit");

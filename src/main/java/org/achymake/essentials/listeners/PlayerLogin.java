@@ -79,9 +79,6 @@ public class PlayerLogin implements Listener {
     private void allow(PlayerLoginEvent event, Player player) {
         event.allow();
         if (getUserdata().reload(player)) {
-            if (!player.getName().equals(getUserdata().getConfig(player).getString("name"))) {
-                getUserdata().setString(player, "name", player.getName());
-            }
             if (getUserdata().isBanned(player)) {
                 getUserdata().setBoolean(player, "settings.banned", false);
                 getUserdata().setInt(player, "settings.ban-expire", 0);

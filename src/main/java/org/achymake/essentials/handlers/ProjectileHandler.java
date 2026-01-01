@@ -21,12 +21,9 @@ public class ProjectileHandler {
      * @since many moons ago
      */
     public void addRemovalTask(Projectile projectile, int seconds) {
-        int taskID = getScheduler().runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (projectile != null) {
-                    remove(projectile);
-                }
+        int taskID = getScheduler().runLater(() -> {
+            if (projectile != null) {
+                remove(projectile);
             }
         }, seconds * 20L).getTaskId();
         getProjectiles().put(projectile, taskID);

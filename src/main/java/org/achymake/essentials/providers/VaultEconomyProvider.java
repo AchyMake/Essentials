@@ -59,7 +59,7 @@ public class VaultEconomyProvider implements Economy {
     }
     @Override
     public double getBalance(OfflinePlayer player) {
-        return ess.getUserdata().getAccount(player);
+        return ess.getEconomyHandler().getAccount(player);
     }
     @Override
     public double getBalance(String playerName) {
@@ -75,7 +75,7 @@ public class VaultEconomyProvider implements Economy {
     }
     @Override
     public boolean has(OfflinePlayer player, double amount) {
-        return ess.getUserdata().getAccount(player) >= amount;
+        return ess.getEconomyHandler().getAccount(player) >= amount;
     }
     @Override
     public boolean has(String playerName, double amount) {

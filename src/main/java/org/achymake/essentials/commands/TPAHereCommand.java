@@ -33,20 +33,17 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (!getUserdata().hasTaskID(player, "tpahere")) {
-                    var target = getInstance().getPlayer(args[0]);
-                    if (target != null) {
-                        if (target != player) {
-                            int taskID = getScheduler().runLater( new Runnable() {
-                                @Override
-                                public void run() {
-                                    getUserdata().setTpaHereFrom(target, null);
-                                    getUserdata().removeTask(target, "tpahere");
-                                    getUserdata().setTpaHereSent(player, null);
-                                    getUserdata().removeTask(player, "tpahere");
-                                    target.sendMessage(getMessage().get("commands.tpahere.expired"));
-                                    player.sendMessage(getMessage().get("commands.tpahere.expired"));
-                                }
+                var target = getInstance().getPlayer(args[0]);
+                if (target != null) {
+                    if (target != player) {
+                        if (!getUserdata().hasTaskID(player, "tpahere")) {
+                            int taskID = getScheduler().runLater(() -> {
+                                getUserdata().setTpaHereFrom(target, null);
+                                getUserdata().removeTask(target, "tpahere");
+                                getUserdata().setTpaHereSent(player, null);
+                                getUserdata().removeTask(player, "tpahere");
+                                target.sendMessage(getMessage().get("commands.tpahere.expired"));
+                                player.sendMessage(getMessage().get("commands.tpahere.expired"));
                             }, 300).getTaskId();
                             getUserdata().setTpaHereFrom(target, player);
                             getUserdata().addTaskID(target, "tpahere", taskID);
@@ -56,12 +53,12 @@ public class TPAHereCommand implements CommandExecutor, TabCompleter {
                             target.sendMessage(getMessage().get("commands.tpahere.target.decide"));
                             player.sendMessage(getMessage().get("commands.tpahere.sender.notify", target.getName()));
                             player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
-                        } else player.sendMessage(getMessage().get("commands.tpahere.request-self"));
-                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
-                } else {
-                    player.sendMessage(getMessage().get("commands.tpahere.occupied"));
-                    player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
-                }
+                        } else {
+                            player.sendMessage(getMessage().get("commands.tpahere.occupied"));
+                            player.sendMessage(getMessage().get("commands.tpahere.sender.decide"));
+                        }
+                    } else player.sendMessage(getMessage().get("commands.tpahere.request-self"));
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
         }

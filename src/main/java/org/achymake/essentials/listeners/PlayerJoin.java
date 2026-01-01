@@ -53,7 +53,6 @@ public class PlayerJoin implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
         var player = event.getPlayer();
-        player.setDisplayName(getUserdata().getDisplayName(player));
         if (getUserdata().hasBoard(player)) {
             getScoreboardHandler().apply(player);
         }
@@ -70,13 +69,10 @@ public class PlayerJoin implements Listener {
                 event.setJoinMessage(null);
                 getMessage().sendAll(getMessage().get("events.join.notify", player.getName()), "essentials.event.join.notify");
             }
-            getScheduler().runLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (getUserdata().hasJoined(player)) {
-                        getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome-back"));
-                    } else getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
-                }
+            getScheduler().runLater(() -> {
+                if (getUserdata().hasJoined(player)) {
+                    getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome-back"));
+                } else getMessage().sendStringList(player, getConfig().getStringList("message-of-the-day.welcome"));
             }, 0);
         } else {
             event.setJoinMessage(null);

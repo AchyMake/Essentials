@@ -157,13 +157,10 @@ public class WorldHandler {
             }
             if (seconds > 0) {
                 getMessage().sendActionBar(player, getMessage().get("events.teleport.post", String.valueOf(seconds)));
-                var taskID = getInstance().getScheduleHandler().runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
-                        player.teleport(location);
-                        getUserdata().removeTask(player, "teleport");
-                    }
+                var taskID = getInstance().getScheduleHandler().runLater(() -> {
+                    getMessage().sendActionBar(player, getMessage().get("events.teleport.success", name));
+                    player.teleport(location);
+                    getUserdata().removeTask(player, "teleport");
                 }, seconds * 20L).getTaskId();
                 getUserdata().addTaskID(player, "teleport", taskID);
             } else {
@@ -180,20 +177,17 @@ public class WorldHandler {
     public void randomTeleport(Player player) {
         getMessage().sendActionBar(player, getMessage().get("commands.rtp.post-teleport"));
         var block = highestRandomBlock(get(getConfig().getString("commands.rtp.world")), getConfig().getInt("commands.rtp.spread"));
-        var taskID = getScheduler().runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (block.isLiquid()) {
-                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
-                    randomTeleport(player);
-                } else {
-                    if (!block.getChunk().isLoaded()) {
-                        block.getChunk().load();
-                    }
-                    getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
-                    player.teleport(block.getLocation().add(0.5,1,0.5));
-                    getUserdata().removeTask(player, "rtp");
+        var taskID = getScheduler().runLater(() -> {
+            if (block.isLiquid()) {
+                getMessage().sendActionBar(player, getMessage().get("commands.rtp.liquid"));
+                randomTeleport(player);
+            } else {
+                if (!block.getChunk().isLoaded()) {
+                    block.getChunk().load();
                 }
+                getMessage().sendActionBar(player, getMessage().get("commands.rtp.teleport"));
+                player.teleport(block.getLocation().add(0.5,1,0.5));
+                getUserdata().removeTask(player, "rtp");
             }
         }, 3).getTaskId();
         getUserdata().addTaskID(player, "rtp", taskID);

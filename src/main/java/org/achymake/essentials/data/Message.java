@@ -440,6 +440,7 @@ public class Message {
         config.set("commands.nickname.self", "&6You changed your nickname to&f {0}");
         config.set("commands.nickname.sender", "&6You changed&f {0}&6 nickname to&f {1}");
         config.set("commands.nickname.exempt", "&cYou are not allowed to change nickname for&f {0}");
+        config.set("commands.nickname.limit", "&cYou reached the limit of 16 characters&f {1}&c has&f {0}&c characters");
         config.set("commands.pay.target", "&6You received&a {0}&6 from&f {1}");
         config.set("commands.pay.sender", "&6You paid&f {0}&a {1}");
         config.set("commands.pay.insufficient-funds", "&cYou do not have&a {0}&c to pay&f {1}");

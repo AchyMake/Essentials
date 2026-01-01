@@ -24,6 +24,9 @@ public class EntityDeath implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityDeath(EntityDeathEvent event) {
         var livingEntity = event.getEntity();
+        if (getEntityHandler().isNamed(livingEntity)) {
+            livingEntity.setCustomName(null);
+        }
         if (livingEntity.getKiller() == null)return;
         var value = getEntityHandler().getDroppedEXP(livingEntity);
         if (value > 0) {

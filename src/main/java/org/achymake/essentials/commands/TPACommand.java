@@ -33,20 +33,17 @@ public class TPACommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player player) {
             if (args.length == 1) {
-                if (!getUserdata().hasTaskID(player, "tpa")) {
-                    var target = getInstance().getPlayer(args[0]);
-                    if (target != null) {
-                        if (target != player) {
-                            var taskID = getScheduler().runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getUserdata().setTpaFrom(target, null);
-                                    getUserdata().removeTask(target, "tpa");
-                                    getUserdata().setTpaSent(player, null);
-                                    getUserdata().removeTask(player, "tpa");
-                                    target.sendMessage(getMessage().get("commands.tpa.expired"));
-                                    player.sendMessage(getMessage().get("commands.tpa.expired"));
-                                }
+                var target = getInstance().getPlayer(args[0]);
+                if (target != null) {
+                    if (target != player) {
+                        if (!getUserdata().hasTaskID(player, "tpa")) {
+                            var taskID = getScheduler().runLater(() -> {
+                                getUserdata().setTpaFrom(target, null);
+                                getUserdata().removeTask(target, "tpa");
+                                getUserdata().setTpaSent(player, null);
+                                getUserdata().removeTask(player, "tpa");
+                                target.sendMessage(getMessage().get("commands.tpa.expired"));
+                                player.sendMessage(getMessage().get("commands.tpa.expired"));
                             }, 300).getTaskId();
                             getUserdata().setTpaFrom(target, player);
                             getUserdata().addTaskID(target, "tpa", taskID);
@@ -56,12 +53,12 @@ public class TPACommand implements CommandExecutor, TabCompleter {
                             target.sendMessage(getMessage().get("commands.tpa.target.decide"));
                             player.sendMessage(getMessage().get("commands.tpa.sender.notify", target.getName()));
                             player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
-                        } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
-                    } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
-                } else {
-                    player.sendMessage(getMessage().get("commands.tpa.occupied"));
-                    player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
-                }
+                        } else {
+                            player.sendMessage(getMessage().get("commands.tpa.occupied"));
+                            player.sendMessage(getMessage().get("commands.tpa.sender.decide"));
+                        }
+                    } else player.sendMessage(getMessage().get("commands.tpa.request-self"));
+                } else player.sendMessage(getMessage().get("error.target.offline", args[0]));
                 return true;
             }
         }
