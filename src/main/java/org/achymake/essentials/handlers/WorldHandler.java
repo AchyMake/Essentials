@@ -54,80 +54,19 @@ public class WorldHandler {
         return new ArrayList<>(getInstance().getServer().getWorlds());
     }
     /**
-     * set morning
-     * @param world world
-     * @since many moons ago
-     */
-    public void setMorning(World world) {
-        world.setTime(0);
-    }
-    /**
-     * set day
-     * @param world world
-     * @since many moons ago
-     */
-    public void setDay(World world) {
-        world.setTime(1000);
-    }
-    /**
-     * set noon
-     * @param world world
-     * @since many moons ago
-     */
-    public void setNoon(World world) {
-        world.setTime(6000);
-    }
-    /**
-     * set night
-     * @param world world
-     * @since many moons ago
-     */
-    public void setNight(World world) {
-        world.setTime(13000);
-    }
-    /**
-     * set midnight
-     * @param world world
-     * @since many moons ago
-     */
-    public void setMidnight(World world) {
-        world.setTime(18000);
-    }
-    /**
-     * set time
-     * @param world world
-     * @param value long
-     * @since many moons ago
-     */
-    public void setTime(World world, long value) {
-        world.setTime(value);
-    }
-    /**
-     * add time
-     * @param world world
-     * @param value long
-     * @since many moons ago
-     */
-    public void addTime(World world, long value) {
-        world.setTime(world.getTime() + value);
-    }
-    /**
-     * remove time
-     * @param world world
-     * @param value long
-     * @since many moons ago
-     */
-    public void removeTime(World world, long value) {
-        world.setTime(world.getTime() - value);
-    }
-    /**
-     * drop itemStack
+     * spawn item
      * @param location location
      * @param itemStack itemStack
      * @since many moons ago
      */
-    public Item dropItem(Location location, ItemStack itemStack) {
-        return location.getWorld().dropItem(location, itemStack);
+    public Item spawnItem(Location location, ItemStack itemStack) {
+        var world = location.getWorld();
+        if (world != null) {
+            var item = world.createEntity(location, Item.class);
+            item.setItemStack(itemStack);
+            world.addEntity(item);
+            return item;
+        } else return null;
     }
     /**
      * gets the highest random block
@@ -207,9 +146,5 @@ public class WorldHandler {
         var world = location.getWorld();
         if (world == null)return;
         world.playSound(location, Sound.valueOf(soundType), (float) volume, (float) pitch);
-    }
-    public void playSound(Entity entity, String soundType, double volume, double pitch) {
-        var world = entity.getWorld();
-        world.playSound(entity, Sound.valueOf(soundType), (float) volume, (float) pitch);
     }
 }

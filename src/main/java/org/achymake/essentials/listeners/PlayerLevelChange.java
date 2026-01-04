@@ -47,7 +47,7 @@ public class PlayerLevelChange implements Listener {
                 if (soundType != null) {
                     var volume = getConfig().getDouble("levels.level-up.sound.volume");
                     var pitch = getConfig().getDouble("levels.level-up.sound.pitch");
-                    getWorldHandler().playSound(player, soundType, volume, pitch);
+                    getWorldHandler().playSound(player.getLocation(), soundType, volume, pitch);
                 }
             }
         } else if (oldLevel > level) {
@@ -67,7 +67,7 @@ public class PlayerLevelChange implements Listener {
                 if (soundType != null) {
                     var volume = getConfig().getDouble("levels.level-down.sound.volume");
                     var pitch = getConfig().getDouble("levels.level-down.sound.pitch");
-                    getWorldHandler().playSound(player, soundType, volume, pitch);
+                    getWorldHandler().playSound(player.getLocation(), soundType, volume, pitch);
                 }
             }
         }

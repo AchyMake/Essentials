@@ -25,7 +25,9 @@ public class BlockDropItem implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onBlockDropItem(BlockDropItemEvent event) {
         var player = event.getPlayer();
-        if (!getMaterialHandler().hasEnchantment(player.getInventory().getItemInMainHand(), "smelting_touch"))return;
+        var heldItem = player.getInventory().getItemInMainHand();
+        if (getMaterialHandler().isAir(heldItem))return;
+        if (!getMaterialHandler().hasEnchantment(heldItem, "smelting_touch"))return;
         for (var item : event.getItems()) {
             var itemStack = item.getItemStack();
             var material = itemStack.getType();

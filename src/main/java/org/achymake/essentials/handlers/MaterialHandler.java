@@ -68,7 +68,7 @@ public class MaterialHandler {
      * @since many moons ago
      */
     public boolean hasEnchantment(ItemStack itemStack, String enchantmentName) {
-        if (isEnchantment(enchantmentName)) {
+        if (isEnchantment(enchantmentName) && itemStack != null) {
             return itemStack.getItemMeta().hasEnchant(getEnchantment(enchantmentName));
         } else return false;
     }
@@ -117,7 +117,7 @@ public class MaterialHandler {
         var rest = player.getInventory().addItem(itemStack).values();
         if (rest.isEmpty())return;
         var location = player.getLocation();
-        rest.forEach(itemStacks -> getWorldHandler().dropItem(location, itemStack));
+        rest.forEach(itemStacks -> getWorldHandler().spawnItem(location, itemStack));
     }
     /**
      * give itemStack
