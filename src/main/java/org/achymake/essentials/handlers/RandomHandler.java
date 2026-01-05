@@ -7,10 +7,10 @@ public class RandomHandler {
         return new Random();
     }
     private double getRandomDouble() {
-        return 1.0 - getRandom().nextDouble(1.0);
+        return nextDouble(0, 1);
     }
     private double getRandomInt() {
-        return 100 - getRandom().nextInt(100);
+        return getRandom().nextInt(0, 100);
     }
     /**
      * is true
