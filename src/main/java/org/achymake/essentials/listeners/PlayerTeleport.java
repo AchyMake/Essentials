@@ -25,8 +25,10 @@ public class PlayerTeleport implements Listener {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         var player = event.getPlayer();
         if (!getUserdata().isDisabled(player)) {
-            if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.COMMAND) || event.getCause().equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-                getUserdata().setLocation(player, player.getLocation(), "recent");
+            var cause = event.getCause();
+            if (cause.equals(PlayerTeleportEvent.TeleportCause.COMMAND) || cause.equals(PlayerTeleportEvent.TeleportCause.PLUGIN)) {
+                var location = player.getLocation();
+                getUserdata().setLocation(player, location, "recent");
             }
         } else event.setCancelled(true);
     }

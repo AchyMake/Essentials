@@ -6,7 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -31,12 +33,12 @@ public class EntityHandler {
     }
     /**
      * get file of entity/entityType.yml
-     * @param entity entity
+     * @param livingEntity livingEntity
      * @return persistentDataContainer
      * @since many moons ago
      */
-    public PersistentDataContainer getData(Entity entity) {
-        return entity.getPersistentDataContainer();
+    public PersistentDataContainer getData(LivingEntity livingEntity) {
+        return livingEntity.getPersistentDataContainer();
     }
     /**
      * get file of entity/entityType.yml
@@ -45,7 +47,7 @@ public class EntityHandler {
      * @since many moons ago
      */
     public File getFile(EntityType entityType) {
-        return new File(getInstance().getDataFolder(), "entity/" + entityType.toString() + ".yml");
+        return new File(getInstance().getDataFolder(), "entity/" + entityType.name().toUpperCase() + ".yml");
     }
     /**
      * exists
@@ -76,7 +78,7 @@ public class EntityHandler {
     }
     /**
      * is hostile
-     * @param entityType entityType
+     * @param entityType livingEntity
      * @return true if entityType is hostile else false
      * @since many moons ago
      */
@@ -155,7 +157,7 @@ public class EntityHandler {
      * @since many moons ago
      */
     public boolean isEntityDamageByEntityDisabled(EntityType entityType, EntityType targetEntityType) {
-        return getConfig(entityType).getBoolean("settings.disable-entity-damage." + targetEntityType.toString());
+        return getConfig(entityType).getBoolean("settings.disable-entity-damage." + targetEntityType);
     }
     /**
      * is entity explode disabled
@@ -179,22 +181,22 @@ public class EntityHandler {
     /**
      * is entity target disabled
      * @param entityType entityType
-     * @param targetEntityType entityType
+     * @param targetEntityType targetEntityType
      * @return true if entityType is disabled for target targetEntityType else false
      * @since many moons ago
      */
     public boolean isEntityTargetDisabled(EntityType entityType, EntityType targetEntityType) {
-        return getConfig(entityType).getBoolean("settings.disable-target." + targetEntityType.toString());
+        return getConfig(entityType).getBoolean("settings.disable-target." + targetEntityType);
     }
     /**
      * is entity hanging break disabled
-     * @param removerEntityType entityType
-     * @param hangingEntityType entityType
+     * @param entityType entityType
+     * @param hangingEntityType hangingEntityType
      * @return true if removerEntityType is disabled for breaking hangingEntityType else false
      * @since many moons ago
      */
-    public boolean disableHangingBreakByEntity(EntityType removerEntityType, EntityType hangingEntityType) {
-        return getConfig(removerEntityType).getBoolean("settings.disable-hanging-break." + hangingEntityType.toString());
+    public boolean disableHangingBreakByEntity(EntityType entityType, EntityType hangingEntityType) {
+        return getConfig(entityType).getBoolean("settings.disable-hanging-break." + hangingEntityType);
     }
     /**
      * is entity spawn reason disabled
@@ -246,28 +248,28 @@ public class EntityHandler {
     }
     /**
      * get dropped exp
-     * @param entity entity
+     * @param livingEntity livingEntity
      * @return integer
      * @since many moons ago
      */
-    public int getDroppedEXP(Entity entity) {
-        var value = getData(entity).get(getInstance().getKey("exp"), PersistentDataType.INTEGER);
+    public int getDroppedEXP(LivingEntity livingEntity) {
+        var value = getData(livingEntity).get(getInstance().getKey("exp"), PersistentDataType.INTEGER);
         if (value != null) {
             return value;
         } else return 0;
     }
     /**
      * set dropped exp
-     * @param entity entity
+     * @param livingEntity livingEntity
      * @param value integer
      * @since many moons ago
      */
-    public void setDroppedEXP(Entity entity, int value) {
-        getData(entity).set(getInstance().getKey("exp"), PersistentDataType.INTEGER, value);
+    public void setDroppedEXP(LivingEntity livingEntity, int value) {
+        getData(livingEntity).set(getInstance().getKey("exp"), PersistentDataType.INTEGER, value);
     }
-    private Set<Map.Entry<String, Double>> getLevels(EntityType entityType) {
+    private Set<Map.Entry<String, Double>> getLevels(LivingEntity livingEntity) {
         var levels = new HashMap<String, Double>();
-        var config = getConfig(entityType);
+        var config = getConfig(livingEntity.getType());
         config.getConfigurationSection("levels").getKeys(false).forEach(level -> levels.put(level, config.getDouble("levels." + level + ".chance")));
         var list = new ArrayList<>(levels.entrySet());
         list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
@@ -280,48 +282,32 @@ public class EntityHandler {
         }
         return result.entrySet();
     }
-    public boolean isNamed(Entity entity) {
-        return getData(entity).has(getInstance().getKey("named"));
+    public boolean isNamed(LivingEntity livingEntity) {
+        return getData(livingEntity).has(getInstance().getKey("named"));
     }
-    public void setNamed(Entity entity) {
-        getData(entity).set(getInstance().getKey("named"), PersistentDataType.BOOLEAN, true);
+    public void setNamed(LivingEntity livingEntity) {
+        getData(livingEntity).set(getInstance().getKey("named"), PersistentDataType.BOOLEAN, true);
     }
     /**
      * set equipment this is the level section from entity/entityType.yml
-     * @param entity entity
+     * @param livingEntity livingEntity
      * @since many moons ago
      */
-    public void setEquipment(Entity entity) {
-        if (!(entity instanceof LivingEntity livingEntity))return;
-        if (!exists(entity.getType()))return;
-        var levels = getLevels(livingEntity.getType());
+    public void setEquipment(LivingEntity livingEntity) {
+        var entityType = livingEntity.getType();
+        if (!exists(entityType))return;
+        var levels = getLevels(livingEntity);
         if (levels.isEmpty())return;
-        var equipment = livingEntity.getEquipment();
-        if (equipment == null)return;
-        var config = getConfig(entity.getType());
-        for (var level : levels) {
-            if (!getRandomHandler().isTrue(level.getValue()))return;
-            var section = "levels." + level.getKey();
+        var config = getConfig(entityType);
+        levels.forEach(stringDoubleEntry -> {
+            var chance = stringDoubleEntry.getValue();
+            if (!getRandomHandler().isTrue(chance))return;
+            var key = stringDoubleEntry.getKey();
+            var section = "levels." + key;
             var name = config.getString(section + ".name");
             if (name != null) {
                 livingEntity.setCustomName(getInstance().getMessage().addColor(name));
                 setNamed(livingEntity);
-            }
-            if (config.isDouble(section + ".health")) {
-                var health = config.getDouble(section + ".health");
-                livingEntity.setMaxHealth(health);
-                livingEntity.setHealth(health);
-            } else if (config.isDouble(section + ".health.min") && config.isDouble(section + ".health.max")) {
-                var healthMin = config.getDouble(section + ".health.min");
-                var healthMax = config.getDouble(section + ".health.max");
-                var result = getInstance().getRandomHandler().nextDouble(healthMin, healthMax);
-                livingEntity.setMaxHealth(result);
-                livingEntity.setHealth(result);
-            }
-            if (config.isDouble(section + ".movement_speed")) {
-                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(config.getDouble(section + ".movement_speed"));
-            } else if (config.isDouble(section + ".movement_speed.min") && config.isDouble(section + ".movement_speed.max")) {
-                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".movement_speed.min"), config.getDouble(section + ".movement_speed.max")));
             }
             if (config.isDouble(section + ".armor")) {
                 livingEntity.getAttribute(Attribute.ARMOR).setBaseValue(config.getDouble(section + ".armor"));
@@ -333,6 +319,22 @@ public class EntityHandler {
             } else if (config.isDouble(section + ".attack_damage.min") && config.isDouble(section + ".attack_damage.max")) {
                 livingEntity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".attack_damage.min"), config.getDouble(section + ".attack_damage.max")));
             }
+            if (config.isDouble(section + ".health")) {
+                var health = config.getDouble(section + ".health");
+                livingEntity.getAttribute(Attribute.MAX_HEALTH).setBaseValue(health);
+                livingEntity.setHealth(health);
+            } else if (config.isDouble(section + ".health.min") && config.isDouble(section + ".health.max")) {
+                var healthMin = config.getDouble(section + ".health.min");
+                var healthMax = config.getDouble(section + ".health.max");
+                var result = getInstance().getRandomHandler().nextDouble(healthMin, healthMax);
+                livingEntity.getAttribute(Attribute.MAX_HEALTH).setBaseValue(result);
+                livingEntity.setHealth(result);
+            }
+            if (config.isDouble(section + ".movement_speed")) {
+                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(config.getDouble(section + ".movement_speed"));
+            } else if (config.isDouble(section + ".movement_speed.min") && config.isDouble(section + ".movement_speed.max")) {
+                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".movement_speed.min"), config.getDouble(section + ".movement_speed.max")));
+            }
             if (config.isDouble(section + ".scale")) {
                 livingEntity.getAttribute(Attribute.SCALE).setBaseValue(config.getDouble(section + ".scale"));
             } else if (config.isDouble(section + ".scale.min") && config.isDouble(section + ".scale.max")) {
@@ -343,103 +345,118 @@ public class EntityHandler {
             } else if (config.isInt(section + ".exp.min") && config.isInt(section + ".exp.max")) {
                 setDroppedEXP(livingEntity, getRandomHandler().nextInt(config.getInt(section + ".exp.min"), config.getInt(section + ".exp.max")));
             }
-            if (config.isString(section + ".main-hand.type") && config.isInt(section + ".main-hand.amount")) {
-                var itemName = config.getString(section + ".main-hand.type");
-                var itemAmount = config.getInt(section + ".main-hand.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".main-hand.enchantments")) {
-                    config.getConfigurationSection(section + ".main-hand.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".main-hand.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".main-hand.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+            var equipment = livingEntity.getEquipment();
+            if (equipment != null) {
+                if (config.isString(section + ".main-hand.type") && config.isInt(section + ".main-hand.amount")) {
+                    var itemName = config.getString(section + ".main-hand.type");
+                    var itemAmount = config.getInt(section + ".main-hand.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".main-hand.enchantments")) {
+                            config.getConfigurationSection(section + ".main-hand.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".main-hand.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".main-hand.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setItemInMainHand(itemStack);
+                        if (config.isDouble(section + ".main-hand.drop-chance")) {
+                            equipment.setItemInMainHandDropChance((float) config.getDouble(section + ".main-hand.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setItemInMainHand(item);
-            }
-            if (config.isDouble(section + ".main-hand.drop-chance")) {
-                equipment.setItemInMainHandDropChance((float) config.getDouble(section + ".main-hand.drop-chance"));
-            }
-            if (config.isString(section + ".off-hand.type") && config.isInt(section + ".off-hand.amount")) {
-                var itemName = config.getString(section + ".off-hand.type");
-                var itemAmount = config.getInt(section + ".off-hand.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".off-hand.enchantments")) {
-                    config.getConfigurationSection(section + ".off-hand.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".off-hand.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".off-hand.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+                if (config.isString(section + ".off-hand.type") && config.isInt(section + ".off-hand.amount")) {
+                    var itemName = config.getString(section + ".off-hand.type");
+                    var itemAmount = config.getInt(section + ".off-hand.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".off-hand.enchantments")) {
+                            config.getConfigurationSection(section + ".off-hand.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".off-hand.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".off-hand.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setItemInOffHand(itemStack);
+                        if (config.isDouble(section + ".off-hand.drop-chance")) {
+                            equipment.setItemInOffHandDropChance((float) config.getDouble(section + ".off-hand.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setItemInOffHand(item);
-            }
-            if (config.isDouble(section + ".off-hand.drop-chance")) {
-                equipment.setItemInOffHandDropChance((float) config.getDouble(section + ".off-hand.drop-chance"));
-            }
-            if (config.isString(section + ".helmet.type") && config.isInt(section + ".helmet.amount")) {
-                var itemName = config.getString(section + ".helmet.type");
-                var itemAmount = config.getInt(section + ".helmet.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".helmet.enchantments")) {
-                    config.getConfigurationSection(section + ".helmet.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".helmet.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".helmet.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+                if (config.isString(section + ".helmet.type") && config.isInt(section + ".helmet.amount")) {
+                    var itemName = config.getString(section + ".helmet.type");
+                    var itemAmount = config.getInt(section + ".helmet.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".helmet.enchantments")) {
+                            config.getConfigurationSection(section + ".helmet.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".helmet.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".helmet.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setHelmet(itemStack);
+                        if (config.isDouble(section + ".helmet.drop-chance")) {
+                            equipment.setHelmetDropChance((float) config.getDouble(section + ".helmet.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setHelmet(item);
-            }
-            if (config.isDouble(section + ".helmet.drop-chance")) {
-                equipment.setHelmetDropChance((float) config.getDouble(section + ".helmet.drop-chance"));
-            }
-            if (config.isString(section + ".chestplate.type") && config.isInt(section + ".chestplate.amount")) {
-                var itemName = config.getString(section + ".chestplate.type");
-                var itemAmount = config.getInt(section + ".chestplate.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".chestplate.enchantments")) {
-                    config.getConfigurationSection(section + ".chestplate.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".chestplate.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".chestplate.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+                if (config.isString(section + ".chestplate.type") && config.isInt(section + ".chestplate.amount")) {
+                    var itemName = config.getString(section + ".chestplate.type");
+                    var itemAmount = config.getInt(section + ".chestplate.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".chestplate.enchantments")) {
+                            config.getConfigurationSection(section + ".chestplate.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".chestplate.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".chestplate.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setChestplate(itemStack);
+                        if (config.isDouble(section + ".chestplate.drop-chance")) {
+                            equipment.setChestplateDropChance((float) config.getDouble(section + ".chestplate.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setChestplate(item);
-            }
-            if (config.isDouble(section + ".chestplate.drop-chance")) {
-                equipment.setChestplateDropChance((float) config.getDouble(section + ".chestplate.drop-chance"));
-            }
-            if (config.isString(section + ".leggings.type") && config.isInt(section + ".leggings.amount")) {
-                var itemName = config.getString(section + ".leggings.type");
-                var itemAmount = config.getInt(section + ".leggings.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".leggings.enchantments")) {
-                    config.getConfigurationSection(section + ".leggings.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".leggings.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".leggings.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+                if (config.isString(section + ".leggings.type") && config.isInt(section + ".leggings.amount")) {
+                    var itemName = config.getString(section + ".leggings.type");
+                    var itemAmount = config.getInt(section + ".leggings.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".leggings.enchantments")) {
+                            config.getConfigurationSection(section + ".leggings.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".leggings.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".leggings.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setLeggings(itemStack);
+                        if (config.isDouble(section + ".leggings.drop-chance")) {
+                            equipment.setLeggingsDropChance((float) config.getDouble(section + ".leggings.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setLeggings(item);
-            }
-            if (config.isDouble(section + ".leggings.drop-chance")) {
-                equipment.setLeggingsDropChance((float) config.getDouble(section + ".leggings.drop-chance"));
-            }
-            if (config.isString(section + ".boots.type") && config.isInt(section + ".boots.amount")) {
-                var itemName = config.getString(section + ".boots.type");
-                var itemAmount = config.getInt(section + ".boots.amount");
-                var item = getMaterials().getItemStack(itemName, itemAmount);
-                if (config.isConfigurationSection(section + ".boots.enchantments")) {
-                    config.getConfigurationSection(section + ".boots.enchantments").getKeys(false).forEach(enchantment -> {
-                        if (!config.isInt(section + ".boots.enchantments." + enchantment))return;
-                        var enchantLvl = config.getInt(section + ".boots.enchantments." + enchantment);
-                        item.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
-                    });
+                if (config.isString(section + ".boots.type") && config.isInt(section + ".boots.amount")) {
+                    var itemName = config.getString(section + ".boots.type");
+                    var itemAmount = config.getInt(section + ".boots.amount");
+                    var itemStack = getMaterials().getItemStack(itemName, itemAmount);
+                    if (itemStack != null) {
+                        if (config.isConfigurationSection(section + ".boots.enchantments")) {
+                            config.getConfigurationSection(section + ".boots.enchantments").getKeys(false).forEach(enchantment -> {
+                                if (!config.isInt(section + ".boots.enchantments." + enchantment))return;
+                                var enchantLvl = config.getInt(section + ".boots.enchantments." + enchantment);
+                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                            });
+                        }
+                        equipment.setBoots(itemStack);
+                        if (config.isDouble(section + ".boots.drop-chance")) {
+                            equipment.setBootsDropChance((float) config.getDouble(section + ".boots.drop-chance"));
+                        }
+                    }
                 }
-                equipment.setBoots(item);
             }
-            if (config.isDouble(section + ".boots.drop-chance")) {
-                equipment.setBootsDropChance((float) config.getDouble(section + ".boots.drop-chance"));
-            }
-        }
+        });
     }
     /**
      * reload entity folder

@@ -32,16 +32,14 @@ public class EntityPlace implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityPlace(EntityPlaceEvent event) {
         if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
-            if (!getEntityHandler().isOverChunkLimit(event.getEntity())) {
-                if (event.getPlayer() != null) {
-                    if (!getUserdata().isDisabled(event.getPlayer()))return;
-                    event.setCancelled(true);
-                }
-            } else {
+            if (getEntityHandler().isOverChunkLimit(event.getEntity())) {
                 event.setCancelled(true);
                 if (event.getPlayer() != null) {
                     getMessage().sendActionBar(event.getPlayer(), getMessage().get("events.entity-place", getMessage().toTitleCase(event.getEntityType().toString()), String.valueOf(getEntityHandler().getChunkLimit(event.getEntityType()))));
                 }
+            } else if (event.getPlayer() != null) {
+                if (!getUserdata().isDisabled(event.getPlayer()))return;
+                event.setCancelled(true);
             }
         } else event.setCancelled(true);
     }

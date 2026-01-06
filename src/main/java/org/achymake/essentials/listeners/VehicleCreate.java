@@ -24,11 +24,9 @@ public class VehicleCreate implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onVehicleCreate(VehicleCreateEvent event) {
         var vehicle = event.getVehicle();
-        var type = vehicle.getType();
-        if (!getEntityHandler().isCreatureSpawnDisabled(type)) {
-            if (getEntityHandler().isOverChunkLimit(vehicle)) {
-                event.setCancelled(true);
-            }
+        if (!getEntityHandler().isCreatureSpawnDisabled(vehicle.getType())) {
+            if (!getEntityHandler().isOverChunkLimit(vehicle))return;
+            event.setCancelled(true);
         } else event.setCancelled(true);
     }
 }

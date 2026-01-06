@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EntityHandler;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,18 +21,18 @@ public class CreatureSpawn implements Listener {
     public CreatureSpawn() {
         getPluginManager().registerEvents(this, getInstance());
     }
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
-        if (event.getEntity() instanceof Player)return;
-        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))return;
-        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG))return;
-        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BREEDING))return;
-        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CURED))return;
-        if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.INFECTION))return;
         if (!getEntityHandler().isSpawnReasonDisabled(event.getEntityType(), event.getSpawnReason())) {
             if (!getEntityHandler().isCreatureSpawnDisabled(event.getEntityType())) {
-                if (!getEntityHandler().isOverChunkLimit(event.getEntity())) {
-                    getEntityHandler().setEquipment(event.getEntity());
+                var entity = event.getEntity();
+                if (!getEntityHandler().isOverChunkLimit(entity)) {
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CUSTOM))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BREEDING))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CURED))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.INFECTION))return;
+                    getEntityHandler().setEquipment(entity);
                 } else event.setCancelled(true);
             } else event.setCancelled(true);
         } else event.setCancelled(true);

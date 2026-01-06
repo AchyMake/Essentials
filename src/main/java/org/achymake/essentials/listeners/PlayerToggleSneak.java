@@ -27,9 +27,9 @@ public class PlayerToggleSneak implements Listener {
     }
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerToggleSneak(PlayerToggleSneakEvent event) {
-        if (!getConfig().getBoolean("vanish.sneaking-picks-item"))return;
         var player = event.getPlayer();
         if (!getUserdata().isVanished(player))return;
+        if (!getConfig().getBoolean("vanish.sneaking-picks-item"))return;
         if (!player.isOnGround())return;
         player.setCanPickupItems(!player.isSneaking());
     }

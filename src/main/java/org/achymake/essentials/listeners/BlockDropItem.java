@@ -2,7 +2,6 @@ package org.achymake.essentials.listeners;
 
 import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.MaterialHandler;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,16 +27,16 @@ public class BlockDropItem implements Listener {
         var heldItem = player.getInventory().getItemInMainHand();
         if (getMaterialHandler().isAir(heldItem))return;
         if (!getMaterialHandler().hasEnchantment(heldItem, "smelting_touch"))return;
-        for (var item : event.getItems()) {
+        event.getItems().forEach(item -> {
             var itemStack = item.getItemStack();
             var material = itemStack.getType();
             if (material.equals(getMaterialHandler().get("raw_copper"))) {
-                itemStack.setType(Material.COPPER_INGOT);
+                itemStack.setType(getMaterialHandler().get("copper_ingot"));
             } else if (material.equals(getMaterialHandler().get("raw_iron"))) {
-                itemStack.setType(Material.IRON_INGOT);
+                itemStack.setType(getMaterialHandler().get("iron_ingot"));
             } else if (material.equals(getMaterialHandler().get("raw_gold"))) {
-                itemStack.setType(Material.GOLD_INGOT);
+                itemStack.setType(getMaterialHandler().get("gold_ingot"));
             }
-        }
+        });
     }
 }

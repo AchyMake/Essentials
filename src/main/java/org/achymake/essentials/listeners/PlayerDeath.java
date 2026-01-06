@@ -47,23 +47,16 @@ public class PlayerDeath implements Listener {
         var location = player.getLocation();
         getUserdata().setLocation(player, location, "death");
         if (getConfig().getBoolean("deaths.drop-player-head.enable")) {
-            if (getRandomHandler().isTrue(getConfig().getDouble("deaths.drop-player-head.chance"))) {
-                event.getDrops().add(getMaterials().getPlayerHead(player, 1));
-            }
+            if (!getRandomHandler().isTrue(getConfig().getDouble("deaths.drop-player-head.chance")))return;
+            event.getDrops().add(getMaterials().getPlayerHead(player, 1));
         }
         if (getConfig().getBoolean("deaths.drop-economy.enable")) {
-            var lost = getRandomHandler().nextDouble(getConfig().getDouble("deaths.drop-economy.min"), getConfig().getDouble("deaths.drop-economy.max"));
-            if (getEconomy().has(player, lost)) {
-                getEconomy().remove(player, lost);
-                player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
-            }
-        }
-        var helmet = player.getInventory().getHelmet();
-        if (helmet != null) {
-            if (getMaterials().hasEnchantment(helmet, "keep")) {
-                event.setKeepInventory(true);
-                event.getDrops().clear();
-            }
+            var min = getConfig().getDouble("deaths.drop-economy.min");
+            var max = getConfig().getDouble("deaths.drop-economy.max");
+            var lost = getRandomHandler().nextDouble(min, max);
+            if (!getEconomy().has(player, lost))return;
+            getEconomy().remove(player, lost);
+            player.sendMessage(getMessage().get("events.death", getEconomy().currency() + getEconomy().format(lost), event.getDeathMessage().replace(player.getName(), "you")));
         }
         if (player.hasPermission("essentials.event.death.keep_exp")) {
             event.setKeepLevel(true);

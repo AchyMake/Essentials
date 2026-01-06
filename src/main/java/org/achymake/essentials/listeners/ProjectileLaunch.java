@@ -4,7 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.handlers.EntityHandler;
 import org.achymake.essentials.handlers.ProjectileHandler;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,8 +47,8 @@ public class ProjectileLaunch implements Listener {
                 if (cooldown > 0) {
                     player.setCooldown(heldItem.getType(), cooldown);
                 }
-            } else if (projectile.getShooter() instanceof Entity entity) {
-                var entityType = entity.getType().toString().toLowerCase();
+            } else if (projectile.getShooter() instanceof LivingEntity livingEntity) {
+                var entityType = livingEntity.getType().toString().toLowerCase();
                 var timer = getConfig().getInt("projectile.removal-timer." + entityType + "."  + projectileType);
                 if (timer > 0) {
                     getProjectileHandler().addRemovalTask(event.getEntity(), timer);

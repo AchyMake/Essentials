@@ -4,11 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.UpdateChecker;
 import org.achymake.essentials.data.Message;
 import org.achymake.essentials.data.Userdata;
-import org.achymake.essentials.handlers.ScheduleHandler;
-import org.achymake.essentials.handlers.ScoreboardHandler;
-import org.achymake.essentials.handlers.TablistHandler;
-import org.achymake.essentials.handlers.VanishHandler;
-import org.bukkit.Sound;
+import org.achymake.essentials.handlers.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,6 +36,9 @@ public class PlayerJoin implements Listener {
     }
     private VanishHandler getVanishHandler() {
         return getInstance().getVanishHandler();
+    }
+    private WorldHandler getWorldHandler() {
+        return getInstance().getWorldHandler();
     }
     private Message getMessage() {
         return getInstance().getMessage();
@@ -86,6 +85,6 @@ public class PlayerJoin implements Listener {
         var soundType = getConfig().getString("connection.join.sound.type");
         var volume = (float) getConfig().getDouble("connection.join.sound.volume");
         var pitch = (float) getConfig().getDouble("connection.join.sound.pitch");
-        getInstance().getOnlinePlayers().forEach(target -> target.playSound(target, Sound.valueOf(soundType), volume, pitch));
+        getInstance().getOnlinePlayers().forEach(target -> getWorldHandler().playSound(target.getLocation(), soundType, volume, pitch));
     }
 }

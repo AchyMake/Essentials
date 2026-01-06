@@ -34,9 +34,8 @@ public class PlayerChangedWorld implements Listener {
         var player = event.getPlayer();
         getTablistHandler().disable(player);
         getTablistHandler().apply(player);
-        if (getUserdata().hasBoard(player)) {
-            getScoreboardHandler().disable(player);
-            getScoreboardHandler().apply(player);
-        }
+        if (getUserdata().hasBoard(player))return;
+        getScoreboardHandler().disable(player);
+        getScoreboardHandler().apply(player);
     }
 }

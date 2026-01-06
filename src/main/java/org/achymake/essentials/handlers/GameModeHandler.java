@@ -15,27 +15,38 @@ public class GameModeHandler {
     /**
      * set game mode
      * @param player target
-     * @param mode string
+     * @param gameMode string
      * @return true if mode is gamemode else false
      * @since many moons ago
      */
-    public boolean setGameMode(Player player, String mode) {
-        if (mode.equalsIgnoreCase("adventure")) {
-            player.setGameMode(GameMode.ADVENTURE);
+    public boolean setGameMode(Player player, String gameMode) {
+        if (gameMode.equalsIgnoreCase("adventure")) {
+            player.setGameMode(get(gameMode));
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.adventure")));
             return true;
-        } else if (mode.equalsIgnoreCase("creative")) {
-            player.setGameMode(GameMode.CREATIVE);
+        } else if (gameMode.equalsIgnoreCase("creative")) {
+            player.setGameMode(get(gameMode));
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.creative")));
             return true;
-        } else if (mode.equalsIgnoreCase("spectator")) {
-            player.setGameMode(GameMode.SPECTATOR);
+        } else if (gameMode.equalsIgnoreCase("spectator")) {
+            player.setGameMode(get(gameMode));
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.spectator")));
             return true;
-        } else if (mode.equalsIgnoreCase("survival")) {
-            player.setGameMode(GameMode.SURVIVAL);
+        } else if (gameMode.equalsIgnoreCase("survival")) {
+            player.setGameMode(get(gameMode));
             getMessage().sendActionBar(player, getMessage().get("gamemode.change", getMessage().get("gamemode.survival")));
             return true;
         } else return false;
+    }
+    public GameMode get(String gameMode) {
+        if (gameMode.equalsIgnoreCase("adventure")) {
+            return GameMode.ADVENTURE;
+        } else if (gameMode.equalsIgnoreCase("creative")) {
+            return GameMode.CREATIVE;
+        } else if (gameMode.equalsIgnoreCase("spectator")) {
+            return GameMode.SPECTATOR;
+        } else if (gameMode.equalsIgnoreCase("survival")) {
+            return GameMode.SURVIVAL;
+        } else return GameMode.SURVIVAL;
     }
 }
