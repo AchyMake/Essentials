@@ -32,6 +32,10 @@ public class CreatureSpawn implements Listener {
                     if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER_EGG))return;
                     if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.CURED))return;
                     if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.INFECTION))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.DROWNED))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.FROZEN))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SHEARED))return;
+                    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.PIGLIN_ZOMBIFIED))return;
                     getEntityHandler().setEquipment(entity);
                 } else event.setCancelled(true);
             } else event.setCancelled(true);

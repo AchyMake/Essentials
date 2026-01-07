@@ -203,6 +203,7 @@ public final class Essentials extends JavaPlugin {
         new EntityShootBow();
         new EntityTarget();
         new EntityTargetLivingEntity();
+        new EntityTransform();
         new HangingBreakByEntity();
         new HangingPlace();
         new NotePlay();

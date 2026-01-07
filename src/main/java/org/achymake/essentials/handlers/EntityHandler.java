@@ -4,6 +4,7 @@ import org.achymake.essentials.Essentials;
 import org.achymake.essentials.entity.*;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
@@ -457,6 +458,47 @@ public class EntityHandler {
                 }
             }
         });
+    }
+    public double getAttributeValue(LivingEntity livingEntity, Attribute attribute) {
+        var value = livingEntity.getAttribute(attribute);
+        if (value != null) {
+            return value.getBaseValue();
+        } else return 0.0;
+    }
+    public AttributeInstance getAttribute(LivingEntity livingEntity, Attribute attribute) {
+        return livingEntity.getAttribute(attribute);
+    }
+    public void copyStats(LivingEntity before, LivingEntity after) {
+        copyAttackDamage(before, after);
+        copyScale(before, after);
+        copyHealth(before, after);
+    }
+    public void copyAttackDamage(LivingEntity before, LivingEntity after) {
+        var afterAttribute = getAttribute(after, Attribute.ATTACK_DAMAGE);
+        if (afterAttribute != null) {
+            var beforeValue = getAttributeValue(before, Attribute.ATTACK_DAMAGE);
+            if (beforeValue > 0) {
+                afterAttribute.setBaseValue(beforeValue);
+            }
+        }
+    }
+    public void copyHealth(LivingEntity before, LivingEntity after) {
+        var afterAttribute = getAttribute(after, Attribute.MAX_HEALTH);
+        if (afterAttribute != null) {
+            var beforeValue = getAttributeValue(before, Attribute.MAX_HEALTH);
+            if (beforeValue > 0) {
+                afterAttribute.setBaseValue(beforeValue);
+            }
+        }
+    }
+    public void copyScale(LivingEntity before, LivingEntity after) {
+        var afterAttribute = getAttribute(after, Attribute.SCALE);
+        if (afterAttribute != null) {
+            var beforeValue = getAttributeValue(before, Attribute.SCALE);
+            if (beforeValue > 0) {
+                afterAttribute.setBaseValue(beforeValue);
+            }
+        }
     }
     /**
      * reload entity folder
