@@ -446,14 +446,29 @@ permissions:
   essentials.command.bank.create:
     description: creates bank
     default: op
+  essentials.command.bank.delete:
+    description: deletes current bank
+    default: op
+  essentials.command.bank.leave:
+    description: leaves current bank
+    default: op
   essentials.command.bank.info:
     description: check bank
     default: op
   essentials.command.bank.info.other:
     description: check other bank
     default: op
+  essentials.command.bank.invite:
+    description: invite members to bank
+    default: op
+  essentials.command.bank.rank:
+    description: rename bank
+    default: op
   essentials.command.bank.rename:
     description: rename bank
+    default: op
+  essentials.command.bank.remove:
+    description: remove bank member
     default: op
   essentials.command.bank.top:
     description: top bank

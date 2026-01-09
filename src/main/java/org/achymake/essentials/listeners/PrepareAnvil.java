@@ -26,12 +26,11 @@ public class PrepareAnvil implements Listener {
         var result = event.getResult();
         if (result == null)return;
         var meta = result.getItemMeta();
-        var view = event.getView();
-        var player = view.getPlayer();
-        var rename = view.getRenameText();
+        var anvilView = event.getView();
+        var rename = anvilView.getRenameText();
         if (rename == null)return;
         if (!rename.contains("&"))return;
-        if (!player.hasPermission("essentials.event.anvil.color"))return;
+        if (!anvilView.getPlayer().hasPermission("essentials.event.anvil.color"))return;
         meta.setDisplayName(getMessage().addColor(rename));
         result.setItemMeta(meta);
     }

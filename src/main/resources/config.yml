@@ -83,6 +83,8 @@ economy:
   minimum-payment: 1.00
   bank:
     enable: true
+    # auto creates bank with their name first time they join
+    auto-create: false
     starting-balance: 0.0
     minimum-withdraw: 1.00
     minimum-deposit: 1.00

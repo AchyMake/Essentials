@@ -268,20 +268,29 @@ public class EntityHandler {
     public void setDroppedEXP(LivingEntity livingEntity, int value) {
         getData(livingEntity).set(getInstance().getKey("exp"), PersistentDataType.INTEGER, value);
     }
-    private Set<Map.Entry<String, Double>> getLevels(LivingEntity livingEntity) {
+    private Set<Map.Entry<String, Double>> getChances(LivingEntity livingEntity) {
         var levels = new HashMap<String, Double>();
         var config = getConfig(livingEntity.getType());
-        config.getConfigurationSection("levels").getKeys(false).forEach(level -> levels.put(level, config.getDouble("levels." + level + ".chance")));
-        var list = new ArrayList<>(levels.entrySet());
-        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-        var result = new LinkedHashMap<String, Double>();
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        for (var entry : list) {
-            result.put(entry.getKey(), entry.getValue());
+        var section = config.getConfigurationSection("chances");
+        if (section != null) {
+            section.getKeys(false).forEach(level -> {
+                var chance = config.getDouble("chances." + level + ".chance");
+                if (chance > 0) {
+                    levels.put(level, chance);
+                }
+            });
+            var list = new ArrayList<>(levels.entrySet());
+            list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+            var result = new LinkedHashMap<String, Double>();
+            result.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+            for (var entry : list) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+            return result.entrySet();
         }
-        return result.entrySet();
+        return levels.entrySet();
     }
     public boolean isNamed(LivingEntity livingEntity) {
         return getData(livingEntity).has(getInstance().getKey("named"));
@@ -297,49 +306,47 @@ public class EntityHandler {
     public void setEquipment(LivingEntity livingEntity) {
         var entityType = livingEntity.getType();
         if (!exists(entityType))return;
-        var levels = getLevels(livingEntity);
-        if (levels.isEmpty())return;
+        var chances = getChances(livingEntity);
+        if (chances.isEmpty())return;
         var config = getConfig(entityType);
-        levels.forEach(stringDoubleEntry -> {
+        chances.forEach(stringDoubleEntry -> {
             var chance = stringDoubleEntry.getValue();
             if (!getRandomHandler().isTrue(chance))return;
             var key = stringDoubleEntry.getKey();
-            var section = "levels." + key;
+            var section = "chances." + key;
             var name = config.getString(section + ".name");
             if (name != null) {
                 livingEntity.setCustomName(getInstance().getMessage().addColor(name));
                 setNamed(livingEntity);
             }
             if (config.isDouble(section + ".armor")) {
-                livingEntity.getAttribute(Attribute.ARMOR).setBaseValue(config.getDouble(section + ".armor"));
+                getAttribute(livingEntity, Attribute.ARMOR).setBaseValue(config.getDouble(section + ".armor"));
             } else if (config.isDouble(section + ".armor.min") && config.isDouble(section + ".armor.max")) {
-                livingEntity.getAttribute(Attribute.ARMOR).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".armor.min"), config.getDouble(section + ".armor.max")));
+                getAttribute(livingEntity, Attribute.ARMOR).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".armor.min"), config.getDouble(section + ".armor.max")));
             }
             if (config.isDouble(section + ".attack_damage")) {
-                livingEntity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(config.getDouble(section + ".attack_damage"));
+                getAttribute(livingEntity, Attribute.ATTACK_DAMAGE).setBaseValue(config.getDouble(section + ".attack_damage"));
             } else if (config.isDouble(section + ".attack_damage.min") && config.isDouble(section + ".attack_damage.max")) {
-                livingEntity.getAttribute(Attribute.ATTACK_DAMAGE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".attack_damage.min"), config.getDouble(section + ".attack_damage.max")));
+                getAttribute(livingEntity, Attribute.ATTACK_DAMAGE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".attack_damage.min"), config.getDouble(section + ".attack_damage.max")));
             }
             if (config.isDouble(section + ".health")) {
                 var health = config.getDouble(section + ".health");
-                livingEntity.getAttribute(Attribute.MAX_HEALTH).setBaseValue(health);
+                getAttribute(livingEntity, Attribute.MAX_HEALTH).setBaseValue(health);
                 livingEntity.setHealth(health);
             } else if (config.isDouble(section + ".health.min") && config.isDouble(section + ".health.max")) {
-                var healthMin = config.getDouble(section + ".health.min");
-                var healthMax = config.getDouble(section + ".health.max");
-                var result = getInstance().getRandomHandler().nextDouble(healthMin, healthMax);
-                livingEntity.getAttribute(Attribute.MAX_HEALTH).setBaseValue(result);
-                livingEntity.setHealth(result);
+                var health = getRandomHandler().nextDouble(config.getDouble(section + ".health.min"), config.getDouble(section + ".health.max"));
+                getAttribute(livingEntity, Attribute.MAX_HEALTH).setBaseValue(health);
+                livingEntity.setHealth(health);
             }
             if (config.isDouble(section + ".movement_speed")) {
-                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(config.getDouble(section + ".movement_speed"));
+                getAttribute(livingEntity, Attribute.MOVEMENT_SPEED).setBaseValue(config.getDouble(section + ".movement_speed"));
             } else if (config.isDouble(section + ".movement_speed.min") && config.isDouble(section + ".movement_speed.max")) {
-                livingEntity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".movement_speed.min"), config.getDouble(section + ".movement_speed.max")));
+                getAttribute(livingEntity, Attribute.MOVEMENT_SPEED).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".movement_speed.min"), config.getDouble(section + ".movement_speed.max")));
             }
             if (config.isDouble(section + ".scale")) {
-                livingEntity.getAttribute(Attribute.SCALE).setBaseValue(config.getDouble(section + ".scale"));
+                getAttribute(livingEntity, Attribute.SCALE).setBaseValue(config.getDouble(section + ".scale"));
             } else if (config.isDouble(section + ".scale.min") && config.isDouble(section + ".scale.max")) {
-                livingEntity.getAttribute(Attribute.SCALE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".scale.min"), config.getDouble(section + ".scale.max")));
+                getAttribute(livingEntity, Attribute.SCALE).setBaseValue(getRandomHandler().nextDouble(config.getDouble(section + ".scale.min"), config.getDouble(section + ".scale.max")));
             }
             if (config.isInt(section + ".exp")) {
                 setDroppedEXP(livingEntity, config.getInt(section + ".exp"));
@@ -354,11 +361,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".main-hand.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".main-hand.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".main-hand.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".main-hand.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setItemInMainHand(itemStack);
                         if (config.isDouble(section + ".main-hand.drop-chance")) {
@@ -372,11 +381,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".off-hand.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".off-hand.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".off-hand.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".off-hand.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setItemInOffHand(itemStack);
                         if (config.isDouble(section + ".off-hand.drop-chance")) {
@@ -390,11 +401,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".helmet.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".helmet.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".helmet.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".helmet.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setHelmet(itemStack);
                         if (config.isDouble(section + ".helmet.drop-chance")) {
@@ -408,11 +421,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".chestplate.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".chestplate.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".chestplate.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".chestplate.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setChestplate(itemStack);
                         if (config.isDouble(section + ".chestplate.drop-chance")) {
@@ -426,11 +441,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".leggings.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".leggings.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".leggings.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".leggings.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setLeggings(itemStack);
                         if (config.isDouble(section + ".leggings.drop-chance")) {
@@ -444,11 +461,13 @@ public class EntityHandler {
                     var itemStack = getMaterials().getItemStack(itemName, itemAmount);
                     if (itemStack != null) {
                         if (config.isConfigurationSection(section + ".boots.enchantments")) {
+                            var itemMeta = itemStack.getItemMeta();
                             config.getConfigurationSection(section + ".boots.enchantments").getKeys(false).forEach(enchantment -> {
                                 if (!config.isInt(section + ".boots.enchantments." + enchantment))return;
                                 var enchantLvl = config.getInt(section + ".boots.enchantments." + enchantment);
-                                itemStack.addUnsafeEnchantment(getMaterials().getEnchantment(enchantment), enchantLvl);
+                                itemMeta.addEnchant(getMaterials().getEnchantment(enchantment), enchantLvl, true);
                             });
+                            itemStack.setItemMeta(itemMeta);
                         }
                         equipment.setBoots(itemStack);
                         if (config.isDouble(section + ".boots.drop-chance")) {

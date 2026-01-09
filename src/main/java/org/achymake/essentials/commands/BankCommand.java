@@ -68,28 +68,32 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("delete")) {
                     if (getEconomy().hasBank(player)) {
-                        var bank = getEconomy().getBank(player);
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("owner")) {
-                            if (!getBank().has(bank, 0.01)) {
-                                getBank().delete(bank);
-                                player.sendMessage(getMessage().get("commands.bank.delete.success"));
-                            } else player.sendMessage(getMessage().get("commands.bank.delete.sufficient-funds", getEconomy().currency() + getEconomy().format(getBank().get(bank))));
-                            return true;
+                        if (player.hasPermission("essentials.command.bank.delete")) {
+                            var bank = getEconomy().getBank(player);
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("owner")) {
+                                if (!getBank().has(bank, 0.01)) {
+                                    getBank().delete(bank);
+                                    player.sendMessage(getMessage().get("commands.bank.delete.success"));
+                                } else player.sendMessage(getMessage().get("commands.bank.delete.sufficient-funds", getEconomy().currency() + getEconomy().format(getBank().get(bank))));
+                                return true;
+                            }
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("leave")) {
                     if (getEconomy().hasBank(player)) {
-                        var bank = getEconomy().getBank(player);
-                        if (!getBank().isOwner(bank, player)) {
-                            if (getBank().isMember(bank, player)) {
-                                if (getBank().removeMember(bank, player)) {
-                                    player.sendMessage(getMessage().get("commands.bank.leave", bank));
-                                    getUserdata().setString(player, "bank", "");
-                                    getUserdata().setString(player, "bank-rank", "default");
-                                } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getEconomy().getBank(player)).getName()));
+                        if (player.hasPermission("essentials.command.bank.leave")) {
+                            var bank = getEconomy().getBank(player);
+                            if (!getBank().isOwner(bank, player)) {
+                                if (getBank().isMember(bank, player)) {
+                                    if (getBank().removeMember(bank, player)) {
+                                        player.sendMessage(getMessage().get("commands.bank.leave", bank));
+                                        getUserdata().setString(player, "bank", "");
+                                        getUserdata().setString(player, "bank-rank", "default");
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getEconomy().getBank(player)).getName()));
+                                }
+                                return true;
                             }
-                            return true;
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("accept")) {
@@ -181,51 +185,55 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args[0].equalsIgnoreCase("remove")) {
                     if (getEconomy().hasBank(player)) {
-                        var bank = getEconomy().getBank(player);
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                            var target = getInstance().getOfflinePlayer(args[1]);
-                            if (getBank().isMember(bank, target)) {
-                                if (getBank().removeMember(bank, target)) {
-                                    player.sendMessage(getMessage().get("commands.bank.remove", target.getName(), bank));
-                                } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getEconomy().getBank(player)).getName()));
-                                return true;
+                        if (player.hasPermission("essentials.command.bank.remove")) {
+                            var bank = getEconomy().getBank(player);
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
+                                var target = getInstance().getOfflinePlayer(args[1]);
+                                if (getBank().isMember(bank, target)) {
+                                    if (getBank().removeMember(bank, target)) {
+                                        player.sendMessage(getMessage().get("commands.bank.remove", target.getName(), bank));
+                                    } else player.sendMessage(getMessage().get("error.file.exception", getBank().getFile(getEconomy().getBank(player)).getName()));
+                                    return true;
+                                }
                             }
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("invite")) {
                     if (getEconomy().hasBank(player)) {
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                            var target = getInstance().getPlayer(args[1]);
-                            if (target != null) {
-                                if (target != player) {
-                                    if (!getUserdata().hasTaskID(player, "bank-invite")) {
-                                        if (!getEconomy().hasBank(target)) {
-                                            var taskID = getScheduler().runLater(() -> {
-                                                getUserdata().setBankFrom(target, null);
-                                                getUserdata().removeTask(target, "bank-invite");
-                                                getUserdata().setBankSent(player, null);
-                                                getUserdata().removeTask(player, "bank-invite");
-                                                target.sendMessage(getMessage().get("commands.bank.invite.expired"));
-                                                player.sendMessage(getMessage().get("commands.bank.invite.expired"));
-                                            }, 300).getTaskId();
-                                            getUserdata().setBankFrom(target, player);
-                                            getUserdata().addTaskID(target, "bank-invite", taskID);
-                                            getUserdata().setBankSent(player, target);
-                                            getUserdata().addTaskID(player, "bank-invite", taskID);
-                                            target.sendMessage(getMessage().get("commands.bank.invite.target.notify", player.getName()));
-                                            target.sendMessage(getMessage().get("commands.bank.invite.target.decide"));
-                                            player.sendMessage(getMessage().get("commands.bank.invite.sender.notify", target.getName()));
+                        if (player.hasPermission("essentials.command.bank.invite")) {
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
+                                var target = getInstance().getPlayer(args[1]);
+                                if (target != null) {
+                                    if (target != player) {
+                                        if (!getUserdata().hasTaskID(player, "bank-invite")) {
+                                            if (!getEconomy().hasBank(target)) {
+                                                var taskID = getScheduler().runLater(() -> {
+                                                    getUserdata().setBankFrom(target, null);
+                                                    getUserdata().removeTask(target, "bank-invite");
+                                                    getUserdata().setBankSent(player, null);
+                                                    getUserdata().removeTask(player, "bank-invite");
+                                                    target.sendMessage(getMessage().get("commands.bank.invite.expired"));
+                                                    player.sendMessage(getMessage().get("commands.bank.invite.expired"));
+                                                }, 300).getTaskId();
+                                                getUserdata().setBankFrom(target, player);
+                                                getUserdata().addTaskID(target, "bank-invite", taskID);
+                                                getUserdata().setBankSent(player, target);
+                                                getUserdata().addTaskID(player, "bank-invite", taskID);
+                                                target.sendMessage(getMessage().get("commands.bank.invite.target.notify", player.getName()));
+                                                target.sendMessage(getMessage().get("commands.bank.invite.target.decide"));
+                                                player.sendMessage(getMessage().get("commands.bank.invite.sender.notify", target.getName()));
+                                                player.sendMessage(getMessage().get("commands.bank.invite.sender.decide"));
+                                            } else player.sendMessage(getMessage().get("commands.bank.invite.already-has", target.getName()));
+                                        } else {
+                                            player.sendMessage(getMessage().get("commands.bank.invite.occupied"));
                                             player.sendMessage(getMessage().get("commands.bank.invite.sender.decide"));
-                                        } else player.sendMessage(getMessage().get("commands.bank.invite.already-has", target.getName()));
-                                    } else {
-                                        player.sendMessage(getMessage().get("commands.bank.invite.occupied"));
-                                        player.sendMessage(getMessage().get("commands.bank.invite.sender.decide"));
+                                        }
                                     }
                                 }
+                                return true;
                             }
-                            return true;
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("rename")) {
@@ -252,10 +260,12 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("create")) {
                     if (!getEconomy().hasBank(player)) {
-                        if (getBank().create(args[1], player)) {
-                            player.sendMessage(getMessage().get("commands.bank.create", args[1]));
-                        } else player.sendMessage(getMessage().get("error.bank.exists", args[1]));
-                        return true;
+                        if (player.hasPermission("essentials.command.bank.create")) {
+                            if (getBank().create(args[1], player)) {
+                                player.sendMessage(getMessage().get("commands.bank.create", args[1]));
+                            } else player.sendMessage(getMessage().get("error.bank.exists", args[1]));
+                            return true;
+                        }
                     }
                 } else if (args[0].equalsIgnoreCase("withdraw")) {
                     if (player.hasPermission("essentials.command.bank.withdraw")) {
@@ -298,28 +308,30 @@ public class BankCommand implements CommandExecutor, TabCompleter {
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("rank")) {
                     if (getEconomy().hasBank(player)) {
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("owner")) {
-                            var target = getInstance().getOfflinePlayer(args[1]);
-                            if (getBank().isMember(getEconomy().getBank(player), target)) {
-                                if (args[2].equalsIgnoreCase("default") ||
-                                        args[2].equalsIgnoreCase("member") ||
-                                        args[2].equalsIgnoreCase("co-owner")) {
-                                    if (getUserdata().setString(target, "bank-rank", args[2])) {
-                                        player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
-                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
-                                    return true;
+                        if (player.hasPermission("essentials.command.bank.rank")) {
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("owner")) {
+                                var target = getInstance().getOfflinePlayer(args[1]);
+                                if (getBank().isMember(getEconomy().getBank(player), target)) {
+                                    if (args[2].equalsIgnoreCase("default") ||
+                                            args[2].equalsIgnoreCase("member") ||
+                                            args[2].equalsIgnoreCase("co-owner")) {
+                                        if (getUserdata().setString(target, "bank-rank", args[2])) {
+                                            player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                                        return true;
+                                    }
                                 }
-                            }
-                        } else if (rank.equalsIgnoreCase("co-owner")) {
-                            var target = getInstance().getOfflinePlayer(args[1]);
-                            if (getBank().isMember(getEconomy().getBank(player), target)) {
-                                if (args[2].equalsIgnoreCase("default") ||
-                                        args[2].equalsIgnoreCase("member")) {
-                                    if (getUserdata().setString(target, "bank-rank", args[2])) {
-                                        player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
-                                    } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
-                                    return true;
+                            } else if (rank.equalsIgnoreCase("co-owner")) {
+                                var target = getInstance().getOfflinePlayer(args[1]);
+                                if (getBank().isMember(getEconomy().getBank(player), target)) {
+                                    if (args[2].equalsIgnoreCase("default") ||
+                                            args[2].equalsIgnoreCase("member")) {
+                                        if (getUserdata().setString(target, "bank-rank", args[2])) {
+                                            player.sendMessage(getMessage().get("commands.bank.rank.set", target.getName(), args[2]));
+                                        } else player.sendMessage(getMessage().get("error.file.exception", getUserdata().getFile(target).getName()));
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -351,25 +363,33 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                 }
                 if (getEconomy().hasBank(player)) {
                     if (!getBank().isOwner(getEconomy().getBank(player), player)) {
-                        commands.add("leave");
+                        if (player.hasPermission("essentials.command.bank.leave")) {
+                            commands.add("leave");
+                        }
                     }
                 }
                 if (getEconomy().hasBank(player)) {
                     var rank = getEconomy().getBankRank(player);
                     if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                        commands.add("rank");
+                        if (player.hasPermission("essentials.command.bank.rank")) {
+                            commands.add("rank");
+                        }
                     }
                 }
                 if (getEconomy().hasBank(player)) {
                     var rank = getEconomy().getBankRank(player);
                     if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
-                        commands.add("remove");
+                        if (player.hasPermission("essentials.command.bank.remove")) {
+                            commands.add("remove");
+                        }
                     }
                 }
                 if (getEconomy().hasBank(player)) {
                     var rank = getEconomy().getBankRank(player);
                     if (rank.equalsIgnoreCase("owner")) {
-                        commands.add("delete");
+                        if (player.hasPermission("essentials.command.bank.delete")) {
+                            commands.add("delete");
+                        }
                     }
                 }
                 if (player.hasPermission("essentials.command.bank.info")) {
@@ -378,7 +398,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                 if (player.hasPermission("essentials.command.bank.create")) {
                     if (!getEconomy().hasBank(player)) {
                         commands.add("create");
-                    } else {
+                    } else if (player.hasPermission("essentials.command.bank.invite")) {
                         var rank = getEconomy().getBankRank(player);
                         if (rank.equalsIgnoreCase("co-owner") || rank.equalsIgnoreCase("owner")) {
                             commands.add("invite");
@@ -435,15 +455,17 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                     }
                 } else if (args[0].equalsIgnoreCase("invite")) {
                     if (getEconomy().hasBank(player)) {
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("owner") || rank.equalsIgnoreCase("co-owner")) {
-                            getInstance().getOnlinePlayers().forEach(target -> {
-                                if (!getUserdata().isVanished(target)) {
-                                    if (target.getName().startsWith(args[1])) {
-                                        commands.add(target.getName());
+                        if (player.hasPermission("essentials.command.bank.invite")) {
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("owner") || rank.equalsIgnoreCase("co-owner")) {
+                                getInstance().getOnlinePlayers().forEach(target -> {
+                                    if (!getUserdata().isVanished(target)) {
+                                        if (target.getName().startsWith(args[1])) {
+                                            commands.add(target.getName());
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("remove")) {
@@ -469,7 +491,7 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                         }
                     }
                 } else if (args[0].equalsIgnoreCase("create")) {
-                    if (player.hasPermission("essentials.command.create")) {
+                    if (player.hasPermission("essentials.command.bank.create")) {
                         if (!getEconomy().hasBank(player)) {
                             commands.add(player.getName());
                         }
@@ -498,16 +520,18 @@ public class BankCommand implements CommandExecutor, TabCompleter {
                 }
             } else if (args.length == 3) {
                 if (args[0].equalsIgnoreCase("rank")) {
-                    if (getEconomy().hasBank(player)) {
-                        var rank = getEconomy().getBankRank(player);
-                        if (rank.equalsIgnoreCase("co-owner")) {
-                            commands.add("default");
-                            commands.add("member");
-                        }
-                        if (rank.equalsIgnoreCase("owner")) {
-                            commands.add("default");
-                            commands.add("member");
-                            commands.add("co-owner");
+                    if (player.hasPermission("essentials.command.bank.rank")) {
+                        if (getEconomy().hasBank(player)) {
+                            var rank = getEconomy().getBankRank(player);
+                            if (rank.equalsIgnoreCase("co-owner")) {
+                                commands.add("default");
+                                commands.add("member");
+                            }
+                            if (rank.equalsIgnoreCase("owner")) {
+                                commands.add("default");
+                                commands.add("member");
+                                commands.add("co-owner");
+                            }
                         }
                     }
                 }

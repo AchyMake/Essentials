@@ -25,7 +25,7 @@ public class Userdata {
     private FileConfiguration getConfig() {
         return getInstance().getConfig();
     }
-    private EconomyHandler getEconomy() {
+    private EconomyHandler getEconomyHandler() {
         return getInstance().getEconomyHandler();
     }
     private EntityHandler getEntityHandler() {
@@ -823,9 +823,15 @@ public class Userdata {
         var config = YamlConfiguration.loadConfiguration(file);
         config.set("name", offlinePlayer.getName());
         config.set("display-name", offlinePlayer.getName());
-        config.set("account", getEconomy().getStartingBalance());
-        config.set("bank", "");
-        config.set("bank-rank", "default");
+        config.set("account", getEconomyHandler().getStartingBalance());
+        if (getEconomyHandler().autoCreateBank()) {
+            getInstance().getBank().create(offlinePlayer.getName(), offlinePlayer);
+            config.set("bank", offlinePlayer.getName());
+            config.set("bank-rank", "owner");
+        } else {
+            config.set("bank", "");
+            config.set("bank-rank", "default");
+        }
         config.set("settings.board", !hasBoard(offlinePlayer));
         config.set("settings.pvp", !isPVP(offlinePlayer));
         config.set("settings.muted", isMuted(offlinePlayer));
@@ -884,16 +890,16 @@ public class Userdata {
      */
     public void reload() {
         var folder = new File(getInstance().getDataFolder(), "userdata");
-        if (folder.exists() && folder.isDirectory()) {
-            for (var file : folder.listFiles()) {
-                if (file.exists() && file.isFile()) {
-                    var config = YamlConfiguration.loadConfiguration(file);
-                    try {
-                        config.load(file);
-                    } catch (IOException | InvalidConfigurationException e) {
-                        getInstance().sendWarning(e.getMessage());
-                    }
-                }
+        if (!folder.exists())return;
+        if (!folder.isDirectory())return;
+        for (var file : folder.listFiles()) {
+            if (!file.exists())return;
+            if (!file.isFile())return;
+            var config = YamlConfiguration.loadConfiguration(file);
+            try {
+                config.load(file);
+            } catch (IOException | InvalidConfigurationException e) {
+                getInstance().sendWarning(e.getMessage());
             }
         }
     }
@@ -938,13 +944,12 @@ public class Userdata {
      * @since many moons ago
      */
     public boolean hasCooldown(Player player, String name, int seconds) {
-        var uuid = player.getUniqueId();
         var cooldownString = getEntityHandler().getData(player).get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
-            getMessage().getMapStringLong(cooldownString).containsKey(name + "-" + uuid);
-            if (cooldown.containsKey(name + "-" + uuid)) {
-                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+            getMessage().getMapStringLong(cooldownString).containsKey(name);
+            if (cooldown.containsKey(name)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name);
                 return timeElapsed < Integer.parseInt(seconds + "000");
             } else return false;
         } else return false;
@@ -957,21 +962,20 @@ public class Userdata {
      * @since many moons ago
      */
     public void addCooldown(Player player, String name, int seconds) {
-        var uuid = player.getUniqueId();
         var data = getEntityHandler().getData(player);
         var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
-            if (cooldown.containsKey(name + "-" + uuid)) {
-                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+            if (cooldown.containsKey(name)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name);
                 if (timeElapsed > Integer.parseInt(seconds + "000")) {
-                    cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+                    cooldown.put(name, System.currentTimeMillis());
                 }
-            } else cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+            } else cooldown.put(name, System.currentTimeMillis());
             data.set(getInstance().getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
         } else {
             var cooldown = new HashMap<String, Long>();
-            cooldown.put(name + "-" + uuid, System.currentTimeMillis());
+            cooldown.put(name, System.currentTimeMillis());
             data.set(getInstance().getKey("cooldown"), PersistentDataType.STRING, cooldown.toString());
         }
     }
@@ -984,13 +988,12 @@ public class Userdata {
      * @since many moons ago
      */
     public String getCooldown(Player player, String name, int seconds) {
-        var uuid = player.getUniqueId();
         var data = getEntityHandler().getData(player);
         var cooldownString = data.get(getInstance().getKey("cooldown"), PersistentDataType.STRING);
         if (cooldownString != null) {
             var cooldown = getMessage().getMapStringLong(cooldownString);
-            if (cooldown.containsKey(name + "-" + uuid)) {
-                var timeElapsed = System.currentTimeMillis() - cooldown.get(name + "-" + uuid);
+            if (cooldown.containsKey(name)) {
+                var timeElapsed = System.currentTimeMillis() - cooldown.get(name);
                 var timerResult = Integer.parseInt(seconds + "000");
                 if (timeElapsed < timerResult) {
                     var result = (timerResult - timeElapsed);

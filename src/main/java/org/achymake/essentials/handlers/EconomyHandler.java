@@ -139,6 +139,9 @@ public class EconomyHandler {
     public String currency() {
         return getConfig().getString("economy.currency");
     }
+    public boolean autoCreateBank() {
+        return getConfig().getBoolean("economy.bank.auto-create");
+    }
     public double getStartingBalance() {
         return getConfig().getDouble("economy.starting-balance");
     }

@@ -1,6 +1,7 @@
 package org.achymake.essentials.entity;
 
 import org.achymake.essentials.Essentials;
+import org.achymake.essentials.handlers.EntityHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,7 +12,10 @@ public class TNT {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private final File file = new File(getInstance().getDataFolder(), "entity/" + this.getClass().getSimpleName() + ".yml");
+    private EntityHandler getEntityHandler() {
+        return getInstance().getEntityHandler();
+    }
+    private final File file = new File(getInstance().getDataFolder(), "entity/" + getClass().getSimpleName() + ".yml");
     private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     private boolean setup() {
         config.options().copyDefaults(true);
@@ -36,7 +40,7 @@ public class TNT {
         config.set("settings.disable-hanging-break.PAINTING", true);
         config.set("settings.disable-hanging-break.LEASH_KNOT", true);
         config.set("settings.disable-hanging-break.ARMOR_STAND", true);
-        for(var reason : getInstance().getEntityHandler().getSpawnReasons()) {
+        for(var reason : getEntityHandler().getSpawnReasons()) {
             config.set("settings.disable-spawn-reason." + reason.toString(), false);
         }
         try {

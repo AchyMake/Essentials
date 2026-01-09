@@ -7,7 +7,7 @@ public class RandomHandler {
         return new Random();
     }
     private double getRandomDouble() {
-        return nextDouble(0, 1);
+        return nextDouble(0.0, 1.0);
     }
     private double getRandomInt() {
         return getRandom().nextInt(0, 100);
