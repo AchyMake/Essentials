@@ -7,8 +7,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.text.DecimalFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EconomyHandler {
     private Essentials getInstance() {
@@ -86,7 +88,7 @@ public class EconomyHandler {
      * @return set map offlinePlayer, double
      * @since many moons ago
      */
-    public Set<Map.Entry<OfflinePlayer, Double>> getTopAccounts() {
+    public ArrayList<Map.Entry<OfflinePlayer, Double>> getTopAccounts() {
         var accounts = new HashMap<OfflinePlayer, Double>();
         for (var offlinePlayer : getInstance().getOfflinePlayers()) {
             if (!getUserdata().isBanned(offlinePlayer) || !getUserdata().isDisabled(offlinePlayer)) {
@@ -95,43 +97,25 @@ public class EconomyHandler {
                 }
             }
         }
-        var list = new ArrayList<>(accounts.entrySet());
-        list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-        var result = new LinkedHashMap<OfflinePlayer, Double>();
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .limit(10)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        for (var entry : list) {
-            result.put(entry.getKey(), entry.getValue());
-        }
-        return result.entrySet();
+        var listed = new ArrayList<>(accounts.entrySet());
+        listed.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        return listed;
     }
     /**
      * get set map string, double
      * @return set map string, double
      * @since many moons ago
      */
-    public Set<Map.Entry<String, Double>> getTopBanks() {
+    public ArrayList<Map.Entry<String, Double>> getTopBanks() {
         var bankAccounts = new HashMap<String, Double>();
         for (var bankName : getBank().getListed()) {
             if (getBank().has(bankName, 0.01)) {
                 bankAccounts.put(bankName, getBank().get(bankName));
             }
         }
-        if (!bankAccounts.isEmpty()) {
-            var list = new ArrayList<>(bankAccounts.entrySet());
-            list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-            var result = new LinkedHashMap<String, Double>();
-            result.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                    .limit(10)
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-            for (var entry : list) {
-                result.put(entry.getKey(), entry.getValue());
-            }
-            return result.entrySet();
-        } else return new HashSet<>();
+        var listed = new ArrayList<>(bankAccounts.entrySet());
+        listed.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        return listed;
     }
     public String format(double amount) {
         return new DecimalFormat(getConfig().getString("economy.format")).format(amount);

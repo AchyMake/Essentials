@@ -17,7 +17,6 @@ import org.bukkit.persistence.PersistentDataType;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EntityHandler {
     private Essentials getInstance() {
@@ -268,29 +267,21 @@ public class EntityHandler {
     public void setDroppedEXP(LivingEntity livingEntity, int value) {
         getData(livingEntity).set(getInstance().getKey("exp"), PersistentDataType.INTEGER, value);
     }
-    private Set<Map.Entry<String, Double>> getChances(LivingEntity livingEntity) {
-        var levels = new HashMap<String, Double>();
+    private ArrayList<Map.Entry<String, Double>> getChances(LivingEntity livingEntity) {
+        var chances = new HashMap<String, Double>();
         var config = getConfig(livingEntity.getType());
         var section = config.getConfigurationSection("chances");
         if (section != null) {
-            section.getKeys(false).forEach(level -> {
-                var chance = config.getDouble("chances." + level + ".chance");
+            for (var key : section.getKeys(false)) {
+                var chance = config.getDouble("chances." + key + ".chance");
                 if (chance > 0) {
-                    levels.put(level, chance);
+                    chances.put(key, chance);
                 }
-            });
-            var list = new ArrayList<>(levels.entrySet());
-            list.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
-            var result = new LinkedHashMap<String, Double>();
-            result.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-            for (var entry : list) {
-                result.put(entry.getKey(), entry.getValue());
             }
-            return result.entrySet();
         }
-        return levels.entrySet();
+        var listed = new ArrayList<>(chances.entrySet());
+        listed.sort(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        return listed;
     }
     public boolean isNamed(LivingEntity livingEntity) {
         return getData(livingEntity).has(getInstance().getKey("named"));
@@ -309,10 +300,10 @@ public class EntityHandler {
         var chances = getChances(livingEntity);
         if (chances.isEmpty())return;
         var config = getConfig(entityType);
-        chances.forEach(stringDoubleEntry -> {
-            var chance = stringDoubleEntry.getValue();
+        for (var listed : chances) {
+            var chance = listed.getValue();
             if (!getRandomHandler().isTrue(chance))return;
-            var key = stringDoubleEntry.getKey();
+            var key = listed.getKey();
             var section = "chances." + key;
             var name = config.getString(section + ".name");
             if (name != null) {
@@ -476,7 +467,7 @@ public class EntityHandler {
                     }
                 }
             }
-        });
+        }
     }
     public double getAttributeValue(LivingEntity livingEntity, Attribute attribute) {
         var value = livingEntity.getAttribute(attribute);
