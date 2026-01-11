@@ -59,7 +59,7 @@ public class InventoryHandler {
         return player.openWorkbench(null, true);
     }
     public boolean setHelmet(PlayerInventory inventory, ItemStack itemStack) {
-        if (inventory.getHelmet() == null) {
+        if (getMaterials().isAir(inventory.getHelmet())) {
             inventory.setHelmet(getMaterials().getItemStack(itemStack, 1));
             return true;
         } else return false;
