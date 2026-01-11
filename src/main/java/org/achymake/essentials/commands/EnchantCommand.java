@@ -16,7 +16,7 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -30,15 +30,15 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)) {
+                if (!getMaterialHandler().isAir(heldItem)) {
                     var itemMeta = heldItem.getItemMeta();
                     var enchantName = args[0];
-                    if (getMaterials().isEnchantment(enchantName)) {
-                        if (itemMeta.hasEnchant(getMaterials().getEnchantment(enchantName))) {
-                            getMaterials().setEnchantment(heldItem, enchantName, 0);
+                    if (getMaterialHandler().isEnchantment(enchantName)) {
+                        if (itemMeta.hasEnchant(getMaterialHandler().getEnchantment(enchantName))) {
+                            getMaterialHandler().setEnchantment(heldItem, enchantName, 0);
                             player.sendMessage(getMessage().get("commands.enchant.remove", getMessage().toTitleCase(enchantName)));
                         } else {
-                            getMaterials().setEnchantment(heldItem, enchantName, 1);
+                            getMaterialHandler().setEnchantment(heldItem, enchantName, 1);
                             player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(1)));
                         }
                     } else player.sendMessage(getMessage().get("error.enchantment.invalid", enchantName));
@@ -46,10 +46,10 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
                 return true;
             } else if (args.length == 2) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)) {
+                if (!getMaterialHandler().isAir(heldItem)) {
                     var enchantName = args[0];
                     var amount = getMessage().getInteger(args[1]);
-                    getMaterials().setEnchantment(heldItem, enchantName, amount);
+                    getMaterialHandler().setEnchantment(heldItem, enchantName, amount);
                     if (amount > 0) {
                         player.sendMessage(getMessage().get("commands.enchant.add", getMessage().toTitleCase(enchantName), String.valueOf(amount)));
                     } else player.sendMessage(getMessage().get("commands.enchant.remove", getMessage().toTitleCase(enchantName)));
@@ -64,14 +64,17 @@ public class EnchantCommand implements CommandExecutor, TabCompleter {
         var commands = new ArrayList<String>();
         if (sender instanceof Player) {
             if (args.length == 1) {
-                getMaterials().getEnchantments().forEach(enchantment -> {
+                getMaterialHandler().getEnchantments().forEach(enchantment -> {
                     var enchantName = enchantment.getKey().getKey();
                     if (enchantName.startsWith(args[0])) {
                         commands.add(enchantName);
                     }
                 });
             } else if (args.length == 2) {
-                commands.add(String.valueOf(getMaterials().getEnchantment(args[0]).getMaxLevel()));
+                var enchantment = getMaterialHandler().getEnchantment(args[0]);
+                if (enchantment != null) {
+                    commands.add(String.valueOf(enchantment.getMaxLevel()));
+                }
             }
         }
         return commands;

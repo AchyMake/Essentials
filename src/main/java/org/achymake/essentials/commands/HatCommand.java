@@ -24,7 +24,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
     private InventoryHandler getInventoryHandler() {
         return getInstance().getInventoryHandler();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -38,7 +38,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)) {
+                if (!getMaterialHandler().isAir(heldItem)) {
                     var helmet = player.getInventory().getHelmet();
                     if (getInventoryHandler().setHelmet(player.getInventory(), heldItem)) {
                         player.sendMessage(getMessage().get("commands.hat.success", getMessage().toTitleCase(heldItem.getType().toString())));
@@ -51,7 +51,7 @@ public class HatCommand implements CommandExecutor, TabCompleter {
                     var target = getInstance().getPlayer(args[0]);
                     if (target != null) {
                         var heldItem = player.getInventory().getItemInMainHand();
-                        if (!getMaterials().isAir(heldItem)) {
+                        if (!getMaterialHandler().isAir(heldItem)) {
                             var helmet = target.getInventory().getHelmet();
                             if (target == player) {
                                 if (getInventoryHandler().setHelmet(target.getInventory(), heldItem)) {

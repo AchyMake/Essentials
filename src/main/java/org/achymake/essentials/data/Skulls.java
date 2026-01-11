@@ -15,7 +15,7 @@ public class Skulls {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private PaperHandler getPaperHandler() {
@@ -53,7 +53,7 @@ public class Skulls {
      * @since many moons ago
      */
     public ItemStack getCustomHead(String skullName, int amount) {
-        var skullItem = getMaterials().getItemStack("player_head", amount);
+        var skullItem = getMaterialHandler().getItemStack("player_head", amount);
         if (16 >= skullName.length()) {
             return getPaperHandler().getCustomHead(skullName, config.getString(skullName), amount);
         } else return skullItem;

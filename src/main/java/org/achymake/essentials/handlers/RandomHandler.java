@@ -10,7 +10,7 @@ public class RandomHandler {
         return nextDouble(0.0, 1.0);
     }
     private double getRandomInt() {
-        return getRandom().nextInt(0, 100);
+        return nextInt(0, 100);
     }
     /**
      * is true

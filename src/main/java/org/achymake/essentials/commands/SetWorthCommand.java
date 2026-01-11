@@ -24,7 +24,7 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
     private EconomyHandler getEconomy() {
         return getInstance().getEconomyHandler();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -38,7 +38,7 @@ public class SetWorthCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)) {
+                if (!getMaterialHandler().isAir(heldItem)) {
                     var material = heldItem.getType();
                     var itemName = getMessage().toTitleCase(material.toString());
                     var value = Double.parseDouble(args[0]);

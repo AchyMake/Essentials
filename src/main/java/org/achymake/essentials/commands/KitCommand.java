@@ -29,7 +29,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
     private Kits getKits() {
         return getInstance().getKits();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -60,13 +60,13 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                                 if (getKits().hasPrice(kitName)) {
                                     if (getEconomy().has(player, getKits().getPrice(kitName))) {
                                         if (getEconomy().remove(player, getKits().getPrice(kitName))) {
-                                            getMaterials().giveItemStacks(player, getKits().get(kitName));
+                                            getMaterialHandler().giveItemStacks(player, getKits().get(kitName));
                                             getUserdata().addCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName));
                                             player.sendMessage(getMessage().get("commands.kit.received", kitName));
                                         }
                                     } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                                 } else {
-                                    getMaterials().giveItemStacks(player, getKits().get(kitName));
+                                    getMaterialHandler().giveItemStacks(player, getKits().get(kitName));
                                     getUserdata().addCooldown(player, "kit-" + kitName, getKits().getCooldown(kitName));
                                     player.sendMessage(getMessage().get("commands.kit.received", kitName));
                                 }
@@ -74,12 +74,12 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                         } else if (getKits().hasPrice(kitName)) {
                             if (getEconomy().has(player, getKits().getPrice(kitName))) {
                                 if (getEconomy().remove(player, getKits().getPrice(kitName))) {
-                                    getMaterials().giveItemStacks(player, getKits().get(kitName));
+                                    getMaterialHandler().giveItemStacks(player, getKits().get(kitName));
                                     player.sendMessage(getMessage().get("commands.kit.received", kitName));
                                 }
                             } else player.sendMessage(getMessage().get("commands.kit.insufficient-funds", getEconomy().currency() + getEconomy().format(getKits().getPrice(kitName)), kitName));
                         } else {
-                            getMaterials().giveItemStacks(player, getKits().get(kitName));
+                            getMaterialHandler().giveItemStacks(player, getKits().get(kitName));
                             player.sendMessage(getMessage().get("commands.kit.received", kitName));
                         }
                         return true;
@@ -92,7 +92,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                         if (!target.hasPermission("essentials.command.kit.exempt")) {
                             var kitName = args[0];
                             if (getKits().isListed(kitName)) {
-                                getMaterials().giveItemStacks(target, getKits().get(kitName));
+                                getMaterialHandler().giveItemStacks(target, getKits().get(kitName));
                                 target.sendMessage(getMessage().get("commands.kit.received", kitName));
                                 player.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
                             } else player.sendMessage(getMessage().get("commands.kit.invalid", kitName));
@@ -115,7 +115,7 @@ public class KitCommand implements CommandExecutor, TabCompleter {
                 if (target != null) {
                     var kitName = args[0];
                     if (getKits().isListed(kitName)) {
-                        getMaterials().giveItemStacks(target, getKits().get(kitName));
+                        getMaterialHandler().giveItemStacks(target, getKits().get(kitName));
                         target.sendMessage(getMessage().get("commands.kit.received", kitName));
                         consoleCommandSender.sendMessage(getMessage().get("commands.kit.sender", kitName, target.getName()));
                     } else consoleCommandSender.sendMessage(getMessage().get("commands.kit.invalid", kitName));

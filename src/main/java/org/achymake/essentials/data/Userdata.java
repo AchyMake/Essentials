@@ -1,10 +1,7 @@
 package org.achymake.essentials.data;
 
 import org.achymake.essentials.Essentials;
-import org.achymake.essentials.handlers.EconomyHandler;
-import org.achymake.essentials.handlers.EntityHandler;
-import org.achymake.essentials.handlers.ScheduleHandler;
-import org.achymake.essentials.handlers.WorldHandler;
+import org.achymake.essentials.handlers.*;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.WeatherType;
@@ -16,7 +13,12 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Set;
 
 public class Userdata {
     private Essentials getInstance() {
@@ -31,8 +33,11 @@ public class Userdata {
     private EntityHandler getEntityHandler() {
         return getInstance().getEntityHandler();
     }
-    private ScheduleHandler getScheduler() {
+    private ScheduleHandler getScheduleHandler() {
         return getInstance().getScheduleHandler();
+    }
+    private UUIDHandler getUUIDHandler() {
+        return getInstance().getUUIDHandler();
     }
     private WorldHandler getWorldHandler() {
         return getInstance().getWorldHandler();
@@ -73,6 +78,18 @@ public class Userdata {
     public FileConfiguration getConfig(OfflinePlayer offlinePlayer) {
         return YamlConfiguration.loadConfiguration(getFile(offlinePlayer));
     }
+    public boolean setObject(OfflinePlayer offlinePlayer, String path, Object object) {
+        var file = getFile(offlinePlayer);
+        var config = YamlConfiguration.loadConfiguration(file);
+        config.set(path, object);
+        try {
+            config.save(file);
+            return true;
+        } catch (IOException e) {
+            getInstance().sendWarning(e.getMessage());
+            return false;
+        }
+    }
     /**
      * sets string
      * @param offlinePlayer or player
@@ -83,16 +100,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setString(OfflinePlayer offlinePlayer, String path, String value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets list string
@@ -104,16 +112,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setStringList(OfflinePlayer offlinePlayer, String path, List<String> value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets double
@@ -125,16 +124,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setDouble(OfflinePlayer offlinePlayer, String path, double value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets int
@@ -146,16 +136,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setInt(OfflinePlayer offlinePlayer, String path, int value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets float
@@ -167,16 +148,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setFloat(OfflinePlayer offlinePlayer, String path, float value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets long
@@ -188,16 +160,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setLong(OfflinePlayer offlinePlayer, String path, long value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * sets boolean
@@ -209,16 +172,7 @@ public class Userdata {
      * @see FileConfiguration
      */
     public boolean setBoolean(OfflinePlayer offlinePlayer, String path, boolean value) {
-        var file = getFile(offlinePlayer);
-        var config = YamlConfiguration.loadConfiguration(file);
-        config.set(path, value);
-        try {
-            config.save(file);
-            return true;
-        } catch (IOException e) {
-            getInstance().sendWarning(e.getMessage());
-            return false;
-        }
+        return setObject(offlinePlayer, path, value);
     }
     /**
      * has joined
@@ -352,7 +306,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("last-whisper"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setBankSent(Player player, Player target) {
@@ -371,7 +325,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("bank.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setBankFrom(Player player, Player target) {
@@ -390,7 +344,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("bank.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setTpaSent(Player player, Player target) {
@@ -409,7 +363,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpa.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setTpaFrom(Player player, Player target) {
@@ -428,7 +382,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpa.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setTpaHereSent(Player player, Player target) {
@@ -447,7 +401,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpahere.sent"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     public void setTpaHereFrom(Player player, Player target) {
@@ -466,7 +420,7 @@ public class Userdata {
         var data = getEntityHandler().getData(player);
         var tpaFrom = data.get(getInstance().getKey("tpahere.from"), PersistentDataType.STRING);
         if (tpaFrom != null) {
-            return getInstance().getPlayer(UUID.fromString(tpaFrom));
+            return getInstance().getPlayer(getUUIDHandler().get(tpaFrom));
         } else return null;
     }
     /**
@@ -655,8 +609,8 @@ public class Userdata {
      * @since many moons ago
      */
     public void removeTask(Player player, String taskName) {
-        if (getScheduler().isQueued(getTaskID(player, taskName))) {
-            getScheduler().cancel(getTaskID(player, taskName));
+        if (getScheduleHandler().isQueued(getTaskID(player, taskName))) {
+            getScheduleHandler().cancel(getTaskID(player, taskName));
         }
         setString(player, "tasks." + taskName, null);
     }
@@ -854,7 +808,9 @@ public class Userdata {
     private void update(OfflinePlayer offlinePlayer) {
         if (!exists(offlinePlayer))return;
         var name = offlinePlayer.getName();
-        if (Objects.equals(name, getConfig(offlinePlayer).getString("name")))return;
+        var fileName = getConfig(offlinePlayer).getString("name");
+        if (fileName == null)return;
+        if (fileName.equals(name))return;
         var file = getFile(offlinePlayer);
         var config = YamlConfiguration.loadConfiguration(file);
         config.set("name", name);
@@ -915,7 +871,7 @@ public class Userdata {
             for (var file : folder.listFiles()) {
                 if (file.exists() && file.isFile()) {
                     var uuidString = file.getName().replace(".yml", "");
-                    listed.add(getInstance().getOfflinePlayer(UUID.fromString(uuidString)));
+                    listed.add(getInstance().getOfflinePlayer(getUUIDHandler().get(uuidString)));
                 }
             }
         }

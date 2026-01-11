@@ -28,7 +28,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
     private Worth getWorth() {
         return getInstance().getWorth();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -42,7 +42,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 0) {
                 var heldItem = player.getInventory().getItemInMainHand();
-                if (!getMaterials().isAir(heldItem)  && !heldItem.getItemMeta().hasEnchants()) {
+                if (!getMaterialHandler().isAir(heldItem)  && !heldItem.getItemMeta().hasEnchants()) {
                     var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                     if (getWorth().isListed(heldItem.getType())) {
                         var amount = heldItem.getAmount();
@@ -76,7 +76,7 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                     var amount = Integer.parseInt(args[0]);
                     if (amount > 0) {
                         var heldItem = player.getInventory().getItemInMainHand();
-                        if (!getMaterials().isAir(heldItem) && !heldItem.getItemMeta().hasEnchants()) {
+                        if (!getMaterialHandler().isAir(heldItem) && !heldItem.getItemMeta().hasEnchants()) {
                             var itemName = getMessage().toTitleCase(heldItem.getType().toString());
                             var itemAmount = heldItem.getAmount();
                             if (getWorth().isListed(heldItem.getType())) {

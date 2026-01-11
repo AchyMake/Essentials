@@ -17,7 +17,7 @@ public class Kits {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private Message getMessage() {
@@ -90,7 +90,7 @@ public class Kits {
                 var section = kitName + ".items." + sections;
                 var materialName = config.getString(section + ".type");
                 if (materialName != null) {
-                    var itemStack = getMaterials().getItemStack(materialName, 1);
+                    var itemStack = getMaterialHandler().getItemStack(materialName, 1);
                     if (itemStack != null) {
                         var amount = config.getInt(section + ".amount");
                         if (amount > 0) {

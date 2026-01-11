@@ -40,6 +40,7 @@ public final class Essentials extends JavaPlugin {
     private ScheduleHandler scheduleHandler;
     private ScoreboardHandler scoreboardHandler;
     private TablistHandler tablistHandler;
+    private UUIDHandler uuidHandler;
     private VanishHandler vanishHandler;
     private WorldHandler worldHandler;
     private LuckPermsProvider luckPermsProvider;
@@ -71,6 +72,7 @@ public final class Essentials extends JavaPlugin {
         scheduleHandler = new ScheduleHandler();
         scoreboardHandler = new ScoreboardHandler();
         tablistHandler = new TablistHandler();
+        uuidHandler = new UUIDHandler();
         vanishHandler = new VanishHandler();
         worldHandler = new WorldHandler();
         luckPermsProvider = new LuckPermsProvider();
@@ -294,6 +296,9 @@ public final class Essentials extends JavaPlugin {
     }
     public VanishHandler getVanishHandler() {
         return vanishHandler;
+    }
+    public UUIDHandler getUUIDHandler() {
+        return uuidHandler;
     }
     public TablistHandler getTablistHandler() {
         return tablistHandler;

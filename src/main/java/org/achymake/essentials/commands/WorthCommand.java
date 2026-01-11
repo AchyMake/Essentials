@@ -19,7 +19,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
     private Essentials getInstance() {
         return Essentials.getInstance();
     }
-    private MaterialHandler getMaterials() {
+    private MaterialHandler getMaterialHandler() {
         return getInstance().getMaterialHandler();
     }
     private EconomyHandler getEconomy() {
@@ -39,7 +39,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         if (sender instanceof Player player) {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
-                var material = getMaterials().get(args[0]);
+                var material = getMaterialHandler().get(args[0]);
                 if (getWorth().isListed(material)) {
                     player.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
                 } else player.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
@@ -48,7 +48,7 @@ public class WorthCommand implements CommandExecutor, TabCompleter {
         } else if (sender instanceof ConsoleCommandSender consoleCommandSender) {
             if (args.length == 1) {
                 var itemName = getMessage().toTitleCase(args[0]);
-                var material = getMaterials().get(args[0]);
+                var material = getMaterialHandler().get(args[0]);
                 if (getWorth().isListed(material)) {
                     consoleCommandSender.sendMessage(getMessage().get("commands.worth.listed", itemName, getEconomy().currency() + getEconomy().format(getWorth().get(material))));
                 } else consoleCommandSender.sendMessage(getMessage().get("commands.worth.unlisted", itemName));
